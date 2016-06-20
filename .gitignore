@@ -1,3 +1,6 @@
+# Environment Configuration
+.env
+
 # Build output folders
 build/
 public/

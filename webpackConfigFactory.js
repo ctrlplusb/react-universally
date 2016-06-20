@@ -5,7 +5,10 @@ const nodeExternals = require('webpack-node-externals')
 
 // @see https://github.com/motdotla/dotenv
 const dotenv = require('dotenv')
-dotenv.config()
+dotenv.config(process.env.NOW
+  ? { path: './.envnow', silent: true }
+  : { silent: true }
+)
 
 // :: [Any] -> [Any]
 function removeEmpty (x) {
