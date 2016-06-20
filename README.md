@@ -4,6 +4,15 @@
   <p align='center'>An ultra low dependency node v6 universal react boilerplate.</p>
 </p>
 
+## TOC
+
+ - [About](https://github.com/ctrlplusb/react-universally#about)
+ - [Run-time Dependencies](https://github.com/ctrlplusb/react-universally#run-time-dependencies)
+ - [Overview](https://github.com/ctrlplusb/react-universally#overview)
+ - [Deploy your very own Server Side Rendering React App in 5 easy steps](https://github.com/ctrlplusb/react-universally#deploy-your-very-own-server-side-rendering-react-app-in-5-easy-steps)
+ - [npm script commands](https://github.com/ctrlplusb/react-universally#npm-script-commands)
+ - [References](https://github.com/ctrlplusb/react-universally#references)
+
 ## About
 
 This boilerplate contains a super minimal set of dependencies in order to get
