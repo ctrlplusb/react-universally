@@ -1,6 +1,8 @@
-# react-universally
-
-A mildly opinionated ultra low dependency universal react boilerplate. 
+<p align='center'>
+  <h1 align='center'>React, Universally</h1>
+  <img width='150' src='https://raw.githubusercontent.com/ctrlplusb/react-universally/master/assets/logo.png' />
+  <p align='center'>An ultra low dependency node v6 universal react boilerplate.</p>
+</p>
 
 ## About
 
@@ -9,35 +11,58 @@ you up and running with a universal react project, whilst also providing you wit
 
 It doesn't try to dictate how you should build your entire application, rather it provides a clean and simple base on which you can expand.  
 
+## Run-time Dependencies
+
+  - `node` v6
+  - `compression` - Gzip compression support for express server responses.
+  - `express` - Web server.
+  - `helmet` - Provides a content security policy for express.
+  - `hpp` - Express middleware to protect against HTTP Parameter Pollution attacks.
+  - `react` - A declarative, efficient, and flexible JavaScript library for building user interfaces.
+  - `react-dom` - React support for the DOM.
+  - `react-router` - A complete routing library for React.
+  - `serialize-javascript` - A superset of JSON that includes regular expressions and functions.
+  - `source-map-support` - Adds source map support to node.js (for stack traces).
+
 ## Overview
 
-The boilerplate uses Webpack 2 to produce bundles for both the client and the
+This boilerplate uses Webpack 2 to produce bundles for both the client and the
 server code.  You will notice two Webpack configuration files that allow you to target the respective environments:
 
    - `webpack.client.config.js`
    - `webpack.server.config.js`
 
-All code is executed via the webpack bundles, in both development and production mode.
+The source is written in ES2015, and it explicitly keeps to the standard syntax, not exposing any proposal syntax via additional babel plugins/presets.  As we are following this approach it is unnecessary for us to transpile our server bundle to ES5, taking advantage of `node` v6's native support.  Our client (browser) bundle is however transpiled to ES5 code for maximum browser/device support.
 
-It includes a very basic `express` server with a minimal security configuration.
+Given we are bundling both our client and server code we have included the `source-map-support` module to ensure that we get source map support on node, allowing for nice stack traces on our server code.
 
-Routing is achieved via `react-router`.
+## Deploy your very own Server Side Rendering React App in 5 easy steps ##
 
-Application configuration is achieved using the `dotenv` module.
-
-## Get it running on your machine ##
-
-Clone the repository.
+__Step 1: Clone the repository.__
 
     git clone https://github.com/ctrlplusb/react-universally
-    
+
+__Step 2: `cd` into the cloned directory__
+
+    cd react-universally
+
+__Step 3: Set up your env configuration file__
+
 The application depends on environment settings which are exposed to the application via a `.env` file.  You will have to create one of these using the example version (`.env_example`).  You could simply copy the example:
 
     cp .env_example .env
     
 I would recommend that you review the options within the `.env` file.
 
-That's it. You can then execute the npm script commands to build/execute the application.
+__Step 4: Install the awesome "now" CLI__
+
+    npm install -g now
+    
+These guys are amazing hosts.  [Check them out.](https://zeit.co/now#)
+
+__Step 5: Deploy to "now"__
+
+    now
 
 ## npm script commands##
 

@@ -2,9 +2,6 @@
 build/
 public/
 
-# Environment specific variables
-.env
-
 # Webpack build output of the js client
 backend/assets/client/
 

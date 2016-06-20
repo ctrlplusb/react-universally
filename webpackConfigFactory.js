@@ -234,7 +234,32 @@ function webpackConfigFactory ({ target, mode }) {
         {
           test: /\.js$/,
           loader: 'babel-loader',
-          exclude: /node_modules/
+          exclude: /node_modules/,
+          query: merge(
+            {
+              env: {
+                development: {
+                  plugins: [ 'react-hot-loader/babel' ]
+                }
+              }
+            },
+            ifServer({
+              // We are running a node 6 server which has support for almost
+              // all of the ES2015 syntax, therefore we only transpile JSX.
+              presets: ['react']
+            }),
+            ifClient({
+              // For our clients code we will need to transpile our JS into
+              // ES5 code for wider browser/device compatability.
+              presets: [
+                // JSX
+                'react',
+                // Webpack 2 includes support for es2015 imports, therefore we used this
+                // modified preset.
+                'es2015-webpack'
+              ]
+            })
+          )
         },
 
         // JSON
