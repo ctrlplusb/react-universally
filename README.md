@@ -1,6 +1,6 @@
 <p align='center'>
   <h1 align='center'>React, Universally</h1>
-  <img width='150' src='https://raw.githubusercontent.com/ctrlplusb/react-universally/master/assets/logo.png' />
+  <p align='center'><img width='150' src='https://raw.githubusercontent.com/ctrlplusb/react-universally/master/assets/logo.png' /></p>
   <p align='center'>An ultra low dependency node v6 universal react boilerplate.</p>
 </p>
 
