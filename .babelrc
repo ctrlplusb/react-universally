@@ -1,0 +1,19 @@
+{
+  "presets": [
+    // JSX support :)
+    "react",
+    // Webpack 2 includes support for es2015 imports, therefore we used this
+    // modified preset.
+    "es2015-webpack"
+  ],
+  "ignore": [
+    "node_modules/"
+  ],
+  "env": {
+    "development": {
+      "plugins": [
+        "react-hot-loader/babel",
+      ]
+    }
+  }
+}
