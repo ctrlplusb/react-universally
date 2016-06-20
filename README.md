@@ -5,7 +5,9 @@ A mildly opinionated simple universal react boilerplate.
 ## About
 
 This boilerplate contains a super minimal set of dependencies in order to get
-you up and running with a universal react project.
+you up and running with a universal react project, whilst also providing you with a great development experience that includes hot reloading of the client and server code.
+
+It doesn't try to dictate how you should build your entire application, rather it provides a clean and simple base on which you can expand.  
 
 ## Overview
 
@@ -22,8 +24,6 @@ It includes a very basic `express` server with a minimal security configuration.
 Routing is achieved via `react-router`.
 
 Application configuration is achieved using the `dotenv` module.
-
-Besides for these dependencies, nothing else is included.  No CSS, font,  or image loaders.  No redux, mobx or RxJS.  The intention of this boilerplate is not to be a base framework from which you can develop an app, but rather a base upon you can add your prefered dependencies as and when you need them.
 
 ## Get it running on your machine ##
 
