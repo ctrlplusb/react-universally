@@ -1,6 +1,6 @@
 # react-universally
 
-A mildly opinionated simple universal react boilerplate.
+A mildly opinionated ultra low dependency universal react boilerplate. 
 
 ## About
 
