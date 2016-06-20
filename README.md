@@ -36,6 +36,8 @@ The source is written in ES2015, and it explicitly keeps to the standard syntax,
 
 Given we are bundling both our client and server code we have included the `source-map-support` module to ensure that we get source map support on node, allowing for nice stack traces on our server code.
 
+Application configuration is supported by `dotenv` and requires you to create a `.env` file (you can use the `.env_example` as a base).  The `.env` file has been explicitly ignored from git as it will typically contain environment sensitive/specific information.  In the usual case your continuous deployment tool of choice should configure the specific `.env` file that is needed for a target environment. 
+
 ## Deploy your very own Server Side Rendering React App in 5 easy steps ##
 
 __Step 1: Clone the repository.__
@@ -62,7 +64,11 @@ These guys are amazing hosts.  [Check them out.](https://zeit.co/now#)
 
 __Step 5: Deploy to "now"__
 
-    now
+    cp .env .envnow && now  && rm -r .envnow
+    
+The above command will create a temporary file to expose your `.env` file to the `now` host.  It will then deploy to `now` and subsequently delete the temp env file.
+
+That's it.  Your clipboard will contain the address of the deployed app. Open your browser, paste, go.  
 
 ## npm script commands##
 

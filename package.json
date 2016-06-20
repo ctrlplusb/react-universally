@@ -3,10 +3,6 @@
   "version": "0.0.1",
   "description": "An ultra low dependency node v6 universal react boilerplate.",
   "main": "build/server/main.js",
-  "engines": {
-    "node": "6.2.1",
-    "npm": "3.9.5"
-  },
   "scripts": {
     "clean": "rimraf build",
     "development": "npm run clean && cross-env BABEL_DISABLE_CACHE=1 NODE_ENV=development node ./devServer",
