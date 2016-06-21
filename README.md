@@ -16,8 +16,7 @@
 
 ## About
 
-This boilerplate contains a super minimal set of dependencies in order to get
-you up and running with a universal react project, whilst also providing you with a great development experience that includes hot reloading of the client and server code. 
+This boilerplate contains an absolutely minimal set of dependencies in order to get you up and running with a universal react project as quickly as possible. It also provides you with a great development experience that includes hot reloading of your client and server code. 
 
 ## Overview
 
