@@ -30,7 +30,13 @@ function startServerBundle () {
     serverBundleConfig.output.path, './main.js'
   )
 
-  serverBundleCompiler.plugin('done', () => {
+  serverBundleCompiler.plugin('done', (stats) => {
+    if (stats.hasErrors()) {
+      console.log('==> 😵  Server webpack build failed')
+      console.log(stats.toString())
+      return
+    }
+
     createNotification('server', 'Bundle has been built')
 
     // Make sure our newly built server and client bundles aren't in the module cache.
