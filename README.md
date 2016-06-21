@@ -7,8 +7,9 @@
 ## TOC
 
  - [About](https://github.com/ctrlplusb/react-universally#about)
- - [Run-time Dependencies](https://github.com/ctrlplusb/react-universally#run-time-dependencies)
  - [Overview](https://github.com/ctrlplusb/react-universally#overview)
+ - [Project Structure](https://github.com/ctrlplusb/react-universally#project-structure)
+ - [Runtime Dependencies](https://github.com/ctrlplusb/react-universally#runtime-dependencies)
  - [Deploy your very own Server Side Rendering React App in 5 easy steps](https://github.com/ctrlplusb/react-universally#deploy-your-very-own-server-side-rendering-react-app-in-5-easy-steps)
  - [npm script commands](https://github.com/ctrlplusb/react-universally#npm-script-commands)
  - [References](https://github.com/ctrlplusb/react-universally#references)
@@ -16,11 +17,63 @@
 ## About
 
 This boilerplate contains a super minimal set of dependencies in order to get
-you up and running with a universal react project, whilst also providing you with a great development experience that includes hot reloading of the client and server code.
+you up and running with a universal react project, whilst also providing you with a great development experience that includes hot reloading of the client and server code. 
 
-It doesn't try to dictate how you should build your entire application, rather it provides a clean and simple base on which you can expand.  
+## Overview
 
-## Run-time Dependencies
+The core tech stack includes the following:
+
+  - __node v6__ - mmmmm es2015 support.
+  - __express__ - web server.
+  - __react__ - yep.
+  - __react-router__ - routing for both server and client.
+  - __dotenv__ - environment configuration.
+  - __babel__ - transpilation for browsers.
+  - __webpack 2__ - bundling (with tree shaking) for the server and client.
+
+That's about it really.  Redux/MobX, data persistence, test frameworks, CSS/CSSInJS loaders, Image loaders, and all the other bells and whistles have been explicitly excluded from this boilerplate.  Its up to you to decide what technologies you would like to add to your own implementation based upon your own needs, this boilerplate simply serves as a clean base upon which to do so.
+
+If you would like to reference a more opinionated boilerplate, then have a look at [React, Univerally (Opinionated)](https://github.com/ctrlplusb/react-universally-opinionated). However, I must warn you that implementation is highly structured to meet my own development requirements.  I would recommend that you simply fish ideas from it and implement them in your own codebase.
+
+This boilerplate uses Webpack 2 to produce bundles for both the client and the
+server code.  You will notice two Webpack configuration files that allow you to target the respective environments:
+
+   - `webpack.client.config.js`
+   - `webpack.server.config.js`
+
+Both of these then call into the `webpackConfigFactory.js` in order to generate their respective webpack configurations.  I've tried to keep the webpack configuration as centralized and well documented as possible as it can be a confusing topic at times.
+
+I have decided to use webpack for bundling of both the client and the server as this will bring greater interop and extensibility to the table, allowing server bundles to handle React components that introduce things like CSS or Images.
+
+Given that we are bundling our server code I have included the `source-map-support` module to ensure that we get nice stack traces when executing our code via node.
+
+All the source code is written in ES2015, and I have explicitly kept it to the true specification (bar JSX syntax).  As we are following this approach it is unnecessary for us to transpile our source code for the server into ES5, as `node` v6 has native support for almost all of the ES2015 syntax.  Our client (browser) bundle is however transpiled to ES5 code for maximum browser/device support.
+
+The application configuration is supported by the `dotenv` module and it requires you to create a `.env` file in the project root (you can use the `.env_example` as a base).  The `.env` file has been explicitly ignored from git as it will typically contain environment sensitive/specific information.  In the usual case your continuous deployment tool of choice should configure the specific `.env` file that is needed for a target environment. 
+
+## Project Structure
+
+```
+/
+|- build // The target output dir for our build commands.
+|  |- client // The built client module.
+|  |- server // The built server module
+| 
+|- src  // All the source code
+|  |- server // The server specific source
+|  |- client // The client specific source
+|  |- shared // The shared code between the client/server
+|
+|- .env_example // An example from which to create your own .env file.  
+|- devServer.js // Creates a hot reloading development environment
+|- webpack.client.config.js // Client target webpack configuration
+|- webpack.server.config.js // Server target webpack configuration
+|- webpackConfigFactory.js  // Webpack configuration builder 
+```
+
+## Runtime Dependencies
+
+Even though we are using webpack to support our universal application we keep the webpack runtime out of our production runtime environment.  Everything is prebundled in prep for production exection.  Therefore we only have the following runtime dependencies:
 
   - `node` v6
   - `compression` - Gzip compression support for express server responses.
@@ -32,20 +85,6 @@ It doesn't try to dictate how you should build your entire application, rather i
   - `react-router` - A complete routing library for React.
   - `serialize-javascript` - A superset of JSON that includes regular expressions and functions.
   - `source-map-support` - Adds source map support to node.js (for stack traces).
-
-## Overview
-
-This boilerplate uses Webpack 2 to produce bundles for both the client and the
-server code.  You will notice two Webpack configuration files that allow you to target the respective environments:
-
-   - `webpack.client.config.js`
-   - `webpack.server.config.js`
-
-The source is written in ES2015, and it explicitly keeps to the standard syntax, not exposing any proposal syntax via additional babel plugins/presets.  As we are following this approach it is unnecessary for us to transpile our server bundle to ES5, taking advantage of `node` v6's native support.  Our client (browser) bundle is however transpiled to ES5 code for maximum browser/device support.
-
-Given we are bundling both our client and server code we have included the `source-map-support` module to ensure that we get source map support on node, allowing for nice stack traces on our server code.
-
-Application configuration is supported by `dotenv` and requires you to create a `.env` file (you can use the `.env_example` as a base).  The `.env` file has been explicitly ignored from git as it will typically contain environment sensitive/specific information.  In the usual case your continuous deployment tool of choice should configure the specific `.env` file that is needed for a target environment. 
 
 ## Deploy your very own Server Side Rendering React App in 5 easy steps ##
 

@@ -6,7 +6,9 @@ const nodeExternals = require('webpack-node-externals')
 // @see https://github.com/motdotla/dotenv
 const dotenv = require('dotenv')
 dotenv.config(process.env.NOW
+  // This is to support deployment to the "now" host.  See the README for more info.
   ? { path: './.envnow', silent: true }
+  // Standard .env loading.
   : { silent: true }
 )
 
@@ -16,8 +18,8 @@ function removeEmpty (x) {
 }
 
 // :: bool -> (Any, Any) -> Any
-function ifElse (cond) {
-  return (when, or) => cond ? when : or
+function ifElse (condition) {
+  return (then, or) => condition ? then : or
 }
 
 // :: ...Object -> Object
