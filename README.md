@@ -43,7 +43,7 @@ server code.  You will notice two Webpack configuration files that allow you to 
 
 Both of these then call into the `webpackConfigFactory.js` in order to generate their respective webpack configurations.  I've tried to keep the webpack configuration as centralized and well documented as possible as it can be a confusing topic at times.
 
-I have decided to use webpack for bundling of both the client and the server as this will bring greater interop and extensibility to the table, allowing server bundles to handle React components that introduce things like CSS or Images.
+My reasoning for using webpack to bundle both the client and the server is to bring greater interop and extensibility to the table.  This will for instance allowing server bundles to handle React components that introduce things like CSS or Images (as and when you add the respective loaders).
 
 Given that we are bundling our server code I have included the `source-map-support` module to ensure that we get nice stack traces when executing our code via node.
 
