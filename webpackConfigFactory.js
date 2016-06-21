@@ -166,11 +166,7 @@ function webpackConfigFactory ({ target, mode }) {
           DISABLE_SSR: process.env.DISABLE_SSR,
           WEBSITE_TITLE: JSON.stringify(process.env.WEBSITE_TITLE),
           WEBSITE_DESCRIPTION: JSON.stringify(process.env.WEBSITE_DESCRIPTION)
-        },
-        // Indicates that the bundle is a server bundle.
-        '__SERVER__': ifServer('true', 'false'),
-        // Indicates that the bundle is a client bundle.
-        '__CLIENT__': ifClient('true', 'false')
+        }
       }),
 
       // Generates a JSON file containing a map of all the output files for
