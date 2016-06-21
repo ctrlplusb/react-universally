@@ -7,6 +7,7 @@
 ## TOC
 
  - [About](https://github.com/ctrlplusb/react-universally#about)
+ - [Features](https://github.com/ctrlplusb/react-universally#features)
  - [Overview](https://github.com/ctrlplusb/react-universally#overview)
  - [Project Structure](https://github.com/ctrlplusb/react-universally#project-structure)
  - [Runtime Dependencies](https://github.com/ctrlplusb/react-universally#runtime-dependencies)
@@ -17,6 +18,19 @@
 ## About
 
 This boilerplate contains an absolutely minimal set of dependencies in order to get you up and running with a universal react project as quickly as possible. It also provides you with a great development experience that includes hot reloading of your client and server code. 
+
+## Features
+
+  - Server side rendering.
+  - Full ES2015 support.
+  - Bundling of both client and server using webpack.
+  - Client bundle is split into "main" and "vendor" chunks.
+  - Tree-shaking. 
+  - Live development - i.e. hot reloading of both client and server source.
+  - React as the view.
+  - React Router as the router.
+  - Full development and production configuration.
+  - Application configuration via environment file.
 
 ## Overview
 
