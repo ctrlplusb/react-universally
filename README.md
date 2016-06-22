@@ -21,15 +21,15 @@ This boilerplate contains an absolutely minimal set of dependencies in order to 
 
 ## Features
 
+  - Server side rendering.
+  - Live development - i.e. hot reloading of both client and server source with high level of error tolerance.
   - `express` server with a basic security configuration.
   - `react` as the view.
   - `react-router` as the router, along with a dynamic routing configuration.
-  - Server side rendering.
   - Full ES2015 support, using `babel` to transpile where needed.
   - Bundling of both client and server using `webpack` v2.
   - Client bundle is split by routes and by "vendor" modules.
-  - Tree-shaking, supported by `webpack`. 
-  - Live development - i.e. hot reloading of both client and server source with high level of error tolerance.
+  - Tree-shaking, supported by `webpack`.  
   - A development and optimized production configuration.
   - Easy environment configuration via `dotenv` files.
 
