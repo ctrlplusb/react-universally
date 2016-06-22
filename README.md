@@ -140,6 +140,19 @@ Executes the server.  It expects you to have already built the bundles either vi
 
 Deletes any build output that would have originated from the other commands.
 
+## Troubleshooting ##
+
+___Q:___ __I see `react-router` warnings during hot reloading.__
+
+For example:
+
+```
+Warning: [react-router] You cannot change <Router history>;
+Warning: [react-router] You cannot change <Router routes>;
+``` 
+
+Fret not! This is a known issue when using React Hot Loader 3 alongside React Router.  It is being looked in to.  Everything still works, unfortunately you just get a few warnings alongside your changes.  They are harmless though, promise. :)
+
 ## References ##
 
   - __Webpack 2__ - https://gist.github.com/sokra/27b24881210b56bbaff7
