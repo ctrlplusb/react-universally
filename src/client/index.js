@@ -23,6 +23,7 @@ function renderApp () {
 
 // The following is needed so that we can hot reload our App.
 if (process.env.NODE_ENV === 'development' && module.hot) {
+  module.hot.accept()
   module.hot.accept('../shared/routes', renderApp)
 }
 

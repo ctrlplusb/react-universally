@@ -4,6 +4,7 @@
 import 'source-map-support/register'
 
 import express from 'express'
+import http from 'http'
 import compression from 'compression'
 import hpp from 'hpp'
 import helmet from 'helmet'
@@ -11,16 +12,16 @@ import universalReactAppMiddleware from './middleware/universalReactApp'
 import clientConfigBuilder from '../../webpack.client.config.js'
 
 // Create our express based server.
-const server = express()
+const app = express()
 
 // Don't expose any software information to hackers.
-server.disable('x-powered-by')
+app.disable('x-powered-by')
 
 // Prevent HTTP Parameter pollution.
-server.use(hpp())
+app.use(hpp())
 
 // Content Security Policy
-server.use(helmet.contentSecurityPolicy({
+app.use(helmet.contentSecurityPolicy({
   defaultSrc: ["'self'"],
   scriptSrc: ["'self'"],
   styleSrc: ["'self'"],
@@ -31,28 +32,27 @@ server.use(helmet.contentSecurityPolicy({
   mediaSrc: ["'none'"],
   frameSrc: ["'none'"]
 }))
-server.use(helmet.xssFilter())
-server.use(helmet.frameguard('deny'))
-server.use(helmet.ieNoOpen())
-server.use(helmet.noSniff())
+app.use(helmet.xssFilter())
+app.use(helmet.frameguard('deny'))
+app.use(helmet.ieNoOpen())
+app.use(helmet.noSniff())
 
 // Response compression.
-server.use(compression())
-
-// Get the client bundle webpack configuration.
-const webpackClientConfig = clientConfigBuilder({ mode: process.env.NODE_ENV })
+app.use(compression())
 
 // Configure static serving of our webpack bundled client files.
-server.use(
+const webpackClientConfig = clientConfigBuilder({ mode: process.env.NODE_ENV })
+app.use(
   webpackClientConfig.output.publicPath,
   express.static(webpackClientConfig.output.path))
 
 // Bind our universal react app middleware as the handler for all get requests.
-server.get('*', universalReactAppMiddleware)
+app.get('*', universalReactAppMiddleware)
 
-// Bind the server to our server port
-const serverListener = server.listen(process.env.SERVER_PORT)
-console.log(`==> 💚  Server is running on port ${process.env.SERVER_PORT}`)
+// Create an http server and listener for our express app.
+const server = http.Server(app)
+const listener = server.listen(process.env.SERVER_PORT)
+console.log(`==> 💚  HTTP Listener is running on port ${process.env.SERVER_PORT}`)
 
 // We export the listener as it will be handy for our development hot reloader.
-export default serverListener
+export default listener
