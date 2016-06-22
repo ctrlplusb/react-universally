@@ -200,7 +200,7 @@ function webpackConfigFactory ({ target, mode }) {
       ifDevServer(new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 })),
 
       // Adds options to all of our loaders.
-      ifProd(
+      ifProdClient(
         new webpack.LoaderOptionsPlugin({
           // Indicates to our loaders that they should minify their output
           // if they have the capability to do so.
@@ -211,7 +211,7 @@ function webpackConfigFactory ({ target, mode }) {
         })
       ),
 
-      ifProd(
+      ifProdClient(
         // JS Minification.
         new webpack.optimize.UglifyJsPlugin({
           compress: {
