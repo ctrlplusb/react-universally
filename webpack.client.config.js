@@ -1,6 +1,6 @@
-const webpackConfigFactory = require('./webpackConfigFactory')
+const webpackConfigFactory = require('./webpackConfigFactory');
 
-module.exports = function (options = {}) {
-  const { mode = 'development' } = options
-  return webpackConfigFactory({ target: 'client', mode: mode })
-}
+module.exports = function clientConfigFactory(options = {}) {
+  const { mode = 'development' } = options;
+  return webpackConfigFactory({ target: 'client', mode });
+};

@@ -1,64 +1,66 @@
-const path = require('path')
-const webpack = require('webpack')
-const AssetsPlugin = require('assets-webpack-plugin')
-const nodeExternals = require('webpack-node-externals')
+/* eslint-disable no-console */
+
+const path = require('path');
+const webpack = require('webpack');
+const AssetsPlugin = require('assets-webpack-plugin');
+const nodeExternals = require('webpack-node-externals');
 
 // @see https://github.com/motdotla/dotenv
-const dotenv = require('dotenv')
+const dotenv = require('dotenv');
 dotenv.config(process.env.NOW
   // This is to support deployment to the "now" host.  See the README for more info.
   ? { path: './.envnow', silent: true }
   // Standard .env loading.
   : { silent: true }
-)
+);
 
 // :: [Any] -> [Any]
-function removeEmpty (x) {
-  return x.filter(y => !!y)
+function removeEmpty(x) {
+  return x.filter(y => !!y);
 }
 
 // :: bool -> (Any, Any) -> Any
-function ifElse (condition) {
-  return (then, or) => condition ? then : or
+function ifElse(condition) {
+  return (then, or) => (condition ? then : or);
 }
 
 // :: ...Object -> Object
-function merge () {
-  const funcArgs = Array.prototype.slice.call(arguments)
+function merge() {
+  const funcArgs = Array.prototype.slice.call(arguments); // eslint-disable-line prefer-rest-params
 
   return Object.assign.apply(
     null,
     removeEmpty([{}].concat(funcArgs))
-  )
+  );
 }
 
-function webpackConfigFactory ({ target, mode }) {
+function webpackConfigFactory({ target, mode }) {
   if (!target || !~['client', 'server'].findIndex(valid => target === valid)) {
     throw new Error(
       'You must provide a "target" (client|server) to the webpackConfigFactory.'
-    )
+    );
   }
 
   if (!mode || !~['development', 'production'].findIndex(valid => mode === valid)) {
     throw new Error(
       'You must provide a "mode" (development|production) to the webpackConfigFactory.'
-    )
+    );
   }
 
-  console.log(`==> ℹ️  Creating webpack "${target}" config in "${mode}" mode`)
+  console.log(`==> ℹ️  Creating webpack "${target}" config in "${mode}" mode`);
 
-  const isDev = mode === 'development'
-  const isProd = mode === 'production'
-  const isClient = target === 'client'
-  const isServer = target === 'server'
+  const isDev = mode === 'development';
+  const isProd = mode === 'production';
+  const isClient = target === 'client';
+  const isServer = target === 'server';
 
-  const ifDev = ifElse(isDev)
-  const ifProd = ifElse(isProd)
-  const ifClient = ifElse(isClient)
-  const ifServer = ifElse(isServer)
-  const ifDevClient = ifElse(isDev && isClient)
-  const ifDevServer = ifElse(isDev && isServer)
-  const ifProdClient = ifElse(isProd && isClient)
+  const ifDev = ifElse(isDev);
+  const ifProd = ifElse(isProd);
+  const ifClient = ifElse(isClient);
+  const ifServer = ifElse(isServer);
+  const ifDevClient = ifElse(isDev && isClient);
+  const ifDevServer = ifElse(isDev && isServer);
+  const ifProdClient = ifElse(isProd && isClient);
 
   return {
     // We need to state that we are targetting "node" for our server bundle.
@@ -68,7 +70,7 @@ function webpackConfigFactory ({ target, mode }) {
     // to '/'.  There is no effect on our client bundle.
     node: {
       __dirname: true,
-      __filename: true
+      __filename: true,
     },
     // cache: !(isDev && isServer),
     // Anything listed in externals will not be included in our bundle.
@@ -77,7 +79,7 @@ function webpackConfigFactory ({ target, mode }) {
       // prefering them to be resolved via native node module system.  Therefore
       // we use the `webpack-node-externals` library to help us generate an
       // externals config that will ignore all node_modules.
-      ifServer(nodeExternals())
+      ifServer(nodeExternals()),
     ]),
     devtool: ifElse(isServer || isDev)(
       // We want to be able to get nice stack traces when running our server
@@ -99,8 +101,8 @@ function webpackConfigFactory ({ target, mode }) {
         main: removeEmpty([
           ifDevClient('react-hot-loader/patch'),
           ifDevClient(`webpack-hot-middleware/client?reload=true&path=http://localhost:${process.env.CLIENT_DEVSERVER_PORT}/__webpack_hmr`),
-          path.resolve(__dirname, `./src/${target}/index.js`)
-        ])
+          path.resolve(__dirname, `./src/${target}/index.js`),
+        ]),
       },
       ifClient({
         // We create a seperate chunk containing our vendor modules. This can
@@ -108,8 +110,8 @@ function webpackConfigFactory ({ target, mode }) {
         // rebuild times by not having to rebundle everything with every change.
         vendor: removeEmpty([
           'react',
-          'react-dom'
-        ])
+          'react-dom',
+        ]),
       })
     ),
     output: {
@@ -140,11 +142,11 @@ function webpackConfigFactory ({ target, mode }) {
         '/assets/'
       ),
       // When in server mode we will output our bundle as a commonjs2 module.
-      libraryTarget: ifServer('commonjs2', 'var')
+      libraryTarget: ifServer('commonjs2', 'var'),
     },
     resolve: {
       // These extensions are tried when resolving a file.
-      extensions: ['.js', '.json']
+      extensions: ['.js', '.json'],
     },
     plugins: removeEmpty([
       // Each key passed into DefinePlugin is an identifier.
@@ -165,8 +167,8 @@ function webpackConfigFactory ({ target, mode }) {
           CLIENT_DEVSERVER_PORT: JSON.stringify(process.env.CLIENT_DEVSERVER_PORT),
           DISABLE_SSR: process.env.DISABLE_SSR,
           WEBSITE_TITLE: JSON.stringify(process.env.WEBSITE_TITLE),
-          WEBSITE_DESCRIPTION: JSON.stringify(process.env.WEBSITE_DESCRIPTION)
-        }
+          WEBSITE_DESCRIPTION: JSON.stringify(process.env.WEBSITE_DESCRIPTION),
+        },
       }),
 
       // Generates a JSON file containing a map of all the output files for
@@ -175,7 +177,7 @@ function webpackConfigFactory ({ target, mode }) {
       // we need to inject into our HTML.
       new AssetsPlugin({
         filename: 'assets.json',
-        path: path.resolve(__dirname, `./build/${target}`)
+        path: path.resolve(__dirname, `./build/${target}`),
       }),
 
       // Ensures all our vendor bundle is a single file output and that any
@@ -184,7 +186,7 @@ function webpackConfigFactory ({ target, mode }) {
       ifClient(
         new webpack.optimize.CommonsChunkPlugin({
           name: 'vendor',
-          minChunks: Infinity
+          minChunks: Infinity,
         })
       ),
 
@@ -207,7 +209,7 @@ function webpackConfigFactory ({ target, mode }) {
           minimize: true,
           // Indicates to our loaders that they should enter into debug mode
           // should they support it.
-          debug: false
+          debug: false,
         })
       ),
 
@@ -216,8 +218,8 @@ function webpackConfigFactory ({ target, mode }) {
         new webpack.optimize.UglifyJsPlugin({
           compress: {
             screw_ie8: true,
-            warnings: false
-          }
+            warnings: false,
+          },
         })
       ),
 
@@ -227,7 +229,7 @@ function webpackConfigFactory ({ target, mode }) {
         // given the nested module structure. npm3 is flat, so this doesn't
         // occur.
         new webpack.optimize.DedupePlugin()
-      )
+      ),
     ]),
     module: {
       loaders: [
@@ -240,14 +242,14 @@ function webpackConfigFactory ({ target, mode }) {
             {
               env: {
                 development: {
-                  plugins: [ 'react-hot-loader/babel' ]
-                }
-              }
+                  plugins: ['react-hot-loader/babel'],
+                },
+              },
             },
             ifServer({
               // We are running a node 6 server which has support for almost
               // all of the ES2015 syntax, therefore we only transpile JSX.
-              presets: ['react']
+              presets: ['react'],
             }),
             ifClient({
               // For our clients code we will need to transpile our JS into
@@ -257,20 +259,20 @@ function webpackConfigFactory ({ target, mode }) {
                 'react',
                 // Webpack 2 includes support for es2015 imports, therefore we used this
                 // modified preset.
-                'es2015-webpack'
-              ]
+                'es2015-webpack',
+              ],
             })
-          )
+          ),
         },
 
         // JSON
         {
           test: /\.json$/,
-          loader: 'json-loader'
-        }
-      ]
-    }
-  }
+          loader: 'json-loader',
+        },
+      ],
+    },
+  };
 }
 
-module.exports = webpackConfigFactory
+module.exports = webpackConfigFactory;
