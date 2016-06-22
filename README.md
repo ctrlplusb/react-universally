@@ -29,7 +29,7 @@ This boilerplate contains an absolutely minimal set of dependencies in order to 
   - Bundling of both client and server using `webpack` v2.
   - Client bundle is split by routes and by "vendor" modules.
   - Tree-shaking, supported by `webpack`. 
-  - Live development - i.e. hot reloading of both client and server source.
+  - Live development - i.e. hot reloading of both client and server source with high level of error tolerance.
   - A development and optimized production configuration.
   - Easy environment configuration via `dotenv` files.
 
