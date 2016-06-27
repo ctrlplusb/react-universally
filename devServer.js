@@ -148,32 +148,4 @@ const webpackDevMiddleware = createWebpackMiddleware(clientBundleCompiler, {
 });
 clientBundleServer.use(webpackDevMiddleware);
 clientBundleServer.use(createWebpackHotMiddleware(clientBundleCompiler));
-const clientListener = clientBundleServer.listen(process.env.CLIENT_DEVSERVER_PORT);
-
-/**
- * -----------------------------------------------------------------------------
- * Disposal
- */
-function gracefulShutdown() {
-  // Shut down any existing running servers before quiting.
-
-  if (serverListener && clientListener) {
-    serverListenerDispose(() => {
-      clientListener.close(() => process.exit());
-    });
-  } else {
-    if (serverListener) {
-      serverListenerDispose(() => process.exit());
-    }
-
-    if (clientListener) {
-      clientListener.close(() => process.exit());
-    }
-  }
-}
-
-// listen for TERM signal .e.g. kill
-process.on('SIGTERM', gracefulShutdown);
-
-// listen for INT signal e.g. Ctrl-C
-process.on('SIGINT', gracefulShutdown);
+clientBundleServer.listen(process.env.CLIENT_DEVSERVER_PORT);

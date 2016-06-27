@@ -5,7 +5,7 @@
   "main": "build/server/main.js",
   "scripts": {
     "clean": "rimraf build",
-    "development": "npm run clean && node ./devServer",
+    "development": "node ./devServer",
     "build": "npm run clean && webpack --env.mode production --config webpack.client.config.js && webpack --env.mode production --config webpack.server.config.js",
     "start": "node build/server/main.js"
   },

@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 
-function Main({ children }) {
+function App({ children }) {
   return (
     <div>
       <div style={{ textAlign: 'center' }}>
@@ -21,8 +21,8 @@ function Main({ children }) {
     </div>
   );
 }
-Main.propTypes = {
+App.propTypes = {
   children: PropTypes.node,
 };
 
-export default Main;
+export default App;
