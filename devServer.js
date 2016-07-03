@@ -10,15 +10,21 @@ const createWebpackHotMiddleware = require('webpack-hot-middleware');
 const clientBundleConfig = require('./webpack.client.config')({ mode: 'development' });
 const serverBundleConfig = require('./webpack.server.config')({ mode: 'development' });
 
-function createNotification(subject, msg) {
+function createNotification(subject, msg, open) {
   const title = `${subject.toUpperCase()} DEVSERVER`;
 
   console.log(`==> ${title} -> ${msg}`);
 
-  notifier.notify({
+  var notifyProps = {
     title,
-    message: msg,
-  });
+    message: msg
+  };
+
+  if (typeof open === "string") {
+    notifyProps.open = open;
+  }
+
+  notifier.notify(notifyProps);
 }
 
 /**
@@ -70,7 +76,7 @@ serverBundleCompiler.plugin('done', (stats) => {
       });
     });
 
-    createNotification('server', '✅  Running');
+    createNotification('server', '🌎  Running', `http://localhost:${process.env.SERVER_PORT}`);
   } catch (err) {
     createNotification('server', '😵  Bundle invalid, check console for error');
     console.log(err);
