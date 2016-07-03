@@ -26,6 +26,7 @@ This boilerplate contains an absolutely minimal set of dependencies in order to 
   - `express` server with a basic security configuration.
   - `react` as the view.
   - `react-router` as the router, along with a dynamic routing configuration.
+  - Very basic CSS support - it's up to you to extend it into CSS Modules, SASS, PostCSS, Aphrodite etc.
   - Full ES2015 support, using `babel` to transpile where needed.
   - Bundling of both client and server using `webpack` v2.
   - Client bundle is split by routes and by "vendor" modules.
@@ -36,7 +37,7 @@ This boilerplate contains an absolutely minimal set of dependencies in order to 
 
 ## Overview
 
-Redux/MobX, data persistence, test frameworks, CSS/CSSInJS loaders, Image loaders, and all the other bells and whistles have been explicitly excluded from this boilerplate.  It's up to you to decide what technologies you would like to add to your own implementation based upon your own needs, this boilerplate simply serves as a clean base upon which to do so.
+Redux/MobX, data persistence, test frameworks, and all the other bells and whistles have been explicitly excluded from this boilerplate.  It's up to you to decide what technologies you would like to add to your own implementation based upon your own needs, this boilerplate simply serves as a clean base upon which to do so.
 
 > If you would like to reference a more opinionated boilerplate, then have a look at [React, Univerally (Opinionated)](https://github.com/ctrlplusb/react-universally-opinionated). However, I must warn you that implementation is highly structured to meet my own development requirements.  I would recommend that you simply fish ideas from it and implement them in your own codebase.
 
