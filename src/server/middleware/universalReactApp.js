@@ -1,5 +1,7 @@
 import React from 'react';
-import { RouterContext, match, createMemoryHistory } from 'react-router';
+import RouterContext from 'react-router/lib/RouterContext';
+import createMemoryHistory from 'react-router/lib/createMemoryHistory';
+import match from 'react-router/lib/match';
 import render from '../htmlPage/render';
 import routes from '../../shared/routes';
 
