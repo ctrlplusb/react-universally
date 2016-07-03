@@ -4,6 +4,7 @@ const path = require('path');
 const webpack = require('webpack');
 const AssetsPlugin = require('assets-webpack-plugin');
 const nodeExternals = require('webpack-node-externals');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 // @see https://github.com/motdotla/dotenv
 const dotenv = require('dotenv');
@@ -79,7 +80,14 @@ function webpackConfigFactory({ target, mode }) {
       // prefering them to be resolved via native node module system.  Therefore
       // we use the `webpack-node-externals` library to help us generate an
       // externals config that will ignore all node_modules.
-      ifServer(nodeExternals()),
+      ifServer(nodeExternals({
+        // Ok, this is slightly hacky. We don't want normalize.css to be set as
+        // an external, which would essentially make it ignored by our webpack
+        // bundle process.  We want 'normalize.css' to be processed by our css
+        // loader configuration.  Therefore we lie to the 'webpack-node-externals'
+        // and say it's a binary which will make this library ignore the entry.
+        binaryDirs: ['normalize.css'],
+      })),
     ]),
     devtool: ifElse(isServer || isDev)(
       // We want to be able to get nice stack traces when running our server
@@ -230,6 +238,12 @@ function webpackConfigFactory({ target, mode }) {
         // occur.
         new webpack.optimize.DedupePlugin()
       ),
+
+      ifProdClient(
+        // This is a production client so we will extract our CSS into
+        // CSS files.
+        new ExtractTextPlugin('[name]-[chunkhash].css', { allChunks: true })
+      ),
     ]),
     module: {
       loaders: [
@@ -270,6 +284,34 @@ function webpackConfigFactory({ target, mode }) {
           test: /\.json$/,
           loader: 'json-loader',
         },
+
+        // CSS
+        merge(
+          { test: /\.css$/ },
+          // When targetting the server we fake out the style loader as the
+          // server can't handle the styles and doesn't care about them either..
+          ifServer({
+            loaders: [
+              'fake-style-loader',
+              'css-loader',
+            ],
+          }),
+          // For a production client build we use the ExtractTextPlugin which
+          // will extract our CSS into CSS files.  The plugin needs to be
+          // registered within the plugins section too.
+          ifProdClient({
+            loader: ExtractTextPlugin.extract('style-loader', 'css-loader'),
+          }),
+          // For a development client we will use a straight style & css loader
+          // along with source maps.  This combo gives us a better development
+          // experience.
+          ifDevClient({
+            loaders: [
+              'style-loader',
+              { loader: 'css-loader', query: { sourceMap: true } },
+            ],
+          })
+        ),
       ],
     },
   };
