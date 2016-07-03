@@ -25,7 +25,7 @@ This boilerplate contains an absolutely minimal set of dependencies in order to 
   - Live development - i.e. hot reloading of both client and server source with high level of error tolerance.
   - `express` server with a basic security configuration.
   - `react` as the view.
-  - `react-router` as the router, along with a dynamic routing configuration.
+  - `react-router` as the router, along with a dynamic routing configuration (i.e. you get code splitting based on your routes).
   - Very basic CSS support - it's up to you to extend it into CSS Modules, SASS, PostCSS, Aphrodite etc.
   - Full ES2015 support, using `babel` to transpile where needed.
   - Bundling of both client and server using `webpack` v2.
