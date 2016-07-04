@@ -12,8 +12,6 @@ backend/assets/client/
 webpack-assets.json
 webpack-stats.json
 
-#####=== Node ===#####
-
 # Logs
 logs
 *.log
@@ -44,4 +42,6 @@ node_modules
 
 # Debug log from npm
 npm-debug.log
+
+# IntelliJ IDE ignore
 .idea

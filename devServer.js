@@ -8,21 +8,18 @@ const express = require('express');
 const createWebpackMiddleware = require('webpack-dev-middleware');
 const createWebpackHotMiddleware = require('webpack-hot-middleware');
 
-function createNotification(subject, msg, open) {
-  const title = `🔥  ${subject.toUpperCase()}`;
+function createNotification(options = {}) {
+  const title = !!options.title
+    ? `🔥  ${options.title.toUpperCase()}`
+    : undefined;
 
-  var notifyProps = {
+  notifier.notify({
     title,
-    message: msg
-  };
+    message: options.message,
+    open: options.open,
+  });
 
-  if (typeof open === "string") {
-    notifyProps.open = open;
-  }
-
-  notifier.notify(notifyProps);
-
-  console.log(`==> ${title} -> ${msg}`);
+  console.log(`==> ${title} -> ${options.message}`);
 }
 
 class ListenerManager {
@@ -77,9 +74,18 @@ class HotServer {
       // requiring it. It returns the http listener too.
       this.listenerManager = new ListenerManager(require(compiledOutputPath).default);
 
-      createNotification('server', '🌎  Running', `http://localhost:${process.env.SERVER_PORT}`);
+      const url = `http://localhost:${process.env.SERVER_PORT}`;
+
+      createNotification({
+        title: 'server',
+        message: `🌎  Running on ${url}`,
+        open: url,
+      });
     } catch (err) {
-      createNotification('server', '😵  Bundle invalid, check console for error');
+      createNotification({
+        title: 'server',
+        message: '😵  Bundle invalid, check console for error',
+      });
       console.log(err);
     }
   }
@@ -111,7 +117,10 @@ class HotClient {
     const listener = app.listen(process.env.CLIENT_DEVSERVER_PORT);
     this.listenerManager = new ListenerManager(listener);
 
-    createNotification('client', '✅  Running');
+    createNotification({
+      title: 'client',
+      message: '✅  Running',
+    });
   }
 
   dispose() {
@@ -144,7 +153,10 @@ class HotServers {
       const serverConfig = require('./webpack.server.config')({ mode: 'development' });
       this.serverCompiler = webpack(serverConfig);
     } catch (err) {
-      createNotification('webpack', '😵  Webpack config invalid, check console for error');
+      createNotification({
+        title: 'webpack',
+        message: '😵  Webpack config invalid, check console for error',
+      });
       console.log(err);
       return;
     }
@@ -171,10 +183,16 @@ class HotServers {
   _configureHotClient() {
     this.clientCompiler.plugin('done', (stats) => {
       if (stats.hasErrors()) {
-        createNotification('client', '😵  Build failed, check console for error');
+        createNotification({
+          title: 'client',
+          message: '😵  Build failed, check console for error',
+        });
         console.log(stats.toString());
       } else {
-        createNotification('client', '✅  Built');
+        createNotification({
+          title: 'client',
+          message: '✅  Built',
+        });
       }
     });
 
@@ -201,12 +219,18 @@ class HotServers {
 
     this.serverCompiler.plugin('done', (stats) => {
       if (stats.hasErrors()) {
-        createNotification('server', '😵  Build failed, check console for error');
+        createNotification({
+          title: 'server',
+          message: '😵  Build failed, check console for error',
+        });
         console.log(stats.toString());
         return;
       }
 
-      createNotification('server', '✅  Built');
+      createNotification({
+        title: 'server',
+        message: '✅  Built',
+      });
 
       // Make sure our newly built server bundles aren't in the module cache.
       Object.keys(require.cache).forEach(modulePath => {
