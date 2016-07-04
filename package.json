@@ -64,7 +64,7 @@
     "react-hot-loader": "3.0.0-beta.2",
     "rimraf": "2.5.3",
     "style-loader": "0.13.1",
-    "webpack": "2.1.0-beta.13",
+    "webpack": "2.1.0-beta.15",
     "webpack-dev-middleware": "1.6.1",
     "webpack-hot-middleware": "2.12.0",
     "webpack-node-externals": "1.2.0"
