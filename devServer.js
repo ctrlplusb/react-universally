@@ -77,7 +77,7 @@ class HotServer {
       // requiring it. It returns the http listener too.
       this.listenerManager = new ListenerManager(require(compiledOutputPath).default);
 
-      createNotification('server', '✅  Running');
+      createNotification('server', '🌎  Running', `http://localhost:${process.env.SERVER_PORT}`);
     } catch (err) {
       createNotification('server', '😵  Bundle invalid, check console for error');
       console.log(err);
