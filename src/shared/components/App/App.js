@@ -2,7 +2,7 @@ import 'normalize.css/normalize.css';
 import './globals.css';
 
 import React, { PropTypes } from 'react';
-import { Link } from 'react-router';
+import Link from 'react-router/lib/Link';
 
 function App({ children }) {
   return (

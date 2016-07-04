@@ -197,9 +197,10 @@ class HotServers {
       if (stats.hasErrors()) {
         createNotification('server', '😵  Build failed, check console for error');
         console.log(stats.toString());
-      } else {
-        createNotification('server', '✅  Built');
+        return;
       }
+
+      createNotification('server', '✅  Built');
 
       // Make sure our newly built server bundles aren't in the module cache.
       Object.keys(require.cache).forEach(modulePath => {
