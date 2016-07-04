@@ -8,13 +8,19 @@ const express = require('express');
 const createWebpackMiddleware = require('webpack-dev-middleware');
 const createWebpackHotMiddleware = require('webpack-hot-middleware');
 
-function createNotification(subject, msg) {
+function createNotification(subject, msg, open) {
   const title = `🔥  ${subject.toUpperCase()}`;
 
-  notifier.notify({
+  var notifyProps = {
     title,
-    message: msg,
-  });
+    message: msg
+  };
+
+  if (typeof open === "string") {
+    notifyProps.open = open;
+  }
+
+  notifier.notify(notifyProps);
 
   console.log(`==> ${title} -> ${msg}`);
 }
@@ -71,7 +77,7 @@ class HotServer {
       // requiring it. It returns the http listener too.
       this.listenerManager = new ListenerManager(require(compiledOutputPath).default);
 
-      createNotification('server', '✅  Running');
+      createNotification('server', '🌎  Running', `http://localhost:${process.env.SERVER_PORT}`);
     } catch (err) {
       createNotification('server', '😵  Bundle invalid, check console for error');
       console.log(err);

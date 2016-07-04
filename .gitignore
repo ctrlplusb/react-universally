@@ -44,3 +44,4 @@ node_modules
 
 # Debug log from npm
 npm-debug.log
+.idea
