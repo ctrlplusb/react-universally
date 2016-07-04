@@ -10,7 +10,7 @@
  - [Features](https://github.com/ctrlplusb/react-universally#features)
  - [Overview](https://github.com/ctrlplusb/react-universally#overview)
  - [Project Structure](https://github.com/ctrlplusb/react-universally#project-structure)
- - [Runtime Dependencies](https://github.com/ctrlplusb/react-universally#runtime-dependencies)
+ - [Server Runtime Dependencies](https://github.com/ctrlplusb/react-universally#server-runtime-dependencies)
  - [Deploy your very own Server Side Rendering React App in 5 easy steps](https://github.com/ctrlplusb/react-universally#deploy-your-very-own-server-side-rendering-react-app-in-5-easy-steps)
  - [npm script commands](https://github.com/ctrlplusb/react-universally#npm-script-commands)
  - [References](https://github.com/ctrlplusb/react-universally#references)
@@ -77,7 +77,7 @@ The application configuration is supported by the `dotenv` module and it require
 |- webpackConfigFactory.js  // Webpack configuration builder 
 ```
 
-## Runtime Dependencies
+## Server Runtime Dependencies
 
 Even though we are using webpack to support our universal application we keep the webpack runtime out of our production runtime environment.  Everything is prebundled in prep for production exection.  Therefore we only have the following runtime dependencies:
 
