@@ -10,33 +10,34 @@
  - [Features](https://github.com/ctrlplusb/react-universally#features)
  - [Overview](https://github.com/ctrlplusb/react-universally#overview)
  - [Project Structure](https://github.com/ctrlplusb/react-universally#project-structure)
- - [Runtime Dependencies](https://github.com/ctrlplusb/react-universally#runtime-dependencies)
+ - [Server Runtime Dependencies](https://github.com/ctrlplusb/react-universally#server-runtime-dependencies)
  - [Deploy your very own Server Side Rendering React App in 5 easy steps](https://github.com/ctrlplusb/react-universally#deploy-your-very-own-server-side-rendering-react-app-in-5-easy-steps)
  - [npm script commands](https://github.com/ctrlplusb/react-universally#npm-script-commands)
  - [References](https://github.com/ctrlplusb/react-universally#references)
 
 ## About
 
-This boilerplate contains an absolutely minimal set of dependencies in order to get you up and running with a universal react project as quickly as possible. It also provides you with a great development experience that includes hot reloading of your client and server code. 
+This boilerplate contains an absolutely minimal set of dependencies in order to get you up and running with a universal react project as quickly as possible. It provides you with a great development experience that includes hot reloading of everything. 
 
 ## Features
 
-  - Server side rendering.
-  - Live development - i.e. hot reloading of both client and server source with high level of error tolerance.
-  - `express` server with a basic security configuration.
-  - `react` as the view.
-  - `react-router` as the router, along with a dynamic routing configuration.
-  - Full ES2015 support, using `babel` to transpile where needed.
-  - Bundling of both client and server using `webpack` v2.
-  - Client bundle is split by routes and by "vendor" modules.
-  - Tree-shaking, supported by `webpack`.  
-  - A development and optimized production configuration.
-  - Easy environment configuration via `dotenv` files.
-  - Airbnb's eslint configuration.
+  - 🌍 Server side rendering.
+  - 🔥 Extreme live development - hot reloading of client/server source as well as your _webpack configuration_, with high level of error tolerance.
+  - 🔨 `express` server with a basic security configuration.
+  - 🔨 `react` as the view.
+  - 🔨 `react-router` as the router, along with a dynamic routing configuration (i.e. you get code splitting based on your routes).
+  - 🔨 Very basic CSS support - it's up to you to extend it into CSS Modules, SASS, PostCSS, Aphrodite etc.
+  - 🚀 Full ES2015 support, using `babel` to transpile where needed.
+  - 📦 Bundling of both client and server using `webpack` v2.
+  - ✂️ Client bundle is split by routes and by "vendor" modules.
+  - 🍃 Tree-shaking, supported by `webpack`.  
+  - 🎛 A development and optimized production configuration.
+  - 🔧 Easy environment configuration via `dotenv` files.
+  - 👼 Airbnb's eslint configuration.
 
 ## Overview
 
-Redux/MobX, data persistence, test frameworks, CSS/CSSInJS loaders, Image loaders, and all the other bells and whistles have been explicitly excluded from this boilerplate.  It's up to you to decide what technologies you would like to add to your own implementation based upon your own needs, this boilerplate simply serves as a clean base upon which to do so.
+Redux/MobX, data persistence, test frameworks, and all the other bells and whistles have been explicitly excluded from this boilerplate.  It's up to you to decide what technologies you would like to add to your own implementation based upon your own needs, this boilerplate simply serves as a clean base upon which to do so.
 
 > If you would like to reference a more opinionated boilerplate, then have a look at [React, Univerally (Opinionated)](https://github.com/ctrlplusb/react-universally-opinionated). However, I must warn you that implementation is highly structured to meet my own development requirements.  I would recommend that you simply fish ideas from it and implement them in your own codebase.
 
@@ -76,9 +77,9 @@ The application configuration is supported by the `dotenv` module and it require
 |- webpackConfigFactory.js  // Webpack configuration builder 
 ```
 
-## Runtime Dependencies
+## Server Runtime Dependencies
 
-Even though we are using webpack to support our universal application we keep the webpack runtime out of our production runtime environment.  Everything is prebundled in prep for production exection.  Therefore we only have the following runtime dependencies:
+Even though we are using webpack to support our universal application we keep the webpack runtime out of our production runtime environment.  Everything is prebundled in prep for production execution.  Therefore we only have the following runtime dependencies:
 
   - `node` v6
   - `compression` - Gzip compression support for express server responses.

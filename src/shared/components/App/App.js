@@ -1,9 +1,12 @@
+import 'normalize.css/normalize.css';
+import './globals.css';
+
 import React, { PropTypes } from 'react';
-import { Link } from 'react-router';
+import Link from 'react-router/lib/Link';
 
 function App({ children }) {
   return (
-    <div>
+    <div style={{ padding: '10px' }}>
       <div style={{ textAlign: 'center' }}>
         <h1>React, Universally</h1>
         <strong>A mildly opinionated ultra low dependency universal react boilerplate.</strong>
