@@ -17,7 +17,7 @@
 
 ## About
 
-This boilerplate contains an absolutely minimal set of dependencies in order to get you up and running with a universal react project as quickly as possible. It also provides you with a great development experience that includes hot reloading of your client and server code. 
+This boilerplate contains an absolutely minimal set of dependencies in order to get you up and running with a universal react project as quickly as possible. It provides you with a great development experience that includes hot reloading of everything. 
 
 ## Features
 
@@ -79,7 +79,7 @@ The application configuration is supported by the `dotenv` module and it require
 
 ## Server Runtime Dependencies
 
-Even though we are using webpack to support our universal application we keep the webpack runtime out of our production runtime environment.  Everything is prebundled in prep for production exection.  Therefore we only have the following runtime dependencies:
+Even though we are using webpack to support our universal application we keep the webpack runtime out of our production runtime environment.  Everything is prebundled in prep for production execution.  Therefore we only have the following runtime dependencies:
 
   - `node` v6
   - `compression` - Gzip compression support for express server responses.
