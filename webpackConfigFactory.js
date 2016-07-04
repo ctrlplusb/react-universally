@@ -140,9 +140,8 @@ function webpackConfigFactory({ target, mode }) {
       ),
       chunkFilename: '[name]-[chunkhash].js',
       // This is the web path under which our webpack bundled output should
-      // be considered as being served from. Useful in the client bundle context
-      // only.
-      publicPath: ifDevClient(
+      // be considered as being served from.
+      publicPath: ifDev(
         // As we run a seperate server for our client and server bundles we
         // need to use an absolute http path for our assets public path.
         `http://localhost:${process.env.CLIENT_DEVSERVER_PORT}/assets/`,
