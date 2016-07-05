@@ -4,7 +4,6 @@
 import 'source-map-support/register';
 
 import express from 'express';
-import { Server } from 'http';
 import compression from 'compression';
 import hpp from 'hpp';
 import helmet from 'helmet';
@@ -49,9 +48,8 @@ app.use(
 // Bind our universal react app middleware as the handler for all get requests.
 app.get('*', universalReactAppMiddleware);
 
-// Create an http server and listener for our express app.
-const server = new Server(app);
-const listener = server.listen(parseInt(process.env.SERVER_PORT, 10));
+// Create an http listener for our express app.
+const listener = app.listen(parseInt(process.env.SERVER_PORT, 10));
 
 if (process.env.NODE_ENV === 'development') {
   console.log(`==> 💚  HTTP Listener is running on port ${process.env.SERVER_PORT}`); // eslint-disable-line no-console,max-len
