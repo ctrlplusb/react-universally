@@ -29,7 +29,7 @@ This boilerplate contains an absolutely minimal set of dependencies in order to 
   - 🔨 Very basic CSS support - it's up to you to extend it into CSS Modules, SASS, PostCSS, Aphrodite etc.
   - 🚀 Full ES2015 support, using `babel` to transpile where needed.
   - 📦 Bundling of both client and server using `webpack` v2.
-  - ✂️ Client bundle is split by routes and by "vendor" modules.
+  - ✂️ Client bundle is split by routes.
   - 🍃 Tree-shaking, supported by `webpack`.  
   - 🎛 A development and optimized production configuration.
   - 🔧 Easy environment configuration via `dotenv` files.

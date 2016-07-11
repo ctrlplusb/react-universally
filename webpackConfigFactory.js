@@ -111,16 +111,7 @@ function webpackConfigFactory({ target, mode }) {
           ifDevClient(`webpack-hot-middleware/client?reload=true&path=http://localhost:${process.env.CLIENT_DEVSERVER_PORT}/__webpack_hmr`),
           path.resolve(__dirname, `./src/${target}/index.js`),
         ]),
-      },
-      ifClient({
-        // We create a seperate chunk containing our vendor modules. This can
-        // avoid unnecessary downloads by users as well as speed up development
-        // rebuild times by not having to rebundle everything with every change.
-        vendor: removeEmpty([
-          'react',
-          'react-dom',
-        ]),
-      })
+      }
     ),
     output: {
       // The dir in which our bundle should be output.
@@ -186,16 +177,6 @@ function webpackConfigFactory({ target, mode }) {
         filename: 'assets.json',
         path: path.resolve(__dirname, `./build/${target}`),
       }),
-
-      // Ensures all our vendor bundle is a single file output and that any
-      // shared code between our main and vendor bundles are put into the vendor
-      // bundle.
-      ifClient(
-        new webpack.optimize.CommonsChunkPlugin({
-          name: 'vendor',
-          minChunks: Infinity,
-        })
-      ),
 
       // We don't want webpack errors to occur during development as it will
       // kill our dev servers.
