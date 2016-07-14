@@ -1,0 +1,6 @@
+// We don't use the .babelrc file for our babel configuration, preferring for
+// our webpack loaders to have full control over the babel configuration.
+// This allows us to build up our babel config in a much more dynamic fashion
+// easily targetting a mix mash of server vs browser vs dev vs prod etc.
+// @see webpackConfigFactory.js
+{}
