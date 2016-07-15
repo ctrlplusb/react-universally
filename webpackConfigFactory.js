@@ -145,6 +145,13 @@ function webpackConfigFactory({ target, mode }) {
     resolve: {
       // These extensions are tried when resolving a file.
       extensions: ['.js', '.json'],
+      // We alias out our react dependencies and replace them with the
+      // lightweight preact library.
+      // @see https://github.com/developit/preact-compat
+      alias: {
+        react: 'preact-compat',
+        'react-dom': 'preact-compat',
+      },
     },
     plugins: removeEmpty([
       // Each key passed into DefinePlugin is an identifier.
