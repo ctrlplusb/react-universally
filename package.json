@@ -58,7 +58,7 @@
     "eslint-plugin-import": "1.10.3",
     "eslint-plugin-jsx-a11y": "1.5.5",
     "eslint-plugin-react": "5.2.2",
-    "extract-text-webpack-plugin": "2.0.0-beta.1",
+    "extract-text-webpack-plugin": "2.0.0-beta.2",
     "fake-style-loader": "1.0.1",
     "json-loader": "0.5.4",
     "node-notifier": "4.6.0",
@@ -67,7 +67,7 @@
     "react-hot-loader": "3.0.0-beta.2",
     "rimraf": "2.5.3",
     "style-loader": "0.13.1",
-    "webpack": "2.1.0-beta.17",
+    "webpack": "2.1.0-beta.19",
     "webpack-dev-middleware": "1.6.1",
     "webpack-hot-middleware": "2.12.1",
     "webpack-node-externals": "1.2.0"

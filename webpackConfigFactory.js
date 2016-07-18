@@ -230,7 +230,7 @@ function webpackConfigFactory({ target, mode }) {
       ifProdClient(
         // This is a production client so we will extract our CSS into
         // CSS files.
-        new ExtractTextPlugin('[name]-[chunkhash].css', { allChunks: true })
+        new ExtractTextPlugin({ filename: '[name]-[chunkhash].css', allChunks: true })
       ),
     ]),
     module: {
@@ -288,7 +288,10 @@ function webpackConfigFactory({ target, mode }) {
           // will extract our CSS into CSS files.  The plugin needs to be
           // registered within the plugins section too.
           ifProdClient({
-            loader: ExtractTextPlugin.extract('style-loader', 'css-loader'),
+            loader: ExtractTextPlugin.extract({
+              notExtractLoader: 'style-loader',
+              loader: 'css-loader',
+            }),
           }),
           // For a development client we will use a straight style & css loader
           // along with source maps.  This combo gives us a better development
