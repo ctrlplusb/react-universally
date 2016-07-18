@@ -1,6 +1,6 @@
 {
   "name": "react-universally",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "An ultra low dependency node v6 universal react boilerplate.",
   "main": "build/server/main.js",
   "engines": {
