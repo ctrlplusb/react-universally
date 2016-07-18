@@ -148,7 +148,11 @@ function webpackConfigFactory({ target, mode }) {
     },
     resolve: {
       // These extensions are tried when resolving a file.
-      extensions: ['.js', '.json'],
+      extensions: [
+        '.js',
+        '.jsx',
+        '.json',
+      ],
     },
     plugins: removeEmpty([
       // Each key passed into DefinePlugin is an identifier.
@@ -233,7 +237,7 @@ function webpackConfigFactory({ target, mode }) {
       loaders: [
         // Javascript
         {
-          test: /\.js$/,
+          test: /\.jsx?$/,
           loader: 'babel-loader',
           exclude: [/node_modules/, path.resolve(__dirname, './build')],
           query: merge(
