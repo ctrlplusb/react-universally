@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "description": "An ultra low dependency node v6 universal react boilerplate.",
   "main": "build/server/main.js",
+  "engines": {
+    "node": "~6.3.0"
+  },
   "scripts": {
     "clean": "rimraf build",
     "development": "node ./devServer",
