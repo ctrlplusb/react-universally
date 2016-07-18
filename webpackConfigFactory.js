@@ -81,12 +81,16 @@ function webpackConfigFactory({ target, mode }) {
       // we use the `webpack-node-externals` library to help us generate an
       // externals config that will ignore all node_modules.
       ifServer(nodeExternals({
-        // Ok, this is slightly hacky. We don't want normalize.css to be set as
-        // an external, which would essentially make it ignored by our webpack
-        // bundle process.  We want 'normalize.css' to be processed by our css
-        // loader configuration.  Therefore we lie to the 'webpack-node-externals'
-        // and say it's a binary which will make this library ignore the entry.
-        binaryDirs: ['normalize.css'],
+        // Okay, this is slightly hacky. There are some libraries we want/need
+        // webpack to process, therefore we lie to the 'webpack-node-externals'
+        // and list these as binaries which will make sure they don't get
+        // added to the externals list.
+        // If you have a library dependency that depends on a webpack loader
+        // then you will need to add it to this list.
+        binaryDirs: [
+          // We want 'normalize.css' to be processed by our css loader.
+          'normalize.css',
+        ],
       })),
     ]),
     devtool: ifElse(isServer || isDev)(
