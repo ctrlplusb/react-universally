@@ -7,7 +7,7 @@ import match from 'react-router/lib/match';
 import routes from '../shared/routes';
 
 // Get the DOM Element that will host our React application.
-const container = document.getElementById('app');
+const container = document.querySelector('#app');
 
 function renderApp() {
   // As we are using dynamic react-router routes we have to use the following
