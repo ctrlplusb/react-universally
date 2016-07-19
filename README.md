@@ -1,30 +1,55 @@
 <p align='center'>
-  <h1 align='center'>React, Universally</h1>
-  <p align='center'><img width='150' src='https://raw.githubusercontent.com/ctrlplusb/assets/master/logos/react-universally.png' /></p>
-  <p align='center'>An ultra low dependency node v6 universal react boilerplate with an amazing dev experience.</p>
+  <h1 align='center'>React, Universally - Skinny</h1>
+  <p align='center'><img width='60' src='https://raw.githubusercontent.com/ctrlplusb/assets/master/logos/react-universally-skinny.png' /></p>
+  <p align='center'>A "when size matters" ultra low dependency node v6 universal react boilerplate with an amazing dev experience.</p>
 </p>
 
 ## TOC
 
- - [About](https://github.com/ctrlplusb/react-universally#about)
- - [Features](https://github.com/ctrlplusb/react-universally#features)
- - [Overview](https://github.com/ctrlplusb/react-universally#overview)
- - [Project Structure](https://github.com/ctrlplusb/react-universally#project-structure)
- - [Server Runtime Dependencies](https://github.com/ctrlplusb/react-universally#server-runtime-dependencies)
- - [Deploy your very own Server Side Rendering React App in 5 easy steps](https://github.com/ctrlplusb/react-universally#deploy-your-very-own-server-side-rendering-react-app-in-5-easy-steps)
- - [npm script commands](https://github.com/ctrlplusb/react-universally#npm-script-commands)
- - [References](https://github.com/ctrlplusb/react-universally#references)
+ - [About](https://github.com/ctrlplusb/react-universally-skinny#about)
+ - [Features](https://github.com/ctrlplusb/react-universally-skinny#features)
+ - [Overview](https://github.com/ctrlplusb/react-universally-skinny#overview)
+ - [Project Structure](https://github.com/ctrlplusb/react-universally-skinny#project-structure)
+ - [Server Runtime Dependencies](https://github.com/ctrlplusb/react-universally-skinny#server-runtime-dependencies)
+ - [Deploy your very own Server Side Rendering React App in 5 easy steps](https://github.com/ctrlplusb/react-universally-skinny#deploy-your-very-own-server-side-rendering-react-app-in-5-easy-steps)
+ - [npm script commands](https://github.com/ctrlplusb/react-universally-skinny#npm-script-commands)
+ - [References](https://github.com/ctrlplusb/react-universally-skinny#references)
 
 ## About
 
-This boilerplate contains an absolutely minimal set of dependencies in order to get you up and running with a universal react project as quickly as possible. It provides you with a great development experience that includes hot reloading of everything. 
+This is an alternative version of the [`react-universally`](https://github.com/ctrlplusb/react-universally), a boilerplate that contains an absolutely minimal set of dependencies in order to get you up and running with a universal react project as quickly as possible. It provides you with a great development experience that includes hot reloading of everything. 
+
+This adaptation of the boilerplate attempts to provide you with as small as a client bundle size as possible.  It does so by making use of the amazing `preact` and `preact-compat` libraries.  
+
+Take a look at the differences in bundle size output...
+
+### [`react-universally`](https://github.com/ctrlplusb/react-universally)
+
+| Chunk Name                    |  Size (GZipped)  |
+|-------------------------------|------------------|
+| main-cb2669ecf95d09720eb1.js  | 55.9 KB          |
+| 1-9aa9096e3fc8a0c2c097.js     | 1.3 KB           |
+| 0-caed1bc1f639ca595cb2.js     | 1.0 KB           |
+
+### `react-universally-skinny`
+
+| Chunk Name                    |  Size (GZipped)  |
+|-------------------------------|------------------|
+| main-cb2669ecf95d09720eb1.js  | 20.4 KB          |
+| 1-9aa9096e3fc8a0c2c097.js     | 1.1 KB           |
+| 0-caed1bc1f639ca595cb2.js     | 1.1 KB           |
+
+BOOM, ___60%___ size savings!
+
+Of course these don't come without a cost.  As we are using `preact` we have had to drop `react-hot-loader` and instead replace it with a native implementation of `webpack` HMR feature.
 
 ## Features
 
+  - 🕴 Super small client bundle size.
   - 🌍 Server side rendering.
   - 🔥 Extreme live development - hot reloading of client/server source as well as your _webpack configuration_, with high level of error tolerance.
   - 🔨 `express` server with a basic security configuration.
-  - 🔨 `react` as the view.
+  - 🔨 `react` as the view  (provided via `preact` and `preact-compat`).
   - 🔨 `react-router` as the router, along with a dynamic routing configuration (i.e. you get code splitting based on your routes).
   - 🔨 Very basic CSS support - it's up to you to extend it into CSS Modules, SASS, PostCSS, Aphrodite etc.
   - 🚀 Full ES2015 support, using `babel` to transpile where needed.
@@ -38,8 +63,6 @@ This boilerplate contains an absolutely minimal set of dependencies in order to 
 ## Overview
 
 Redux/MobX, data persistence, test frameworks, and all the other bells and whistles have been explicitly excluded from this boilerplate.  It's up to you to decide what technologies you would like to add to your own implementation based upon your own needs, this boilerplate simply serves as a clean base upon which to do so.
-
-> If you would like to reference a more opinionated boilerplate, then have a look at [React, Univerally (Opinionated)](https://github.com/ctrlplusb/react-universally-opinionated). However, I must warn you that implementation is highly structured to meet my own development requirements.  I would recommend that you simply fish ideas from it and implement them in your own codebase.
 
 This boilerplate uses Webpack 2 to produce bundles for both the client and the
 server code.  You will notice two Webpack configuration files that allow you to target the respective environments:
@@ -86,8 +109,8 @@ Even though we are using webpack to support our universal application we keep th
   - `express` - Web server.
   - `helmet` - Provides a content security policy for express.
   - `hpp` - Express middleware to protect against HTTP Parameter Pollution attacks.
-  - `react` - A declarative, efficient, and flexible JavaScript library for building user interfaces.
-  - `react-dom` - React support for the DOM.
+  - `react` - A declarative, efficient, and flexible JavaScript library for building user interfaces (provided via `preact` and `preact-compat`).
+  - `react-dom` - React support for the DOM (provided via `preact` and `preact-compat`).
   - `react-router` - A complete routing library for React.
   - `serialize-javascript` - A superset of JSON that includes regular expressions and functions.
   - `source-map-support` - Adds source map support to node.js (for stack traces).
@@ -157,6 +180,7 @@ Fret not! This is a known issue when using React Hot Loader 3 alongside React Ro
 
 ## References ##
 
+  - __preact__ - https://github.com/developit/preact
   - __Webpack 2__ - https://gist.github.com/sokra/27b24881210b56bbaff7
   - __React Hot Loader v3__ - https://github.com/gaearon/react-hot-boilerplate/pull/61
   - __dotenv__ - https://github.com/bkeepers/dotenv
