@@ -1,6 +1,5 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { AppContainer } from 'react-hot-loader';
 import Router from 'react-router/lib/Router';
 import browserHistory from 'react-router/lib/browserHistory';
 import match from 'react-router/lib/match';
@@ -19,15 +18,22 @@ function renderApp() {
       console.log('==> 😭  React Router match failed.'); // eslint-disable-line no-console
     }
 
+    if (process.env.NODE_ENV === 'development' && module.hot) {
+      // Preact's default behaviour is to append to the container, rather than
+      // replace existing content like in React.  The Preact Compat is supposed
+      // to emulate React's behaviour however it seems to be having problems
+      // with this dynamic routing configuration, therefore we manually clear
+      // out our container before doing any rendering.
+      while (container.firstChild) {
+        container.removeChild(container.firstChild);
+      }
+    }
+
     render(
-      <AppContainer>
-        {/*
-        We need to explicly render the Router component here instead of have
-        this embedded within a shared App type of component as we use different
-        router base components for client vs server rendering.
-        */}
-        <Router {...renderProps} />
-      </AppContainer>,
+      // We need to explicly render the Router component here instead of have
+      // this embedded within a shared App type of component as we use different
+      // router base components for client vs server rendering.
+      <Router {...renderProps} />,
       container
     );
   });

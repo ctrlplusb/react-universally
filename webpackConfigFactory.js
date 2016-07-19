@@ -101,11 +101,17 @@ function webpackConfigFactory({ target, mode }, { json }) {
         // webpack to process, therefore we lie to the 'webpack-node-externals'
         // and list these as binaries which will make sure they don't get
         // added to the externals list.
-        // If you have a library dependency that depends on a webpack loader
-        // then you will need to add it to this list.
         binaryDirs: [
           // We want 'normalize.css' to be processed by our css loader.
           'normalize.css',
+          // We need react and react-dom here as they are aliased by our
+          // webpack configuration.
+          'react',
+          'react-dom',
+          // List out any libraries that you depend on here, which have a
+          // dependency on react. This is so that their react dependency
+          // can be aliased to preact-compat.
+          'react-router',
         ],
       })),
     ]),
@@ -127,7 +133,6 @@ function webpackConfigFactory({ target, mode }, { json }) {
     entry: merge(
       {
         main: removeEmpty([
-          ifDevClient('react-hot-loader/patch'),
           ifDevClient(`webpack-hot-middleware/client?reload=true&path=http://localhost:${process.env.CLIENT_DEVSERVER_PORT}/__webpack_hmr`),
           path.resolve(__dirname, `./src/${target}/index.js`),
         ]),
@@ -169,6 +174,14 @@ function webpackConfigFactory({ target, mode }, { json }) {
         '.jsx',
         '.json',
       ],
+      // We alias out our react dependencies and replace them with the
+      // lightweight preact library.
+      // @see https://github.com/developit/preact-compat
+      alias: {
+        react: 'preact-compat',
+        'react-dom': 'preact-compat',
+        'react-dom/server': 'preact-compat',
+      },
     },
     plugins: removeEmpty([
       // Each key passed into DefinePlugin is an identifier.
@@ -257,13 +270,6 @@ function webpackConfigFactory({ target, mode }, { json }) {
           loader: 'babel-loader',
           exclude: [/node_modules/, path.resolve(__dirname, './build')],
           query: merge(
-            {
-              env: {
-                development: {
-                  plugins: ['react-hot-loader/babel'],
-                },
-              },
-            },
             ifServer({
               // We are running a node 6 server which has support for almost
               // all of the ES2015 syntax, therefore we only transpile JSX.

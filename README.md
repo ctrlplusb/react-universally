@@ -60,7 +60,7 @@ The application configuration is supported by the `dotenv` module and it require
 
 ### [`react-universally-skinny`](https://github.com/ctrlplusb/react-universally-skinny)
 
-When size matters.  A lightweight alternative to `react-universally`.  Provides over 60% bundle output savings!
+When size matters.  A lightweight alternative to `react-universally`.  Provides over ___60% bundle output savings___!
 
 ### [`advanced-boilerplate`](https://github.com/sebastian-software/advanced-boilerplate)
 
