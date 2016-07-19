@@ -89,7 +89,6 @@ function webpackConfigFactory({ target, mode }, { json }) {
       __dirname: true,
       __filename: true,
     },
-    // cache: !(isDev && isServer),
     // Anything listed in externals will not be included in our bundle.
     externals: removeEmpty([
       // We don't want our node_modules to be bundled with our server package,
