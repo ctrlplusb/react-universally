@@ -9,6 +9,7 @@
  - [About](https://github.com/ctrlplusb/react-universally#about)
  - [Features](https://github.com/ctrlplusb/react-universally#features)
  - [Overview](https://github.com/ctrlplusb/react-universally#overview)
+ - [Extensions and Alternatives](https://github.com/ctrlplusb/react-universally#extensions-and-alternatives)
  - [Project Structure](https://github.com/ctrlplusb/react-universally#project-structure)
  - [Server Runtime Dependencies](https://github.com/ctrlplusb/react-universally#server-runtime-dependencies)
  - [Deploy your very own Server Side Rendering React App in 5 easy steps](https://github.com/ctrlplusb/react-universally#deploy-your-very-own-server-side-rendering-react-app-in-5-easy-steps)
@@ -39,8 +40,6 @@ This boilerplate contains an absolutely minimal set of dependencies in order to 
 
 Redux/MobX, data persistence, test frameworks, and all the other bells and whistles have been explicitly excluded from this boilerplate.  It's up to you to decide what technologies you would like to add to your own implementation based upon your own needs, this boilerplate simply serves as a clean base upon which to do so.
 
-> If you would like to reference a more opinionated boilerplate, then have a look at [React, Univerally (Opinionated)](https://github.com/ctrlplusb/react-universally-opinionated). However, I must warn you that implementation is highly structured to meet my own development requirements.  I would recommend that you simply fish ideas from it and implement them in your own codebase.
-
 This boilerplate uses Webpack 2 to produce bundles for both the client and the
 server code.  You will notice two Webpack configuration files that allow you to target the respective environments:
 
@@ -56,6 +55,20 @@ Given that we are bundling our server code I have included the `source-map-suppo
 All the source code is written in ES2015, and I have explicitly kept it to the true specification (bar JSX syntax).  As we are following this approach it is unnecessary for us to transpile our source code for the server into ES5, as `node` v6 has native support for almost all of the ES2015 syntax.  Our client (browser) bundle is however transpiled to ES5 code for maximum browser/device support.
 
 The application configuration is supported by the `dotenv` module and it requires you to create a `.env` file in the project root (you can use the `.env_example` as a base).  The `.env` file has been explicitly ignored from git as it will typically contain environment sensitive/specific information.  In the usual case your continuous deployment tool of choice should configure the specific `.env` file that is needed for a target environment. 
+
+## Extensions and Alternatives 
+
+### [`react-universally-skinny`](https://github.com/ctrlplusb/react-universally-skinny)
+
+When size matters.  A lightweight alternative to `react-universally`.  Provides over 60% bundle output savings!
+
+### [`advanced-boilerplate`](https://github.com/sebastian-software/advanced-boilerplate)
+
+This boilerplate provides extended features on top of `react-universally` such as CSS Support with CSS modules alongside a flexible full PostCSS chain for advanced transformations e.g. autoprefixer.
+
+### [`react-universally-opinionated`](https://github.com/ctrlplusb/react-universally-opinionated) (WIP)
+
+This is still in production, so it's not really worth looking at right now, but when it's ready it will be an opinionated boilerplate. The implementation will be highly structured to meet my own development requirements, so I would recommend that you simply fish ideas from it and implement them in your own codebase as you need.
 
 ## Project Structure
 
