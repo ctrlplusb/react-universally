@@ -1,8 +1,11 @@
 {
   "name": "react-universally",
-  "version": "0.0.1",
-  "description": "An ultra low dependency node v6 universal react boilerplate.",
+  "version": "1.0.0",
+  "description": "An ultra low dependency node v6 universal react boilerplate with an amazing dev experience.",
   "main": "build/server/main.js",
+  "engines": {
+    "node": "~6.3.0"
+  },
   "scripts": {
     "clean": "rimraf build",
     "development": "node ./devServer",
@@ -49,11 +52,11 @@
     "chokidar": "1.6.0",
     "css-loader": "0.23.1",
     "dotenv": "2.0.0",
-    "eslint": "2.13.1",
+    "eslint": "3.1.1",
     "eslint-config-airbnb": "9.0.1",
     "eslint-loader": "1.4.1",
     "eslint-plugin-import": "1.11.0",
-    "eslint-plugin-jsx-a11y": "1.5.5",
+    "eslint-plugin-jsx-a11y": "2.0.1",
     "eslint-plugin-react": "5.2.2",
     "extract-text-webpack-plugin": "2.0.0-beta.2",
     "fake-style-loader": "1.0.1",
@@ -63,7 +66,7 @@
     "path": "0.12.7",
     "rimraf": "2.5.3",
     "style-loader": "0.13.1",
-    "webpack": "2.1.0-beta.17",
+    "webpack": "2.1.0-beta.19",
     "webpack-dev-middleware": "1.6.1",
     "webpack-hot-middleware": "2.12.1",
     "webpack-node-externals": "1.2.0"

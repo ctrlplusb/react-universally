@@ -35,7 +35,7 @@ function merge() {
   );
 }
 
-function webpackConfigFactory({ target, mode }) {
+function webpackConfigFactory({ target, mode }, { json }) {
   if (!target || !~['client', 'server'].findIndex(valid => target === valid)) {
     throw new Error(
       'You must provide a "target" (client|server) to the webpackConfigFactory.'
@@ -48,7 +48,23 @@ function webpackConfigFactory({ target, mode }) {
     );
   }
 
-  console.log(`==> ℹ️  Creating webpack "${target}" config in "${mode}" mode`);
+  if (!json) {
+    // Our bundle is outputing json for bundle analysis, therefore we don't
+    // want to do this console output as it will interfere with the json output.
+    //
+    // You can run a bundle analysis by executing the following:
+    //
+    // $(npm bin)/webpack \
+    //   --env.mode production \
+    //   --config webpack.client.config.js \
+    //   --json \
+    //   > build/client/analysis.json
+    //
+    // And then upload the build/client/analysis.json to http://webpack.github.io/analyse/
+    // This allows you to analyse your webpack bundle to make sure it is
+    // optimal.
+    console.log(`==> ℹ️  Creating webpack "${target}" config in "${mode}" mode`);
+  }
 
   const isDev = mode === 'development';
   const isProd = mode === 'production';
@@ -153,7 +169,11 @@ function webpackConfigFactory({ target, mode }) {
     },
     resolve: {
       // These extensions are tried when resolving a file.
-      extensions: ['.js', '.json'],
+      extensions: [
+        '.js',
+        '.jsx',
+        '.json',
+      ],
       // We alias out our react dependencies and replace them with the
       // lightweight preact library.
       // @see https://github.com/developit/preact-compat
@@ -246,7 +266,7 @@ function webpackConfigFactory({ target, mode }) {
       loaders: [
         // Javascript
         {
-          test: /\.js$/,
+          test: /\.jsx?$/,
           loader: 'babel-loader',
           exclude: [/node_modules/, path.resolve(__dirname, './build')],
           query: merge(

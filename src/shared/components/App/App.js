@@ -9,7 +9,10 @@ function App({ children }) {
     <div style={{ padding: '10px' }}>
       <div style={{ textAlign: 'center' }}>
         <h1>React, Universally</h1>
-        <strong>A mildly opinionated ultra low dependency universal react boilerplate.</strong>
+        <strong>
+          An ultra low dependency node v6 universal react boilerplate with
+          an amazing dev experience.
+        </strong>
       </div>
       <div>
         <ul>
