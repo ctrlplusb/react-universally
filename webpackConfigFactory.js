@@ -117,7 +117,6 @@ function webpackConfigFactory({ target, mode }) {
     entry: merge(
       {
         main: removeEmpty([
-          ifDevClient('react-hot-loader/patch'),
           ifDevClient(`webpack-hot-middleware/client?reload=true&path=http://localhost:${process.env.CLIENT_DEVSERVER_PORT}/__webpack_hmr`),
           path.resolve(__dirname, `./src/${target}/index.js`),
         ]),
@@ -159,7 +158,7 @@ function webpackConfigFactory({ target, mode }) {
       // lightweight preact library.
       // @see https://github.com/developit/preact-compat
       alias: {
-        'react': 'preact-compat',
+        react: 'preact-compat',
         'react-dom': 'preact-compat',
         'react-dom/server': 'preact-compat',
       },
@@ -240,7 +239,7 @@ function webpackConfigFactory({ target, mode }) {
       ifProdClient(
         // This is a production client so we will extract our CSS into
         // CSS files.
-        new ExtractTextPlugin('[name]-[chunkhash].css', { allChunks: true })
+        new ExtractTextPlugin({ filename: '[name]-[chunkhash].css', allChunks: true })
       ),
     ]),
     module: {
@@ -251,13 +250,6 @@ function webpackConfigFactory({ target, mode }) {
           loader: 'babel-loader',
           exclude: [/node_modules/, path.resolve(__dirname, './build')],
           query: merge(
-            {
-              env: {
-                development: {
-                  plugins: ['react-hot-loader/babel'],
-                },
-              },
-            },
             ifServer({
               // We are running a node 6 server which has support for almost
               // all of the ES2015 syntax, therefore we only transpile JSX.
@@ -298,7 +290,10 @@ function webpackConfigFactory({ target, mode }) {
           // will extract our CSS into CSS files.  The plugin needs to be
           // registered within the plugins section too.
           ifProdClient({
-            loader: ExtractTextPlugin.extract('style-loader', 'css-loader'),
+            loader: ExtractTextPlugin.extract({
+              notExtractLoader: 'style-loader',
+              loader: 'css-loader',
+            }),
           }),
           // For a development client we will use a straight style & css loader
           // along with source maps.  This combo gives us a better development
