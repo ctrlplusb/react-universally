@@ -47,7 +47,7 @@
     "babel-core": "6.11.4",
     "babel-eslint": "6.1.2",
     "babel-loader": "6.2.4",
-    "babel-preset-es2015-webpack": "6.4.1",
+    "babel-preset-es2015-webpack": "6.4.2",
     "babel-preset-react": "6.11.1",
     "chokidar": "1.6.0",
     "css-loader": "0.23.1",
@@ -65,11 +65,11 @@
     "normalize.css": "4.2.0",
     "path": "0.12.7",
     "react-hot-loader": "3.0.0-beta.2",
-    "rimraf": "2.5.3",
+    "rimraf": "2.5.4",
     "style-loader": "0.13.1",
     "webpack": "2.1.0-beta.19",
     "webpack-dev-middleware": "1.6.1",
     "webpack-hot-middleware": "2.12.1",
-    "webpack-node-externals": "1.2.0"
+    "webpack-node-externals": "1.3.0"
   }
 }
