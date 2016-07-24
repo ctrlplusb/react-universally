@@ -7,6 +7,7 @@
     "node": "~6.3.0"
   },
   "scripts": {
+    "lint": "eslint src",
     "clean": "rimraf build",
     "development": "node ./devServer",
     "build": "npm run clean && webpack --env.mode production --config webpack.client.config.js && webpack --env.mode production --config webpack.server.config.js",
@@ -54,7 +55,6 @@
     "dotenv": "2.0.0",
     "eslint": "3.1.1",
     "eslint-config-airbnb": "9.0.1",
-    "eslint-loader": "1.4.1",
     "eslint-plugin-import": "1.11.1",
     "eslint-plugin-jsx-a11y": "2.0.1",
     "eslint-plugin-react": "5.2.2",
