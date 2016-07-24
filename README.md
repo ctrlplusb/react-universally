@@ -27,7 +27,8 @@ This boilerplate contains an absolutely minimal set of dependencies in order to 
   - 🔨 `express` server with a basic security configuration.
   - 🔨 `react` as the view.
   - 🔨 `react-router` as the router, along with a dynamic routing configuration (i.e. you get code splitting based on your routes).
-  - 🔨 Very basic CSS support - it's up to you to extend it into CSS Modules, SASS, PostCSS, Aphrodite etc.
+  - 🖌 Very basic CSS support - it's up to you to extend it into CSS Modules, SASS, PostCSS, Aphrodite etc.
+  - 🏜 Image and Font support.
   - 🚀 Full ES2015 support, using `babel` to transpile where needed.
   - 📦 Bundling of both client and server using `webpack` v2.
   - ✂️ Client bundle is split by routes.
@@ -60,7 +61,7 @@ The application configuration is supported by the `dotenv` module and it require
 
 ### [`react-universally-skinny`](https://github.com/ctrlplusb/react-universally-skinny)
 
-When size matters.  A lightweight alternative to `react-universally`.  Provides over 60% bundle output savings!
+When size matters.  A lightweight alternative to `react-universally`.  Provides over ___60% bundle output savings from 60kb to 20kb___!
 
 ### [`advanced-boilerplate`](https://github.com/sebastian-software/advanced-boilerplate)
 
@@ -154,6 +155,10 @@ Executes the server.  It expects you to have already built the bundles either vi
 ### `npm run clean`
 
 Deletes any build output that would have originated from the other commands.
+
+### `npm run lint`
+
+Executes `esling` (using the Airbnb config) against the src folder. Alternatively you could look to install the `eslint-loader` and integrate it into the `webpack` bundle process.
 
 ## Troubleshooting ##
 
