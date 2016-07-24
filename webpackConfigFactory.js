@@ -288,6 +288,17 @@ function webpackConfigFactory({ target, mode }, { json }) {
           loader: 'json-loader',
         },
 
+        // Images and Fonts
+        {
+          test: /\.(jpg|jpeg|png|gif|eot|svg|ttf|woff|woff2)$/,
+          loader: 'url-loader',
+          query: {
+            // Any file with a byte smaller than this will be "inlined" via
+            // a base64 representation.
+            limit: 10000,
+          },
+        },
+
         // CSS
         merge(
           { test: /\.css$/ },

@@ -1,5 +1,6 @@
 import 'normalize.css/normalize.css';
 import './globals.css';
+import logo from './logo.png';
 
 import React, { PropTypes } from 'react';
 import Link from 'react-router/lib/Link';
@@ -8,6 +9,7 @@ function App({ children }) {
   return (
     <div style={{ padding: '10px' }}>
       <div style={{ textAlign: 'center' }}>
+        <img src={logo} alt="Logo" style={{ width: '100px' }} />
         <h1>React, Universally</h1>
         <strong>
           An ultra low dependency node v6 universal react boilerplate with
