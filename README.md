@@ -162,6 +162,34 @@ Executes `esling` (using the Airbnb config) against the src folder. Alternativel
 
 ## Troubleshooting ##
 
+___Q:___ __My dev server is failing and I can't figure out why.__
+
+If you have recently added a library that depends on a webpack loader processing it.  For example a library that includes some sass/css (like `react-toolbox`) then you need to make sure that you add it to the server workaround within the `externals` section of the `webpackConfigFactory`.  For example:
+
+```
+// Anything listed in externals will not be included in our bundle.
+externals: removeEmpty([
+  // We don't want our node_modules to be bundled with our server package,
+  // prefering them to be resolved via native node module system.  Therefore
+  // we use the `webpack-node-externals` library to help us generate an
+  // externals config that will ignore all node_modules.
+  ifServer(nodeExternals({
+    // Okay, this is slightly hacky. There are some libraries we want/need
+    // webpack to process, therefore we lie to the 'webpack-node-externals'
+    // and list these as binaries which will make sure they don't get
+    // added to the externals list.
+    // If you have a library dependency that depends on a webpack loader
+    // then you will need to add it to this list.
+    binaryDirs: [
+      // We want 'normalize.css' to be processed by our css loader.
+      'normalize.css',
+      // React toolbox includes css that needs to be processed by our css loader.
+      'react-toolbox',
+    ],
+  })),
+]),
+```
+
 ___Q:___ __I see `react-router` warnings during hot reloading.__
 
 For example:
@@ -172,6 +200,40 @@ Warning: [react-router] You cannot change <Router routes>;
 ``` 
 
 Fret not! This is a known issue when using React Hot Loader 3 alongside React Router.  It is being looked in to.  Everything still works, unfortunately you just get a few warnings alongside your changes.  They are harmless though, promise. :)
+
+___Q:___ __I see `HMR` warnings after live updating one of my routes.__
+
+For example:
+
+```
+[HMR] unexpected require(95) from disposed module 60
+```
+
+Unfortunately webpack struggles with asynchronous `Route`s.  We had to provide a workaround to handle this case.  These warning messages still appear, however, they are harmless.
+
+___Q:___ __My component is not reloading after making a change to it__
+
+Is it contained within a dynamically resolved route?  Please make sure that you have updated the workaround section within the routes configuration to include the respective component that would be resolved.
+
+For example:
+
+```
+if (process.env.NODE_ENV === 'development' && module.hot) {
+  // HMR falls over when a Route uses a dynamic component resolution
+  // property (i.e. getComponent or getComponents).  As a workaround for any
+  // of your components that are resolved dynamically please require them below.
+  ...
+  require('../components/MyNewRoute'); // eslint-disable-line global-require
+}
+``` 
+
+You can find more info on HMR issues [here](https://github.com/gaearon/react-hot-boilerplate/pull/61#issuecomment-218835358). 
+
+__Q:__ __I get checksum warning errors after receiving content from a server rendered request__
+
+I have experienced some cases of this myself.  The below stackoverflow post talks about a strange case where you are required to surround the server rendered content with an additional `div`.  At the moment this boilerplate doesn't seem to require it, but I have extended versions of this boilerplate where all of a sudden I had to do this.  It is worth knowing about.
+
+[Here is the post.](https://github.com/ctrlplusb/react-universally/issues/34)
 
 ## References ##
 
