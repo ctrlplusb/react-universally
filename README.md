@@ -233,7 +233,7 @@ __Q:__ __I get checksum warning errors after receiving content from a server ren
 
 I have experienced some cases of this myself.  The below stackoverflow post talks about a strange case where you are required to surround the server rendered content with an additional `div`.  At the moment this boilerplate doesn't seem to require it, but I have extended versions of this boilerplate where all of a sudden I had to do this.  It is worth knowing about.
 
-[Here is the post.](https://github.com/ctrlplusb/react-universally/issues/34)
+[Here is the post.](http://stackoverflow.com/questions/33521047/warning-react-attempted-to-reuse-markup-in-a-container-but-the-checksum-was-inv)
 
 ## References ##
 
