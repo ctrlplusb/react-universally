@@ -53,7 +53,7 @@
     "chokidar": "1.6.0",
     "css-loader": "0.23.1",
     "dotenv": "2.0.0",
-    "eslint": "3.1.1",
+    "eslint": "3.2.0",
     "eslint-config-airbnb": "9.0.1",
     "eslint-plugin-import": "1.12.0",
     "eslint-plugin-jsx-a11y": "2.0.1",
