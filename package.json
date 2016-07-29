@@ -34,7 +34,7 @@
   "dependencies": {
     "compression": "1.6.2",
     "express": "4.14.0",
-    "helmet": "2.1.1",
+    "helmet": "2.1.2",
     "hpp": "0.2.1",
     "react": "15.2.1",
     "react-dom": "15.2.1",
