@@ -4,7 +4,7 @@
   "description": "An ultra low dependency node v6 universal react boilerplate with an amazing dev experience.",
   "main": "build/server/main.js",
   "engines": {
-    "node": "~6.3.0"
+    "node": "~6.3.1"
   },
   "scripts": {
     "lint": "eslint src",
