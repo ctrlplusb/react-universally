@@ -3,6 +3,14 @@ import Route from 'react-router/lib/Route';
 import IndexRoute from 'react-router/lib/IndexRoute';
 import App from '../components/App';
 
+if (process.env.NODE_ENV === 'development' && module.hot) {
+  // HMR falls over when a Route uses a dynamic component resolution
+  // property (i.e. getComponent or getComponents).  As a workaround for any
+  // of your components that are resolved dynamically please require them below.
+  require('../components/Home'); // eslint-disable-line global-require
+  require('../components/About'); // eslint-disable-line global-require
+}
+
 function handleError(err) {
   // TODO: Error handling, do we return an Error component here?
   console.log('==> Error occurred loading dynamic route'); // eslint-disable-line no-console
