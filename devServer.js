@@ -41,16 +41,25 @@ class ListenerManager {
     });
   }
 
-  dispose() {
-    return new Promise(resolve => {
-      // First we destroy any connections.
-      Object.keys(this.connectionMap).forEach((connectionKey) => {
-        this.connectionMap[connectionKey].destroy();
-      });
+  killAllConnections() {
+    Object.keys(this.connectionMap).forEach((connectionKey) => {
+      this.connectionMap[connectionKey].destroy();
+    });
+  }
 
-      // Then we close the listener.
+  dispose(force = false) {
+    return new Promise(resolve => {
+      if (force) {
+        // Forcefully close any existing connections.
+        this.killAllConnections();
+      }
+
+      // Close the listener.
       if (this.listener) {
         this.listener.close(() => {
+          // Ensure no straggling connections are left over.
+          this.killAllConnections();
+
           resolve();
         });
       } else {
@@ -72,7 +81,8 @@ class HotServer {
     try {
       // The server bundle  will automatically start the web server just by
       // requiring it. It returns the http listener too.
-      this.listenerManager = new ListenerManager(require(compiledOutputPath).default);
+      const listener = require(compiledOutputPath).default;
+      this.listenerManager = new ListenerManager(listener);
 
       const url = `http://localhost:${process.env.SERVER_PORT}`;
 
@@ -90,10 +100,10 @@ class HotServer {
     }
   }
 
-  dispose() {
-    return Promise.all([
-      this.listenerManager ? this.listenerManager.dispose() : undefined,
-    ]);
+  dispose(force = false) {
+    return this.listenerManager
+      ? this.listenerManager.dispose(force)
+      : Promise.resolve();
   }
 }
 
@@ -123,12 +133,12 @@ class HotClient {
     });
   }
 
-  dispose() {
+  dispose(force = false) {
     this.webpackDevMiddleware.close();
 
-    return Promise.all([
-      this.listenerManager ? this.listenerManager.dispose() : undefined,
-    ]);
+    return this.listenerManager
+      ? this.listenerManager.dispose(force)
+      : Promise.resolve();
   }
 }
 
@@ -165,6 +175,19 @@ class HotServers {
     this._configureHotServer();
   }
 
+
+  dispose() {
+    // We want to forcefully close our servers (passing true) which will hard
+    // kill any existing connections.  We don't care about them running as we
+    // need to restart both the client and server bundles.
+    const safeDisposeClient = () =>
+      (this.clientBundle ? this.clientBundle.dispose(true) : Promise.resolve());
+    const safeDisposeServer = () =>
+      (this.serverBundle ? this.serverBundle.dispose(true) : Promise.resolve());
+
+    return safeDisposeClient().then(safeDisposeServer);
+  }
+
   restart() {
     const clearWebpackConfigsCache = () => {
       Object.keys(require.cache).forEach(modulePath => {
@@ -174,10 +197,10 @@ class HotServers {
       });
     };
 
-    Promise.all([
-      this.serverBundle ? this.serverBundle.dispose() : undefined,
-      this.clientBundle ? this.clientBundle.dispose() : undefined,
-    ]).then(clearWebpackConfigsCache).then(this.start, err => console.log(err));
+    this.dispose()
+      .then(clearWebpackConfigsCache)
+      .then(this.start, err => console.log(err))
+      .catch(err => console.log(err));
   }
 
   _configureHotClient() {
@@ -264,7 +287,16 @@ const watcher = chokidar.watch(
   path.resolve(__dirname, './webpackConfigFactory.js')
 );
 watcher.on('ready', () => {
-  watcher.on('change', hotServers.restart);
+  watcher.on('change', () => {
+    createNotification({
+      title: 'webpack',
+      message: '❗️  Webpack config changed. Full restart occurring..',
+    });
+    hotServers.restart();
+  });
 });
 
 hotServers.start();
+
+// If we receive a kill cmd then we will first try to dispose our listeners.
+process.on('SIGTERM', () => hotServers.dispose().then(() => process.exit(0)));
