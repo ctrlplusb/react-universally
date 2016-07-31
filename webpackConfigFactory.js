@@ -96,15 +96,16 @@ function webpackConfigFactory({ target, mode }, { json }) {
       // we use the `webpack-node-externals` library to help us generate an
       // externals config that will ignore all node_modules.
       ifServer(nodeExternals({
-        // Okay, this is slightly hacky. There are some libraries we want/need
-        // webpack to process, therefore we lie to the 'webpack-node-externals'
-        // and list these as binaries which will make sure they don't get
-        // added to the externals list.
-        // If you have a library dependency that depends on a webpack loader
-        // then you will need to add it to this list.
-        binaryDirs: [
-          // We want 'normalize.css' to be processed by our css loader.
-          'normalize.css',
+        // NOTE: !!!
+        // However the node_modules may contain files that will rely on our
+        // webpack loaders in order to be used/resolved, for example CSS or
+        // SASS. For these cases please make sure that the file extensions
+        // are added to the below list. We have added the most common formats.
+        whitelist: [
+          /\.(eot|woff|woff2|ttf|otf)$/,
+          /\.(svg|png|jpg|jpeg|gif)$/,
+          /\.(mp4|mp3|ogg|swf|webp)$/,
+          /\.(css|scss|sass|sss|less)$/,
         ],
       })),
     ]),
@@ -290,7 +291,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
 
         // Images and Fonts
         {
-          test: /\.(jpg|jpeg|png|gif|eot|svg|ttf|woff|woff2)$/,
+          test: /\.(jpg|jpeg|png|gif|eot|svg|ttf|woff|woff2|otf)$/,
           loader: 'url-loader',
           query: {
             // Any file with a byte smaller than this will be "inlined" via

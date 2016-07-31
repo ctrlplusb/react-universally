@@ -162,9 +162,9 @@ Executes `esling` (using the Airbnb config) against the src folder. Alternativel
 
 ## Troubleshooting ##
 
-___Q:___ __My dev server is failing and I can't figure out why.__
+___Q:___ __My server bundle fails to execute after installing a new library.__
 
-If you have recently added a library that depends on a webpack loader processing it.  For example a library that includes some sass/css (like `react-toolbox`) then you need to make sure that you add it to the server workaround within the `externals` section of the `webpackConfigFactory`.  For example:
+This may occur if the library you added contains a file format that depends on one of your webpack loaders to process it (e.g. `react-toolbox` contains sass/css).  For these cases you need to ensure that you add the file types to the whitelist of the `externals` section in the `webpackConfigFactory`.  For example:
 
 ```
 // Anything listed in externals will not be included in our bundle.
@@ -174,21 +174,22 @@ externals: removeEmpty([
   // we use the `webpack-node-externals` library to help us generate an
   // externals config that will ignore all node_modules.
   ifServer(nodeExternals({
-    // Okay, this is slightly hacky. There are some libraries we want/need
-    // webpack to process, therefore we lie to the 'webpack-node-externals'
-    // and list these as binaries which will make sure they don't get
-    // added to the externals list.
-    // If you have a library dependency that depends on a webpack loader
-    // then you will need to add it to this list.
-    binaryDirs: [
-      // We want 'normalize.css' to be processed by our css loader.
-      'normalize.css',
-      // React toolbox includes css that needs to be processed by our css loader.
-      'react-toolbox',
+    // NOTE: !!!
+    // However the node_modules may contain files that will rely on our
+    // webpack loaders in order to be used/resolved, for example CSS or
+    // SASS. For these cases please make sure that the file extensions
+    // are added to the below list. We have added the most common formats.
+    whitelist: [
+      /\.(eot|woff|woff2|ttf|otf)$/,
+      /\.(svg|png|jpg|jpeg|gif)$/,
+      /\.(mp4|mp3|ogg|swf|webp)$/,
+      /\.(css|scss|sass|sss|less)$/,
     ],
   })),
 ]),
 ```
+
+As you can see above we have already added the most common formats, so you are unlikely to hit this issue, however, it is good to be aware of.
 
 ___Q:___ __I see `react-router` warnings during hot reloading.__
 
