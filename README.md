@@ -191,6 +191,24 @@ externals: removeEmpty([
 
 As you can see above we have already added the most common formats, so you are unlikely to hit this issue, however, it is good to be aware of.
 
+___Q:___ __My component is not reloading after making a change to it__
+
+Is it contained within a dynamically resolved route?  Please make sure that you have updated the workaround section within the routes configuration to include the respective component that would be resolved.
+
+For example:
+
+```
+if (process.env.NODE_ENV === 'development' && module.hot) {
+  // HMR falls over when a Route uses a dynamic component resolution
+  // property (i.e. getComponent or getComponents).  As a workaround for any
+  // of your components that are resolved dynamically please require them below.
+  ...
+  require('../components/MyNewRoute'); // eslint-disable-line global-require
+}
+``` 
+
+You can find more info on HMR issues [here](https://github.com/gaearon/react-hot-boilerplate/pull/61#issuecomment-218835358). 
+
 ___Q:___ __I see `react-router` warnings during hot reloading.__
 
 For example:
@@ -211,24 +229,6 @@ For example:
 ```
 
 Unfortunately webpack struggles with asynchronous `Route`s.  We had to provide a workaround to handle this case.  These warning messages still appear, however, they are harmless.
-
-___Q:___ __My component is not reloading after making a change to it__
-
-Is it contained within a dynamically resolved route?  Please make sure that you have updated the workaround section within the routes configuration to include the respective component that would be resolved.
-
-For example:
-
-```
-if (process.env.NODE_ENV === 'development' && module.hot) {
-  // HMR falls over when a Route uses a dynamic component resolution
-  // property (i.e. getComponent or getComponents).  As a workaround for any
-  // of your components that are resolved dynamically please require them below.
-  ...
-  require('../components/MyNewRoute'); // eslint-disable-line global-require
-}
-``` 
-
-You can find more info on HMR issues [here](https://github.com/gaearon/react-hot-boilerplate/pull/61#issuecomment-218835358). 
 
 __Q:__ __I get checksum warning errors after receiving content from a server rendered request__
 
