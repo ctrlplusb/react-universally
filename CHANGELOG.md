@@ -2,15 +2,27 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.2.2] - 2016-08-03
+
+### Changed
+
+Updated dependencies.
+
+Fixed dependencies - moving required devDependencies into dependencies.
+
+Fixed project to match latest eslint configuration.
+
+Disabled the eslint rule required all files containing JSX to have a .jsx file extension.
+
 ## [1.2.1] - 2016-08-01
 
 No Changes.  Version bump to fix npm documentation.
 
 ## [1.2.0] - 2016-08-01
 
-## Changed
+### Changed
 
-The devServer is far more robust, with webpack changes or process term signals resulting in any existing conenctions being forcefully disposed, whilst if only the server/client bundles get recompiled then existing connections are allowed to end.  This results in a much nice dev experience.
+The devServer is far more robust, with webpack changes or process term signals resulting in any existing connections being forcefully disposed, whilst if only the server/client bundles get recompiled then existing connections are allowed to end.  This results in a much nice dev experience.
 
 Simplified the externals configuration for the server, making it that we don't rely on manual intervention on a per library install basis.  Thanks @swernerx!!
 
@@ -51,7 +63,7 @@ The client side router configuration now handles redirect and "no renderProps" c
 
 ### Changed
 
-Updated the following dependecies:
+Updated the following dependencies:
  - react-router
  - eslint
  - eslint-plugin-jsx-a11y
