@@ -4,7 +4,10 @@ function About() {
   return (
     <div style={{ textAlign: 'center' }}>
       Produced with ❤️
-      by <a href="https://twitter.com/controlplusb" target="_blank">Sean Matheson</a>
+      by
+      <a href="https://twitter.com/controlplusb" target="_blank" rel="noopener noreferrer">
+        Sean Matheson
+      </a>
     </div>
   );
 }

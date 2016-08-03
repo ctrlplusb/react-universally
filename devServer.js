@@ -1,4 +1,4 @@
-/* eslint-disable no-console,global-require,no-underscore-dangle */
+/* eslint-disable no-console,global-require,no-underscore-dangle,import/no-extraneous-dependencies,max-len */
 
 const path = require('path');
 const notifier = require('node-notifier');
@@ -9,7 +9,7 @@ const createWebpackMiddleware = require('webpack-dev-middleware');
 const createWebpackHotMiddleware = require('webpack-hot-middleware');
 
 function createNotification(options = {}) {
-  const title = !!options.title
+  const title = options.title
     ? `🔥  ${options.title.toUpperCase()}`
     : undefined;
 
@@ -159,8 +159,11 @@ class HotServers {
   start() {
     try {
       const clientConfig = require('./webpack.client.config')({ mode: 'development' });
+
       this.clientCompiler = webpack(clientConfig);
+
       const serverConfig = require('./webpack.server.config')({ mode: 'development' });
+
       this.serverCompiler = webpack(serverConfig);
     } catch (err) {
       createNotification({
