@@ -1,3 +1,4 @@
+/* @flow */
 
 import { renderToString } from 'react-dom/server';
 import serialize from 'serialize-javascript';
@@ -38,7 +39,7 @@ const javascriptScripts = javascriptImports(javascript);
  *
  * @return The full HTML page in the form of a React element.
  */
-function render(rootReactElement, initialState) {
+function render(rootReactElement : ?$React$Element, initialState : ?Object) {
   const reactRenderString = rootReactElement
     ? renderToString(rootReactElement)
     : null;
@@ -54,22 +55,22 @@ function render(rootReactElement, initialState) {
     : null;
 
   return `<!DOCTYPE html>
-    <html ${helmet && helmet.htmlAttributes.toString()}>
+    <html ${helmet ? helmet.htmlAttributes.toString() : ''}>
       <head>
         <meta charSet='utf-8' />
         <meta httpEquiv='X-UA-Compatible' content='IE=edge' />
         <meta httpEquiv='Content-Language' content='en' />
         <link rel='shortcut icon' type='image/x-icon' href='/public/favicon.ico' />
 
-        ${helmet && helmet.title.toString()}
-        ${helmet && helmet.meta.toString()}
-        ${helmet && helmet.link.toString()}
-        ${helmet && helmet.style.toString()}
+        ${helmet ? helmet.title.toString() : ''}
+        ${helmet ? helmet.meta.toString() : ''}
+        ${helmet ? helmet.link.toString() : ''}
+        ${helmet ? helmet.style.toString() : ''}
 
         ${cssLinks}
       </head>
       <body>
-        <div id='app'>${reactRenderString}</div>
+        <div id='app'>${reactRenderString || ''}</div>
 
         <script type='text/javascript'>${
           initialState
@@ -77,7 +78,7 @@ function render(rootReactElement, initialState) {
             : ''
         }</script>
 
-        ${helmet && helmet.script.toString()}
+        ${helmet ? helmet.script.toString() : ''}
         ${javascriptScripts}
       </body>
     </html>`;

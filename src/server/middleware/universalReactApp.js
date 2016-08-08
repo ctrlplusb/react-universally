@@ -1,3 +1,6 @@
+/* @flow */
+
+import type { Middleware } from 'express';
 import React from 'react';
 import RouterContext from 'react-router/lib/RouterContext';
 import createMemoryHistory from 'react-router/lib/createMemoryHistory';
@@ -43,4 +46,4 @@ function universalReactAppMiddleware(request, response) {
   });
 }
 
-export default universalReactAppMiddleware;
+export default (universalReactAppMiddleware : Middleware);

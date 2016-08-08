@@ -1,0 +1,58 @@
+[include]
+
+[ignore]
+
+# Including these files causes issues.
+.*/node_modules/fbjs/.*
+
+[libs]
+
+# Official "flow-typed" repository definitions.
+flow-typed/npm
+
+# Custom definitions.
+flow/definitions/
+
+# The following definitions are bundled with flow:
+# React: https://github.com/facebook/flow/blob/master/lib/react.js
+# Javascript: https://github.com/facebook/flow/blob/master/lib/core.js
+# Node: https://github.com/facebook/flow/blob/master/lib/node.js
+# DOM: https://github.com/facebook/flow/blob/master/lib/dom.js
+# BOM: https://github.com/facebook/flow/blob/master/lib/bom.js
+# CSSOM: https://github.com/facebook/flow/blob/master/lib/cssom.js
+# IndexDB: https://github.com/facebook/flow/blob/master/lib/indexeddb.js
+
+[options]
+
+esproposal.class_static_fields=enable
+esproposal.class_instance_fields=enable
+
+# This is so that we can import static files in our webpack supported components
+# and not have flow throw a hissy fit.
+module.name_mapper.extension='css' -> '<PROJECT_ROOT>/flow/stubs/WebpackAsset.js.flow'
+module.name_mapper.extension='eot' -> '<PROJECT_ROOT>/flow/stubs/WebpackAsset.js.flow'
+module.name_mapper.extension='gif' -> '<PROJECT_ROOT>/flow/stubs/WebpackAsset.js.flow'
+module.name_mapper.extension='jpg' -> '<PROJECT_ROOT>/flow/stubs/WebpackAsset.js.flow'
+module.name_mapper.extension='jpeg' -> '<PROJECT_ROOT>/flow/stubs/WebpackAsset.js.flow'
+module.name_mapper.extension='less' -> '<PROJECT_ROOT>/flow/stubs/WebpackAsset.js.flow'
+module.name_mapper.extension='otf' -> '<PROJECT_ROOT>/flow/stubs/WebpackAsset.js.flow'
+module.name_mapper.extension='mp3' -> '<PROJECT_ROOT>/flow/stubs/WebpackAsset.js.flow'
+module.name_mapper.extension='mp4' -> '<PROJECT_ROOT>/flow/stubs/WebpackAsset.js.flow'
+module.name_mapper.extension='ogg' -> '<PROJECT_ROOT>/flow/stubs/WebpackAsset.js.flow'
+module.name_mapper.extension='png' -> '<PROJECT_ROOT>/flow/stubs/WebpackAsset.js.flow'
+module.name_mapper.extension='sass' -> '<PROJECT_ROOT>/flow/stubs/WebpackAsset.js.flow'
+module.name_mapper.extension='scss' -> '<PROJECT_ROOT>/flow/stubs/WebpackAsset.js.flow'
+module.name_mapper.extension='sss' -> '<PROJECT_ROOT>/flow/stubs/WebpackAsset.js.flow'
+module.name_mapper.extension='svg' -> '<PROJECT_ROOT>/flow/stubs/WebpackAsset.js.flow'
+module.name_mapper.extension='swf' -> '<PROJECT_ROOT>/flow/stubs/WebpackAsset.js.flow'
+module.name_mapper.extension='ttf' -> '<PROJECT_ROOT>/flow/stubs/WebpackAsset.js.flow'
+module.name_mapper.extension='webp' -> '<PROJECT_ROOT>/flow/stubs/WebpackAsset.js.flow'
+module.name_mapper.extension='woff' -> '<PROJECT_ROOT>/flow/stubs/WebpackAsset.js.flow'
+module.name_mapper.extension='woff2' -> '<PROJECT_ROOT>/flow/stubs/WebpackAsset.js.flow'
+
+suppress_type=$FlowIssue
+suppress_type=$FlowFixMe
+suppress_type=$FixMe
+
+[version]
+0.30.0

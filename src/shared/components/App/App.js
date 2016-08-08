@@ -1,3 +1,5 @@
+/* @flow */
+
 import React, { PropTypes } from 'react';
 import Link from 'react-router/lib/Link';
 import Helmet from 'react-helmet';
@@ -9,7 +11,9 @@ import logo from './logo.png';
 const websiteDescription =
   'An ultra minimal node v6 universal react boilerplate with a great dev experience.';
 
-function App({ children }) {
+type Props = { children : $React$Children };
+
+function App({ children } : Props) {
   return (
     <div style={{ padding: '10px' }}>
       {/*
