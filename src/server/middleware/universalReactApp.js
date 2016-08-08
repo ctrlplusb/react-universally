@@ -35,7 +35,7 @@ function universalReactAppMiddleware(request, response) {
       // your "not found" component or route respectively, and send a 404 as
       // below, if you're using a catch-all route.
 
-      const html = render({ rootElement: <RouterContext {...renderProps} /> });
+      const html = render(<RouterContext {...renderProps} />);
       response.status(200).send(html);
     } else {
       response.status(404).send('Not found');
