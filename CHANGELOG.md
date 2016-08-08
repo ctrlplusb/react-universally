@@ -2,6 +2,27 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.0.0] - 2016-08-08
+
+### Breaking Changes
+
+The server side render method has been massively simplified as we are now using
+react-helmet to control our page header from our components. Closes #11
+
+### Added
+
+A 'public' static files endpoint, with a favicon implementation. Closes #14
+
+### Changed
+
+The server render helper now resolves the 'assets.json' via the webpack configuration for the client bundle.
+
+### Fixed
+
+Small issue with the dev server not hot reloading when just the server code changes.
+
+The projects dependencies structure so that the "dependecies" section contains ALL libraries that are required for the server runtime.  The "devDependencies" section contains the libraries required for building the project.  Fixes #27
+
 ## [1.2.2] - 2016-08-03
 
 ### Changed
