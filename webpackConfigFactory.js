@@ -275,9 +275,9 @@ function webpackConfigFactory({ target, mode }, { json }) {
               presets: [
                 // JSX
                 'react',
-                // Webpack 2 includes support for es2015 imports, therefore we used this
-                // modified preset.
-                'es2015-webpack',
+                // Webpack 2 includes support for es2015 imports, therefore we
+                // disable the modules processing.
+                ['es2015', { modules: false }],
               ],
             })
           ),
