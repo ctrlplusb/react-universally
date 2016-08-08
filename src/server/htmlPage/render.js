@@ -1,36 +1,36 @@
-import fs from 'fs';
-import path from 'path';
+
 import { renderToString } from 'react-dom/server';
-import createTemplate from './createTemplate';
-import clientConfigBuilder from '../../../webpack.client.config.js';
+import serialize from 'serialize-javascript';
+import clientBundleAssets from './clientBundleAssets';
 
-// We need to calculate the path to our "assets.json" file describing our
-// client webpack bundle, and then read & parse it into json.
-const webpackClientConfig = clientConfigBuilder({ mode: process.env.NODE_ENV });
-const ClientBundleAssets = JSON.parse(
-  fs.readFileSync(
-    path.resolve(webpackClientConfig.output.path, './assets.json'),
-    'utf8'
-  )
-);
+// :: [String] -> [String]
+function cssImports(css) {
+  return css
+    .map(cssPath =>
+      `<link href="${cssPath}" media="screen, projection" rel="stylesheet" type="text/css" />`
+    )
+    .join('\n');
+}
 
-// Convert the assets json it into an object that contains all the paths to our
-// javascript and css files.  Doing this is required as for production
-// configurations we add a hash to our filenames, therefore we won't know the
-// paths of the output by webpack unless we read them from the assets.json file.
-const chunks = Object.keys(ClientBundleAssets).map(key => ClientBundleAssets[key]);
-const assets = chunks.reduce((acc, chunk) => {
-  if (chunk.js) {
-    acc.javascript.push(chunk.js);
-  }
-  if (chunk.css) {
-    acc.css.push(chunk.css);
-  }
-  return acc;
-}, { javascript: [], css: [] });
+// :: [String] -> [String]
+function javascriptImports(javascript) {
+  return javascript
+    .map(scriptPath =>
+      `<script type="text/javascript" src="${scriptPath}"></script>`
+    )
+    .join('\n');
+}
 
-// We prepare a template using the asset data.
-const template = createTemplate(assets);
+// :: Object -> [String]
+function metaTags(meta) {
+  return Object.keys(meta).map(metaKey =>
+    `<meta name="${metaKey}" content="${meta[metaKey]}" />`
+  );
+}
+
+const { css, javascript } = clientBundleAssets;
+const cssLinks = cssImports(css);
+const javascriptScripts = javascriptImports(javascript);
 
 /**
  * Generates a full HTML page containing the render output of the given react
@@ -48,17 +48,42 @@ const template = createTemplate(assets);
  *
  * @return The full HTML page in the form of a React element.
  */
-function render({ rootElement, initialState, title, meta = {} } = {}) {
-  return template({
-    title: title || process.env.WEBSITE_TITLE,
-    meta: Object.assign(
-      {},
-      { description: process.env.WEBSITE_DESCRIPTION },
-      meta
-    ),
-    reactRootElement: rootElement ? renderToString(rootElement) : '',
-    initialState,
-  });
+function render({ rootElement, initialState, title, meta } = {}) {
+  return `<!DOCTYPE html>
+    <html lang='en'>
+      <head>
+        <meta charSet='utf-8' />
+        <meta httpEquiv='X-UA-Compatible' content='IE=edge' />
+        <meta httpEquiv='Content-Language' content='en' />
+
+        <title>${title || process.env.WEBSITE_TITLE}</title>
+
+        ${
+          metaTags(Object.assign(
+            {},
+            { description: process.env.WEBSITE_DESCRIPTION },
+            meta || {}
+          ))
+        }
+
+        ${cssLinks}
+      </head>
+      <body>
+        <div id='app'>${rootElement
+            ? renderToString(rootElement)
+            : ''
+        }</div>
+
+        <script type='text/javascript'>${
+          initialState
+            ? `window.APP_STATE=${serialize(initialState)};`
+            : ''
+        }</script>
+
+        <script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
+        ${javascriptScripts}
+      </body>
+    </html>`;
 }
 
 export default render;

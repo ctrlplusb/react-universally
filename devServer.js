@@ -227,11 +227,12 @@ class HotServers {
 
   _configureHotServer() {
     const compileHotServer = () => {
+      console.log('compiling hot server');
       const runCompiler = () => this.serverCompiler.run(() => undefined);
       // Shut down any existing running server if necessary before starting the
       // compile, else just compile.
       if (this.serverBundle) {
-        this.serverBundle.dispose().then(runCompiler);
+        this.serverBundle.dispose(true).then(runCompiler);
       } else {
         runCompiler();
       }
