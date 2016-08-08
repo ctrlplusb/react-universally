@@ -5,6 +5,7 @@ function About() {
     <div style={{ textAlign: 'center' }}>
       Produced with ❤️
       by
+      &nbsp;
       <a href="https://twitter.com/controlplusb" target="_blank" rel="noopener noreferrer">
         Sean Matheson
       </a>
