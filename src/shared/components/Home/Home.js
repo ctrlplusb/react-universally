@@ -7,7 +7,7 @@ function Home() {
         This boilerplate contains a super minimal project configuration and
         structure, providing you with everything you need to kick off your next
         universal react project. It focuses on the build and developer tools.
-        The actual react project architecture is all up to you. 
+        The actual react project architecture is all up to you.
       </p>
 
       <p>

@@ -1,10 +1,20 @@
+import fs from 'fs';
+import path from 'path';
 import { renderToString } from 'react-dom/server';
 import createTemplate from './createTemplate';
-// TODO: Import the webpack config and resolve the bundle assets location from it.
-import ClientBundleAssets from '../../../build/client/assets.json';
+import clientConfigBuilder from '../../../webpack.client.config.js';
 
-// This takes the assets.json file that was output by webpack for our client
-// bundle and converts it into an object that contains all the paths to our
+// We need to calculate the path to our "assets.json" file describing our
+// client webpack bundle, and then read & parse it into json.
+const webpackClientConfig = clientConfigBuilder({ mode: process.env.NODE_ENV });
+const ClientBundleAssets = JSON.parse(
+  fs.readFileSync(
+    path.resolve(webpackClientConfig.output.path, './assets.json'),
+    'utf8'
+  )
+);
+
+// Convert the assets json it into an object that contains all the paths to our
 // javascript and css files.  Doing this is required as for production
 // configurations we add a hash to our filenames, therefore we won't know the
 // paths of the output by webpack unless we read them from the assets.json file.
