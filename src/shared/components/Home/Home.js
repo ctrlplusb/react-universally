@@ -4,10 +4,10 @@ function Home() {
   return (
     <article>
       <p>
-        This boilerplate contains a super minimal set of dependencies in order
-        to get you up and running with a universal react project, whilst also
-        providing you with a great development experience that includes hot
-        reloading of the client and server code.
+        This boilerplate contains a super minimal project configuration and
+        structure, providing you with everything you need to kick off your next
+        universal react project. It focuses on the build and developer tools.
+        The actual react project architecture is all up to you. 
       </p>
 
       <p>

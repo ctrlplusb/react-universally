@@ -1,7 +1,7 @@
 <p align='center'>
   <h1 align='center'>React, Universally</h1>
   <p align='center'><img width='150' src='https://raw.githubusercontent.com/ctrlplusb/assets/master/logos/react-universally.png' /></p>
-  <p align='center'>An ultra low dependency node v6 universal react boilerplate with an amazing dev experience.</p>
+  <p align='center'>An ultra minimal node v6 universal react boilerplate with a great dev experience.</p>
 </p>
 
 ## TOC
@@ -11,14 +11,14 @@
  - [Overview](https://github.com/ctrlplusb/react-universally#overview)
  - [Extensions and Alternatives](https://github.com/ctrlplusb/react-universally#extensions-and-alternatives)
  - [Project Structure](https://github.com/ctrlplusb/react-universally#project-structure)
- - [Server Runtime Dependencies](https://github.com/ctrlplusb/react-universally#server-runtime-dependencies)
+ - [Project Dependecies](https://github.com/ctrlplusb/react-universally#project-dependencies)
  - [Deploy your very own Server Side Rendering React App in 5 easy steps](https://github.com/ctrlplusb/react-universally#deploy-your-very-own-server-side-rendering-react-app-in-5-easy-steps)
  - [npm script commands](https://github.com/ctrlplusb/react-universally#npm-script-commands)
  - [References](https://github.com/ctrlplusb/react-universally#references)
 
 ## About
 
-This boilerplate contains an absolutely minimal set of dependencies in order to get you up and running with a universal react project as quickly as possible. It provides you with a great development experience that includes hot reloading of everything. 
+This boilerplate contains a super minimal project configuration and structure, providing you with everything you need to kick off your next universal react project. It focuses on the build and developer tools. The actual react project architecture is all up to you. 
 
 ## Features
 
@@ -91,20 +91,11 @@ This is still in production, so it's not really worth looking at right now, but 
 |- webpackConfigFactory.js  // Webpack configuration builder 
 ```
 
-## Server Runtime Dependencies
+## Project Dependencies 
 
-Even though we are using webpack to support our universal application we keep the webpack runtime out of our production runtime environment.  Everything is prebundled in prep for production execution.  Therefore we only have the following runtime dependencies:
+The dependencies within `package.json` are structured so that the libraries required to transpile/bundle the source are contained within the `devDependencies` section, whilst the libraries required during the server runtime are contained within the `dependencies` section.
 
-  - `node` v6
-  - `compression` - Gzip compression support for express server responses.
-  - `express` - Web server.
-  - `helmet` - Provides a content security policy for express.
-  - `hpp` - Express middleware to protect against HTTP Parameter Pollution attacks.
-  - `react` - A declarative, efficient, and flexible JavaScript library for building user interfaces.
-  - `react-dom` - React support for the DOM.
-  - `react-router` - A complete routing library for React.
-  - `serialize-javascript` - A superset of JSON that includes regular expressions and functions.
-  - `source-map-support` - Adds source map support to node.js (for stack traces).
+You may notice that a few `webpack` libraries are contained within the `dependencies` section.  These are not needed to do any runtime `webpack` compile runs, instead they are included so that the runtime can require the `webpack` configuration and then use it to configure the static hosting paths for our webpack bundles.  This saves us having to do any duplicate configuration of the respective paths.
 
 ## Deploy your very own Server Side Rendering React App in 5 easy steps ##
 
@@ -161,6 +152,14 @@ Deletes any build output that would have originated from the other commands.
 Executes `esling` (using the Airbnb config) against the src folder. Alternatively you could look to install the `eslint-loader` and integrate it into the `webpack` bundle process.
 
 ## Troubleshooting ##
+
+___Q:___ __My project fails to build and execute when I deploy it to my host__
+
+The likely issue in this case, is that your hosting provider doesn't install the `devDependencies` by default.  The dependencies within `package.json` are structured so that the libraries required to transpile/bundle the source are contained within the `devDependencies` section, whilst the libraries required during the server runtime are contained within the `dependencies` section.
+You two options to fix this:
+
+ 1. Prebuild your project and then deploy it along with the build output.
+ 2. Change your host configuration so that it will install the `devDependencies` too.  In the case of Heroku for example see [here](https://devcenter.heroku.com/articles/nodejs-support#devdependencies).
 
 ___Q:___ __My server bundle fails to execute after installing a new library.__
 

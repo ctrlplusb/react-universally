@@ -43,7 +43,8 @@ app.use(compression());
 const webpackClientConfig = clientConfigBuilder({ mode: process.env.NODE_ENV });
 app.use(
   webpackClientConfig.output.publicPath,
-  express.static(webpackClientConfig.output.path));
+  express.static(webpackClientConfig.output.path)
+);
 
 // Bind our universal react app middleware as the handler for all get requests.
 app.get('*', universalReactAppMiddleware);

@@ -5,9 +5,9 @@ const webpack = require('webpack');
 const AssetsPlugin = require('assets-webpack-plugin');
 const nodeExternals = require('webpack-node-externals');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const dotenv = require('dotenv');
 
 // @see https://github.com/motdotla/dotenv
-const dotenv = require('dotenv');
 dotenv.config(process.env.NOW
   // This is to support deployment to the "now" host.  See the README for more info.
   ? { path: './.envnow', silent: true }
