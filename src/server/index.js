@@ -7,6 +7,7 @@ import express from 'express';
 import compression from 'compression';
 import hpp from 'hpp';
 import helmet from 'helmet';
+import path from 'path';
 import universalReactAppMiddleware from './middleware/universalReactApp';
 import clientConfigBuilder from '../../webpack.client.config.js';
 
@@ -44,6 +45,12 @@ const webpackClientConfig = clientConfigBuilder({ mode: process.env.NODE_ENV });
 app.use(
   webpackClientConfig.output.publicPath,
   express.static(webpackClientConfig.output.path)
+);
+
+// Configure static serving of our "public" static files.
+app.use(
+  '/public/',
+  express.static(path.resolve(__dirname, '../../public'))
 );
 
 // Bind our universal react app middleware as the handler for all get requests.
