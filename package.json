@@ -1,6 +1,6 @@
 {
   "name": "react-universally",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "A low dependency, node 6, webpack 2, universal react starter kit with a 🔥 dev experience.",
   "main": "build/server/main.js",
   "engines": {
