@@ -35,6 +35,7 @@ This boilerplate contains a super minimal project configuration and structure, p
   - 🚀 Full ES2015 support, using `babel` to transpile where needed.
   - 📦 Bundling of both client and server using `webpack` v2.
   - ✂️ Client bundle is split by routes.
+  - 🐘 Long term caching of the client bundle. Thanks to @mjackson for the inspiration from his super cool [`web-starter`](https://github.com/mjackson/web-starter) project.  Check it out!
   - 🍃 Tree-shaking, supported by `webpack`.  
   - 🎛 A development and optimized production configuration.
   - 🔧 Easy environment configuration via `dotenv` files.
