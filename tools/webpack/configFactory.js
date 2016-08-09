@@ -8,6 +8,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const dotenv = require('dotenv');
 const appRoot = require('app-root-path');
 const WebpackMd5Hash = require('webpack-md5-hash');
+const { removeEmpty, ifElse, merge } = require('../utils');
 
 const appRootPath = appRoot.toString();
 
@@ -18,26 +19,6 @@ dotenv.config(process.env.NOW
   // Standard .env loading.
   : { silent: true }
 );
-
-// :: [Any] -> [Any]
-function removeEmpty(x) {
-  return x.filter(y => !!y);
-}
-
-// :: bool -> (Any, Any) -> Any
-function ifElse(condition) {
-  return (then, or) => (condition ? then : or);
-}
-
-// :: ...Object -> Object
-function merge() {
-  const funcArgs = Array.prototype.slice.call(arguments); // eslint-disable-line prefer-rest-params
-
-  return Object.assign.apply(
-    null,
-    removeEmpty([{}].concat(funcArgs))
-  );
-}
 
 function webpackConfigFactory({ target, mode }, { json }) {
   if (!target || !~['client', 'server'].findIndex(valid => target === valid)) {
