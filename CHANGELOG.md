@@ -2,6 +2,28 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.1.0] - 2016-08-09
+
+### Adds
+
+Long-term caching support. Closes #58
+
+Base robots.txt file to the public assets.
+
+.ico to the static files supported file format lists in the webpack config factory.
+
+### Changes
+
+Pulled out utils from webpack configFactory.
+
+Moved favicon to be colocated with the htmlPage.
+
+The "public" folder is now routed to the HTTP root.
+
+### Fixed
+
+Fixed eslint rule on the configFactory.js
+
 ## [3.0.1] - 2016-08-09
 
 ### Changes
