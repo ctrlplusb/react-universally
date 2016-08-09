@@ -19,7 +19,7 @@
 
 ## About
 
-This boilerplate contains a super minimal project configuration and structure, providing you with everything you need to kick off your next universal react project. It focuses on the build and developer tools. The actual react project architecture is all up to you.
+This boilerplate contains a super minimal project configuration and structure, providing you with everything you need to kick off your next universal react project, whilst making your own project architecture decisions. We focus on the build and developer tools, whilst providing some of the "key" elements that we believe the average SSR react project would need.
 
 ## Features
 
