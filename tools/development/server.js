@@ -158,11 +158,11 @@ class HotServers {
 
   start() {
     try {
-      const clientConfig = require('./webpack.client.config')({ mode: 'development' });
+      const clientConfig = require('../webpack/client.config')({ mode: 'development' });
 
       this.clientCompiler = webpack(clientConfig);
 
-      const serverConfig = require('./webpack.server.config')({ mode: 'development' });
+      const serverConfig = require('../webpack/server.config')({ mode: 'development' });
 
       this.serverCompiler = webpack(serverConfig);
     } catch (err) {
@@ -270,7 +270,7 @@ class HotServers {
 
     // Now we will configure `chokidar` to watch our server specific source folder.
     // Any changes will cause a rebuild of the server bundle.
-    this.watcher = chokidar.watch([path.resolve(__dirname, './src/server')]);
+    this.watcher = chokidar.watch([path.resolve(__dirname, '../../src/server')]);
     this.watcher.on('ready', () => {
       this.watcher
         .on('add', compileHotServer)
@@ -287,7 +287,7 @@ const hotServers = new HotServers();
 // Any changes to our webpack config builder will cause us to restart our
 // hot servers.
 const watcher = chokidar.watch(
-  path.resolve(__dirname, './webpackConfigFactory.js')
+  path.resolve(__dirname, '../webpack/configFactory.js')
 );
 watcher.on('ready', () => {
   watcher.on('change', () => {

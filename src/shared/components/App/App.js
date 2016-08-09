@@ -9,7 +9,7 @@ import './globals.css';
 import logo from './logo.png';
 
 const websiteDescription =
-  'An ultra minimal node v6 universal react boilerplate with a great dev experience.';
+  'A low dependency, node 6, webpack 2, universal react starter kit with a 🔥 dev experience.';
 
 type Props = { children : $React$Children };
 
@@ -22,7 +22,7 @@ function App({ children } : Props) {
       */}
       <Helmet
         htmlAttributes={{ lang: 'en' }}
-        title="React Universally"
+        titleTemplate="React Universally - %s"
         defaultTitle="React Universally"
         meta={[
           { name: 'description', content: websiteDescription },

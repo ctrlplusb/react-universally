@@ -2,6 +2,18 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.0.0] - 2016-08-09
+
+### Breaking Changes
+
+Complete restructure to the development and build tooling.  All put into the "tools" directory now.
+
+Ripped out our runtime dependencies on webpack.  This was done by adding some new environment configuration variables and then combining them with the awesome 'app-root-path' library.
+
+### Changes
+
+Improved the react-helmet implementation example.
+
 ## [2.0.0] - 2016-08-08
 
 ### Breaking Changes
@@ -21,7 +33,7 @@ The server render helper now resolves the 'assets.json' via the webpack configur
 
 Small issue with the dev server not hot reloading when just the server code changes.
 
-The projects dependencies structure so that the "dependecies" section contains ALL libraries that are required for the server runtime.  The "devDependencies" section contains the libraries required for building the project.  Fixes #27
+The projects dependencies structure so that the "dependencies" section contains ALL libraries that are required for the server runtime.  The "devDependencies" section contains the libraries required for building the project.  Fixes #27
 
 ## [1.2.2] - 2016-08-03
 

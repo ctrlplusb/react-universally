@@ -1,10 +1,13 @@
 /* @flow */
 
 import React from 'react';
+import Helmet from 'react-helmet';
 
 function Home() {
   return (
     <article>
+      <Helmet title="Home" />
+
       <p>
         This boilerplate contains a super minimal project configuration and
         structure, providing you with everything you need to kick off your next

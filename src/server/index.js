@@ -10,8 +10,10 @@ import compression from 'compression';
 import hpp from 'hpp';
 import helmet from 'helmet';
 import path from 'path';
+import appRoot from 'app-root-path';
 import universalReactAppMiddleware from './middleware/universalReactApp';
-import clientConfigBuilder from '../../webpack.client.config.js';
+
+const appRootPath = appRoot.toString();
 
 // Create our express based server.
 const app = express();
@@ -43,17 +45,13 @@ app.use(helmet.noSniff());
 app.use(compression());
 
 // Configure static serving of our webpack bundled client files.
-const webpackClientConfig = clientConfigBuilder({ mode: process.env.NODE_ENV });
 app.use(
-  webpackClientConfig.output.publicPath,
-  express.static(webpackClientConfig.output.path)
+  process.env.CLIENT_BUNDLE_HTTP_PATH,
+  express.static(path.resolve(appRootPath, process.env.CLIENT_BUNDLE_OUTPUT_PATH))
 );
 
 // Configure static serving of our "public" static files.
-app.use(
-  '/public/',
-  express.static(path.resolve(__dirname, '../../public'))
-);
+app.use('/public/', express.static(path.resolve(appRootPath, './public')));
 
 // Bind our universal react app middleware as the handler for all get requests.
 app.get('*', universalReactAppMiddleware);
