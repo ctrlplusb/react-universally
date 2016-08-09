@@ -10,6 +10,7 @@ import helmet from 'helmet';
 import path from 'path';
 import appRoot from 'app-root-path';
 import universalReactAppMiddleware from './middleware/universalReactApp';
+import SERVER_CONFIG from './config';
 
 const appRootPath = appRoot.toString();
 
@@ -44,10 +45,10 @@ app.use(compression());
 
 // Configure static serving of our webpack bundled client files.
 app.use(
-  process.env.CLIENT_BUNDLE_HTTP_PATH,
+  SERVER_CONFIG.CLIENT_BUNDLE_HTTP_PATH,
   express.static(
-    path.resolve(appRootPath, process.env.CLIENT_BUNDLE_OUTPUT_PATH),
-    { maxAge: process.env.CLIENT_BUNDLE_CACHE_MAXAGE }
+    path.resolve(appRootPath, SERVER_CONFIG.CLIENT_BUNDLE_OUTPUT_PATH),
+    { maxAge: SERVER_CONFIG.CLIENT_BUNDLE_CACHE_MAXAGE }
   )
 );
 
@@ -58,11 +59,9 @@ app.use(express.static(path.resolve(appRootPath, './public')));
 app.get('*', universalReactAppMiddleware);
 
 // Create an http listener for our express app.
-const listener = app.listen(parseInt(process.env.SERVER_PORT, 10));
+const listener = app.listen(SERVER_CONFIG.SERVER_PORT);
 
-if (process.env.NODE_ENV === 'development') {
-  console.log(`==> 💚  HTTP Listener is running on port ${process.env.SERVER_PORT}`); // eslint-disable-line no-console,max-len
-}
+console.log(`==> 💚  HTTP Listener is running on port ${SERVER_CONFIG.SERVER_PORT}`); // eslint-disable-line no-console,max-len
 
 // We export the listener as it will be handy for our development hot reloader.
 export default listener;

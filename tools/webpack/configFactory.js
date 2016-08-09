@@ -184,7 +184,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
           // to the .env_example for a description of each key.
           SERVER_PORT: JSON.stringify(process.env.SERVER_PORT),
           CLIENT_DEVSERVER_PORT: JSON.stringify(process.env.CLIENT_DEVSERVER_PORT),
-          DISABLE_SSR: process.env.DISABLE_SSR,
+          DISABLE_SSR: JSON.stringify(process.env.DISABLE_SSR),
           SERVER_BUNDLE_OUTPUT_PATH: JSON.stringify(process.env.SERVER_BUNDLE_OUTPUT_PATH),
           CLIENT_BUNDLE_OUTPUT_PATH: JSON.stringify(process.env.CLIENT_BUNDLE_OUTPUT_PATH),
           CLIENT_BUNDLE_ASSETS_FILENAME: JSON.stringify(process.env.CLIENT_BUNDLE_ASSETS_FILENAME),

@@ -4,13 +4,15 @@ import createMemoryHistory from 'react-router/lib/createMemoryHistory';
 import match from 'react-router/lib/match';
 import render from '../htmlPage/render';
 import routes from '../../shared/routes';
+import SERVER_CONFIG from '../config';
+import SHARED_CONFIG from '../../shared/config';
 
 /**
  * An express middleware that is capabable of doing React server side rendering.
  */
 function universalReactAppMiddleware(request, response) {
-  if (process.env.DISABLE_SSR) {
-    if (process.env.NODE_ENV === 'development') {
+  if (SERVER_CONFIG.DISABLE_SSR) {
+    if (SHARED_CONFIG.IS_DEVELOPMENT) {
       console.log('==> 🐌  Handling react route without SSR');  // eslint-disable-line no-console
     }
     // SSR is disabled so we will just return an empty html page and will

@@ -5,6 +5,7 @@ import Router from 'react-router/lib/Router';
 import browserHistory from 'react-router/lib/browserHistory';
 import match from 'react-router/lib/match';
 import routes from '../shared/routes';
+import SHARED_CONFIG from '../shared/config';
 
 // Get the DOM Element that will host our React application.
 const container = document.querySelector('#app');
@@ -43,7 +44,7 @@ function renderApp() {
 }
 
 // The following is needed so that we can hot reload our App.
-if (process.env.NODE_ENV === 'development' && module.hot) {
+if (SHARED_CONFIG.IS_HOT_DEVELOPMENT) {
   // Accept changes to this file for hot reloading.
   module.hot.accept('./index.js');
   // Any changes to our routes will cause a hotload re-render.

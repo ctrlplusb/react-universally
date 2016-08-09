@@ -3,18 +3,19 @@
 import fs from 'fs';
 import path from 'path';
 import appRoot from 'app-root-path';
+import SERVER_CONFIG from '../config';
 
 const appRootPath = appRoot.toString();
 
 const assetsPath = path.resolve(
   appRootPath,
-  process.env.CLIENT_BUNDLE_OUTPUT_PATH,
-  process.env.CLIENT_BUNDLE_ASSETS_FILENAME
+  SERVER_CONFIG.CLIENT_BUNDLE_OUTPUT_PATH,
+  SERVER_CONFIG.CLIENT_BUNDLE_ASSETS_FILENAME
 );
 
 if (!fs.existsSync(assetsPath)) {
   throw new Error(
-    `We could not find the "${process.env.CLIENT_BUNDLE_ASSETS_FILENAME}" file ` +
+    `We could not find the "${SERVER_CONFIG.CLIENT_BUNDLE_ASSETS_FILENAME}" file ` +
     'containing a list of the assets of the client bundle.  Please ensure that ' +
     'the client bundle has been built before the server bundle.'
   );

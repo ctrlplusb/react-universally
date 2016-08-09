@@ -2,8 +2,9 @@ import React from 'react';
 import Route from 'react-router/lib/Route';
 import IndexRoute from 'react-router/lib/IndexRoute';
 import App from '../components/App';
+import SHARED_CONFIG from '../config';
 
-if (process.env.NODE_ENV === 'development' && module.hot) {
+if (SHARED_CONFIG.IS_HOT_DEVELOPMENT) {
   // HMR falls over when a Route uses a dynamic component resolution
   // property (i.e. getComponent or getComponents).  As a workaround for any
   // of your components that are resolved dynamically please require them below.
