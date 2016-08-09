@@ -29,7 +29,7 @@ This boilerplate contains a super minimal project configuration and structure, p
   - 👮 Security on the `express` server using `helmet` and `hpp`.
   - 👀 `react` as the view.
   - 🔀 `react-router` as the router, along with a dynamic routing configuration (i.e. you get code splitting based on your routes).
-  - ⛑ `react-helmet` allowing control of the page title/meta/styles/scripts from within your components.
+  - ⛑ `react-helmet` allowing control of the page title/meta/styles/scripts from within your components. Direct control for your SEO needs.
   - 🖌 Very basic CSS support - it's up to you to extend it into CSS Modules, SASS, PostCSS, Aphrodite etc.
   - 🏜 Image and Font support.
   - 🚀 Full ES2015 support, using `babel` to transpile where needed.
