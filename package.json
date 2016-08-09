@@ -1,7 +1,7 @@
 {
   "name": "react-universally",
   "version": "2.0.0",
-  "description": "An ultra minimal node v6 universal react boilerplate with a great dev experience.",
+  "description": "A minimal node 6, webpack 2, universal react starter kit with a 🔥 dev experience.",
   "main": "build/server/main.js",
   "engines": {
     "node": "~6.3.1"

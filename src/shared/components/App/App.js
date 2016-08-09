@@ -7,7 +7,7 @@ import './globals.css';
 import logo from './logo.png';
 
 const websiteDescription =
-  'An ultra minimal node v6 universal react boilerplate with a great dev experience.';
+  'A minimal node 6, webpack 2, universal react starter kit with a 🔥 dev experience.';
 
 function App({ children }) {
   return (
