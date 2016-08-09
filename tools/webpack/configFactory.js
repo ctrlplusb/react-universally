@@ -270,7 +270,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
           exclude: [
             /node_modules/,
             path.resolve(appRootPath, process.env.CLIENT_BUNDLE_OUTPUT_PATH),
-            path.resolve(appRootPath, process.env.SERVER_BUNDLE_OUTPUT_PATH)
+            path.resolve(appRootPath, process.env.SERVER_BUNDLE_OUTPUT_PATH),
           ],
           query: merge(
             {
@@ -319,12 +319,11 @@ function webpackConfigFactory({ target, mode }, { json }) {
         // CSS
         merge(
           { test: /\.css$/ },
-          // When targetting the server we fake out the style loader as the
-          // server can't handle the styles and doesn't care about them either..
+          // When targetting the server we use the "/locals" version of the
+          // css loader.
           ifServer({
             loaders: [
-              'fake-style-loader',
-              'css-loader',
+              'css-loader/locals',
             ],
           }),
           // For a production client build we use the ExtractTextPlugin which
