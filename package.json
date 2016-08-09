@@ -1,7 +1,7 @@
 {
   "name": "react-universally",
   "version": "2.0.0",
-  "description": "A minimal node 6, webpack 2, universal react starter kit with a 🔥 dev experience.",
+  "description": "A low dependency, node 6, webpack 2, universal react starter kit with a 🔥 dev experience.",
   "main": "build/server/main.js",
   "engines": {
     "node": "~6.3.1"
@@ -34,7 +34,6 @@
   "dependencies": {
     "app-root-path": "1.3.0",
     "compression": "1.6.2",
-    "dotenv": "2.0.0",
     "express": "4.14.0",
     "helmet": "2.1.2",
     "hpp": "0.2.1",
@@ -58,6 +57,7 @@
     "babel-preset-react": "6.11.1",
     "chokidar": "1.6.0",
     "css-loader": "0.23.1",
+    "dotenv": "2.0.0",
     "eslint": "3.2.2",
     "eslint-config-airbnb": "10.0.0",
     "eslint-plugin-import": "1.12.0",

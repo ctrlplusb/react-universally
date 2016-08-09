@@ -7,7 +7,7 @@ import './globals.css';
 import logo from './logo.png';
 
 const websiteDescription =
-  'A minimal node 6, webpack 2, universal react starter kit with a 🔥 dev experience.';
+  'A low dependency, node 6, webpack 2, universal react starter kit with a 🔥 dev experience.';
 
 function App({ children }) {
   return (
