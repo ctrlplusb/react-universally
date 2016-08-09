@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.0.1] - 2016-08-09
+
+### Changes
+
+Changed url-loader to only emit files for client bundles.
+
+Replaced "fake-style-loader" with "css-loader/locals".  Thanks @giltig! Closes #59
+
 ## [3.0.0] - 2016-08-09
 
 ### Breaking Changes
