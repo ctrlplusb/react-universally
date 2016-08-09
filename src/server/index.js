@@ -51,6 +51,9 @@ app.use(
   )
 );
 
+// Configure static serving of our "public" root http path static files.
+app.use(express.static(path.resolve(appRootPath, './public')));
+
 // Bind our universal react app middleware as the handler for all get requests.
 app.get('*', universalReactAppMiddleware);
 
