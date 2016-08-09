@@ -106,7 +106,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
         // are added to the below list. We have added the most common formats.
         whitelist: [
           /\.(eot|woff|woff2|ttf|otf)$/,
-          /\.(svg|png|jpg|jpeg|gif)$/,
+          /\.(svg|png|jpg|jpeg|gif|ico)$/,
           /\.(mp4|mp3|ogg|swf|webp)$/,
           /\.(css|scss|sass|sss|less)$/,
         ],
@@ -307,7 +307,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
 
         // Images and Fonts
         {
-          test: /\.(jpg|jpeg|png|gif|eot|svg|ttf|woff|woff2|otf)$/,
+          test: /\.(jpg|jpeg|png|gif|ico|eot|svg|ttf|woff|woff2|otf)$/,
           loader: 'url-loader',
           query: {
             // Any file with a byte smaller than this will be "inlined" via

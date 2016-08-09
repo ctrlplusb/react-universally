@@ -48,9 +48,6 @@ app.use(
   express.static(path.resolve(appRootPath, process.env.CLIENT_BUNDLE_OUTPUT_PATH))
 );
 
-// Configure static serving of our "public" static files.
-app.use('/public/', express.static(path.resolve(appRootPath, './public')));
-
 // Bind our universal react app middleware as the handler for all get requests.
 app.get('*', universalReactAppMiddleware);
 
