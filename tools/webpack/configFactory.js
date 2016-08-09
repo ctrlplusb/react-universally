@@ -313,6 +313,10 @@ function webpackConfigFactory({ target, mode }, { json }) {
             // Any file with a byte smaller than this will be "inlined" via
             // a base64 representation.
             limit: 10000,
+            // We only emit files when building a client bundle, for the server
+            // bundles this will just make sure any file imports will not fall
+            // over.
+            emitFile: isClient,
           },
         },
 
