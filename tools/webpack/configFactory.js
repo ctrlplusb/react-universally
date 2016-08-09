@@ -6,6 +6,9 @@ const AssetsPlugin = require('assets-webpack-plugin');
 const nodeExternals = require('webpack-node-externals');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const dotenv = require('dotenv');
+const appRoot = require('app-root-path');
+
+const appRootPath = appRoot.toString();
 
 // @see https://github.com/motdotla/dotenv
 dotenv.config(process.env.NOW
@@ -129,13 +132,18 @@ function webpackConfigFactory({ target, mode }, { json }) {
         main: removeEmpty([
           ifDevClient('react-hot-loader/patch'),
           ifDevClient(`webpack-hot-middleware/client?reload=true&path=http://localhost:${process.env.CLIENT_DEVSERVER_PORT}/__webpack_hmr`),
-          path.resolve(__dirname, `../../src/${target}/index.js`),
+          path.resolve(appRootPath, `./src/${target}/index.js`),
         ]),
       }
     ),
     output: {
       // The dir in which our bundle should be output.
-      path: path.resolve(__dirname, `../../build/${target}`),
+      path: path.resolve(
+        appRootPath,
+        isClient
+          ? process.env.CLIENT_BUNDLE_OUTPUT_PATH
+          : process.env.SERVER_BUNDLE_OUTPUT_PATH
+      ),
       // The filename format for our bundle's entries.
       filename: ifProdClient(
         // We include a hash for client caching purposes.  Including a unique
@@ -155,9 +163,9 @@ function webpackConfigFactory({ target, mode }, { json }) {
       publicPath: ifDev(
         // As we run a seperate server for our client and server bundles we
         // need to use an absolute http path for our assets public path.
-        `http://localhost:${process.env.CLIENT_DEVSERVER_PORT}/assets/`,
+        `http://localhost:${process.env.CLIENT_DEVSERVER_PORT}${process.env.CLIENT_BUNDLE_HTTP_PATH}`,
         // Otherwise we expect our bundled output to be served from this path.
-        '/assets/'
+        process.env.CLIENT_BUNDLE_HTTP_PATH
       ),
       // When in server mode we will output our bundle as a commonjs2 module.
       libraryTarget: ifServer('commonjs2', 'var'),
@@ -188,19 +196,23 @@ function webpackConfigFactory({ target, mode }, { json }) {
           SERVER_PORT: JSON.stringify(process.env.SERVER_PORT),
           CLIENT_DEVSERVER_PORT: JSON.stringify(process.env.CLIENT_DEVSERVER_PORT),
           DISABLE_SSR: process.env.DISABLE_SSR,
-          WEBSITE_TITLE: JSON.stringify(process.env.WEBSITE_TITLE),
-          WEBSITE_DESCRIPTION: JSON.stringify(process.env.WEBSITE_DESCRIPTION),
+          SERVER_BUNDLE_OUTPUT_PATH: JSON.stringify(process.env.SERVER_BUNDLE_OUTPUT_PATH),
+          CLIENT_BUNDLE_OUTPUT_PATH: JSON.stringify(process.env.CLIENT_BUNDLE_OUTPUT_PATH),
+          CLIENT_BUNDLE_ASSETS_FILENAME: JSON.stringify(process.env.CLIENT_BUNDLE_ASSETS_FILENAME),
+          CLIENT_BUNDLE_HTTP_PATH: JSON.stringify(process.env.CLIENT_BUNDLE_HTTP_PATH),
         },
       }),
 
-      // Generates a JSON file containing a map of all the output files for
-      // our webpack bundle.  A necessisty for our server rendering process
-      // as we need to interogate these files in order to know what JS/CSS
-      // we need to inject into our HTML.
-      new AssetsPlugin({
-        filename: 'assets.json',
-        path: path.resolve(__dirname, `../../build/${target}`),
-      }),
+      ifClient(
+        // Generates a JSON file containing a map of all the output files for
+        // our webpack bundle.  A necessisty for our server rendering process
+        // as we need to interogate these files in order to know what JS/CSS
+        // we need to inject into our HTML.
+        new AssetsPlugin({
+          filename: process.env.CLIENT_BUNDLE_ASSETS_FILENAME,
+          path: path.resolve(appRootPath, process.env.CLIENT_BUNDLE_OUTPUT_PATH),
+        })
+      ),
 
       // We don't want webpack errors to occur during development as it will
       // kill our dev servers.
@@ -255,7 +267,11 @@ function webpackConfigFactory({ target, mode }, { json }) {
         {
           test: /\.jsx?$/,
           loader: 'babel-loader',
-          exclude: [/node_modules/, path.resolve(__dirname, '../../build')],
+          exclude: [
+            /node_modules/,
+            path.resolve(appRootPath, process.env.CLIENT_BUNDLE_OUTPUT_PATH),
+            path.resolve(appRootPath, process.env.SERVER_BUNDLE_OUTPUT_PATH)
+          ],
           query: merge(
             {
               env: {

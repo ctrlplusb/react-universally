@@ -32,11 +32,10 @@
   },
   "homepage": "https://github.com/ctrlplusb/react-universally#readme",
   "dependencies": {
-    "assets-webpack-plugin": "3.4.0",
+    "app-root-path": "1.3.0",
     "compression": "1.6.2",
     "dotenv": "2.0.0",
     "express": "4.14.0",
-    "extract-text-webpack-plugin": "2.0.0-beta.3",
     "helmet": "2.1.2",
     "hpp": "0.2.1",
     "normalize.css": "4.2.0",
@@ -47,11 +46,10 @@
     "react-hot-loader": "3.0.0-beta.2",
     "react-router": "2.6.1",
     "serialize-javascript": "1.3.0",
-    "source-map-support": "0.4.2",
-    "webpack": "2.1.0-beta.20",
-    "webpack-node-externals": "1.3.3"
+    "source-map-support": "0.4.2"
   },
   "devDependencies": {
+    "assets-webpack-plugin": "3.4.0",
     "babel-cli": "6.11.4",
     "babel-core": "6.13.2",
     "babel-eslint": "6.1.2",
@@ -65,13 +63,16 @@
     "eslint-plugin-import": "1.12.0",
     "eslint-plugin-jsx-a11y": "2.0.1",
     "eslint-plugin-react": "6.0.0",
+    "extract-text-webpack-plugin": "2.0.0-beta.3",
     "fake-style-loader": "1.0.1",
     "file-loader": "0.9.0",
     "json-loader": "0.5.4",
     "node-notifier": "4.6.0",
     "style-loader": "0.13.1",
     "url-loader": "0.5.7",
+    "webpack": "2.1.0-beta.20",
     "webpack-dev-middleware": "1.6.1",
-    "webpack-hot-middleware": "2.12.2"
+    "webpack-hot-middleware": "2.12.2",
+    "webpack-node-externals": "1.3.3"
   }
 }

@@ -2,29 +2,28 @@
 import { renderToString } from 'react-dom/server';
 import serialize from 'serialize-javascript';
 import Helmet from 'react-helmet';
-import clientBundleAssets from './clientBundleAssets';
+import clientAssets from '../clientAssets';
 
 // :: [String] -> [String]
-function cssImports(css) {
-  return css
-    .map(cssPath =>
-      `<link href="${cssPath}" media="screen, projection" rel="stylesheet" type="text/css" />`
+function styleTags(styles) {
+  return styles
+    .map(style =>
+      `<link href="${style}" media="screen, projection" rel="stylesheet" type="text/css" />`
     )
     .join('\n');
 }
 
 // :: [String] -> [String]
-function javascriptImports(javascript) {
-  return javascript
-    .map(scriptPath =>
-      `<script type="text/javascript" src="${scriptPath}"></script>`
+function scriptTags(scripts) {
+  return scripts
+    .map(script =>
+      `<script type="text/javascript" src="${script}"></script>`
     )
     .join('\n');
 }
 
-const { css, javascript } = clientBundleAssets;
-const cssLinks = cssImports(css);
-const javascriptScripts = javascriptImports(javascript);
+const styles = styleTags(clientAssets.styles);
+const scripts = scriptTags(clientAssets.scripts);
 
 /**
  * Generates a full HTML page containing the render output of the given react
@@ -66,7 +65,7 @@ function render(rootReactElement, initialState) {
         ${helmet && helmet.link.toString()}
         ${helmet && helmet.style.toString()}
 
-        ${cssLinks}
+        ${styles}
       </head>
       <body>
         <div id='app'>${reactRenderString}</div>
@@ -78,7 +77,7 @@ function render(rootReactElement, initialState) {
         }</script>
 
         ${helmet && helmet.script.toString()}
-        ${javascriptScripts}
+        ${scripts}
       </body>
     </html>`;
 }
