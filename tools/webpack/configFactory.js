@@ -7,6 +7,7 @@ const nodeExternals = require('webpack-node-externals');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const dotenv = require('dotenv');
 const appRoot = require('app-root-path');
+const WebpackMd5Hash = require('webpack-md5-hash');
 
 const appRootPath = appRoot.toString();
 
@@ -149,7 +150,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
         // We include a hash for client caching purposes.  Including a unique
         // has for every build will ensure browsers always fetch our newest
         // bundle.
-        '[name]-[hash].js',
+        '[name]-[chunkhash].js',
         // We want a determinable file name when running our server bundles,
         // as we need to be able to target our server start file from our
         // npm scripts.  We don't care about caching on the server anyway.
@@ -179,6 +180,13 @@ function webpackConfigFactory({ target, mode }, { json }) {
       ],
     },
     plugins: removeEmpty([
+      // We use this so that our generated [chunkhash]'s are only different if
+      // the content for our respective chunks have changed.  This optimises
+      // our long term browser caching strategy for our client bundle, avoiding
+      // cases where browsers end up having to download all the client chunks
+      // even though 1 or 2 may have only changed.
+      ifClient(new WebpackMd5Hash()),
+
       // Each key passed into DefinePlugin is an identifier.
       // The values for each key will be inlined into the code replacing any
       // instances of the keys that are found.
@@ -200,6 +208,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
           CLIENT_BUNDLE_OUTPUT_PATH: JSON.stringify(process.env.CLIENT_BUNDLE_OUTPUT_PATH),
           CLIENT_BUNDLE_ASSETS_FILENAME: JSON.stringify(process.env.CLIENT_BUNDLE_ASSETS_FILENAME),
           CLIENT_BUNDLE_HTTP_PATH: JSON.stringify(process.env.CLIENT_BUNDLE_HTTP_PATH),
+          CLIENT_BUNDLE_CACHE_MAXAGE: JSON.stringify(process.env.CLIENT_BUNDLE_CACHE_MAXAGE),
         },
       }),
 

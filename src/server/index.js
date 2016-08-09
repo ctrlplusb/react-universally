@@ -45,7 +45,10 @@ app.use(compression());
 // Configure static serving of our webpack bundled client files.
 app.use(
   process.env.CLIENT_BUNDLE_HTTP_PATH,
-  express.static(path.resolve(appRootPath, process.env.CLIENT_BUNDLE_OUTPUT_PATH))
+  express.static(
+    path.resolve(appRootPath, process.env.CLIENT_BUNDLE_OUTPUT_PATH),
+    { maxAge: process.env.CLIENT_BUNDLE_CACHE_MAXAGE }
+  )
 );
 
 // Bind our universal react app middleware as the handler for all get requests.
