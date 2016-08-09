@@ -45,6 +45,16 @@ app.use(helmet.noSniff());
 app.use(compression());
 
 // Configure static serving of our webpack bundled client files.
+if (!process.env.CLIENT_BUNDLE_OUTPUT_PATH) {
+  throw new Error(
+    'You must provide the CLIENT_BUNDLE_OUTPUT_PATH environment variable'
+  );
+}
+if (!process.env.CLIENT_BUNDLE_HTTP_PATH) {
+  throw new Error(
+    'You must provide the CLIENT_BUNDLE_HTTP_PATH environment variable'
+  );
+}
 app.use(
   process.env.CLIENT_BUNDLE_HTTP_PATH,
   express.static(path.resolve(appRootPath, process.env.CLIENT_BUNDLE_OUTPUT_PATH))
