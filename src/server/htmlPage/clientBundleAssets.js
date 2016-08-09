@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import clientConfigBuilder from '../../../webpack.client.config.js';
+import clientConfigBuilder from '../../../tools/webpack/client.config.js';
 
 // We need to calculate the path to our "assets.json" file describing our
 // client webpack bundle, and then read & parse it into json.

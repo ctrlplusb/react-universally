@@ -9,8 +9,8 @@
   "scripts": {
     "lint": "eslint src",
     "clean": "rimraf build",
-    "development": "node ./devServer",
-    "build": "npm run clean && webpack --env.mode production --config webpack.client.config.js && webpack --env.mode production --config webpack.server.config.js",
+    "development": "node ./tools/development/server",
+    "build": "npm run clean && webpack --env.mode production --config ./tools/webpack/client.config.js && webpack --env.mode production --config ./tools/webpack/server.config.js",
     "start": "node build/server/main.js"
   },
   "repository": {

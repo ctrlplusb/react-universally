@@ -9,7 +9,7 @@ import hpp from 'hpp';
 import helmet from 'helmet';
 import path from 'path';
 import universalReactAppMiddleware from './middleware/universalReactApp';
-import clientConfigBuilder from '../../webpack.client.config.js';
+import clientConfigBuilder from '../../tools/webpack/client.config.js';
 
 // Create our express based server.
 const app = express();

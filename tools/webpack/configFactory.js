@@ -10,7 +10,7 @@ const dotenv = require('dotenv');
 // @see https://github.com/motdotla/dotenv
 dotenv.config(process.env.NOW
   // This is to support deployment to the "now" host.  See the README for more info.
-  ? { path: './.envnow', silent: true }
+  ? { path: '../../.envnow', silent: true }
   // Standard .env loading.
   : { silent: true }
 );
@@ -129,13 +129,13 @@ function webpackConfigFactory({ target, mode }, { json }) {
         main: removeEmpty([
           ifDevClient('react-hot-loader/patch'),
           ifDevClient(`webpack-hot-middleware/client?reload=true&path=http://localhost:${process.env.CLIENT_DEVSERVER_PORT}/__webpack_hmr`),
-          path.resolve(__dirname, `./src/${target}/index.js`),
+          path.resolve(__dirname, `../../src/${target}/index.js`),
         ]),
       }
     ),
     output: {
       // The dir in which our bundle should be output.
-      path: path.resolve(__dirname, `./build/${target}`),
+      path: path.resolve(__dirname, `../../build/${target}`),
       // The filename format for our bundle's entries.
       filename: ifProdClient(
         // We include a hash for client caching purposes.  Including a unique
@@ -199,7 +199,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
       // we need to inject into our HTML.
       new AssetsPlugin({
         filename: 'assets.json',
-        path: path.resolve(__dirname, `./build/${target}`),
+        path: path.resolve(__dirname, `../../build/${target}`),
       }),
 
       // We don't want webpack errors to occur during development as it will
@@ -255,7 +255,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
         {
           test: /\.jsx?$/,
           loader: 'babel-loader',
-          exclude: [/node_modules/, path.resolve(__dirname, './build')],
+          exclude: [/node_modules/, path.resolve(__dirname, '../../build')],
           query: merge(
             {
               env: {
