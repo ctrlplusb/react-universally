@@ -1,6 +1,8 @@
+/* @flow */
+
 import invariant from 'invariant';
 
-function ensureEnvVariablesExist(expected) {
+function ensureEnvVariablesExist(expected : Array<string>) {
   expected.forEach(variable => {
     invariant(
       !!process.env[variable],

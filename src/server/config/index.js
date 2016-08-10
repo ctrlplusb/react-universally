@@ -1,3 +1,5 @@
+/* @flow */
+
 // Contains all the configuration specific to our Server.
 // Please note that the DefinePlugin of webpack will inline/replace all the
 // respective "process.env.*" variables below with the actual values.
@@ -26,7 +28,7 @@ export const DISABLE_SSR = process.env.DISABLE_SSR === 'true';
 export const CLIENT_BUNDLE_HTTP_PATH = process.env.CLIENT_BUNDLE_HTTP_PATH;
 
 export const CLIENT_BUNDLE_OUTPUT_PATH = path.resolve(
-  appRootPath, process.env.CLIENT_BUNDLE_OUTPUT_PATH
+  appRootPath, process.env.CLIENT_BUNDLE_OUTPUT_PATH || './build/client'
 );
 
 export const CLIENT_BUNDLE_CACHE_MAXAGE = process.env.CLIENT_BUNDLE_CACHE_MAXAGE;
@@ -34,7 +36,7 @@ export const CLIENT_BUNDLE_CACHE_MAXAGE = process.env.CLIENT_BUNDLE_CACHE_MAXAGE
 const assetsBundleFilePath = path.resolve(
   appRootPath,
   CLIENT_BUNDLE_OUTPUT_PATH,
-  process.env.CLIENT_BUNDLE_ASSETS_FILENAME
+  process.env.CLIENT_BUNDLE_ASSETS_FILENAME || 'assets.json'
 );
 if (!fs.existsSync(assetsBundleFilePath)) {
   throw new Error(

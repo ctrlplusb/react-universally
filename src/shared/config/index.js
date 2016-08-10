@@ -1,3 +1,5 @@
+/* @flow */
+
 // Contains all the configuration shared between our Server and Client.
 // Please note that the DefinePlugin of webpack will inline/replace all the
 // respective "process.env.*" variables below with the actual values.
