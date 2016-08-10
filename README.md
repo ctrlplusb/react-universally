@@ -1,7 +1,7 @@
 <p align='center'>
   <h1 align='center'>React, Universally</h1>
   <p align='center'><img width='150' src='https://raw.githubusercontent.com/ctrlplusb/assets/master/logos/react-universally.png' /></p>
-  <p align='center'>A low dependency, node 6, webpack 2, universal react starter kit with a 🔥 dev experience.</p>
+  <p align='center'>A starter kit giving you the minimum requirements for a production ready universal react application.</p>
 </p>
 
 ## TOC
