@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.3.0] - 2016-08-10
+
+### Added
+
+Flow type checking. Just a simple configuration for now, and we are only including definitions from the maintained 'flow-typed' repo. Closes #57
+
 ## [3.2.1] - 2016-08-10
 
 ### Changed
