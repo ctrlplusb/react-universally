@@ -48,16 +48,14 @@ Redux/MobX, data persistence, test frameworks, and all the other bells and whist
 This boilerplate uses Webpack 2 to produce bundles for both the client and the
 server code.  You will notice two Webpack configuration files that allow you to target the respective environments:
 
-   - `webpack.client.config.js`
-   - `webpack.server.config.js`
+   - `tools/webpack/client.config.js`
+   - `tools/webpack/server.config.js`
 
-Both of these then call into the `webpackConfigFactory.js` in order to generate their respective webpack configurations.  I've tried to keep the webpack configuration as centralized and well documented as possible as it can be a confusing topic at times.
+Both of these then call into the `tools/webpack/configFactory.js` in order to generate their respective webpack configurations.  I've tried to keep the webpack configuration as centralized and well documented as possible as it can be a confusing topic at times.
 
-My reasoning for using webpack to bundle both the client and the server is to bring greater interop and extensibility to the table.  This will for instance allowing server bundles to handle React components that introduce things like CSS or Images (as and when you add the respective loaders).
+My reasoning for using webpack to bundle both the client and the server is that it allows our server code to handle React components which require support for additional file imports (e.g. CSS/Images (as and when you add the respective loaders).
 
 Given that we are bundling our server code I have included the `source-map-support` module to ensure that we get nice stack traces when executing our code via node.
-
-All the source code is written in ES2015, and I have explicitly kept it to the true specification (bar JSX syntax).  As we are following this approach it is unnecessary for us to transpile our source code for the server into ES5, as `node` v6 has native support for almost all of the ES2015 syntax.  Our client (browser) bundle is however transpiled to ES5 code for maximum browser/device support.
 
 The application configuration is supported by the `dotenv` module and it requires you to create a `.env` file in the project root (you can use the `.env_example` as a base).  The `.env` file has been explicitly ignored from git as it will typically contain environment sensitive/specific information.  In the usual case your continuous deployment tool of choice should configure the specific `.env` file that is needed for a target environment.
 
@@ -70,10 +68,6 @@ When size matters.  A lightweight alternative to `react-universally`.  ___Provid
 ### [`advanced-boilerplate`](https://github.com/sebastian-software/advanced-boilerplate)
 
 This boilerplate provides extended features on top of `react-universally` such as CSS Support with CSS modules alongside a flexible full PostCSS chain for advanced transformations e.g. autoprefixer.
-
-### [`react-universally-opinionated`](https://github.com/ctrlplusb/react-universally-opinionated) (WIP)
-
-This is still in production, so it's not really worth looking at right now, but when it's ready it will be an opinionated boilerplate. The implementation will be highly structured to meet my own development requirements, so I would recommend that you simply fish ideas from it and implement them in your own codebase as you need.
 
 ## Project Structure
 
