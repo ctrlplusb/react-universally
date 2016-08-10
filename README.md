@@ -37,6 +37,7 @@ This starter kit contains all the build tooling and configuration you need to ki
   - ✂️ Client bundle is split by routes.
   - 🐘 Long term caching of the client bundle. Thanks to @mjackson for the inspiration from his super cool [`web-starter`](https://github.com/mjackson/web-starter) project.  Check it out!
   - 🍃 Tree-shaking, supported by `webpack`.  
+  - ✔️ Type checking via `flow`.  Flow is a beautiful and unobtrusive type framework. You aren't required to implement type checking in your files.  It's up to you if you want to extend your own code with flow annotations.
   - 🎛 A development and optimized production configuration.
   - 🔧 Easy environment configuration via `dotenv` files.
   - 👼 Airbnb's eslint configuration.
@@ -108,13 +109,14 @@ Even though we are using webpack to support our universal application we keep th
   - `app-root-path` - Gives us the ability to easily resolve files from the root of our app.
   - `compression` - Gzip compression support for express server responses.
   - `express` - Web server.
+  - `invariant` - Gives us a precondition check function with which to warn on invalid args/state/config.
   - `helmet` - Provides a content security policy for express.
   - `hpp` - Express middleware to protect against HTTP Parameter Pollution attacks.
   - `react` - A declarative, efficient, and flexible JavaScript library for building user interfaces.
   - `react-dom` - React support for the DOM.
   - `react-helmet` - Control the page header from your components.
   - `react-router` - A complete routing library for React.
-  - `serialize-javascript` - A superset of JSON that includes regular expressions and functions.
+  - `serialize-javascript` - Allows us to serialize our js in a format safe for embedding in webpages.
   - `source-map-support` - Adds source map support to node.js (for stack traces).
 
 ## Deploy your very own Server Side Rendering React App in 5 easy steps ##
@@ -170,6 +172,10 @@ Deletes any build output that would have originated from the other commands.
 ### `npm run lint`
 
 Executes `esling` (using the Airbnb config) against the src folder. Alternatively you could look to install the `eslint-loader` and integrate it into the `webpack` bundle process.
+
+### `npm run typecheck`
+
+Executes `flow-bin`, performing type checking on the source.  If you really like flow I would recommend getting a plugin for your IDE.  For Atom I recommend `flow-ide`.
 
 ## Troubleshooting ##
 
