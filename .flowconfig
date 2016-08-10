@@ -8,10 +8,10 @@
 [libs]
 
 # Official "flow-typed" repository definitions.
-flow-typed/npm
+tools/flow/flow-typed/npm
 
 # Custom definitions.
-flow/definitions/
+tools/flow/definitions/
 
 # Note: the following definitions come bundled with flow. It can be handy
 # to reference them.
@@ -30,7 +30,7 @@ esproposal.class_instance_fields=enable
 
 # This is so that we can import static files in our webpack supported components
 # and not have flow throw a hissy fit.
-module.name_mapper='^\(.*\)\.\(css\|eot\|gif\|ico\|jpg\|jpeg\|less\|otf\|mp3\|mp4\|ogg\|png\|sass\|scss\|sss\|svg\|swf\|ttf\|webp\|woff\|woff2\)$' -> '<PROJECT_ROOT>/flow/stubs/WebpackAsset.js.flow'
+module.name_mapper='^\(.*\)\.\(css\|eot\|gif\|ico\|jpg\|jpeg\|less\|otf\|mp3\|mp4\|ogg\|png\|sass\|scss\|sss\|svg\|swf\|ttf\|webp\|woff\|woff2\)$' -> '<PROJECT_ROOT>/tools/flow/stubs/WebpackAsset.js.flow'
 
 [version]
 0.30.0
