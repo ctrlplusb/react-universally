@@ -9,15 +9,10 @@ function Home() {
       <Helmet title="Home" />
 
       <p>
-        This boilerplate contains a super minimal project configuration and
-        structure, providing you with everything you need to kick off your next
-        universal react project. It focuses on the build and developer tools.
-        The actual react project architecture is all up to you.
-      </p>
-
-      <p>
-        It doesn't try to dictate how you should build your entire application,
-        rather it provides a clean and simple base on which you can expand.
+        This starter kit contains all the build tooling and configuration you
+        need to kick off your next universal react project, whilst containing a
+        minimal "project" set up allowing you to make your own architecture
+        decisions (redux/mobx etc).
       </p>
     </article>
   );

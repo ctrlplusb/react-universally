@@ -1,7 +1,7 @@
 <p align='center'>
   <h1 align='center'>React, Universally</h1>
   <p align='center'><img width='150' src='https://raw.githubusercontent.com/ctrlplusb/assets/master/logos/react-universally.png' /></p>
-  <p align='center'>A low dependency, node 6, webpack 2, universal react starter kit with a 🔥 dev experience.</p>
+  <p align='center'>A starter kit giving you the minimum requirements for a production ready universal react application.</p>
 </p>
 
 ## TOC
@@ -19,7 +19,7 @@
 
 ## About
 
-This boilerplate contains a super minimal project configuration and structure, providing you with everything you need to kick off your next universal react project and the platform upon which to make your own project architecture (redux/mobx etc) decisions. We focus on the build and developer tools, whilst providing some of the "key" elements that we believe the average SSR react project would need.
+This starter kit contains all the build tooling and configuration you need to kick off your next universal react project, whilst containing a minimal "project" set up allowing you to make your own architecture decisions (redux/mobx etc).
 
 ## Features
 

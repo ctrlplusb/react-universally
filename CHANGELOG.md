@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.2.1] - 2016-08-10
+
+### Changed
+
+Moved public dir resolution into configs.
+
 ## [3.2.0] - 2016-08-10
 
 ### Added

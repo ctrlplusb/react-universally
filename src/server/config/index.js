@@ -8,6 +8,8 @@ import path from 'path';
 import appRoot from 'app-root-path';
 import ensureEnvVariablesExist from '../../shared/utils/ensureEnvVariablesExist';
 
+const appRootPath = appRoot.toString();
+
 ensureEnvVariablesExist([
   'SERVER_PORT',
   'DISABLE_SSR',
@@ -23,11 +25,12 @@ export const DISABLE_SSR = process.env.DISABLE_SSR === 'true';
 
 export const CLIENT_BUNDLE_HTTP_PATH = process.env.CLIENT_BUNDLE_HTTP_PATH;
 
-export const CLIENT_BUNDLE_OUTPUT_PATH = process.env.CLIENT_BUNDLE_OUTPUT_PATH;
+export const CLIENT_BUNDLE_OUTPUT_PATH = path.resolve(
+  appRootPath, process.env.CLIENT_BUNDLE_OUTPUT_PATH
+);
 
 export const CLIENT_BUNDLE_CACHE_MAXAGE = process.env.CLIENT_BUNDLE_CACHE_MAXAGE;
 
-const appRootPath = appRoot.toString();
 const assetsBundleFilePath = path.resolve(
   appRootPath,
   CLIENT_BUNDLE_OUTPUT_PATH,
@@ -43,3 +46,5 @@ if (!fs.existsSync(assetsBundleFilePath)) {
   );
 }
 export const CLIENT_BUNDLE_ASSETSJSON_FILEPATH = assetsBundleFilePath;
+
+export const PUBLIC_DIR_PATH = path.resolve(appRootPath, './public');

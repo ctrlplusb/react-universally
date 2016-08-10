@@ -9,7 +9,8 @@ import './globals.css';
 import logo from './logo.png';
 
 const websiteDescription =
-  'A low dependency, node 6, webpack 2, universal react starter kit with a 🔥 dev experience.';
+  'A starter kit giving you the minimum requirements for a production ready ' +
+  'universal react application.';
 
 type Props = { children : $React$Children };
 
