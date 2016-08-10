@@ -1,7 +1,5 @@
 /* @flow */
 
-import fs from 'fs';
-
 export function notEmpty<T>(x : ?T, message : string) : T {
   if (x == null) {
     throw new Error(message);
@@ -18,10 +16,4 @@ export function envVarExists(envVarName : string) : string {
     'the "DefinePlugin" plugin within the webpack configFactory.';
 
   return notEmpty(process.env[envVarName], message);
-}
-
-export function fileExists(filePath : string, message : string) {
-  if (!fs.existsSync(filePath)) {
-    throw new Error(message);
-  }
 }
