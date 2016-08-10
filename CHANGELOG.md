@@ -2,6 +2,17 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.2.0] - 2016-08-10
+
+### Added
+
+The transform-object-rest-spread and transform-class-properties as they are too useful when developing react projects.
+
+### Changed
+
+Centralised env config values into config files so that they get parsed and validated in a single place and once.
+
+
 ## [3.1.0] - 2016-08-09
 
 ### Adds
