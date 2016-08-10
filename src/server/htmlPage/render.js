@@ -6,8 +6,7 @@ import Helmet from 'react-helmet';
 import clientAssets from '../clientAssets';
 import favicon from './favicon.ico';
 
-// :: [String] -> [String]
-function styleTags(styles) {
+function styleTags(styles : Array<string>) {
   return styles
     .map(style =>
       `<link href="${style}" media="screen, projection" rel="stylesheet" type="text/css" />`
@@ -15,8 +14,7 @@ function styleTags(styles) {
     .join('\n');
 }
 
-// :: [String] -> [String]
-function scriptTags(scripts) {
+function scriptTags(scripts : Array<string>) {
   return scripts
     .map(script =>
       `<script type="text/javascript" src="${script}"></script>`
@@ -65,9 +63,9 @@ function render(rootReactElement : ?$React$Element, initialState : ?Object) {
         ${helmet ? helmet.title.toString() : ''}
         ${helmet ? helmet.meta.toString() : ''}
         ${helmet ? helmet.link.toString() : ''}
-        ${helmet ? helmet.style.toString() : ''}
 
         ${styles}
+        ${helmet ? helmet.style.toString() : ''}
       </head>
       <body>
         <div id='app'>${reactRenderString || ''}</div>
@@ -78,8 +76,8 @@ function render(rootReactElement : ?$React$Element, initialState : ?Object) {
             : ''
         }</script>
 
-        ${helmet ? helmet.script.toString() : ''}
         ${scripts}
+        ${helmet ? helmet.script.toString() : ''}
       </body>
     </html>`;
 }

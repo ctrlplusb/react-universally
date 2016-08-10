@@ -13,9 +13,12 @@
     "defaultParams": true
   },
   "rules": {
+    # We use the 'import' plugin which allows for cases "flow" awareness.
+    "no-duplicate-imports": 0,
+
     "flow-vars/define-flow-type": 1,
     "flow-vars/use-flow-type": 1,
 
-    "react/jsx-filename-extension": [0]
+    "react/jsx-filename-extension": 0
   }
 }

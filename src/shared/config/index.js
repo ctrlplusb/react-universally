@@ -9,7 +9,7 @@
 // then it should go in the specific /src/server/config which will only be
 // contained in the server bundle.
 
-import ensureEnvVariablesExist from '../../shared/utils/ensureEnvVariablesExist';
+import ensureEnvVariablesExist from '../utils/ensureEnvVariablesExist';
 
 ensureEnvVariablesExist([
   'NODE_ENV',
