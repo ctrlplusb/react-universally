@@ -7,28 +7,29 @@
 
 import path from 'path';
 import appRoot from 'app-root-path';
-import * as guard from '../../shared/utils/guards';
+import { envVarExists } from '../../shared/utils/guards';
+import { fileExists } from '../utils/guards';
 
 const appRootPath = appRoot.toString();
 
-export const SERVER_PORT = parseInt(guard.envVarExists('SERVER_PORT'), 10);
+export const SERVER_PORT = parseInt(envVarExists('SERVER_PORT'), 10);
 
 export const DISABLE_SSR = process.env.DISABLE_SSR === 'true';
 
-export const CLIENT_BUNDLE_HTTP_PATH = guard.envVarExists('CLIENT_BUNDLE_HTTP_PATH');
+export const CLIENT_BUNDLE_HTTP_PATH = envVarExists('CLIENT_BUNDLE_HTTP_PATH');
 
 export const CLIENT_BUNDLE_OUTPUT_PATH = path.resolve(
-  appRootPath, guard.envVarExists('CLIENT_BUNDLE_OUTPUT_PATH')
+  appRootPath, envVarExists('CLIENT_BUNDLE_OUTPUT_PATH')
 );
 
-export const CLIENT_BUNDLE_CACHE_MAXAGE = guard.envVarExists('CLIENT_BUNDLE_CACHE_MAXAGE');
+export const CLIENT_BUNDLE_CACHE_MAXAGE = envVarExists('CLIENT_BUNDLE_CACHE_MAXAGE');
 
 const assetsBundleFilePath = path.resolve(
   appRootPath,
   CLIENT_BUNDLE_OUTPUT_PATH,
-  guard.envVarExists('CLIENT_BUNDLE_ASSETS_FILENAME')
+  envVarExists('CLIENT_BUNDLE_ASSETS_FILENAME')
 );
-guard.fileExists(
+fileExists(
   assetsBundleFilePath,
   `We could not find the "${assetsBundleFilePath}" file, which contains a ` +
   'list of the assets of the client bundle.  Please ensure that the client ' +
