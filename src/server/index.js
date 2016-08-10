@@ -12,6 +12,12 @@ import helmet from 'helmet';
 import path from 'path';
 import appRoot from 'app-root-path';
 import universalReactAppMiddleware from './middleware/universalReactApp';
+import {
+  CLIENT_BUNDLE_HTTP_PATH,
+  CLIENT_BUNDLE_OUTPUT_PATH,
+  CLIENT_BUNDLE_CACHE_MAXAGE,
+  SERVER_PORT,
+} from './config';
 
 const appRootPath = appRoot.toString();
 
@@ -45,31 +51,24 @@ app.use(helmet.noSniff());
 app.use(compression());
 
 // Configure static serving of our webpack bundled client files.
-if (!process.env.CLIENT_BUNDLE_OUTPUT_PATH) {
-  throw new Error(
-    'You must provide the CLIENT_BUNDLE_OUTPUT_PATH environment variable'
-  );
-}
-if (!process.env.CLIENT_BUNDLE_HTTP_PATH) {
-  throw new Error(
-    'You must provide the CLIENT_BUNDLE_HTTP_PATH environment variable'
-  );
-}
 app.use(
-  process.env.CLIENT_BUNDLE_HTTP_PATH,
-  express.static(path.resolve(appRootPath, process.env.CLIENT_BUNDLE_OUTPUT_PATH))
+  CLIENT_BUNDLE_HTTP_PATH,
+  express.static(
+    path.resolve(appRootPath, CLIENT_BUNDLE_OUTPUT_PATH),
+    { maxAge: CLIENT_BUNDLE_CACHE_MAXAGE }
+  )
 );
 
-// Configure static serving of our "public" static files.
-app.use('/public/', express.static(path.resolve(appRootPath, './public')));
+// Configure static serving of our "public" root http path static files.
+app.use(express.static(path.resolve(appRootPath, './public')));
 
 // Bind our universal react app middleware as the handler for all get requests.
 app.get('*', universalReactAppMiddleware);
 
 // Create an http listener for our express app.
-const listener = app.listen(parseInt(process.env.SERVER_PORT, 10));
+const listener = app.listen(SERVER_PORT);
 
-console.log(`==> 💚  HTTP Listener is running on port ${parseInt(process.env.SERVER_PORT, 10)}`); // eslint-disable-line no-console,max-len
+console.log(`==> 💚  HTTP Listener is running on port ${SERVER_PORT}`); // eslint-disable-line no-console,max-len
 
 // We export the listener as it will be handy for our development hot reloader.
 export default listener;

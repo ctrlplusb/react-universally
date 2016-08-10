@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+/* eslint-disable no-console,import/no-extraneous-dependencies */
 
 const path = require('path');
 const webpack = require('webpack');
@@ -7,6 +7,8 @@ const nodeExternals = require('webpack-node-externals');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const dotenv = require('dotenv');
 const appRoot = require('app-root-path');
+const WebpackMd5Hash = require('webpack-md5-hash');
+const { removeEmpty, ifElse, merge } = require('../utils');
 
 const appRootPath = appRoot.toString();
 
@@ -17,26 +19,6 @@ dotenv.config(process.env.NOW
   // Standard .env loading.
   : { silent: true }
 );
-
-// :: [Any] -> [Any]
-function removeEmpty(x) {
-  return x.filter(y => !!y);
-}
-
-// :: bool -> (Any, Any) -> Any
-function ifElse(condition) {
-  return (then, or) => (condition ? then : or);
-}
-
-// :: ...Object -> Object
-function merge() {
-  const funcArgs = Array.prototype.slice.call(arguments); // eslint-disable-line prefer-rest-params
-
-  return Object.assign.apply(
-    null,
-    removeEmpty([{}].concat(funcArgs))
-  );
-}
 
 function webpackConfigFactory({ target, mode }, { json }) {
   if (!target || !~['client', 'server'].findIndex(valid => target === valid)) {
@@ -106,7 +88,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
         // are added to the below list. We have added the most common formats.
         whitelist: [
           /\.(eot|woff|woff2|ttf|otf)$/,
-          /\.(svg|png|jpg|jpeg|gif)$/,
+          /\.(svg|png|jpg|jpeg|gif|ico)$/,
           /\.(mp4|mp3|ogg|swf|webp)$/,
           /\.(css|scss|sass|sss|less)$/,
         ],
@@ -149,7 +131,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
         // We include a hash for client caching purposes.  Including a unique
         // has for every build will ensure browsers always fetch our newest
         // bundle.
-        '[name]-[hash].js',
+        '[name]-[chunkhash].js',
         // We want a determinable file name when running our server bundles,
         // as we need to be able to target our server start file from our
         // npm scripts.  We don't care about caching on the server anyway.
@@ -179,6 +161,13 @@ function webpackConfigFactory({ target, mode }, { json }) {
       ],
     },
     plugins: removeEmpty([
+      // We use this so that our generated [chunkhash]'s are only different if
+      // the content for our respective chunks have changed.  This optimises
+      // our long term browser caching strategy for our client bundle, avoiding
+      // cases where browsers end up having to download all the client chunks
+      // even though 1 or 2 may have only changed.
+      ifClient(new WebpackMd5Hash()),
+
       // Each key passed into DefinePlugin is an identifier.
       // The values for each key will be inlined into the code replacing any
       // instances of the keys that are found.
@@ -195,11 +184,12 @@ function webpackConfigFactory({ target, mode }, { json }) {
           // to the .env_example for a description of each key.
           SERVER_PORT: JSON.stringify(process.env.SERVER_PORT),
           CLIENT_DEVSERVER_PORT: JSON.stringify(process.env.CLIENT_DEVSERVER_PORT),
-          DISABLE_SSR: process.env.DISABLE_SSR,
+          DISABLE_SSR: JSON.stringify(process.env.DISABLE_SSR),
           SERVER_BUNDLE_OUTPUT_PATH: JSON.stringify(process.env.SERVER_BUNDLE_OUTPUT_PATH),
           CLIENT_BUNDLE_OUTPUT_PATH: JSON.stringify(process.env.CLIENT_BUNDLE_OUTPUT_PATH),
           CLIENT_BUNDLE_ASSETS_FILENAME: JSON.stringify(process.env.CLIENT_BUNDLE_ASSETS_FILENAME),
           CLIENT_BUNDLE_HTTP_PATH: JSON.stringify(process.env.CLIENT_BUNDLE_HTTP_PATH),
+          CLIENT_BUNDLE_CACHE_MAXAGE: JSON.stringify(process.env.CLIENT_BUNDLE_CACHE_MAXAGE),
         },
       }),
 
@@ -270,10 +260,14 @@ function webpackConfigFactory({ target, mode }, { json }) {
           exclude: [
             /node_modules/,
             path.resolve(appRootPath, process.env.CLIENT_BUNDLE_OUTPUT_PATH),
-            path.resolve(appRootPath, process.env.SERVER_BUNDLE_OUTPUT_PATH)
+            path.resolve(appRootPath, process.env.SERVER_BUNDLE_OUTPUT_PATH),
           ],
           query: merge(
             {
+              plugins: [
+                'transform-object-rest-spread',
+                'transform-class-properties',
+              ],
               env: {
                 development: {
                   plugins: ['react-hot-loader/babel'],
@@ -307,24 +301,27 @@ function webpackConfigFactory({ target, mode }, { json }) {
 
         // Images and Fonts
         {
-          test: /\.(jpg|jpeg|png|gif|eot|svg|ttf|woff|woff2|otf)$/,
+          test: /\.(jpg|jpeg|png|gif|ico|eot|svg|ttf|woff|woff2|otf)$/,
           loader: 'url-loader',
           query: {
             // Any file with a byte smaller than this will be "inlined" via
             // a base64 representation.
             limit: 10000,
+            // We only emit files when building a client bundle, for the server
+            // bundles this will just make sure any file imports will not fall
+            // over.
+            emitFile: isClient,
           },
         },
 
         // CSS
         merge(
           { test: /\.css$/ },
-          // When targetting the server we fake out the style loader as the
-          // server can't handle the styles and doesn't care about them either..
+          // When targetting the server we use the "/locals" version of the
+          // css loader.
           ifServer({
             loaders: [
-              'fake-style-loader',
-              'css-loader',
+              'css-loader/locals',
             ],
           }),
           // For a production client build we use the ExtractTextPlugin which
