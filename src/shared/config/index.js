@@ -9,12 +9,6 @@
 // then it should go in the specific /src/server/config which will only be
 // contained in the server bundle.
 
-import ensureEnvVariablesExist from '../utils/ensureEnvVariablesExist';
-
-ensureEnvVariablesExist([
-  'NODE_ENV',
-]);
-
 const isDevelopment = process.env.NODE_ENV === 'development';
 export const IS_DEVELOPMENT = isDevelopment;
 
