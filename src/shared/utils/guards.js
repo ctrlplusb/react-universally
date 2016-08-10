@@ -1,3 +1,5 @@
+/* @flow */
+
 import fs from 'fs';
 
 export function notEmpty<T>(x : ?T, message : string) : T {
@@ -8,7 +10,7 @@ export function notEmpty<T>(x : ?T, message : string) : T {
   return x;
 }
 
-export function envVarExists(envVarName : string) : T {
+export function envVarExists(envVarName : string) : string {
   const message =
     `The "${envVarName}" env variable was not found.  Please ensure you have ` +
     'set the environment variable. If you have but you are still seeing this ' +
