@@ -15,7 +15,7 @@ const appRootPath = appRoot.toString();
 // @see https://github.com/motdotla/dotenv
 dotenv.config(process.env.NOW
   // This is to support deployment to the "now" host.  See the README for more info.
-  ? { path: '../../.envnow', silent: true }
+  ? { path: path.resolve(appRootPath, './.envnow'), silent: true }
   // Standard .env loading.
   : { silent: true }
 );
