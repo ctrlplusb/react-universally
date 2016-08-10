@@ -264,6 +264,10 @@ function webpackConfigFactory({ target, mode }, { json }) {
           ],
           query: merge(
             {
+              plugins: [
+                'transform-object-rest-spread',
+                'transform-class-properties',
+              ],
               env: {
                 development: {
                   plugins: ['react-hot-loader/babel'],
