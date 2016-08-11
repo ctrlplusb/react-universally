@@ -1,6 +1,6 @@
 /* @flow */
 
-import React, { PropTypes } from 'react';
+import React from 'react';
 import Link from 'react-router/lib/Link';
 import Helmet from 'react-helmet';
 
@@ -12,9 +12,8 @@ const websiteDescription =
   'A starter kit giving you the minimum requirements for a production ready ' +
   'universal react application.';
 
-type Props = { children : $React$Children };
-
-function App({ children } : Props) {
+function App(props : { children : $React$Children }) {
+  const { children } = props;
   return (
     <div style={{ padding: '10px' }}>
       {/*
@@ -53,8 +52,5 @@ function App({ children } : Props) {
     </div>
   );
 }
-App.propTypes = {
-  children: PropTypes.node,
-};
 
 export default App;

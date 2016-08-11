@@ -21,6 +21,7 @@
   "keywords": [
     "react",
     "boilerplate",
+    "starter kit",
     "universal",
     "javascript",
     "express",
@@ -38,7 +39,6 @@
     "express": "4.14.0",
     "helmet": "2.1.2",
     "hpp": "0.2.1",
-    "invariant": "2.2.1",
     "normalize.css": "4.2.0",
     "path": "0.12.7",
     "react": "15.3.0",
