@@ -109,7 +109,6 @@ Even though we are using webpack to support our universal application we keep th
   - `app-root-path` - Gives us the ability to easily resolve files from the root of our app.
   - `compression` - Gzip compression support for express server responses.
   - `express` - Web server.
-  - `invariant` - Gives us a precondition check function with which to warn on invalid args/state/config.
   - `helmet` - Provides a content security policy for express.
   - `hpp` - Express middleware to protect against HTTP Parameter Pollution attacks.
   - `react` - A declarative, efficient, and flexible JavaScript library for building user interfaces.
