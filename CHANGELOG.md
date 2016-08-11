@@ -2,6 +2,24 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.3.1] - 2016-08-11
+
+### Changed
+
+Moved flow files into the tools dir.
+
+Minor enhancement to eslint config to play nicely with flow type imports.
+
+Moved the styles/scripts imports from react-helmet to be below the application styles/scripts.
+
+Cleaned up the config guards.
+
+Updated the .envnow file resolution.
+
+### Fixed
+
+Added missing rimraf dependency.
+
 ## [3.3.0] - 2016-08-10
 
 ### Added
