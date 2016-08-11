@@ -37,7 +37,7 @@ This starter kit contains all the build tooling and configuration you need to ki
   - ✂️ Client bundle is split by routes.
   - 🐘 Long term caching of the client bundle. Thanks to @mjackson for the inspiration from his super cool [`web-starter`](https://github.com/mjackson/web-starter) project.  Check it out!
   - 🍃 Tree-shaking, supported by `webpack`.  
-  - ✔️ Type checking via `flow`.  Flow is a beautiful and unobtrusive type framework. You aren't required to implement type checking in your files.  It's up to you if you want to extend your own code with flow annotations.
+  - ✔️ Type checking via Flow, a beautiful and unobtrusive type framework. NOTE: Flow is a completely optional feature.  The flow type annotations get ripped out of the source by the webpack build step. You have no obligation to use flow within your code and can even uninstall the dependency (flow-bin) without breaking the project.  I do highly recommend you try it out though.
   - 🎛 A development and optimized production configuration.
   - 🔧 Easy environment configuration via `dotenv` files.
   - 👼 Airbnb's eslint configuration.
@@ -99,7 +99,7 @@ This boilerplate provides extended features on top of `react-universally` such a
 
 The dependencies within `package.json` are structured so that the libraries required to transpile/bundle the source are contained within the `devDependencies` section, whilst the libraries required during the server runtime are contained within the `dependencies` section.
 
-You may notice that a few `webpack` libraries are contained within the `dependencies` section.  These are not needed to do any runtime `webpack` compile runs, instead they are included so that the runtime can require the `webpack` configuration and then use it to configure the static hosting paths for our webpack bundles.  This saves us having to do any duplicate configuration of the respective paths.
+If you do building on your production environment you must ensure that you have allowed the installation of the `devDependencies` too (Heroku, for example doesn't do this by default).
 
 ## Server Runtime Dependencies
 
