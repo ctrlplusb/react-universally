@@ -7,9 +7,14 @@ import App from '../components/App';
 import { IS_HOT_DEVELOPMENT } from '../config';
 
 if (IS_HOT_DEVELOPMENT) {
-  // HMR falls over when a Route uses a dynamic component resolution
-  // property (i.e. getComponent or getComponents).  As a workaround for any
-  // of your components that are resolved dynamically please require them below.
+  // HMR does not work 100% if you are using the dynamic component resolution
+  // properties (i.e. getComponent or getComponents). Specifically, HMR will
+  // work initially but if you change your route (i.e. browse to another part
+  // of your app) then the HMR will stop working.
+  // As a workaround for this scenario; for any of your components that are
+  // resolved dynamically please require them below. If you don't want to
+  // maintain this list then you could remove it and instead do a manual browser
+  // refresh after changing the route.
   require('../components/Home'); // eslint-disable-line global-require
   require('../components/About'); // eslint-disable-line global-require
 }
