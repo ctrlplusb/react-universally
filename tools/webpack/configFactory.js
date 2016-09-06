@@ -273,6 +273,10 @@ function webpackConfigFactory({ target, mode }, { json }) {
           query: merge(
             {
               plugins: [
+                // The transform-object-rest-spread plugin currently depends
+                // on this plugin.  Even if you are running in an environment
+                // that supports destructuring.
+                'transform-es2015-destructuring',
                 'transform-object-rest-spread',
                 'transform-class-properties',
               ],
