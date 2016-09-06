@@ -182,6 +182,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
           NODE_ENV: JSON.stringify(mode),
           // All the below items match the config items in our .env file. Go
           // to the .env_example for a description of each key.
+          // TODO: Automate this by reading the keys from the .env file.
           SERVER_PORT: JSON.stringify(process.env.SERVER_PORT),
           CLIENT_DEVSERVER_PORT: JSON.stringify(process.env.CLIENT_DEVSERVER_PORT),
           DISABLE_SSR: JSON.stringify(process.env.DISABLE_SSR),
