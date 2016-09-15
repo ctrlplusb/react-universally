@@ -21,13 +21,13 @@ dotenv.config(process.env.NOW
 );
 
 function webpackConfigFactory({ target, mode }, { json }) {
-  if (!target || !~['client', 'server'].findIndex(valid => target === valid)) {
+  if (!target || ['client', 'server'].findIndex(valid => target === valid) === -1) {
     throw new Error(
       'You must provide a "target" (client|server) to the webpackConfigFactory.'
     );
   }
 
-  if (!mode || !~['development', 'production'].findIndex(valid => mode === valid)) {
+  if (!mode || ['development', 'production'].findIndex(valid => mode === valid) === -1) {
     throw new Error(
       'You must provide a "mode" (development|production) to the webpackConfigFactory.'
     );

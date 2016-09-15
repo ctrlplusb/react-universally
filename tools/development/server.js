@@ -29,9 +29,9 @@ class ListenerManager {
     this.listener = listener;
 
     // Track all connections to our server so that we can close them when needed.
-    this.listener.on('connection', connection => {
+    this.listener.on('connection', (connection) => {
       // Generate a new key to represent the connection
-      const connectionKey = ++this.lastConnectionKey;
+      const connectionKey = this.lastConnectionKey + 1;
       // Add the connection to our map.
       this.connectionMap[connectionKey] = connection;
       // Remove the connection from our map when it closes.
@@ -48,7 +48,7 @@ class ListenerManager {
   }
 
   dispose(force = false) {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       if (force) {
         // Forcefully close any existing connections.
         this.killAllConnections();
@@ -193,8 +193,8 @@ class HotServers {
 
   restart() {
     const clearWebpackConfigsCache = () => {
-      Object.keys(require.cache).forEach(modulePath => {
-        if (~modulePath.indexOf('webpack')) {
+      Object.keys(require.cache).forEach((modulePath) => {
+        if (modulePath.indexOf('webpack') !== -1) {
           delete require.cache[modulePath];
         }
       });
@@ -259,8 +259,8 @@ class HotServers {
       });
 
       // Make sure our newly built server bundles aren't in the module cache.
-      Object.keys(require.cache).forEach(modulePath => {
-        if (~modulePath.indexOf(this.serverCompiler.options.output.path)) {
+      Object.keys(require.cache).forEach((modulePath) => {
+        if (modulePath.indexOf(this.serverCompiler.options.output.path) !== -1) {
           delete require.cache[modulePath];
         }
       });
