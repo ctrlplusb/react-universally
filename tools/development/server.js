@@ -7,6 +7,7 @@ const webpack = require('webpack');
 const express = require('express');
 const createWebpackMiddleware = require('webpack-dev-middleware');
 const createWebpackHotMiddleware = require('webpack-hot-middleware');
+const envVars = require('../config/envVars');
 
 function createNotification(options = {}) {
   const title = options.title
@@ -84,7 +85,7 @@ class HotServer {
       const listener = require(compiledOutputPath).default;
       this.listenerManager = new ListenerManager(listener);
 
-      const url = `http://localhost:${process.env.SERVER_PORT}`;
+      const url = `http://localhost:${envVars.SERVER_PORT}`;
 
       createNotification({
         title: 'server',
@@ -124,7 +125,7 @@ class HotClient {
     app.use(this.webpackDevMiddleware);
     app.use(createWebpackHotMiddleware(compiler));
 
-    const listener = app.listen(process.env.CLIENT_DEVSERVER_PORT);
+    const listener = app.listen(envVars.CLIENT_DEVSERVER_PORT);
     this.listenerManager = new ListenerManager(listener);
 
     createNotification({

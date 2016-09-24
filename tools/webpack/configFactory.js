@@ -5,20 +5,12 @@ const webpack = require('webpack');
 const AssetsPlugin = require('assets-webpack-plugin');
 const nodeExternals = require('webpack-node-externals');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const dotenv = require('dotenv');
 const appRoot = require('app-root-path');
 const WebpackMd5Hash = require('webpack-md5-hash');
 const { removeEmpty, ifElse, merge } = require('../utils');
+const envVars = require('../config/envVars');
 
 const appRootPath = appRoot.toString();
-
-// @see https://github.com/motdotla/dotenv
-dotenv.config(process.env.NOW
-  // This is to support deployment to the "now" host.  See the README for more info.
-  ? { path: path.resolve(appRootPath, './.envnow'), silent: true }
-  // Standard .env loading.
-  : { silent: true }
-);
 
 function webpackConfigFactory({ target, mode }, { json }) {
   if (!target || ['client', 'server'].findIndex(valid => target === valid) === -1) {
@@ -43,6 +35,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
     //   --env.mode production \
     //   --config webpack.client.config.js \
     //   --json \
+    //   --profile \
     //   > build/client/analysis.json
     //
     // And then upload the build/client/analysis.json to http://webpack.github.io/analyse/
@@ -113,7 +106,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
       {
         main: removeEmpty([
           ifDevClient('react-hot-loader/patch'),
-          ifDevClient(`webpack-hot-middleware/client?reload=true&path=http://localhost:${process.env.CLIENT_DEVSERVER_PORT}/__webpack_hmr`),
+          ifDevClient(`webpack-hot-middleware/client?reload=true&path=http://localhost:${envVars.CLIENT_DEVSERVER_PORT}/__webpack_hmr`),
           path.resolve(appRootPath, `./src/${target}/index.js`),
         ]),
       }
@@ -123,8 +116,8 @@ function webpackConfigFactory({ target, mode }, { json }) {
       path: path.resolve(
         appRootPath,
         isClient
-          ? process.env.CLIENT_BUNDLE_OUTPUT_PATH
-          : process.env.SERVER_BUNDLE_OUTPUT_PATH
+          ? envVars.CLIENT_BUNDLE_OUTPUT_PATH
+          : envVars.SERVER_BUNDLE_OUTPUT_PATH
       ),
       // The filename format for our bundle's entries.
       filename: ifProdClient(
@@ -145,9 +138,9 @@ function webpackConfigFactory({ target, mode }, { json }) {
       publicPath: ifDev(
         // As we run a seperate server for our client and server bundles we
         // need to use an absolute http path for our assets public path.
-        `http://localhost:${process.env.CLIENT_DEVSERVER_PORT}${process.env.CLIENT_BUNDLE_HTTP_PATH}`,
+        `http://localhost:${envVars.CLIENT_DEVSERVER_PORT}${envVars.CLIENT_BUNDLE_HTTP_PATH}`,
         // Otherwise we expect our bundled output to be served from this path.
-        process.env.CLIENT_BUNDLE_HTTP_PATH
+        envVars.CLIENT_BUNDLE_HTTP_PATH
       ),
       // When in server mode we will output our bundle as a commonjs2 module.
       libraryTarget: ifServer('commonjs2', 'var'),
@@ -186,6 +179,23 @@ function webpackConfigFactory({ target, mode }, { json }) {
       // even though 1 or 2 may have only changed.
       ifClient(new WebpackMd5Hash()),
 
+      // The DefinePlugin is used by webpack to substitute any patterns that it
+      // finds within the code with the respective value assigned below.
+      //
+      // For example you may have the following in your code:
+      //   if (process.env.NODE_ENV === 'development') {
+      //     console.log('Foo');
+      //   }
+      //
+      // If we assign the NODE_ENV variable in the DefinePlugin below a value
+      // of 'production' webpack will replace your code with the following:
+      //   if ('production' === 'development') {
+      //     console.log('Foo');
+      //   }
+      //
+      // This is very useful as we are compiling/bundling our code and we would
+      // like our environment variables to persist within the code.
+      //
       // Each key passed into DefinePlugin is an identifier.
       // The values for each key will be inlined into the code replacing any
       // instances of the keys that are found.
@@ -194,23 +204,25 @@ function webpackConfigFactory({ target, mode }, { json }) {
       // If the value is an object all keys are removeEmpty the same way.
       // If you prefix typeof to the key, it’s only removeEmpty for typeof calls.
       new webpack.DefinePlugin({
-        'process.env': {
-          // NOTE: The NODE_ENV key is especially important for production
-          // builds as React relies on process.env.NODE_ENV for optimizations.
-          NODE_ENV: JSON.stringify(mode),
-          IS_SERVER: isServer,
-          // All the below items match the config items in our .env file. Go
-          // to the .env_example for a description of each key.
-          // TODO: Automate this by reading the keys from the .env file.
-          SERVER_PORT: JSON.stringify(process.env.SERVER_PORT),
-          CLIENT_DEVSERVER_PORT: JSON.stringify(process.env.CLIENT_DEVSERVER_PORT),
-          DISABLE_SSR: JSON.stringify(process.env.DISABLE_SSR),
-          SERVER_BUNDLE_OUTPUT_PATH: JSON.stringify(process.env.SERVER_BUNDLE_OUTPUT_PATH),
-          CLIENT_BUNDLE_OUTPUT_PATH: JSON.stringify(process.env.CLIENT_BUNDLE_OUTPUT_PATH),
-          CLIENT_BUNDLE_ASSETS_FILENAME: JSON.stringify(process.env.CLIENT_BUNDLE_ASSETS_FILENAME),
-          CLIENT_BUNDLE_HTTP_PATH: JSON.stringify(process.env.CLIENT_BUNDLE_HTTP_PATH),
-          CLIENT_BUNDLE_CACHE_MAXAGE: JSON.stringify(process.env.CLIENT_BUNDLE_CACHE_MAXAGE),
-        },
+        'process.env': merge(
+          {
+            // NOTE: The NODE_ENV key is especially important for production
+            // builds as React relies on process.env.NODE_ENV for optimizations.
+            NODE_ENV: JSON.stringify(mode),
+            // NOTE: If you are providing any environment variables from the
+            // command line rather than the .env files then you must make sure
+            // you add them here so that webpack can use them in during the
+            // compiling process.
+            // e.g.
+            // MY_CUSTOM_VAR: JSON.stringify(process.env.MY_CUSTOM_VAR)
+          },
+          // Now we will expose all of the .env config variables to webpack
+          // so that it can make all the subtitutions for us.
+          Object.keys(envVars).reduce((acc, cur) => {
+            acc[cur] = JSON.stringify(envVars[cur]); // eslint-disable-line no-param-reassign
+            return acc;
+          }, {})
+        ),
       }),
 
       ifClient(
@@ -219,8 +231,8 @@ function webpackConfigFactory({ target, mode }, { json }) {
         // as we need to interogate these files in order to know what JS/CSS
         // we need to inject into our HTML.
         new AssetsPlugin({
-          filename: process.env.CLIENT_BUNDLE_ASSETS_FILENAME,
-          path: path.resolve(appRootPath, process.env.CLIENT_BUNDLE_OUTPUT_PATH),
+          filename: envVars.CLIENT_BUNDLE_ASSETS_FILENAME,
+          path: path.resolve(appRootPath, envVars.CLIENT_BUNDLE_OUTPUT_PATH),
         })
       ),
 
@@ -286,8 +298,8 @@ function webpackConfigFactory({ target, mode }, { json }) {
           loader: 'babel-loader',
           exclude: [
             /node_modules/,
-            path.resolve(appRootPath, process.env.CLIENT_BUNDLE_OUTPUT_PATH),
-            path.resolve(appRootPath, process.env.SERVER_BUNDLE_OUTPUT_PATH),
+            path.resolve(appRootPath, envVars.CLIENT_BUNDLE_OUTPUT_PATH),
+            path.resolve(appRootPath, envVars.SERVER_BUNDLE_OUTPUT_PATH),
           ],
           query: merge(
             {
