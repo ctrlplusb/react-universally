@@ -2,6 +2,27 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.0.0] - 2016-09-24
+
+### Breaking Changes
+
+Big restructure and improvement to the dynamic routing / code splitting configuration.
+We no longer need the previous manual import hacks for the routes to allow Hot Module Reloading to work. Yay!
+The ~/src/shared/components/App/ now has subfolders, one for "lib" components (i.e. components to be reused across views/routes), and a "views" folder which will contain components used for our routes.
+All our primary routes which we will use for code splitting have been moved to ~/src/shared/components/App/views
+
+Environment variables from the .env files are now automatically applied to the webpack DefinePlugin section, no longer requiring any error prone manual intervention.
+
+### Changed
+
+Updates dependencies.
+
+Minor optimization to bundle build size.
+
+### Fixed
+
+Adds missing plugin dependency for the transform-object-rest-spread babel plugin.
+
 ## [3.3.1] - 2016-08-11
 
 ### Changed
