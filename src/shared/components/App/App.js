@@ -6,7 +6,8 @@ import Helmet from 'react-helmet';
 
 import 'normalize.css/normalize.css';
 import './globals.css';
-import logo from './logo.png';
+
+import Logo from './lib/Logo';
 
 const websiteDescription =
   'A starter kit giving you the minimum requirements for a production ready ' +
@@ -32,19 +33,17 @@ function App(props : { children : $React$Children }) {
         ]}
       />
 
-      <div style={{ textAlign: 'center' }}>
-        <img src={logo} alt="Logo" style={{ width: '100px' }} />
+      <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
+        <Logo />
         <h1>React, Universally</h1>
-        <strong>
-          {websiteDescription}
-        </strong>
+        <strong>{websiteDescription}</strong>
       </div>
-      <div>
+      <div style={{ marginBottom: '1rem' }}>
         <ul>
           <li><Link to="/">Home</Link></li>
           <li><Link to="/about">About</Link></li>
+          <li><Link to="/foo">Foo</Link></li>
         </ul>
-
       </div>
       <div>
         {children}

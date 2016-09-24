@@ -161,6 +161,24 @@ function webpackConfigFactory({ target, mode }, { json }) {
       ],
     },
     plugins: removeEmpty([
+      // We use the System.import feature of webpack with a "dynamic" component
+      // path. (e.g. System.import(`../components/App/views/${viewName}/index.js`))
+      // This causes webpack to create a regex that will match for the dynamic
+      // part of the path (i.e. ${viewName}).  By default a greedy ".*" regex
+      // pattern will be used, and therefore any subfolders containing a
+      // "index.js" file will be considered a match and webpack will then
+      // create a seperate bundle for the path.  This is probably not going
+      // to be desirable for us, so I have overridden the regex that will be
+      // used below and have specified it in such a manner that only the root
+      // folders within "~/src/shared/components/App/views" that contain an
+      // "index.js" will be considered an async view component that should be
+      // used by webpack for code splitting.
+      // @see https://github.com/webpack/webpack/issues/87
+      new webpack.ContextReplacementPlugin(
+        /components[\/\\]App[\/\\]views$/,
+        new RegExp('^\\.\\/(\\w|\\s|-|_)*\\/index\\.js$')
+      ),
+
       // We use this so that our generated [chunkhash]'s are only different if
       // the content for our respective chunks have changed.  This optimises
       // our long term browser caching strategy for our client bundle, avoiding
@@ -180,6 +198,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
           // NOTE: The NODE_ENV key is especially important for production
           // builds as React relies on process.env.NODE_ENV for optimizations.
           NODE_ENV: JSON.stringify(mode),
+          IS_SERVER: isServer,
           // All the below items match the config items in our .env file. Go
           // to the .env_example for a description of each key.
           // TODO: Automate this by reading the keys from the .env file.
