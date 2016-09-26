@@ -107,6 +107,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
         main: removeEmpty([
           ifDevClient('react-hot-loader/patch'),
           ifDevClient(`webpack-hot-middleware/client?reload=true&path=http://localhost:${envVars.CLIENT_DEVSERVER_PORT}/__webpack_hmr`),
+          ifClient('babel-polyfill'),
           path.resolve(appRootPath, `./src/${target}/index.js`),
         ]),
       }

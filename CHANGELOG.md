@@ -2,6 +2,18 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.1.0] - 2016-09-26
+
+### Added
+
+babel-polyfill to client bundle output.
+
+### Fixed
+
+Webpack context regex to be windows path friendly.
+
+System.import expression within routes to not use a template string as Webpack throws warnings for these.
+
 ## [4.0.0] - 2016-09-24
 
 ### Breaking Changes
