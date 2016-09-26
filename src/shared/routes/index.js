@@ -32,7 +32,7 @@ function asyncAppViewResolver(viewName: string) {
   };
 
   return (nextState, cb) =>
-    System.import(`../components/App/views/${viewName}/index.js`)
+    System.import('../components/App/views/' + viewName + '/index.js') // eslint-disable-line prefer-template
       .then(module => cb(null, module.default))
       .catch(errorHandler);
 }

@@ -169,7 +169,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
       // @see https://github.com/webpack/webpack/issues/87
       new webpack.ContextReplacementPlugin(
         /components[\/\\]App[\/\\]views$/,
-        new RegExp('^\\.\\/(\\w|\\s|-|_)*\\/index\\.js$')
+        new RegExp(String.raw`^\.[\\\/](\w|\s|-|_)*[\\\/]index\.js$`)
       ),
 
       // We use this so that our generated [chunkhash]'s are only different if
