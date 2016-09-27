@@ -2,6 +2,31 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.0.0] - 2016-09-27
+
+### Breaking Change
+
+Unfortunately webpack doesn't support System.import statements containing expressions when doing a target=node bundle.  Therefore I have had to reluctantly revert back to the more verbose previous way of doing things.
+
+### Fixed
+
+I have picked up on an issue with webpack's tree shaking feature. Importing a constant boolean value from another file (i.e. our config files) and wrapping a code block with an if statement based on the respective value doesn't result in tree shaking even if the value is false.  Therefore I have had to "inline" these statements, which does then result in tree shaking working.
+
+For example:
+
+    import { IS_HOT_DEVELOPMENT } from '../config';
+    if (IS_HOT_DEVELOPMENT) {
+      // tree shake me
+    }
+
+Has to be:
+
+    if (process.env.NODE_ENV === 'development' && module.hot) {
+      // tree shake me
+    }
+
+Please be aware of this.
+
 ## [4.1.0] - 2016-09-26
 
 ### Added
