@@ -28,9 +28,7 @@ function App(props : { children : $React$Children }) {
         meta={[
           { name: 'description', content: websiteDescription },
         ]}
-        script={[
-          { src: 'https://cdn.polyfill.io/v2/polyfill.min.js', type: 'text/javascript' },
-        ]}
+        script={[]}
       />
 
       <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
