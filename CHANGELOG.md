@@ -2,6 +2,16 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.1.0] - 2016-09-27
+
+### Fixed
+
+An issue with the webpack configuration which prevented multiple chunks when build a dev version of the server bundle, this would then result in errors on resolving our async routes.  Phew!  That was a hard fought fight.
+
+### Changed
+
+Updates the routing configuration to be concise.
+
 ## [5.0.0] - 2016-09-27
 
 ### Breaking Change
