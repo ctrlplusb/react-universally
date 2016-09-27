@@ -1,5 +1,5 @@
-// flow-typed signature: c3642ab12fdf362ba2c6e2e1577efeff
-// flow-typed version: 84bd61091d/express_v4.x.x/flow_>=v0.25.x
+// flow-typed signature: ce6eddb651fe9035366f36c446364736
+// flow-typed version: 08386ddd61/express_v4.x.x/flow_>=v0.25.x
 
 // @flow
 import type { Server } from 'http';
@@ -54,6 +54,8 @@ declare module 'express' {
     signed?: boolean
   };
 
+  declare type RenderCallback = (err: Error | null, html?: string) => mixed;
+
   declare type SendFileOptions = {
     maxAge?: number,
     root?: string,
@@ -76,7 +78,7 @@ declare module 'express' {
     location(path: string): this;
     redirect(url: string, ...args: Array<void>): this;
     redirect(status: number, url: string, ...args: Array<void>): this;
-    render(view: string, locals?: mixed, callback: (err?: ?Error) => mixed): this;
+    render(view: string, locals?: mixed, callback: RenderCallback): this;
     send(body?: mixed): this;
     sendFile(path: string, options?: SendFileOptions, callback?: (err?: ?Error) => mixed): this;
     sendStatus(statusCode: number): this;
@@ -89,20 +91,21 @@ declare module 'express' {
   declare type $Request = Request;
   declare type NextFunction = (err?: ?Error) => mixed;
   declare type Middleware =
-    (req: Request, res: Response, next: NextFunction) => mixed |
-    (error: ?Error, req : Request, res: Response, next: NextFunction) => mixed;
+    ((req: Request, res: Response, next: NextFunction) => mixed) |
+    ((error: ?Error, req : Request, res: Response, next: NextFunction) => mixed);
   declare interface RouteMethodType<T> {
     (middleware: Middleware): T;
     (...middleware: Array<Middleware>): T;
-    (path: string|RegExp, ...middleware: Array<Middleware>): T;
+    (path: string|RegExp|string[], ...middleware: Array<Middleware>): T;
   }
   declare interface RouterMethodType<T> {
     (middleware: Middleware): T;
     (...middleware: Array<Middleware>): T;
-    (path: string|RegExp, ...middleware: Array<Middleware>): T;
+    (path: string|RegExp|string[], ...middleware: Array<Middleware>): T;
     (path: string, router: Router): T;
   }
   declare class Route {
+    all: RouteMethodType<this>;
     get: RouteMethodType<this>;
     post: RouteMethodType<this>;
     put: RouteMethodType<this>;
@@ -138,6 +141,8 @@ declare module 'express' {
     use: RouterMethodType<this>;
 
     route(path: string): Route;
+    
+    static (): Router;
   }
 
   declare function serveStatic(root: string, options?: Object): Middleware;
@@ -161,7 +166,7 @@ declare module 'express' {
      */
     //   get(name: string): mixed;
     set(name: string, value: mixed): mixed;
-    render(name: string, optionsOrFunction: {[name: string]: mixed}, callback: (err: ?Error, html: string) => mixed): void;
+    render(name: string, optionsOrFunction: {[name: string]: mixed}, callback: RenderCallback): void;
   }
 
   declare type $Application = Application;
