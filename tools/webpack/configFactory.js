@@ -251,10 +251,6 @@ function webpackConfigFactory({ target, mode }, { json }) {
       // We need this plugin to enable hot module reloading for our dev server.
       ifDevClient(new webpack.HotModuleReplacementPlugin()),
 
-      // Ensure only 1 file is output for the server bundles.  This makes it
-      // much easer for us to clear the module cache when reloading the server.
-      ifDevServer(new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 })),
-
       // Adds options to all of our loaders.
       ifProdClient(
         new webpack.LoaderOptionsPlugin({
