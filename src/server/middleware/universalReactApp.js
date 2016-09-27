@@ -8,14 +8,13 @@ import match from 'react-router/lib/match';
 import render from '../htmlPage/render';
 import routes from '../../shared/routes';
 import { DISABLE_SSR } from '../config';
-import { IS_DEVELOPMENT } from '../../shared/config';
 
 /**
  * An express middleware that is capabable of doing React server side rendering.
  */
 function universalReactAppMiddleware(request, response) {
   if (DISABLE_SSR) {
-    if (IS_DEVELOPMENT) {
+    if (process.env.NODE_ENV === 'development') {
       console.log('==> 🐌  Handling react route without SSR');  // eslint-disable-line no-console
     }
     // SSR is disabled so we will just return an empty html page and will

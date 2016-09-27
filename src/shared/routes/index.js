@@ -5,51 +5,66 @@ import Route from 'react-router/lib/Route';
 import IndexRoute from 'react-router/lib/IndexRoute';
 import App from '../components/App';
 
-/**
- * Use this function to provide `getComponent` implementations for your
- * application "views" (i.e. pages). It makes use of webpack 2's System.import
- * feature which allows for the async module loading behavior, and this results
- * in webpack doing code splitting.  So essentially we will get a different
- * code split bundle for each of our views.  Sweet.
- *
- * Notes:
- * 1. Your view components have to reside within the
- *    ~/src/shared/components/App/views folder.  You need to create a folder to
- *    represent your view and then have an index.js file within that will return
- *    the respective view component.
- * 2. The regex that webpack uses to statically calculate which components it
- *    should expose as async has been overridden within the config factory. It
- *    has been overridden so that only the "root" folders within
- *    ~/src/shared/components/App/views will be recognised as async components.
- *    None of the sub folders will be considered.
- *
- * @see https://gist.github.com/sokra/27b24881210b56bbaff7#code-splitting-with-es6
- */
-function asyncAppViewResolver(viewName: string) {
-  const errorHandler = (err) => {
-    console.log(`==> Failed to load async view "${viewName}".`); // eslint-disable-line no-console
-    console.log(err); // eslint-disable-line no-console
-  };
+if (process.env.NODE_ENV === 'development' && module.hot) {
+  // HMR does not work 100% if you are using the dynamic component resolution
+  // properties (i.e. getComponent or getComponents). Specifically, HMR will
+  // work initially but if you change your route (i.e. browse to another part
+  // of your app) then the HMR will stop working.
+  // As a workaround for this scenario; for any of your components that are
+  // resolved dynamically please require them below. If you don't want to
+  // maintain this list then you could remove it and instead do a manual browser
+  // refresh after changing the route.
+  require('../components/App/views/Home'); // eslint-disable-line global-require
+  require('../components/App/views/About'); // eslint-disable-line global-require
+}
 
-  return (nextState, cb) =>
-    System.import('../components/App/views/' + viewName + '/index.js') // eslint-disable-line prefer-template
-      .then(module => cb(null, module.default))
-      .catch(errorHandler);
+function handleError(err) {
+  // TODO: Error handling, do we return an Error component here?
+  console.log('==> Error occurred loading dynamic route'); // eslint-disable-line no-console
+  console.log(err); // eslint-disable-line no-console
+}
+
+// NOTE: Unfortunately we have to declare every async route manually.  We can't
+// use a single System.import statement with a dynamic expression for resolving
+// a component/view as this is currently broken in target=node webpack bundles.
+// @see https://github.com/webpack/webpack/issues/3065
+// When this is sorted then we can replace the below functions with a single
+// implementation similar to:
+// function resolveAsyncView(viewName: string) {
+//   return (nextState, cb) => {
+//     System.import('../components/App/views/' + viewName + '/index.js')
+//       .then(module => cb(null, module.default))
+//       .catch(handleError);
+//   }
+// }
+// Additionally we wouldn't need the workaround at the top of the file.  Until
+// then, you will need to be a bit verbose here.  Apologies.
+
+function resolveIndexComponent(nextState, cb) {
+  System.import('../components/App/views/Home')
+    .then(module => cb(null, module.default))
+    .catch(handleError);
+}
+
+function resolveAboutComponent(nextState, cb) {
+  System.import('../components/App/views/About')
+    .then(module => cb(null, module.default))
+    .catch(handleError);
 }
 
 /**
  * Our routes.
  *
- * Note: We load our routes asynhronously using the `getComponent` API of
+ * NOTE: We load our routes asynhronously using the `getComponent` API of
  * react-router, doing so combined with the `System.import` support by
  * webpack 2 allows us to get code splitting based on our routes.
- *
  * @see https://github.com/reactjs/react-router/blob/master/docs/guides/DynamicRouting.md
+ * @see https://gist.github.com/sokra/27b24881210b56bbaff7#code-splitting-with-es6
  */
 const routes = (
   <Route path="/" component={App}>
-    <IndexRoute getComponent={asyncAppViewResolver('Home')} />
-    <Route path="about" getComponent={asyncAppViewResolver('About')} />
+    <IndexRoute getComponent={resolveIndexComponent} />
+    <Route path="about" getComponent={resolveAboutComponent} />
   </Route>
 );
 

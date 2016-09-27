@@ -219,6 +219,13 @@ function webpackConfigFactory({ target, mode }, { json }) {
           },
           // Now we will expose all of the .env config variables to webpack
           // so that it can make all the subtitutions for us.
+          // Note: ALL of these values will be given as string types. Even if you
+          // set numeric/boolean looking values within your .env file. The parsing
+          // that we do of the .env file always returns the values as strings.
+          // Therefore in your code you may need to do operations like the
+          // following:
+          // const MY_NUMBER = parseInt(process.env.MY_NUMBER, 10);
+          // const MY_BOOL = process.env.MY_BOOL === 'true';
           Object.keys(envVars).reduce((acc, cur) => {
             acc[cur] = JSON.stringify(envVars[cur]); // eslint-disable-line no-param-reassign
             return acc;
