@@ -7,8 +7,7 @@
 
 import path from 'path';
 import appRoot from 'app-root-path';
-import { envVarExists } from '../../shared/utils/guards';
-import { fileExists } from '../utils/guards';
+import { envVarExists, fileExists } from './utils/guards';
 
 const appRootPath = appRoot.toString();
 

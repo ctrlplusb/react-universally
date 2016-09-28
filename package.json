@@ -11,8 +11,8 @@
     "lint": "eslint src",
     "clean": "rimraf build",
     "development": "node ./tools/development/server",
-    "build": "npm run clean && webpack --env.mode production --config ./tools/webpack/client.config.js && webpack --env.mode production --config ./tools/webpack/server.config.js",
-    "start": "node build/server/main.js"
+    "build": "npm run clean && webpack --config ./tools/webpack/client.config.js && webpack --config ./tools/webpack/universalMiddleware.config.js && webpack --config ./tools/webpack/server.config.js",
+    "start": "node build/server"
   },
   "repository": {
     "type": "git",
@@ -55,11 +55,8 @@
     "babel-core": "6.14.0",
     "babel-eslint": "7.0.0",
     "babel-loader": "6.2.5",
-    "babel-plugin-transform-class-properties": "6.11.5",
-    "babel-plugin-transform-es2015-destructuring": "6.9.0",
-    "babel-plugin-transform-object-rest-spread": "6.8.0",
     "babel-polyfill": "6.13.0",
-    "babel-preset-es2015": "6.14.0",
+    "babel-preset-latest": "6.14.0",
     "babel-preset-react": "6.11.1",
     "chokidar": "1.6.0",
     "css-loader": "0.25.0",

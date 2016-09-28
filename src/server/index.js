@@ -9,7 +9,7 @@ import express from 'express';
 import compression from 'compression';
 import hpp from 'hpp';
 import helmet from 'helmet';
-import universalReactAppMiddleware from './middleware/universalReactApp';
+import universalMiddleware from '../../build/universalMiddleware';
 import {
   CLIENT_BUNDLE_HTTP_PATH,
   CLIENT_BUNDLE_OUTPUT_PATH,
@@ -57,7 +57,7 @@ app.use(
 app.use(express.static(PUBLIC_DIR_PATH));
 
 // Bind our universal react app middleware as the handler for all get requests.
-app.get('*', universalReactAppMiddleware);
+app.get('*', universalMiddleware);
 
 // Create an http listener for our express app.
 const listener = app.listen(SERVER_PORT);

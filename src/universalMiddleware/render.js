@@ -3,8 +3,7 @@
 import { renderToString } from 'react-dom/server';
 import serialize from 'serialize-javascript';
 import Helmet from 'react-helmet';
-import clientAssets from '../clientAssets';
-import favicon from './favicon.ico';
+import clientAssets from './clientAssets';
 
 function styleTags(styles : Array<string>) {
   return styles
@@ -58,7 +57,7 @@ function render(rootReactElement : ?$React$Element, initialState : ?Object) {
         <meta charSet='utf-8' />
         <meta httpEquiv='X-UA-Compatible' content='IE=edge' />
         <meta httpEquiv='Content-Language' content='en' />
-        <link rel='shortcut icon' type='image/x-icon' href='${favicon}' />
+        <link rel='shortcut icon' type='image/x-icon' href='/favicon.ico' />
 
         ${helmet ? helmet.title.toString() : ''}
         ${helmet ? helmet.meta.toString() : ''}

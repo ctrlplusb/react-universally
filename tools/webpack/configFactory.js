@@ -13,9 +13,9 @@ const envVars = require('../config/envVars');
 const appRootPath = appRoot.toString();
 
 function webpackConfigFactory({ target, mode }, { json }) {
-  if (!target || ['client', 'server'].findIndex(valid => target === valid) === -1) {
+  if (!target || ['client', 'server', 'universalMiddleware'].findIndex(valid => target === valid) === -1) {
     throw new Error(
-      'You must provide a "target" (client|server) to the webpackConfigFactory.'
+      'You must provide a "target" (client|server|universalMiddleware) to the webpackConfigFactory.'
     );
   }
 
@@ -48,18 +48,26 @@ function webpackConfigFactory({ target, mode }, { json }) {
   const isProd = mode === 'production';
   const isClient = target === 'client';
   const isServer = target === 'server';
+  const isUniversalMiddleware = target === 'universalMiddleware';
+  const isNodeTarget = isServer || isUniversalMiddleware;
 
+  const ifNodeTarget = ifElse(isNodeTarget);
+  const ifReactTarget = ifElse(isClient || isUniversalMiddleware);
   const ifDev = ifElse(isDev);
-  const ifProd = ifElse(isProd);
   const ifClient = ifElse(isClient);
   const ifServer = ifElse(isServer);
   const ifDevClient = ifElse(isDev && isClient);
-  const ifDevServer = ifElse(isDev && isServer);
   const ifProdClient = ifElse(isProd && isClient);
+
+  const bundleOutputMap = {
+    client: envVars.CLIENT_BUNDLE_OUTPUT_PATH,
+    server: envVars.SERVER_BUNDLE_OUTPUT_PATH,
+    universalMiddleware: envVars.UNIVERSALMIDDLEWARE_BUNDLE_OUTPUT_PATH,
+  };
 
   return {
     // We need to state that we are targetting "node" for our server bundle.
-    target: ifServer('node', 'web'),
+    target: ifNodeTarget('node', 'web'),
     // We have to set this to be able to use these items when executing a
     // server bundle.  Otherwise strangeness happens, like __dirname resolving
     // to '/'.  There is no effect on our client bundle.
@@ -69,11 +77,15 @@ function webpackConfigFactory({ target, mode }, { json }) {
     },
     // Anything listed in externals will not be included in our bundle.
     externals: removeEmpty([
+      // Don't allow the server to bundle the universal middleware bundle. We
+      // want the server to natively require it from the build dir.
+      ifServer(/universalMiddleware/),
+
       // We don't want our node_modules to be bundled with our server package,
       // prefering them to be resolved via native node module system.  Therefore
       // we use the `webpack-node-externals` library to help us generate an
       // externals config that will ignore all node_modules.
-      ifServer(nodeExternals({
+      ifNodeTarget(nodeExternals({
         // NOTE: !!!
         // However the node_modules may contain files that will rely on our
         // webpack loaders in order to be used/resolved, for example CSS or
@@ -87,7 +99,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
         ],
       })),
     ]),
-    devtool: ifElse(isServer || isDev)(
+    devtool: ifElse(isNodeTarget || isDev)(
       // We want to be able to get nice stack traces when running our server
       // bundle.  To fully support this we'll also need to configure the
       // `node-source-map-support` module to execute at the start of the server
@@ -104,7 +116,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
     // Define our entry chunks for our bundle.
     entry: merge(
       {
-        main: removeEmpty([
+        index: removeEmpty([
           ifDevClient('react-hot-loader/patch'),
           ifDevClient(`webpack-hot-middleware/client?reload=true&path=http://localhost:${envVars.CLIENT_DEVSERVER_PORT}/__webpack_hmr`),
           ifClient('babel-polyfill'),
@@ -114,12 +126,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
     ),
     output: {
       // The dir in which our bundle should be output.
-      path: path.resolve(
-        appRootPath,
-        isClient
-          ? envVars.CLIENT_BUNDLE_OUTPUT_PATH
-          : envVars.SERVER_BUNDLE_OUTPUT_PATH
-      ),
+      path: path.resolve(appRootPath, bundleOutputMap[target]),
       // The filename format for our bundle's entries.
       filename: ifProdClient(
         // We include a hash for client caching purposes.  Including a unique
@@ -144,7 +151,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
         envVars.CLIENT_BUNDLE_HTTP_PATH
       ),
       // When in server mode we will output our bundle as a commonjs2 module.
-      libraryTarget: ifServer('commonjs2', 'var'),
+      libraryTarget: ifNodeTarget('commonjs2', 'var'),
     },
     resolve: {
       // These extensions are tried when resolving a file.
@@ -168,9 +175,11 @@ function webpackConfigFactory({ target, mode }, { json }) {
       // "index.js" will be considered an async view component that should be
       // used by webpack for code splitting.
       // @see https://github.com/webpack/webpack/issues/87
-      new webpack.ContextReplacementPlugin(
-        /components[\/\\]App[\/\\]views$/,
-        new RegExp(String.raw`^\.[\\\/](\w|\s|-|_)*[\\\/]index\.js$`)
+      ifReactTarget(
+          new webpack.ContextReplacementPlugin(
+          /components[\/\\]App[\/\\]views$/,
+          new RegExp(String.raw`^\.[\\\/](\w|\s|-|_)*[\\\/]index\.js$`)
+        )
       ),
 
       // We use this so that our generated [chunkhash]'s are only different if
@@ -280,7 +289,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
         })
       ),
 
-      ifProd(
+      ifProdClient(
         // This is actually only useful when our deps are installed via npm2.
         // In npm2 its possible to get duplicates of dependencies bundled
         // given the nested module structure. npm3 is flat, so this doesn't
@@ -300,43 +309,20 @@ function webpackConfigFactory({ target, mode }, { json }) {
         {
           test: /\.jsx?$/,
           loader: 'babel-loader',
-          exclude: [
-            /node_modules/,
-            path.resolve(appRootPath, envVars.CLIENT_BUNDLE_OUTPUT_PATH),
-            path.resolve(appRootPath, envVars.SERVER_BUNDLE_OUTPUT_PATH),
-          ],
+          include: [path.resolve(appRootPath, './src')],
           query: merge(
             {
-              plugins: [
-                // The transform-object-rest-spread plugin currently depends
-                // on this plugin.  Even if you are running in an environment
-                // that supports destructuring.
-                'transform-es2015-destructuring',
-                'transform-object-rest-spread',
-                'transform-class-properties',
-              ],
-              env: {
-                development: {
-                  plugins: ['react-hot-loader/babel'],
-                },
-              },
-            },
-            ifServer({
-              // We are running a node 6 server which has support for almost
-              // all of the ES2015 syntax, therefore we only transpile JSX.
-              presets: ['react'],
-            }),
-            ifClient({
-              // For our clients code we will need to transpile our JS into
-              // ES5 code for wider browser/device compatability.
               presets: [
                 // JSX
                 'react',
-                // Webpack 2 includes support for es2015 imports, therefore we
-                // disable the modules processing.
-                ['es2015', { modules: false }],
+                // All the latest JS goodies.
+                // TODO: When babel-preset-latest-minimal has stabilised use it
+                // for the node targets.
+                ['latest', { modules: false }],
               ],
-            })
+            },
+            // Our dev client build will need the react hot loader babel plugin
+            ifDevClient({ plugins: ['react-hot-loader/babel'] })
           ),
         },
 
@@ -366,7 +352,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
           { test: /\.css$/ },
           // When targetting the server we use the "/locals" version of the
           // css loader.
-          ifServer({
+          ifNodeTarget({
             loaders: [
               'css-loader/locals',
             ],

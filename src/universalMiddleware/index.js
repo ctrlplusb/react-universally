@@ -5,15 +5,14 @@ import React from 'react';
 import RouterContext from 'react-router/lib/RouterContext';
 import createMemoryHistory from 'react-router/lib/createMemoryHistory';
 import match from 'react-router/lib/match';
-import render from '../htmlPage/render';
-import routes from '../../shared/routes';
-import { DISABLE_SSR } from '../config';
+import render from './render';
+import routes from '../shared/routes';
 
 /**
  * An express middleware that is capabable of doing React server side rendering.
  */
 function universalReactAppMiddleware(request: $Request, response: $Response) {
-  if (DISABLE_SSR) {
+  if (process.env.DISABLE_SSR === 'true') {
     if (process.env.NODE_ENV === 'development') {
       console.log('==> 🐌  Handling react route without SSR');  // eslint-disable-line no-console
     }

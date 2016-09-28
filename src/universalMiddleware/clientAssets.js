@@ -3,7 +3,7 @@
 // This file resolves the assets available from our client bundle.
 
 import fs from 'fs';
-import { CLIENT_BUNDLE_ASSETSJSON_FILEPATH } from '../config';
+import { CLIENT_BUNDLE_ASSETSJSON_FILEPATH } from '../server/config';
 
 const ClientBundleAssets = JSON.parse(
   fs.readFileSync(CLIENT_BUNDLE_ASSETSJSON_FILEPATH, 'utf8')
