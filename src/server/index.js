@@ -10,6 +10,7 @@ import compression from 'compression';
 import hpp from 'hpp';
 import helmet from 'helmet';
 import { getEnvVar } from '../shared/node/utils/env';
+import universalMiddleware from '../universalMiddleware';
 
 const appRootPath = appRoot.toString();
 
@@ -63,8 +64,6 @@ if (process.env.NODE_ENV === 'development') {
 
   app.get('*', universalDevMiddleware);
 } else {
-  const universalMiddleware = require('../universalMiddleware').default; // eslint-disable-line global-require,max-len
-
   app.get('*', universalMiddleware);
 }
 

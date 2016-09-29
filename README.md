@@ -24,7 +24,7 @@ This starter kit contains all the build tooling and configuration you need to ki
 ## Features
 
   - 🌍 Server side rendering.
-  - 🔥 Extreme live development - hot reloading of client/server source as well as your _webpack configuration_, with high level of error tolerance.
+  - 🔥 Extreme live development - hot reloading of client/server source as, with high level of error tolerance.
   - 🚄 `express` server.
   - 👮 Security on the `express` server using `helmet` and `hpp`.
   - 👀 `react` as the view.
@@ -32,10 +32,10 @@ This starter kit contains all the build tooling and configuration you need to ki
   - ⛑ `react-helmet` allowing control of the page title/meta/styles/scripts from within your components. Direct control for your SEO needs.
   - 🖌 Very basic CSS support - it's up to you to extend it into CSS Modules, SASS, PostCSS, Aphrodite etc.
   - 🏜 Image and Font support.
-  - 🚀 Full ES2015 support, using `babel` to transpile where needed.
+  - 🚀 Full ES2017+ support, using `babel` to transpile where needed.
   - 📦 Bundling of both client and server using `webpack` v2.
   - ✂️ Client bundle is split by routes.
-  - 🐘 Long term caching of the client bundle. Thanks to @mjackson for the inspiration from his super cool [`web-starter`](https://github.com/mjackson/web-starter) project.  Check it out!
+  - 🐘 Long term caching of the client bundle.
   - 🍃 Tree-shaking, supported by `webpack`.  
   - ✔️ Type checking via Flow, a beautiful and unobtrusive type framework. NOTE: Flow is a completely optional feature.  The flow type annotations get ripped out of the source by the webpack build step. You have no obligation to use flow within your code and can even uninstall the dependency (flow-bin) without breaking the project.  I do highly recommend you try it out though.
   - 🎛 A development and optimized production configuration.
@@ -46,17 +46,18 @@ This starter kit contains all the build tooling and configuration you need to ki
 
 Redux/MobX, data persistence, test frameworks, and all the other bells and whistles have been explicitly excluded from this boilerplate.  It's up to you to decide what technologies you would like to add to your own implementation based upon your own needs, this boilerplate simply serves as a clean base upon which to do so.
 
-This boilerplate uses Webpack 2 to produce bundles for both the client and the
-server code.  You will notice two Webpack configuration files that allow you to target the respective environments:
+This boilerplate uses Webpack 2 to produce bundles for both the client, the
+server, and the middleware that the server will use to support SSR rendering of the React application.  You will notice the following Webpack configuration files:
 
    - `tools/webpack/client.config.js`
    - `tools/webpack/server.config.js`
+   - `tools/webpack/universalMiddleware.config.js`
 
-Both of these then call into the `tools/webpack/configFactory.js` in order to generate their respective webpack configurations.  I've tried to keep the webpack configuration as centralized and well documented as possible as it can be a confusing topic at times.
+All of these call into the `tools/webpack/configFactory.js` in order to generate their respective webpack configurations. I've tried to keep the webpack configuration as centralized as possible to allow easier reuse of the configuration and allow you to not have to do constant file jumping whilst trying to analyse the configuration for a target bundle.  I've also included a fair amount of comments as I know webpack can be a bit daunting at first.
 
-My reasoning for using webpack to bundle both the client and the server is that it allows our server code to handle React components which require support for additional file imports (e.g. CSS/Images (as and when you add the respective loaders).
+Using webpack and babel across all of our source allows us to use the same level of javascript (e.g. es2015/2016/2017) without having to worry about what each target environment supports.  In addition to this it allows our client/server code to both support the additional file types that a typical React application may import (e.g. CSS/Images (as and when you add the respective loaders).
 
-Given that we are bundling our server code I have included the `source-map-support` module to ensure that we get nice stack traces when executing our code via node.
+Given that we are bundling our server code I have included the `source-map-support` module to ensure that we still get nice stack traces when executing our code.
 
 The application configuration is supported by the `dotenv` module and it requires you to create a `.env` file in the project root (you can use the `.env_example` as a base).  The `.env` file has been explicitly ignored from git as it will typically contain environment sensitive/specific information.  In the usual case your continuous deployment tool of choice should configure the specific `.env` file that is needed for a target environment.
 
@@ -79,17 +80,21 @@ This boilerplate provides extended features on top of `react-universally` such a
 |  |- server // The built server module
 |
 |- src  // All the source code
-|  |- server // The server specific source
-|  |- client // The client specific source
-|  |- shared // The shared code between the client/server
-|
+|  |- server // The server bundle source
+|  |- universalMiddleware // the universal middleware bundle source
+|  |- client // The client bundle source
+|  |- shared // The shared code between the bundles
+|     |- universal // Shared code that is suitable for web or node bundles 
+|     |               (i.e. any of the bundles)
+|     |- node      // Shared code that is suitable for node bundles 
+|                     (i.e. our server or universalMiddleware bundles)
 |- tools
-|  |- development
-|  |  |- server.js // Creates a hot reloading development environment
+|  |- development // Tool for hot reloading development
 |  |
 |  |- webpack
-|     |- client.config.js // Client target webpack configuration
-|     |- server.config.js // Server target webpack configuration
+|     |- client.config.js // Client webpack configuration
+|     |- server.config.js // Server webpack configuration
+|     |- universalMiddleware.config.js // Universal middleware webpack configuration
 |     |- configFactory.js  // Webpack configuration builder
 |
 |- .env_example // An example from which to create your own .env file.
