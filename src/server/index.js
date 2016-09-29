@@ -70,7 +70,7 @@ if (process.env.NODE_ENV === 'development') {
 // Create an http listener for our express app.
 const port = parseInt(notEmpty(process.env.SERVER_PORT), 10);
 const listener = app.listen(port);
-console.log(`Server listening on port ${port}`);
+console.log(`Server listening on port ${port}`); // eslint-disable-line no-console
 
 // We export the listener as it will be handy for our development hot reloader.
 export default listener;
