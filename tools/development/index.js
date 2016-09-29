@@ -1,149 +1,17 @@
-/* eslint-disable no-console,global-require,no-underscore-dangle,import/no-extraneous-dependencies,max-len */
+/* eslint-disable no-console */
+/* eslint-disable global-require */
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable import/newline-after-import */
 
 const path = require('path');
-const notifier = require('node-notifier');
 const chokidar = require('chokidar');
 const webpack = require('webpack');
-const express = require('express');
-const createWebpackMiddleware = require('webpack-dev-middleware');
-const createWebpackHotMiddleware = require('webpack-hot-middleware');
-const envVars = require('../config/envVars');
+const createNotification = require('./createNotification');
+const HotServer = require('./hotServer');
+const HotClient = require('./hotClient');
 
-function createNotification(options = {}) {
-  const title = options.title
-    ? `🔥  ${options.title.toUpperCase()}`
-    : undefined;
-
-  notifier.notify({
-    title,
-    message: options.message,
-    open: options.open,
-  });
-
-  console.log(`==> ${title} -> ${options.message}`);
-}
-
-class ListenerManager {
-  constructor(listener) {
-    this.lastConnectionKey = 0;
-    this.connectionMap = {};
-    this.listener = listener;
-
-    // Track all connections to our server so that we can close them when needed.
-    this.listener.on('connection', (connection) => {
-      // Generate a new key to represent the connection
-      const connectionKey = this.lastConnectionKey + 1;
-      // Add the connection to our map.
-      this.connectionMap[connectionKey] = connection;
-      // Remove the connection from our map when it closes.
-      connection.on('close', () => {
-        delete this.connectionMap[connectionKey];
-      });
-    });
-  }
-
-  killAllConnections() {
-    Object.keys(this.connectionMap).forEach((connectionKey) => {
-      this.connectionMap[connectionKey].destroy();
-    });
-  }
-
-  dispose(force = false) {
-    return new Promise((resolve) => {
-      if (force) {
-        // Forcefully close any existing connections.
-        this.killAllConnections();
-      }
-
-      // Close the listener.
-      if (this.listener) {
-        this.listener.close(() => {
-          // Ensure no straggling connections are left over.
-          this.killAllConnections();
-
-          resolve();
-        });
-      } else {
-        resolve();
-      }
-    });
-  }
-}
-
-class HotServer {
-  constructor(compiler) {
-    this.compiler = compiler;
-    this.listenerManager = null;
-
-    const compiledOutputPath = path.resolve(
-      compiler.options.output.path, `${Object.keys(compiler.options.entry)[0]}.js`
-    );
-
-    try {
-      // The server bundle  will automatically start the web server just by
-      // requiring it. It returns the http listener too.
-      const listener = require(compiledOutputPath).default;
-      this.listenerManager = new ListenerManager(listener);
-
-      const url = `http://localhost:${envVars.SERVER_PORT}`;
-
-      createNotification({
-        title: 'server',
-        message: `🌎  Running on ${url}`,
-        open: url,
-      });
-    } catch (err) {
-      createNotification({
-        title: 'server',
-        message: '😵  Bundle invalid, check console for error',
-      });
-      console.log(err);
-    }
-  }
-
-  dispose(force = false) {
-    return this.listenerManager
-      ? this.listenerManager.dispose(force)
-      : Promise.resolve();
-  }
-}
-
-class HotClient {
-  constructor(compiler) {
-    const app = express();
-    this.webpackDevMiddleware = createWebpackMiddleware(compiler, {
-      quiet: true,
-      noInfo: true,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-      },
-      // The path at which the client bundles are served from.  Note: in this
-      // case as we are running a seperate dev server the public path should
-      // be absolute, i.e. including the "http://..."
-      publicPath: compiler.options.output.publicPath,
-    });
-    app.use(this.webpackDevMiddleware);
-    app.use(createWebpackHotMiddleware(compiler));
-
-    const listener = app.listen(envVars.CLIENT_DEVSERVER_PORT);
-    this.listenerManager = new ListenerManager(listener);
-
-    createNotification({
-      title: 'client',
-      message: '✅  Running',
-    });
-  }
-
-  dispose(force = false) {
-    this.webpackDevMiddleware.close();
-
-    return this.listenerManager
-      ? this.listenerManager.dispose(force)
-      : Promise.resolve();
-  }
-}
-
-class HotServers {
+class HotDevelopment {
   constructor() {
     // Bind our functions to avoid any scope/closure issues.
     this.start = this.start.bind(this);
@@ -160,11 +28,12 @@ class HotServers {
   start() {
     try {
       const clientConfig = require('../webpack/client.config')({ mode: 'development' });
-
       this.clientCompiler = webpack(clientConfig);
 
-      const serverConfig = require('../webpack/server.config')({ mode: 'development' });
+      const universalMiddlewareConfig = require('../webpack/universalMiddleware.config')({ mode: 'development' });
+      this.universalMiddlewareCompiler = webpack(universalMiddlewareConfig);
 
+      const serverConfig = require('../webpack/server.config')({ mode: 'development' });
       this.serverCompiler = webpack(serverConfig);
     } catch (err) {
       createNotification({
@@ -176,9 +45,9 @@ class HotServers {
     }
 
     this._configureHotClient();
+    this._configureHotUniversalMiddleware();
     this._configureHotServer();
   }
-
 
   dispose() {
     // We want to forcefully close our servers (passing true) which will hard
@@ -186,6 +55,7 @@ class HotServers {
     // need to restart both the client and server bundles.
     const safeDisposeClient = () =>
       (this.clientBundle ? this.clientBundle.dispose(true) : Promise.resolve());
+
     const safeDisposeServer = () =>
       (this.serverBundle ? this.serverBundle.dispose(true) : Promise.resolve());
 
@@ -226,6 +96,41 @@ class HotServers {
     this.clientBundle = new HotClient(this.clientCompiler);
   }
 
+  _configureHotUniversalMiddleware() {
+    const compileUniversalMiddleware = () => {
+      this.universalMiddlewareCompiler.run(() => undefined);
+    };
+
+    this.clientCompiler.plugin('done', (stats) => {
+      if (!stats.hasErrors()) {
+        compileUniversalMiddleware();
+      }
+    });
+
+    this.universalMiddlewareCompiler.plugin('done', (stats) => {
+      if (!stats.hasErrors()) {
+        // Make sure our newly built bundle is removed from the module cache.
+        Object.keys(require.cache).forEach((modulePath) => {
+          if (modulePath.indexOf('universalMiddleware') !== -1) {
+            delete require.cache[modulePath];
+          }
+        });
+      }
+    });
+
+    // Now we will configure `chokidar` to watch our server specific source folder.
+    // Any changes will cause a rebuild of the server bundle.
+    this.watcher = chokidar.watch([path.resolve(__dirname, '../../src/universalMiddleware')]);
+    this.watcher.on('ready', () => {
+      this.watcher
+        .on('add', compileUniversalMiddleware)
+        .on('addDir', compileUniversalMiddleware)
+        .on('change', compileUniversalMiddleware)
+        .on('unlink', compileUniversalMiddleware)
+        .on('unlinkDir', compileUniversalMiddleware);
+    });
+  }
+
   _configureHotServer() {
     const compileHotServer = () => {
       const runCompiler = () => this.serverCompiler.run(() => undefined);
@@ -238,9 +143,27 @@ class HotServers {
       }
     };
 
+    let clientBuilt = false;
+    let middlewareBuilt = false;
+    let started = false;
+
     this.clientCompiler.plugin('done', (stats) => {
       if (!stats.hasErrors()) {
-        compileHotServer();
+        clientBuilt = true;
+        if (!started && (clientBuilt && middlewareBuilt)) {
+          started = true;
+          compileHotServer();
+        }
+      }
+    });
+
+    this.universalMiddlewareCompiler.plugin('done', (stats) => {
+      if (!stats.hasErrors()) {
+        middlewareBuilt = true;
+        if (!started && (clientBuilt && middlewareBuilt)) {
+          started = true;
+          compileHotServer();
+        }
       }
     });
 
@@ -283,7 +206,7 @@ class HotServers {
   }
 }
 
-const hotServers = new HotServers();
+const hotDevelopment = new HotDevelopment();
 
 // Any changes to our webpack config builder will cause us to restart our
 // hot servers.
@@ -296,11 +219,11 @@ watcher.on('ready', () => {
       title: 'webpack',
       message: '❗️  Webpack config changed. Full restart occurring..',
     });
-    hotServers.restart();
+    hotDevelopment.restart();
   });
 });
 
-hotServers.start();
+hotDevelopment.start();
 
 // If we receive a kill cmd then we will first try to dispose our listeners.
-process.on('SIGTERM', () => hotServers.dispose().then(() => process.exit(0)));
+process.on('SIGTERM', () => hotDevelopment.dispose().then(() => process.exit(0)));

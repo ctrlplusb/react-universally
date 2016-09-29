@@ -56,14 +56,9 @@ function webpackConfigFactory({ target, mode }, { json }) {
   const ifDev = ifElse(isDev);
   const ifClient = ifElse(isClient);
   const ifServer = ifElse(isServer);
+  const ifDevServer = ifElse(isDev && isServer);
   const ifDevClient = ifElse(isDev && isClient);
   const ifProdClient = ifElse(isProd && isClient);
-
-  const bundleOutputMap = {
-    client: envVars.CLIENT_BUNDLE_OUTPUT_PATH,
-    server: envVars.SERVER_BUNDLE_OUTPUT_PATH,
-    universalMiddleware: envVars.UNIVERSALMIDDLEWARE_BUNDLE_OUTPUT_PATH,
-  };
 
   return {
     // We need to state that we are targetting "node" for our server bundle.
@@ -80,6 +75,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
       // Don't allow the server to bundle the universal middleware bundle. We
       // want the server to natively require it from the build dir.
       ifServer(/universalMiddleware/),
+      ifDevServer(/universalDevMiddleware/),
 
       // We don't want our node_modules to be bundled with our server package,
       // prefering them to be resolved via native node module system.  Therefore
@@ -126,7 +122,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
     ),
     output: {
       // The dir in which our bundle should be output.
-      path: path.resolve(appRootPath, bundleOutputMap[target]),
+      path: path.resolve(appRootPath, envVars.BUNDLE_OUTPUT_PATH, `./${target}`),
       // The filename format for our bundle's entries.
       filename: ifProdClient(
         // We include a hash for client caching purposes.  Including a unique
@@ -175,12 +171,12 @@ function webpackConfigFactory({ target, mode }, { json }) {
       // "index.js" will be considered an async view component that should be
       // used by webpack for code splitting.
       // @see https://github.com/webpack/webpack/issues/87
-      ifReactTarget(
-          new webpack.ContextReplacementPlugin(
-          /components[\/\\]App[\/\\]views$/,
-          new RegExp(String.raw`^\.[\\\/](\w|\s|-|_)*[\\\/]index\.js$`)
-        )
-      ),
+      // ifReactTarget(
+      //     new webpack.ContextReplacementPlugin(
+      //     /components[\/\\]App[\/\\]views$/,
+      //     new RegExp(String.raw`^\.[\\\/](\w|\s|-|_)*[\\\/]index\.js$`)
+      //   )
+      // ),
 
       // We use this so that our generated [chunkhash]'s are only different if
       // the content for our respective chunks have changed.  This optimises
@@ -248,8 +244,8 @@ function webpackConfigFactory({ target, mode }, { json }) {
         // as we need to interogate these files in order to know what JS/CSS
         // we need to inject into our HTML.
         new AssetsPlugin({
-          filename: envVars.CLIENT_BUNDLE_ASSETS_FILENAME,
-          path: path.resolve(appRootPath, envVars.CLIENT_BUNDLE_OUTPUT_PATH),
+          filename: envVars.BUNDLE_ASSETS_FILENAME,
+          path: path.resolve(appRootPath, envVars.BUNDLE_OUTPUT_PATH, `./${target}`),
         })
       ),
 
@@ -315,14 +311,18 @@ function webpackConfigFactory({ target, mode }, { json }) {
               presets: [
                 // JSX
                 'react',
-                // All the latest JS goodies.
+                // All the latest JS goodies, except for ES6 modules which
+                // webpack has native support for and uses in the tree shaking
+                // process.
                 // TODO: When babel-preset-latest-minimal has stabilised use it
                 // for the node targets.
                 ['latest', { modules: false }],
               ],
             },
             // Our dev client build will need the react hot loader babel plugin
-            ifDevClient({ plugins: ['react-hot-loader/babel'] })
+            ifDevClient({
+              plugins: ['react-hot-loader/babel'],
+            })
           ),
         },
 

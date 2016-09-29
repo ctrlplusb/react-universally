@@ -6,7 +6,7 @@ import RouterContext from 'react-router/lib/RouterContext';
 import createMemoryHistory from 'react-router/lib/createMemoryHistory';
 import match from 'react-router/lib/match';
 import render from './render';
-import routes from '../shared/routes';
+import routes from '../shared/universal/routes';
 
 /**
  * An express middleware that is capabable of doing React server side rendering.

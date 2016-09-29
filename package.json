@@ -10,7 +10,7 @@
     "typecheck": "flow",
     "lint": "eslint src",
     "clean": "rimraf build",
-    "development": "node ./tools/development/server",
+    "development": "node ./tools/development",
     "build": "npm run clean && webpack --config ./tools/webpack/client.config.js && webpack --config ./tools/webpack/universalMiddleware.config.js && webpack --config ./tools/webpack/server.config.js",
     "start": "node build/server"
   },

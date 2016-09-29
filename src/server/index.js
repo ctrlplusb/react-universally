@@ -1,22 +1,17 @@
 /* @flow */
 
-// This grants us source map support, which is handy as our webpack bundling
-// for the server will include source maps.  Therefore we will have nice stack
-// traces again for our server.
+// This grants us source map support, which combined with our webpack source
+// maps will give us nice stack traces.
 import 'source-map-support/register';
-
+import path from 'path';
+import appRoot from 'app-root-path';
 import express from 'express';
 import compression from 'compression';
 import hpp from 'hpp';
 import helmet from 'helmet';
-import universalMiddleware from '../../build/universalMiddleware';
-import {
-  CLIENT_BUNDLE_HTTP_PATH,
-  CLIENT_BUNDLE_OUTPUT_PATH,
-  CLIENT_BUNDLE_CACHE_MAXAGE,
-  SERVER_PORT,
-  PUBLIC_DIR_PATH,
-} from './config';
+import { getEnvVar } from '../shared/node/utils/env';
+
+const appRootPath = appRoot.toString();
 
 // Create our express based server.
 const app = express();
@@ -49,20 +44,36 @@ app.use(compression());
 
 // Configure static serving of our webpack bundled client files.
 app.use(
-  CLIENT_BUNDLE_HTTP_PATH,
-  express.static(CLIENT_BUNDLE_OUTPUT_PATH, { maxAge: CLIENT_BUNDLE_CACHE_MAXAGE })
+  getEnvVar('CLIENT_BUNDLE_HTTP_PATH'),
+  express.static(
+    path.resolve(appRootPath, getEnvVar('BUNDLE_OUTPUT_PATH'), './client'),
+    { maxAge: getEnvVar('CLIENT_BUNDLE_CACHE_MAXAGE') }
+  )
 );
 
 // Configure static serving of our "public" root http path static files.
-app.use(express.static(PUBLIC_DIR_PATH));
+app.use(express.static(path.resolve(appRootPath, './public')));
 
 // Bind our universal react app middleware as the handler for all get requests.
-app.get('*', universalMiddleware);
+if (process.env.NODE_ENV === 'development') {
+  // In development mode we will use a special wrapper middleware which will
+  // allow us to flush our node module cache effectively, and it will thereby
+  // allow us to "hot" reload any builds/updates to our middleware.
+  const universalDevMiddleware = require('../../tools/development/universalDevMiddleware'); // eslint-disable-line global-require,max-len
+
+  app.get('*', universalDevMiddleware);
+} else {
+  const universalMiddleware = require('../universalMiddleware').default; // eslint-disable-line global-require,max-len
+
+  app.get('*', universalMiddleware);
+}
+
+const port = parseInt(getEnvVar('SERVER_PORT'), 10);
 
 // Create an http listener for our express app.
-const listener = app.listen(SERVER_PORT);
+const listener = app.listen(port);
 
-console.log(`==> 💚  HTTP Listener is running on port ${SERVER_PORT}`); // eslint-disable-line no-console,max-len
+console.log(`==> 💚  HTTP Listener is running on port ${port}`); // eslint-disable-line no-console,max-len
 
 // We export the listener as it will be handy for our development hot reloader.
 export default listener;

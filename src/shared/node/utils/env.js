@@ -1,23 +1,9 @@
 /* @flow */
 /* eslint-disable import/prefer-default-export */
 
-import fs from 'fs';
+import { notEmpty } from '../../universal/utils/guards';
 
-export function fileExists(filePath : string, message : string) {
-  if (!fs.existsSync(filePath)) {
-    throw new Error(message);
-  }
-}
-
-export function notEmpty<T>(x : ?T, message : string) : T {
-  if (x == null) {
-    throw new Error(message);
-  }
-
-  return x;
-}
-
-export function envVarExists(envVarName : string) : string {
+export function getEnvVar(envVarName : string) : string {
   const message =
     `The "${envVarName}" env variable was not found.  Please ensure you have ` +
     'set the environment variable. If you have but you are still seeing this ' +
