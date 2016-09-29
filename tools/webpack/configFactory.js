@@ -115,7 +115,10 @@ function webpackConfigFactory({ target, mode }, { json }) {
         index: removeEmpty([
           ifDevClient('react-hot-loader/patch'),
           ifDevClient(`webpack-hot-middleware/client?reload=true&path=http://localhost:${envVars.CLIENT_DEVSERVER_PORT}/__webpack_hmr`),
-          ifClient('babel-polyfill'),
+          // We are using polyfill.io instead of the very heavy babel-polyfill.
+          // Therefore we need to add the regenerator-runtime as the babel-polyfill
+          // included this, which polyfill.io doesn't include.
+          ifClient('regenerator-runtime/runtime'),
           path.resolve(appRootPath, `./src/${target}/index.js`),
         ]),
       }
@@ -271,6 +274,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
       ifProdClient(
         // JS Minification.
         new webpack.optimize.UglifyJsPlugin({
+          // sourceMap: true,
           compress: {
             screw_ie8: true,
             warnings: false,
