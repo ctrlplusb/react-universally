@@ -55,7 +55,7 @@ server, and the middleware that the server will use to support SSR rendering of 
 
 All of these call into the `tools/webpack/configFactory.js` in order to generate their respective webpack configurations. I've tried to keep the webpack configuration as centralized as possible to allow easier reuse of the configuration and allow you to not have to do constant file jumping whilst trying to analyse the configuration for a target bundle.  I've also included a fair amount of comments as I know webpack can be a bit daunting at first.
 
-Using webpack and babel across all of our source allows us to use the same level of javascript (e.g. es2015/2016/2017) without having to worry about what each target environment supports.  In addition to this it allows our client/server code to both support the additional file types that a typical React application may import (e.g. CSS/Images (as and when you add the respective loaders).
+Using webpack and babel across all of our source allows us to use the same level of javascript (e.g. es2015/2016/2017) without having to worry about what each target environment supports.  In addition to this it allows our client/server code to both support the additional file types that a typical React application may import (e.g. CSS/Images).
 
 Given that we are bundling our server code I have included the `source-map-support` module to ensure that we still get nice stack traces when executing our code.
 
@@ -80,14 +80,13 @@ This boilerplate provides extended features on top of `react-universally` such a
 |  |- server // The built server module
 |
 |- src  // All the source code
-|  |- server // The server bundle source
-|  |- universalMiddleware // the universal middleware bundle source
-|  |- client // The client bundle source
+|  |- server // The server bundle entry and specific source
+|  |- universalMiddleware // the universal middleware bundle entry and specific source
+|  |- client // The client bundle entry and specific source
 |  |- shared // The shared code between the bundles
-|     |- universal // Shared code that is suitable for web or node bundles 
-|     |               (i.e. any of the bundles)
-|     |- node      // Shared code that is suitable for node bundles 
-|                     (i.e. our server or universalMiddleware bundles)
+|     |- universal // Shared code that is suitable for any of the bundles
+|     |- node      // Shared code that is suitable for the node bundles 
+|                     (i.e. the server or universalMiddleware bundles)
 |- tools
 |  |- development // Tool for hot reloading development
 |  |
@@ -99,6 +98,8 @@ This boilerplate provides extended features on top of `react-universally` such a
 |
 |- .env_example // An example from which to create your own .env file.
 ```
+
+I highly recommend putting most of your application code into the `shared` folders where possible.  Then put anything that is specific to the `server`/`client`/`universalMiddleware` within their respective folder.
 
 ## Project Dependencies
 
