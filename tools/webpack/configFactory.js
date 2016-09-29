@@ -41,7 +41,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
     // And then upload the build/client/analysis.json to http://webpack.github.io/analyse/
     // This allows you to analyse your webpack bundle to make sure it is
     // optimal.
-    console.log(`==> Creating webpack "${target}" config in "${mode}" mode`);
+    console.log(`==> Creating webpack config for "${target}" in "${mode}" mode`);
   }
 
   const isDev = mode === 'development';
@@ -209,18 +209,18 @@ function webpackConfigFactory({ target, mode }, { json }) {
       // If the value isn’t a string, it will be stringified (including functions).
       // If the value is an object all keys are removeEmpty the same way.
       // If you prefix typeof to the key, it’s only removeEmpty for typeof calls.
-      new webpack.DefinePlugin({
-        'process.env': merge(
+      new webpack.DefinePlugin(
+        merge(
           {
             // NOTE: The NODE_ENV key is especially important for production
             // builds as React relies on process.env.NODE_ENV for optimizations.
-            NODE_ENV: JSON.stringify(mode),
+            'process.env.NODE_ENV': JSON.stringify(mode),
             // NOTE: If you are providing any environment variables from the
             // command line rather than the .env files then you must make sure
             // you add them here so that webpack can use them in during the
             // compiling process.
             // e.g.
-            // MY_CUSTOM_VAR: JSON.stringify(process.env.MY_CUSTOM_VAR)
+            // 'process.env.MY_CUSTOM_VAR': JSON.stringify(process.env.MY_CUSTOM_VAR)
           },
           // Now we will expose all of the .env config variables to webpack
           // so that it can make all the subtitutions for us.
@@ -232,11 +232,11 @@ function webpackConfigFactory({ target, mode }, { json }) {
           // const MY_NUMBER = parseInt(process.env.MY_NUMBER, 10);
           // const MY_BOOL = process.env.MY_BOOL === 'true';
           Object.keys(envVars).reduce((acc, cur) => {
-            acc[cur] = JSON.stringify(envVars[cur]); // eslint-disable-line no-param-reassign
+            acc[`process.env.${cur}`] = JSON.stringify(envVars[cur]); // eslint-disable-line no-param-reassign
             return acc;
           }, {})
-        ),
-      }),
+        )
+      ),
 
       ifClient(
         // Generates a JSON file containing a map of all the output files for

@@ -12,7 +12,7 @@ import routes from '../shared/universal/routes';
 const container = document.querySelector('#app');
 
 function routerError(error) {
-  console.error('==> 😭  React Router match failed.'); // eslint-disable-line no-console
+  console.error('==> Router match failed.'); // eslint-disable-line no-console
   if (error) { console.error(error); } // eslint-disable-line no-console
 }
 

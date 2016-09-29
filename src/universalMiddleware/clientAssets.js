@@ -5,26 +5,26 @@
 import fs from 'fs';
 import path from 'path';
 import appRoot from 'app-root-path';
-import { getEnvVar } from '../shared/node/utils/env';
-import { fileExists } from '../shared/node/utils/guards';
+import { notEmpty } from '../shared/universal/utils/guards';
 
 const appRootPath = appRoot.toString();
 
 const assetsBundleFilePath = path.resolve(
   appRootPath,
-  getEnvVar('BUNDLE_OUTPUT_PATH'),
+  notEmpty(process.env.BUNDLE_OUTPUT_PATH),
   './client',
-  `./${getEnvVar('BUNDLE_ASSETS_FILENAME')}`
+  `./${notEmpty(process.env.BUNDLE_ASSETS_FILENAME)}`
 );
 
-fileExists(
-  assetsBundleFilePath,
-  `We could not find the "${assetsBundleFilePath}" file, which contains a ` +
-  'list of the assets of the client bundle.  Please ensure that the client ' +
-  'bundle has been built before the server bundle and that the required ' +
-  'environment variables are configured (BUNDLE_OUTPUT_PATH & ' +
-  'BUNDLE_ASSETS_FILENAME)'
-);
+if (!fs.existsSync(assetsBundleFilePath)) {
+  throw new Error(
+    `We could not find the "${assetsBundleFilePath}" file, which contains a ` +
+    'list of the assets of the client bundle.  Please ensure that the client ' +
+    'bundle has been built before the server bundle and that the required ' +
+    'environment variables are configured (BUNDLE_OUTPUT_PATH & ' +
+    'BUNDLE_ASSETS_FILENAME)'
+  );
+}
 
 const assetsBundleFileContents = JSON.parse(
   fs.readFileSync(assetsBundleFilePath, 'utf8')

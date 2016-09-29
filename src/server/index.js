@@ -9,8 +9,8 @@ import express from 'express';
 import compression from 'compression';
 import hpp from 'hpp';
 import helmet from 'helmet';
-import { getEnvVar } from '../shared/node/utils/env';
 import universalMiddleware from '../universalMiddleware';
+import { notEmpty } from '../shared/universal/utils/guards';
 
 const appRootPath = appRoot.toString();
 
@@ -45,10 +45,10 @@ app.use(compression());
 
 // Configure static serving of our webpack bundled client files.
 app.use(
-  getEnvVar('CLIENT_BUNDLE_HTTP_PATH'),
+  notEmpty(process.env.CLIENT_BUNDLE_HTTP_PATH),
   express.static(
-    path.resolve(appRootPath, getEnvVar('BUNDLE_OUTPUT_PATH'), './client'),
-    { maxAge: getEnvVar('CLIENT_BUNDLE_CACHE_MAXAGE') }
+    path.resolve(appRootPath, notEmpty(process.env.BUNDLE_OUTPUT_PATH), './client'),
+    { maxAge: notEmpty(process.env.CLIENT_BUNDLE_CACHE_MAXAGE) }
   )
 );
 
@@ -68,8 +68,9 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // Create an http listener for our express app.
-const port = parseInt(getEnvVar('SERVER_PORT'), 10);
+const port = parseInt(notEmpty(process.env.SERVER_PORT), 10);
 const listener = app.listen(port);
+console.log(`Server listening on port ${port}`);
 
 // We export the listener as it will be handy for our development hot reloader.
 export default listener;
