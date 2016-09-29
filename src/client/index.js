@@ -12,7 +12,6 @@ import routes from '../shared/universal/routes';
 const container = document.querySelector('#app');
 
 function routerError(error) {
-  // TODO: Error handling.
   console.error('==> 😭  React Router match failed.'); // eslint-disable-line no-console
   if (error) { console.error(error); } // eslint-disable-line no-console
 }
@@ -44,7 +43,7 @@ function renderApp(appRoutes) {
   });
 }
 
-// The following is needed so that we can hot reload our App.
+// The following is needed so that we can support hot reloading our application.
 if (process.env.NODE_ENV === 'development' && module.hot) {
   // Accept changes to this file for hot reloading.
   module.hot.accept('./index.js');

@@ -58,7 +58,7 @@ app.use(express.static(path.resolve(appRootPath, './public')));
 if (process.env.NODE_ENV === 'development') {
   // In development mode we will use a special wrapper middleware which will
   // allow us to flush our node module cache effectively, and it will thereby
-  // allow us to "hot" reload any builds/updates to our middleware.
+  // allow us to "hot" reload any builds/updates to our middleware bundle.
   const universalDevMiddleware = require('../../tools/development/universalDevMiddleware'); // eslint-disable-line global-require,max-len
 
   app.get('*', universalDevMiddleware);
@@ -68,12 +68,9 @@ if (process.env.NODE_ENV === 'development') {
   app.get('*', universalMiddleware);
 }
 
-const port = parseInt(getEnvVar('SERVER_PORT'), 10);
-
 // Create an http listener for our express app.
+const port = parseInt(getEnvVar('SERVER_PORT'), 10);
 const listener = app.listen(port);
-
-console.log(`==> 💚  HTTP Listener is running on port ${port}`); // eslint-disable-line no-console,max-len
 
 // We export the listener as it will be handy for our development hot reloader.
 export default listener;

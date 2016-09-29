@@ -3,8 +3,11 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable import/no-extraneous-dependencies */
 
+const createNotification = require('./createNotification');
+
 class ListenerManager {
-  constructor(listener) {
+  constructor(listener, name) {
+    this.name = name || 'listener';
     this.lastConnectionKey = 0;
     this.connectionMap = {};
     this.listener = listener;
@@ -28,21 +31,28 @@ class ListenerManager {
     });
   }
 
-  dispose(force = false) {
+  dispose() {
     return new Promise((resolve) => {
-      // if (force) {
-      //   // Forcefully close any existing connections.
-      //   this.killAllConnections();
-      // }
-
-      // Close the listener.
       if (this.listener) {
+        this.killAllConnections();
+
+        createNotification({
+          title: this.name,
+          level: 'info',
+          message: 'Destroyed all existing connections.',
+        });
+
         this.listener.close(() => {
-          // Ensure no straggling connections are left over.
           this.killAllConnections();
 
-          resolve();
+          createNotification({
+            title: this.name,
+            level: 'info',
+            message: 'Closed listener.',
+          });
         });
+
+        resolve();
       } else {
         resolve();
       }

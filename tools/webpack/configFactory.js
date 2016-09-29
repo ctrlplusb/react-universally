@@ -41,7 +41,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
     // And then upload the build/client/analysis.json to http://webpack.github.io/analyse/
     // This allows you to analyse your webpack bundle to make sure it is
     // optimal.
-    console.log(`==> ℹ️  Creating webpack "${target}" config in "${mode}" mode`);
+    console.log(`==> Creating webpack "${target}" config in "${mode}" mode`);
   }
 
   const isDev = mode === 'development';
@@ -171,12 +171,12 @@ function webpackConfigFactory({ target, mode }, { json }) {
       // "index.js" will be considered an async view component that should be
       // used by webpack for code splitting.
       // @see https://github.com/webpack/webpack/issues/87
-      // ifReactTarget(
-      //     new webpack.ContextReplacementPlugin(
-      //     /components[\/\\]App[\/\\]views$/,
-      //     new RegExp(String.raw`^\.[\\\/](\w|\s|-|_)*[\\\/]index\.js$`)
-      //   )
-      // ),
+      ifReactTarget(
+          new webpack.ContextReplacementPlugin(
+          /components[\/\\]App[\/\\]views$/,
+          new RegExp(String.raw`^\.[\\\/](\w|\s|-|_)*[\\\/]index\.js$`)
+        )
+      ),
 
       // We use this so that our generated [chunkhash]'s are only different if
       // the content for our respective chunks have changed.  This optimises
@@ -315,7 +315,8 @@ function webpackConfigFactory({ target, mode }, { json }) {
                 // webpack has native support for and uses in the tree shaking
                 // process.
                 // TODO: When babel-preset-latest-minimal has stabilised use it
-                // for the node targets.
+                // for our node targets so that only the missing features for
+                // our respective node version will be transpiled.
                 ['latest', { modules: false }],
               ],
             },
@@ -362,7 +363,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
           // registered within the plugins section too.
           ifProdClient({
             loader: ExtractTextPlugin.extract({
-              notExtractLoader: 'style-loader',
+              fallbackLoader: 'style-loader',
               loader: 'css-loader',
             }),
           }),

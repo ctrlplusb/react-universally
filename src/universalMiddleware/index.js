@@ -14,7 +14,7 @@ import routes from '../shared/universal/routes';
 function universalReactAppMiddleware(request: $Request, response: $Response) {
   if (process.env.DISABLE_SSR === 'true') {
     if (process.env.NODE_ENV === 'development') {
-      console.log('==> 🐌  Handling react route without SSR');  // eslint-disable-line no-console
+      console.log('==> Handling react route without SSR');  // eslint-disable-line no-console
     }
     // SSR is disabled so we will just return an empty html page and will
     // rely on the client to populate the initial react application state.

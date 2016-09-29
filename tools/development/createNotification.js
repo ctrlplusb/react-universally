@@ -4,10 +4,11 @@
 /* eslint-disable import/no-extraneous-dependencies */
 
 const notifier = require('node-notifier');
+const colors = require('colors');
 
 function createNotification(options = {}) {
   const title = options.title
-    ? `🔥  ${options.title.toUpperCase()}`
+    ? `${options.title.toUpperCase()}`
     : undefined;
 
   notifier.notify({
@@ -16,7 +17,15 @@ function createNotification(options = {}) {
     open: options.open,
   });
 
-  console.log(`==> ${title} -> ${options.message}`);
+  const level = options.level || 'info';
+  const msg = `==> ${title} -> ${options.message}`;
+
+  switch (level) {
+    case 'warn': console.log(colors.red(msg)); break;
+    case 'error': console.log(colors.bgRed.white(msg)); break;
+    case 'info':
+    default: console.log(colors.green(msg));
+  }
 }
 
 module.exports = createNotification;
