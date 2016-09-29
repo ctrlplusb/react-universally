@@ -2,6 +2,26 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [6.0.0] - 2016-09-29
+
+### Breaking Changes
+
+A huge refactor of the application structure has taken place.  Based on experience and using this boilerplate to build a larger application I noticed a lot of pain points, especially around the hot development experience.  In order to alleviate lots of these problems the application has been restructured to build into 3 separate bundles:
+
+  - server
+  - universalMiddleware
+  - client
+
+The universalMiddleware bundle is new bundle, and will be the middleware that our express server will use to server our universal react application.  Having it be built separately from the server allows you to target the bundle with a unique webpack configuration should you wish, whilst also allowing us to only rebuild the middleware when doing hot development.
+
+Some other notable breaking changes:
+
+  - The shared folders now contain two sub-folders, node and universal.  The universal folder should contain all the code that is shared and safe to include with any of the bundles, whilst the node subfolder should only contain code shared between the server or universalMiddleware bundles.
+  - The favicon for the htmlPage render has been moved into the public folder.
+  - We are using the babel-preset-latest for ALL of our bundles.  This allows you to use the same javascript syntax across any of them without worrying about what each target environment supports.  In the future this will be optimized so that the node bundles will only get the syntax that they are missing transpiled.
+  - The webpack configuration DefinePlugin section has been refactored to specify the full `process.env.{key}` for each for the env vars we provide instead of replacing the whole `process.env` object.  This allows you to provide any additional custom env vars during execution time.
+
+
 ## [5.1.0] - 2016-09-27
 
 ### Fixed
