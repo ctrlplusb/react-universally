@@ -28,3 +28,6 @@ npm-debug.log
 
 # IntelliJ IDE ignore
 .idea
+
+# Visual Studio Code
+.vscode
