@@ -13,7 +13,7 @@
     "defaultParams": true
   },
   "rules": {
-    # We use the 'import' plugin which allows for cases "flow" awareness.
+    // We use the 'import' plugin which allows for cases "flow" awareness.
     "no-duplicate-imports": 0,
 
     "flow-vars/define-flow-type": 1,
