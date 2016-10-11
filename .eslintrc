@@ -2,7 +2,7 @@
   "parser": "babel-eslint",
   "extends": "airbnb",
   "plugins": [
-    "flow-vars"
+    "flowtype"
   ],
   "env": {
     "browser": true,
@@ -15,10 +15,7 @@
   "rules": {
     // We use the 'import' plugin which allows for cases "flow" awareness.
     "no-duplicate-imports": 0,
-
-    "flow-vars/define-flow-type": 1,
-    "flow-vars/use-flow-type": 1,
-
+    // A .jsx extension is not required for files containing jsx.
     "react/jsx-filename-extension": 0
   }
 }

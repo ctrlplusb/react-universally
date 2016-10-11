@@ -4,6 +4,7 @@ import { renderToString } from 'react-dom/server';
 import serialize from 'serialize-javascript';
 import Helmet from 'react-helmet';
 import clientAssets from './clientAssets';
+import type { $React$Element } from '../shared/universal/types/react';
 
 function styleTags(styles : Array<string>) {
   return styles

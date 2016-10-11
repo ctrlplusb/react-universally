@@ -8,8 +8,9 @@ import 'normalize.css/normalize.css';
 import './globals.css';
 
 import Logo from './lib/Logo';
+import type { $React$Children } from '../../types/react';
 
-const websiteDescription =
+const WEBSITE_DESCRIPTION =
   'A starter kit giving you the minimum requirements for a production ready ' +
   'universal react application.';
 
@@ -26,7 +27,7 @@ function App(props : { children : $React$Children }) {
         titleTemplate="React Universally - %s"
         defaultTitle="React Universally"
         meta={[
-          { name: 'description', content: websiteDescription },
+          { name: 'description', content: WEBSITE_DESCRIPTION },
         ]}
         script={[]}
       />
@@ -34,7 +35,7 @@ function App(props : { children : $React$Children }) {
       <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
         <Logo />
         <h1>React, Universally</h1>
-        <strong>{websiteDescription}</strong>
+        <strong>{WEBSITE_DESCRIPTION}</strong>
       </div>
       <div style={{ marginBottom: '1rem' }}>
         <ul>
