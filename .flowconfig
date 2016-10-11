@@ -8,7 +8,7 @@
 [libs]
 
 # Official "flow-typed" repository definitions.
-tools/flow/flow-typed/npm
+flow-typed/npm
 
 # Custom definitions.
 tools/flow/definitions/
