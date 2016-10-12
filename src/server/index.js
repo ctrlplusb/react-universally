@@ -1,4 +1,5 @@
 /* @flow */
+/* eslint-disable no-console */
 
 // This grants us source map support, which combined with our webpack source
 // maps will give us nice stack traces.
@@ -6,6 +7,7 @@ import 'source-map-support/register';
 import path from 'path';
 import appRoot from 'app-root-path';
 import express from 'express';
+import type { $Request, $Response, NextFunction } from 'express';
 import compression from 'compression';
 import hpp from 'hpp';
 import helmet from 'helmet';
@@ -67,10 +69,25 @@ if (process.env.NODE_ENV === 'development') {
   app.get('*', universalMiddleware);
 }
 
+// Handle 404 errors.
+app.use((req: $Request, res: $Response, next: NextFunction) => { // eslint-disable-line no-unused-vars,max-len
+  res.status(404).send('Sorry, that page/resource was not found.');
+});
+
+// Handle 500 errors.
+app.use((err: ?Error, req: $Request, res: $Response, next: NextFunction) => { // eslint-disable-line no-unused-vars,max-len
+  if (err) {
+    console.log(err);
+    console.log(err.stack);
+  }
+  res.status(500).send('Sorry, an error occurred.');
+});
+
 // Create an http listener for our express app.
 const port = parseInt(notEmpty(process.env.SERVER_PORT), 10);
-const listener = app.listen(port);
-console.log(`Server listening on port ${port}`); // eslint-disable-line no-console
+const listener = app.listen(port, () =>
+  console.log(`Server listening on port ${port}`)
+);
 
 // We export the listener as it will be handy for our development hot reloader.
 export default listener;

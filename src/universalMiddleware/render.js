@@ -32,8 +32,8 @@ const scripts = scriptTags(clientAssets.scripts);
  * @param  rootReactElement
  *   [Optional] The root React element to be rendered on the page.
  * @param  initialState
- *   [Optional] The initial state for the redux store which will be used by the
- *   client to mount the redux store into the desired state.
+ *   [Optional] A state object to be mounted on window.APP_STATE.
+ *   Useful for rehydrating state management containers like Redux/Mobx etc.
  *
  * @return The full HTML page in the form of a React element.
  */
@@ -67,10 +67,10 @@ function render(rootReactElement : ?$React$Element, initialState : ?Object) {
         ${styles}
         ${helmet ? helmet.style.toString() : ''}
 
-        <script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
+        <!--<script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>-->
       </head>
       <body>
-        <div id='app'>${reactRenderString || ''}</div>
+        <div id='app'><div>${reactRenderString || ''}</div></div>
 
         <script type='text/javascript'>${
           initialState

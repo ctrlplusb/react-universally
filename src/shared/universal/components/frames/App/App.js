@@ -1,21 +1,19 @@
 /* @flow */
 
 import React from 'react';
-import Link from 'react-router/lib/Link';
+import { Link, Match, Miss } from 'react-router';
 import Helmet from 'react-helmet';
-
+import CodeSplitComponent from 'code-split-component';
 import 'normalize.css/normalize.css';
 import './globals.css';
-
-import Logo from './lib/Logo';
-import type { $React$Children } from '../../types/react';
+import Error404 from '../../errors/Error404';
+import Logo from '../../lib/Logo';
 
 const WEBSITE_DESCRIPTION =
   'A starter kit giving you the minimum requirements for a production ready ' +
   'universal react application.';
 
-function App(props : { children : $React$Children }) {
-  const { children } = props;
+function App() {
   return (
     <div style={{ padding: '10px' }}>
       {/*
@@ -44,7 +42,26 @@ function App(props : { children : $React$Children }) {
         </ul>
       </div>
       <div>
-        {children}
+        <Match
+          exactly
+          pattern="/"
+          render={() =>
+            <CodeSplitComponent path="../../views/Home">
+              { Home => (Home ? <Home /> : <div>Loading...</div>) }
+            </CodeSplitComponent>
+          }
+        />
+
+        <Match
+          pattern="/about"
+          render={() =>
+            <CodeSplitComponent path="../../views/About">
+              { About => (About ? <About /> : <div>Loading...</div>) }
+            </CodeSplitComponent>
+          }
+        />
+
+        <Miss component={Error404} />
       </div>
     </div>
   );
