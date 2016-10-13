@@ -16,6 +16,8 @@
     // We use the 'import' plugin which allows for cases "flow" awareness.
     "no-duplicate-imports": 0,
     // A .jsx extension is not required for files containing jsx.
-    "react/jsx-filename-extension": 0
+    "react/jsx-filename-extension": 0,
+    // Disable global requires as we use them for code splitting etc.
+    "global-require": 0
   }
 }

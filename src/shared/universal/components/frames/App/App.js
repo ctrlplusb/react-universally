@@ -3,7 +3,7 @@
 import React from 'react';
 import { Link, Match, Miss } from 'react-router';
 import Helmet from 'react-helmet';
-import CodeSplitComponent from 'code-split-component';
+import CodeSplit from 'code-split-component';
 import 'normalize.css/normalize.css';
 import './globals.css';
 import Error404 from '../../errors/Error404';
@@ -46,18 +46,18 @@ function App() {
           exactly
           pattern="/"
           render={() =>
-            <CodeSplitComponent path="../../views/Home">
+            <CodeSplit module={require('../../views/Home')}>
               { Home => (Home ? <Home /> : <div>Loading...</div>) }
-            </CodeSplitComponent>
+            </CodeSplit>
           }
         />
 
         <Match
           pattern="/about"
           render={() =>
-            <CodeSplitComponent path="../../views/About">
+            <CodeSplit module={require('../../views/About')}>
               { About => (About ? <About /> : <div>Loading...</div>) }
-            </CodeSplitComponent>
+            </CodeSplit>
           }
         />
 

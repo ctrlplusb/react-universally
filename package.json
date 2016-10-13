@@ -4,7 +4,7 @@
   "description": "A starter kit giving you the minimum requirements for a production ready universal react application.",
   "main": "build/server/main.js",
   "engines": {
-    "node": "~6.6.0"
+    "node": "~6.7.0"
   },
   "scripts": {
     "typecheck": "flow",
@@ -35,7 +35,7 @@
   "homepage": "https://github.com/ctrlplusb/react-universally#readme",
   "dependencies": {
     "app-root-path": "2.0.1",
-    "code-split-component": "0.0.1",
+    "code-split-component": "0.0.4",
     "compression": "1.6.2",
     "express": "4.14.0",
     "helmet": "2.2.0",
@@ -77,6 +77,8 @@
     "flow-bin": "0.33.0",
     "json-loader": "0.5.4",
     "node-notifier": "4.6.1",
+    "react-hot-loader": "3.0.0-beta.5",
+    "react-router": "4.0.0-alpha.4",
     "regenerator-runtime": "0.9.5",
     "rimraf": "2.5.4",
     "style-loader": "0.13.1",
