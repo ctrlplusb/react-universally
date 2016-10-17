@@ -6,7 +6,7 @@ import { ServerRouter, createServerRenderContext } from 'react-router';
 import { matchRoutesToLocation } from 'react-router-addons-routes';
 import render from './render';
 import actionRoutes from '../shared/universal/routing/actionRoutes';
-import App from '../shared/universal/components/frames/App';
+import App from '../shared/universal/components/App';
 
 /**
  * An express middleware that is capabable of doing React server side rendering.

@@ -6,7 +6,7 @@ import { AppContainer } from 'react-hot-loader';
 import { BrowserRouter } from 'react-router';
 // import { matchRoutesToLocation } from 'react-router-addons-routes';
 // import actionRoutes from '../shared/universal/routing/actionRoutes';
-import App from '../shared/universal/components/frames/App';
+import App from '../shared/universal/components/App';
 
 // Get the DOM Element that will host our React application.
 const container = document.querySelector('#app');
@@ -46,8 +46,8 @@ if (process.env.NODE_ENV === 'development' && module.hot) {
   module.hot.accept('./index.js');
   // Any changes to our App will cause a hotload re-render.
   module.hot.accept(
-    '../shared/universal/components/frames/App',
-    () => renderApp(require('../shared/universal/components/frames/App').default)
+    '../shared/universal/components/App',
+    () => renderApp(require('../shared/universal/components/App').default)
   );
 }
 
