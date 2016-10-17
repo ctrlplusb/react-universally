@@ -51,6 +51,9 @@ function universalReactAppMiddleware(request: $Request, response: $Response) {
       // do something with it here. e.g. initialise some sort of data store.
     }
 
+    // This is also an opportunity to get the current state of a redux store.
+
+    // Lets now render our app.
     const html = render(
       <ServerRouter
         location={request.url}
@@ -64,7 +67,7 @@ function universalReactAppMiddleware(request: $Request, response: $Response) {
     const renderResult = context.getResult();
 
     // Check if the render result contains a redirect, if so we need to set
-    // the specific header.
+    // the specific status and redirect header and end the response.
     if (renderResult.redirect) {
       response.status(301).setHeader('Location', renderResult.redirect.pathname);
       response.end();
