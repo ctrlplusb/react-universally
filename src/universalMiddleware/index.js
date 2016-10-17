@@ -17,33 +17,38 @@ function universalReactAppMiddleware(request: $Request, response: $Response) {
       console.log('==> Handling react route without SSR');  // eslint-disable-line no-console
     }
     // SSR is disabled so we will just return an empty html page and will
-    // rely on the client to populate the initial react application state.
+    // rely on the client to initialize and render the react application.
     const html = render();
     response.status(200).send(html);
     return;
   }
 
-  // first create a context for <ServerRouter>, it's where we keep the
-  // results of rendering for the second pass if necessary
+  // First create a context for <ServerRouter>, which will allow us to
+  // query for the results of the render.
   const context = createServerRenderContext();
 
-  const matchResult = matchRoutesToLocation(
+  // Now we try to match the url being requested against our actionRoutes and
+  // see if there are any matches.
+  const actionRoutesMatchResult = matchRoutesToLocation(
     actionRoutes, { pathname: request.originalUrl }
   );
 
-  const { matchedRoutes, params } = matchResult;
-
+  // Before we do any rendering we will fire the `prefetchData` action for
+  // any of our actionRoutes that were matched.
   Promise.all(
-    matchedRoutes
-      // We filter down the action routes to those containing a 'prefetchData' action.
+    actionRoutesMatchResult
+      // Get the list of action routes which were matched.
+      .matchedRoutes
+      // Filter the action routes down to those containing a 'prefetchData' action.
       .filter(actionRoute => actionRoute.prefetchData)
       // Then we call the 'prefetchData' action, passing in any routing params.
       // The action should typically return a Promise so that you are able to
       // indicate when the action has completed.
-      .map(actionRoute => actionRoute.prefetchData(params))
-  ).then((data) => {
-    if (data) {
-      // Do something with the data. e.g. init redux store? :)
+      .map(actionRoute => actionRoute.prefetchData(actionRoutesMatchResult.params))
+  ).then((actionRouteResults) => {
+    if (actionRouteResults) {
+      // If you returned something from your action route results you could
+      // do something with it here. e.g. initialise some sort of data store.
     }
 
     const html = render(
@@ -55,50 +60,26 @@ function universalReactAppMiddleware(request: $Request, response: $Response) {
       </ServerRouter>
     );
 
-    // get the result
-    const result = context.getResult();
+    // Get the render result from the server render context.
+    const renderResult = context.getResult();
 
-    // the result will tell you if it redirected, if so, we ignore
-    // the markup and send a proper redirect.
-    if (result.redirect) {
-      response.status(301).setHeader('Location', result.redirect.pathname);
+    // Check if the render result contains a redirect, if so we need to set
+    // the specific header.
+    if (renderResult.redirect) {
+      response.status(301).setHeader('Location', renderResult.redirect.pathname);
       response.end();
       return;
     }
 
-    // // the result will tell you if there were any misses, if so
-    // // we can send a 404 and then do a second render pass with
-    // // the context to clue the <Miss> components into rendering
-    // // this time (on the client they know from componentDidMount)
-    // if (result.missed) {
-    //   response.status(404).send(render(<Error404 />));
-    //   return;
-    // }
-
-    response.status(result.missed ? 404 : 200).send(html);
+    response.status(
+      renderResult.missed
+        // If the renderResult contains a "missed" match then we set a 404 code.
+        // Our App component will handle the rendering of an Error404 view.
+        ? 404
+        // Otherwiser everthing is all good and we send a 200 OK status.
+        : 200
+      ).send(html);
   });
-
-  /*
-  const history = createMemoryHistory(request.originalUrl);
-
-  // Server side handling of react-router.
-  // Read more about this here:
-  // https://github.com/reactjs/react-router/blob/master/docs/guides/ServerRendering.md
-  match({ routes, history }, (error, redirectLocation, renderProps) => {
-    if (error) {
-      response.status(500).send(error.message);
-    } else if (redirectLocation) {
-      response.redirect(302, redirectLocation.pathname + redirectLocation.search);
-    } else if (renderProps) {
-      const html = render(<RouterContext {...renderProps} />);
-      response.status(200).send(html);
-    } else {
-      // No route was matched.
-      const html = render(<Error404 />);
-      response.status(404).send(html);
-    }
-  });
-  */
 }
 
 export default (universalReactAppMiddleware : Middleware);
