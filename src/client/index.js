@@ -2,20 +2,36 @@
 
 import React from 'react';
 import { render } from 'react-dom';
-import { AppContainer } from 'react-hot-loader';
 import { BrowserRouter } from 'react-router';
+import { Provider } from 'react-redux';
+import configureStore from '../shared/universal/redux/configureStore';
+import ReactHotLoader from './ReactHotLoader';
+import TaskRoutesExecutor from './TaskRoutesExecutor';
 import App from '../shared/universal/components/App';
 
 // Get the DOM Element that will host our React application.
 const container = document.querySelector('#app');
 
+// Create our Redux store.
+const store = configureStore(
+  // Server side rendering would have mounted our state on this global.
+  window.APP_STATE
+);
+
 function renderApp(TheApp) {
   render(
-    <AppContainer>
-      <BrowserRouter>
-        {routerProps => <TheApp {...routerProps} />}
-      </BrowserRouter>
-    </AppContainer>,
+    <ReactHotLoader>
+      <Provider store={store}>
+        <BrowserRouter>
+          {
+            routerProps =>
+              <TaskRoutesExecutor {...routerProps} dispatch={store.dispatch}>
+                <TheApp />
+              </TaskRoutesExecutor>
+          }
+        </BrowserRouter>
+      </Provider>
+    </ReactHotLoader>,
     container
   );
 }

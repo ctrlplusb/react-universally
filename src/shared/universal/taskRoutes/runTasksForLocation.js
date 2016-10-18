@@ -3,10 +3,10 @@
 // import matchRoutesToLocation from 'react-router-addons-routes/matchRoutesToLocation';
 import matchRoutesToLocation from './matchRoutesToLocation';
 import createTaskRoutes from './createTaskRoutes';
-import type { Location } from '../types/react-router';
+import type { Location, TaskRouteLocals } from '../types/react-router';
 
 type TaskExecutionResult = {
-  routes: Object,
+  routes: Array<Object>,
   results: Array<any>,
 };
 
@@ -51,7 +51,7 @@ type TaskExecutionResult = {
 function runTasksForLocation(
   location: Location,
   taskNames: Array<string>,
-  locals?: Object,
+  locals: TaskRouteLocals,
   ) : ?Promise<TaskExecutionResult> {
   const taskRoutes = createTaskRoutes(locals);
 

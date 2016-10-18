@@ -3,9 +3,11 @@
 import type { $Request, $Response, Middleware } from 'express';
 import React from 'react';
 import { ServerRouter, createServerRenderContext } from 'react-router';
+import { Provider } from 'react-redux';
 import render from './render';
-import fireRouteTasks from '../shared/universal/taskRoutes/runTasksForLocation';
+import runTasksForLocation from '../shared/universal/taskRoutes/runTasksForLocation';
 import App from '../shared/universal/components/App';
+import configureStore from '../shared/universal/redux/configureStore';
 
 /**
  * An express middleware that is capabable of doing React server side rendering.
@@ -22,6 +24,10 @@ function universalReactAppMiddleware(request: $Request, response: $Response) {
     return;
   }
 
+  // Create the redux store.
+  const store = configureStore();
+  const { dispatch, getState } = store;
+
   // Set up a function we can call to render the app and return the result via
   // the response.
   const renderApp = () => {
@@ -29,14 +35,25 @@ function universalReactAppMiddleware(request: $Request, response: $Response) {
     // query for the results of the render.
     const context = createServerRenderContext();
 
-    // Render the app into a string.
-    const html = render(
+    // Create the application react element.
+    const app = (
       <ServerRouter
         location={request.url}
         context={context}
       >
-        <App />
+        <Provider store={store}>
+          <App />
+        </Provider>
       </ServerRouter>
+    );
+
+    // Render the app to a string.
+    const html = render(
+      // Provide the full app react element.
+      app,
+      // Provide the redux store state, this will be bound to the window.APP_STATE
+      // so that we can rehydrate the state on the client.
+      getState()
     );
 
     // Get the render result from the server render context.
@@ -62,8 +79,8 @@ function universalReactAppMiddleware(request: $Request, response: $Response) {
 
   // Now we try to attempt to execute any 'prefetchData' tasks that get matched
   // for the given location.
-  const executingTasks = fireRouteTasks(
-    { pathname: request.originalUrl }, ['prefetchData']
+  const executingTasks = runTasksForLocation(
+    { pathname: request.originalUrl }, ['prefetchData'], { dispatch }
   );
 
   if (executingTasks) {
@@ -74,7 +91,10 @@ function universalReactAppMiddleware(request: $Request, response: $Response) {
         console.log('Finished tasks for routes', routes); // eslint-disable-line no-console,max-len
       }
 
-      // The tasks are finished, so lets render the app and return the response.
+      // The tasks are complete! Our redux state will probably contain some
+      // data now. :)
+
+      // Lets render the app and return the response.
       renderApp();
     });
   } else {
