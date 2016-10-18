@@ -7,6 +7,7 @@
     "node": "~6.7.0"
   },
   "scripts": {
+    "removetypes": "babel --no-babelrc --plugins 'transform-flow-strip-types' --presets 'react' --out-dir tmp src && copyfiles --up 1 'tmp/**/*.js' src && rimraf tmp",
     "typecheck": "flow",
     "lint": "eslint src",
     "clean": "rimraf build",
