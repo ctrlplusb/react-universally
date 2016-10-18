@@ -8,7 +8,7 @@
  * a memoize function, such as the one available from lodash to avoid
  * unneccesary creation of the collection.
  */
-function createRouteTasks(locals) {
+function createTaskRoutes(locals) {
   return [
     {
       pattern: '/',
@@ -49,4 +49,4 @@ function createRouteTasks(locals) {
   ];
 }
 
-export default createRouteTasks;
+export default createTaskRoutes;
