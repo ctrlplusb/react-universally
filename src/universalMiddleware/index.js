@@ -3,9 +3,8 @@
 import type { $Request, $Response, Middleware } from 'express';
 import React from 'react';
 import { ServerRouter, createServerRenderContext } from 'react-router';
-import { matchRoutesToLocation } from 'react-router-addons-routes';
 import render from './render';
-import actionRoutes from '../shared/universal/routing/actionRoutes';
+import fireRouteTasks from '../shared/universal/taskRoutes/runTasksForLocation';
 import App from '../shared/universal/components/App';
 
 /**
@@ -23,37 +22,14 @@ function universalReactAppMiddleware(request: $Request, response: $Response) {
     return;
   }
 
-  // First create a context for <ServerRouter>, which will allow us to
-  // query for the results of the render.
-  const context = createServerRenderContext();
+  // Set up a function we can call to render the app and return the result via
+  // the response.
+  const renderApp = () => {
+    // First create a context for <ServerRouter>, which will allow us to
+    // query for the results of the render.
+    const context = createServerRenderContext();
 
-  // Now we try to match the url being requested against our actionRoutes and
-  // see if there are any matches.
-  const actionRoutesMatchResult = matchRoutesToLocation(
-    actionRoutes, { pathname: request.originalUrl }
-  );
-
-  // Before we do any rendering we will fire the `prefetchData` action for
-  // any of our actionRoutes that were matched.
-  Promise.all(
-    actionRoutesMatchResult
-      // Get the list of action routes which were matched.
-      .matchedRoutes
-      // Filter the action routes down to those containing a 'prefetchData' action.
-      .filter(actionRoute => actionRoute.prefetchData)
-      // Then we call the 'prefetchData' action, passing in any routing params.
-      // The action should typically return a Promise so that you are able to
-      // indicate when the action has completed.
-      .map(actionRoute => actionRoute.prefetchData(actionRoutesMatchResult.params))
-  ).then((actionRouteResults) => {
-    if (actionRouteResults) {
-      // If you returned something from your action route results you could
-      // do something with it here. e.g. initialise some sort of data store.
-    }
-
-    // This is also an opportunity to get the current state of a redux store.
-
-    // Lets now render our app.
+    // Render the app into a string.
     const html = render(
       <ServerRouter
         location={request.url}
@@ -82,7 +58,29 @@ function universalReactAppMiddleware(request: $Request, response: $Response) {
         // Otherwiser everthing is all good and we send a 200 OK status.
         : 200
       ).send(html);
-  });
+  };
+
+  // Now we try to attempt to execute any 'prefetchData' tasks that get matched
+  // for the given location.
+  const executingTasks = fireRouteTasks(
+    { pathname: request.originalUrl }, ['prefetchData']
+  );
+
+  if (executingTasks) {
+    // Some tasks are executing so we will chain the promise, waiting for them
+    // to complete before we render the application.
+    executingTasks.then(({ routes }) => {
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Finished tasks for routes', routes); // eslint-disable-line no-console,max-len
+      }
+
+      // The tasks are finished, so lets render the app and return the response.
+      renderApp();
+    });
+  } else {
+    // No tasks are being executed so we can render and return the response.
+    renderApp();
+  }
 }
 
 export default (universalReactAppMiddleware : Middleware);

@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Logo from './Logo';
+import Menu from './Menu';
 import { WEBSITE_DESCRIPTION } from '../../../constants';
 
 function Header() {
@@ -10,6 +11,8 @@ function Header() {
       <Logo />
       <h1>React, Universally</h1>
       <strong>{WEBSITE_DESCRIPTION}</strong>
+
+      <Menu />
     </div>
   );
 }

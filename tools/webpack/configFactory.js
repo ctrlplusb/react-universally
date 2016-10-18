@@ -308,6 +308,8 @@ function webpackConfigFactory({ target, mode }, { json }) {
               // requires us to include the destructuring plugin too.
               'transform-object-rest-spread',
               'transform-es2015-destructuring',
+              // The class properties plugin is really useful for react components.
+              'transform-class-properties',
               // Our dev client build will need the react hot loader babel plugin
               ifDevClient('react-hot-loader/babel'),
               // We use the code-split-component/babel plugin and only enable

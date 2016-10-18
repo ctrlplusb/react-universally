@@ -4,7 +4,7 @@ import { renderToString } from 'react-dom/server';
 import serialize from 'serialize-javascript';
 import Helmet from 'react-helmet';
 import clientAssets from './clientAssets';
-import type { $React$Element } from '../shared/universal/types/react';
+import type { ReactElement } from '../shared/universal/types/react';
 
 function styleTags(styles : Array<string>) {
   return styles
@@ -37,7 +37,7 @@ const scripts = scriptTags(clientAssets.scripts);
  *
  * @return The full HTML page in the form of a React element.
  */
-function render(rootReactElement : ?$React$Element, initialState : ?Object) {
+function render(rootReactElement : ?ReactElement, initialState : ?Object) {
   const reactRenderString = rootReactElement
     ? renderToString(rootReactElement)
     : null;
@@ -67,7 +67,7 @@ function render(rootReactElement : ?$React$Element, initialState : ?Object) {
         ${styles}
         ${helmet ? helmet.style.toString() : ''}
 
-        <script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
+        <!--<script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>-->
       </head>
       <body>
         <div id='app'><div>${reactRenderString || ''}</div></div>

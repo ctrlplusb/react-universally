@@ -6,10 +6,10 @@
 
 import React from 'react';
 
-export type $React$Element = React.Element<*>;
+export type ReactElement = React.Element<*>;
 
-export type $React$Node = string | number | $React$Element | Array<$React$Element>;
+export type ReactNode = string | number | ReactElement | Array<ReactElement>;
 
-export type $React$Child = $React$Node | boolean | void | null;
+export type ReactChild = ReactNode | boolean | void | null;
 
-export type $React$Children = $React$Child | Array<$React$Children>;
+export type ReactChildren = ReactChild | Array<ReactChildren>;
