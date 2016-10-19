@@ -1,6 +1,6 @@
 {
   "name": "react-universally",
-  "version": "6.0.0",
+  "version": "7.0.0",
   "description": "A starter kit giving you the minimum requirements for a production ready universal react application.",
   "main": "build/server/main.js",
   "engines": {

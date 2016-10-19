@@ -2,6 +2,32 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [7.0.0] - 2016-10-19
+
+### Breaking Changes
+
+Full refactor of the application, moving it onto react-router v4.  Our components have been structured in a nested manner to reflect the declarative nature of RR4.  No more centralised routing configuration!
+
+Added code-split-component library to help us do declarative based Webpack 2 code splitting. This also simplifies our webpack configuration, no longer requiring the "context hack".
+
+Moved flow-typed definitions back to the root directory as the flow-typed guys have stated that this will be the default moving forward.
+
+Moves the RHL3 AppContainer resolution into a ReactHotLoader component.
+
+Moved the custom react flow types into the /src/shared/universal/types/react.js file.
+
+### Added
+
+A new npm task allowing you to remove all flow types from the source.  You will just need to do some minor cleaning up thereafter.
+
+### Fixed
+
+Eslint import plugin version.
+
+### Changed
+
+Updated dependencies.
+
 ## [6.0.0] - 2016-09-29
 
 ### Breaking Changes
