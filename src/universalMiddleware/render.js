@@ -67,7 +67,7 @@ function render(rootReactElement : ?ReactElement, initialState : ?Object) {
         ${styles}
         ${helmet ? helmet.style.toString() : ''}
 
-        <!--<script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>-->
+        <script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
       </head>
       <body>
         <div id='app'><div>${reactRenderString || ''}</div></div>

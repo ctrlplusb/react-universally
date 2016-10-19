@@ -40,15 +40,6 @@ function App() {
       />
 
       <Match
-        pattern="/posts"
-        render={routerProps =>
-          <CodeSplit module={System.import('./Posts')}>
-            { Posts => Posts && <Posts {...routerProps} /> }
-          </CodeSplit>
-        }
-      />
-
-      <Match
         pattern="/about"
         render={routerProps =>
           <CodeSplit module={System.import('./About')}>
