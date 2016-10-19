@@ -11,7 +11,7 @@ import type { $Request, $Response, NextFunction } from 'express';
 import compression from 'compression';
 import hpp from 'hpp';
 import helmet from 'helmet';
-import universalMiddleware from '../universalMiddleware';
+import universalMiddleware from './middleware/universalMiddleware';
 import { notEmpty } from '../shared/universal/utils/guards';
 
 const appRootPath = appRoot.toString();
@@ -57,17 +57,8 @@ app.use(
 // Configure static serving of our "public" root http path static files.
 app.use(express.static(path.resolve(appRootPath, './public')));
 
-// Bind our universal react app middleware as the handler for all get requests.
-if (process.env.NODE_ENV === 'development') {
-  // In development mode we will use a special wrapper middleware which will
-  // allow us to flush our node module cache effectively, and it will thereby
-  // allow us to "hot" reload any builds/updates to our middleware bundle.
-  const universalDevMiddleware = require('../../tools/development/universalDevMiddleware'); // eslint-disable-line global-require,max-len
-
-  app.get('*', universalDevMiddleware);
-} else {
-  app.get('*', universalMiddleware);
-}
+// The universal middleware for our React application.
+app.get('*', universalMiddleware);
 
 // Handle 404 errors.
 // Note: the react application middleware hands 404 paths, but it is good to

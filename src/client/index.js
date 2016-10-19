@@ -5,8 +5,8 @@ import { render } from 'react-dom';
 import { BrowserRouter } from 'react-router';
 import { Provider } from 'react-redux';
 import configureStore from '../shared/universal/redux/configureStore';
-import ReactHotLoader from './ReactHotLoader';
-import TaskRoutesExecutor from './TaskRoutesExecutor';
+import ReactHotLoader from './components/ReactHotLoader';
+import TaskRoutesExecutor from './components/TaskRoutesExecutor';
 import App from '../shared/universal/components/App';
 
 // Get the DOM Element that will host our React application.

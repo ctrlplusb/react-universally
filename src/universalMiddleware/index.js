@@ -5,7 +5,7 @@ import React from 'react';
 import { ServerRouter, createServerRenderContext } from 'react-router';
 import { Provider } from 'react-redux';
 import render from './render';
-import runTasksForLocation from '../shared/universal/taskRoutes/runTasksForLocation';
+import runTasksForLocation from '../shared/universal/routing/runTasksForLocation';
 import App from '../shared/universal/components/App';
 import configureStore from '../shared/universal/redux/configureStore';
 
@@ -88,7 +88,7 @@ function universalReactAppMiddleware(request: $Request, response: $Response) {
     // to complete before we render the application.
     executingTasks.then(({ routes }) => {
       if (process.env.NODE_ENV === 'development') {
-        console.log('Finished tasks for routes', routes); // eslint-disable-line no-console,max-len
+        console.log('Finished route tasks', routes); // eslint-disable-line no-console,max-len
       }
 
       // The tasks are complete! Our redux state will probably contain some

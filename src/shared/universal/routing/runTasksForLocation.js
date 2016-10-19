@@ -1,8 +1,9 @@
 /* @flow */
 
+import matchRoutesToLocation from './temp/matchRoutesToLocation';
 // import matchRoutesToLocation from 'react-router-addons-routes/matchRoutesToLocation';
-import matchRoutesToLocation from './matchRoutesToLocation';
-import createTaskRoutes from './createTaskRoutes';
+
+import taskRoutes from './taskRoutes';
 import type { Location, TaskRouteLocals } from '../types/react-router';
 
 type TaskExecutionResult = {
@@ -53,12 +54,12 @@ function runTasksForLocation(
   taskNames: Array<string>,
   locals: TaskRouteLocals,
   ) : ?Promise<TaskExecutionResult> {
-  const taskRoutes = createTaskRoutes(locals);
+  const routes = taskRoutes(locals);
 
   // Now we try to match the location being requested against our taskRoutes
   // and see if there are any matches.
   const { matchedRoutes, params } = matchRoutesToLocation(
-    taskRoutes, location
+    routes, location
   );
 
   if (matchedRoutes.length === 0) {
