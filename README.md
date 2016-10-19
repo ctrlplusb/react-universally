@@ -9,7 +9,8 @@
  - [About](https://github.com/ctrlplusb/react-universally#about)
  - [Features](https://github.com/ctrlplusb/react-universally#features)
  - [Overview](https://github.com/ctrlplusb/react-universally#overview)
- - [Extensions and Alternatives](https://github.com/ctrlplusb/react-universally#extensions-and-alternatives)
+ - [Extensions](https://github.com/ctrlplusb/react-universally#extensions)
+ - [3rd Party Extensions](https://github.com/ctrlplusb/react-universally#3rd-party-extensions)
  - [Project Structure](https://github.com/ctrlplusb/react-universally#project-structure)
  - [Project Dependencies](https://github.com/ctrlplusb/react-universally#project-dependencies)
  - [Server Runtime Dependencies](https://github.com/ctrlplusb/react-universally#server-runtime-dependencies)
@@ -28,7 +29,7 @@ This starter kit contains all the build tooling and configuration you need to ki
   - 🚄 `express` server.
   - 👮 Security on the `express` server using `helmet` and `hpp`.
   - 👀 `react` as the view.
-  - 🔀 `react-router` as the router, along with a dynamic routing configuration (i.e. you get code splitting based on your routes).
+  - 🔀 `react-router` v4 as the router, along with `code-split-component` (provides you declarative code splitting for your routes).
   - ⛑ `react-helmet` allowing control of the page title/meta/styles/scripts from within your components. Direct control for your SEO needs.
   - 🖌 Very basic CSS support - it's up to you to extend it into CSS Modules, SASS, PostCSS, Aphrodite etc.
   - 🏜 Image and Font support.
@@ -37,7 +38,11 @@ This starter kit contains all the build tooling and configuration you need to ki
   - ✂️ Client bundle is split by routes.
   - 🐘 Long term caching of the client bundle.
   - 🍃 Tree-shaking, supported by `webpack`.  
-  - ✔️ Type checking via Flow, a beautiful and unobtrusive type framework. NOTE: Flow is a completely optional feature.  The flow type annotations get ripped out of the source by the webpack build step. You have no obligation to use flow within your code and can even uninstall the dependency (flow-bin) without breaking the project.  I do highly recommend you try it out though.
+  - ✔️ Type checking via Flow, a beautiful and unobtrusive type framework. 
+      
+      __NOTE:__ Flow is a completely optional feature.  The flow type annotations get ripped out of the source by the webpack build step. You have no obligation to use flow within your code and can even uninstall the dependency (flow-bin) without breaking the project.  I do highly recommend you try it out though.
+      
+      If you dont' want the types you can run `npm run removetypes` to remove them from the src.  You'll just need to clean up a few empty lines thereafter.
   - 🎛 A development and optimized production configuration.
   - 🔧 Easy environment configuration via `dotenv` files.
   - 👼 Airbnb's eslint configuration.
@@ -45,6 +50,8 @@ This starter kit contains all the build tooling and configuration you need to ki
 ## Overview
 
 Redux/MobX, data persistence, test frameworks, and all the other bells and whistles have been explicitly excluded from this boilerplate.  It's up to you to decide what technologies you would like to add to your own implementation based upon your own needs, this boilerplate simply serves as a clean base upon which to do so.
+
+> __NEW!__ If you really want an example of a data library integration along with an example of how to go about solving data prefetching for the server then feel free to take a look at the [`redux`](https://github.com/ctrlplusb/react-universally/tree/redux) branch which provides exactly this.
 
 This boilerplate uses Webpack 2 to produce bundles for both the client, the
 server, and the middleware that the server will use to support SSR rendering of the React application.  You will notice the following Webpack configuration files:
@@ -61,15 +68,23 @@ Given that we are bundling our server code I have included the `source-map-suppo
 
 The application configuration is supported by the `dotenv` module and it requires you to create a `.env` file in the project root (you can use the `.env_example` as a base).  The `.env` file has been explicitly ignored from git as it will typically contain environment sensitive/specific information.  In the usual case your continuous deployment tool of choice should configure the specific `.env` file that is needed for a target environment.
 
-## Extensions and Alternatives
+## Extensions
 
-### [`react-universally-skinny`](https://github.com/ctrlplusb/react-universally-skinny)
+We provide extensions to this project within branches, detailed below.
 
-When size matters.  A lightweight alternative to `react-universally`.  ___Provides over 48% gzip bundle output savings from 72kb to 37kb___!
+### [`redux`](https://github.com/ctrlplusb/react-universally/tree/redux) __WIP__
+
+Provides you with an example of how to integrate redux into this starter kit, as well as how to deal with issues such a prefetching of data for server rendering.
+
+### [`preact`](https://github.com/ctrlplusb/react-universally/tree/preact) __Coming Soon__
+ 
+Does size matter to you?.  This branch replaces the React libs with `preact` and `preact-compat`.  Use the same React APIs but gain a minimum of 37kb shavings off your gzip bundle size.
+
+## 3rd Party Extensions
 
 ### [`advanced-boilerplate`](https://github.com/sebastian-software/advanced-boilerplate)
 
-This boilerplate provides extended features on top of `react-universally` such as CSS Support with CSS modules alongside a flexible full PostCSS chain for advanced transformations e.g. autoprefixer.
+A This boilerplate provides extended features on top of `react-universally` such as CSS Support with CSS modules alongside a flexible full PostCSS chain for advanced transformations e.g. autoprefixer.
 
 ## Project Structure
 
@@ -220,17 +235,6 @@ externals: removeEmpty([
 ```
 
 As you can see above we have already added the most common formats, so you are unlikely to hit this issue, however, it is good to be aware of.
-
-___Q:___ __I see `react-router` warnings during hot reloading.__
-
-For example:
-
-```
-Warning: [react-router] You cannot change <Router history>;
-Warning: [react-router] You cannot change <Router routes>;
-```
-
-Fret not! This is a known issue when using React Hot Loader 3 alongside React Router.  It is being looked in to.  Everything still works, unfortunately you just get a few warnings alongside your changes.  They are harmless though, promise. :)
 
 __Q:__ __I get checksum warning errors after receiving content from a server rendered request__
 
