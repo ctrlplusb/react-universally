@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
+import Helmet from 'react-helmet';
 import * as FromState from '../../../../reducers';
 import type { Post as PostType } from '../../../../types/model';
 
@@ -11,14 +12,18 @@ type Props = {
 
 function Post({ post } : Props) {
   if (!post) {
-    // Post hasn't been fetched yet.
+    // Post hasn't been fetched yet. It would be better if we had a "status"
+    // reducer attached to our posts which gave us a bit more insight, such
+    // as whether the post is currently being fetched, or if the fetch failed.
     return null;
   }
 
   const { title, body } = post;
 
-  return post && (
+  return (
     <div>
+      <Helmet title={`Posts - ${title}`} />
+
       <h1>{title}</h1>
       <div>
         {body}

@@ -24,7 +24,7 @@ function taskRoutes({ dispatch } : TaskRouteLocals) {
       pattern: '/posts/:id',
       exactly: true,
       prefetchData: ({ id } : { id: number }) => dispatch(PostActions.fetch(id)),
-      // defferedData: () => new Promise(resolve => setTimeout(resolve, 2000)),
+      // deferredData: () => new Promise(resolve => setTimeout(resolve, 2000)),
     },
   ];
 }

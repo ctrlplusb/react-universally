@@ -4,7 +4,7 @@ import { combineReducers } from 'redux';
 import type { Reducer } from 'redux';
 import type { Action } from '../types/redux';
 
-import posts, * as fromPosts from './posts';
+import posts, * as FromPosts from './posts';
 import type { State as PostsState } from './posts';
 
 // -----------------------------------------------------------------------------
@@ -25,7 +25,7 @@ const rootReducer: Reducer<State, Action> = combineReducers({
 // EXPORTED SELECTORS
 
 export function getPostById(state: State, id: number) {
-  return fromPosts.getById(state.posts, id);
+  return FromPosts.getById(state.posts, id);
 }
 
 // -----------------------------------------------------------------------------

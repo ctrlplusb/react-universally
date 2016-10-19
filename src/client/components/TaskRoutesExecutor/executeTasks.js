@@ -8,16 +8,16 @@ function executeTasks(location: Location, dispatch: Dispatch<ThunkAction>) {
   const tasksToExecute = window && window.APP_STATE
     // We have an APP_STATE available, which will contain the state from the
     // server populated by any 'prefetchData' tasks, therefore we only need to
-    // call the 'defferedData' tasks.
-    ? ['defferedData']
+    // call the 'deferredData' tasks.
+    ? ['deferredData']
     // No data is available so we will execute both the 'prefetchData' and
-    // 'defferedData' tasks.
-    : ['prefetchData', 'defferedData'];
+    // 'deferredData' tasks.
+    : ['prefetchData', 'deferredData'];
 
   if (window) {
     // We now remove the APP_STATE as it has been safely merged into the redux
     // store at this stage, and by deleting it we can make sure that we will
-    // execute both the 'prefetchData' and 'defferedData' tasks for every route
+    // execute both the 'prefetchData' and 'deferredData' tasks for every route
     // change that happens on the client side.
     delete window.APP_STATE;
   }

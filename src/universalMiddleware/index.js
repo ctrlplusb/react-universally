@@ -77,8 +77,7 @@ function universalReactAppMiddleware(request: $Request, response: $Response) {
       ).send(html);
   };
 
-  // Now we try to attempt to execute any 'prefetchData' tasks that get matched
-  // for the given location.
+  // Execute any 'prefetchData' tasks that get matched for the request location.
   const executingTasks = runTasksForLocation(
     { pathname: request.originalUrl }, ['prefetchData'], { dispatch }
   );

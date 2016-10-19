@@ -6,21 +6,6 @@ import axios from 'axios';
 import reducer from '../reducers';
 import type { State } from '../reducers';
 
-// // If we create an '/api' endpoint in our server then we will neeed to
-// // configure the axios instances so that it will execute properly on the server.
-// // We need to make sure we provide the full url to our API endpoint. To do so
-// // we need to set the 'baseURL' configuration property for axios.
-// // We don't need to worry about this for client side executions, relative paths
-// // will work fine there.
-// const axiosConfig = process.env.IS_NODE === true
-//   ? { baseURL: process.env.NOW_URL || notEmpty(process.env.SERVER_URL) }
-//   : {};
-//
-// We will then have to initialise the thunk like so:
-// thunk.withExtraArgument({
-//   axios: axios.create(axiosConfig),
-// })
-
 function configureStore(initialState: ?State) {
   const enhancers = compose(
     // Middleware store enhancer.
@@ -28,6 +13,7 @@ function configureStore(initialState: ?State) {
       // Initialising redux-thunk with extra arguments will pass the below
       // arguments to all the redux-thunk actions. Below we are passing a
       // preconfigured axios instance which can be used to fetch data with.
+      // @see https://github.com/gaearon/redux-thunk
       thunk.withExtraArgument({ axios })
     ),
     // Redux Dev Tools store enhancer.
@@ -59,5 +45,25 @@ function configureStore(initialState: ?State) {
 
   return store;
 }
+
+// NOTE: If we create an '/api' endpoint in our application then we will neeed to
+// configure the axios instances so that they will resolve to the proper URL
+// endpoints on the server. We have to provide absolute URLs for any of our
+// server bundles. To do so we can set the default 'baseURL' for axios. Any
+// relative path requests will then be appended to the 'baseURL' in order to
+// form an absolute URL.
+// We don't need to worry about this for client side executions, relative paths
+// will work fine there.
+// Example:
+//
+// const axiosConfig = process.env.IS_NODE === true
+//   ? { baseURL: process.env.NOW_URL || notEmpty(process.env.SERVER_URL) }
+//   : {};
+//
+// Then we will then have to initialise our redux-thunk middlware like so:
+//
+// thunk.withExtraArgument({
+//   axios: axios.create(axiosConfig),
+// })
 
 export default configureStore;

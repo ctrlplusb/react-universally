@@ -313,14 +313,14 @@ function webpackConfigFactory({ target, mode }, { json }) {
               // Our dev client build will need the react hot loader babel plugin
               ifDevClient('react-hot-loader/babel'),
               // We use the code-split-component/babel plugin and only enable
-              // code splitting when bundling a client bundle. For our server
-              // bundles the code-split-component/babel plugin will transpile
-              // the System.import statements into synchronous require statements.
+              // code splitting when bundling a production client bundle.
+              // For our node and development client bundles we configure the
+              // code-split-component/babel so that it will transpile
+              // the System.import statements on our CodeSplit components
+              // into synchronous require statements. This then supports
+              // full server side rendering as well as React Hot Loader 3 on
+              // our development client bundle.
               // @see https://github.com/ctrlplusb/code-split-component
-              // Also, using react-hot-loader@3.0.0-beta.6 or later breaks HMR
-              // of our code split components, so we are disabling code
-              // splitting for anything but our production builds of the
-              // client bundle.
               [
                 'code-split-component/babel',
                 { enableCodeSplitting: isProd && isClient },

@@ -2,11 +2,14 @@
 
 import React from 'react';
 import { Link, Match } from 'react-router';
+import Helmet from 'react-helmet';
 import Post from './Post';
 
 function Posts() {
   return (
     <div>
+      <Helmet title="Posts" />
+
       <h1>Posts</h1>
 
       <ul>
