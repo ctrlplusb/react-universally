@@ -38,10 +38,10 @@ This starter kit contains all the build tooling and configuration you need to ki
   - ✂️ Client bundle is split by routes.
   - 🐘 Long term caching of the client bundle.
   - 🍃 Tree-shaking, supported by `webpack`.  
-  - ✔️ Type checking via Flow, a beautiful and unobtrusive type framework. 
-      
+  - ✔️ Type checking via Flow, a beautiful and unobtrusive type framework.
+
       __NOTE:__ Flow is a completely optional feature.  The flow type annotations get ripped out of the source by the webpack build step. You have no obligation to use flow within your code and can even uninstall the dependency (flow-bin) without breaking the project.  I do highly recommend you try it out though.
-      
+
       If you dont' want the types you can run `npm run removetypes` to remove them from the src.  You'll just need to clean up a few empty lines thereafter.
   - 🎛 A development and optimized production configuration.
   - 🔧 Easy environment configuration via `dotenv` files.
@@ -72,12 +72,12 @@ The application configuration is supported by the `dotenv` module and it require
 
 We provide extensions to this project within branches, detailed below.
 
-### [`redux`](https://github.com/ctrlplusb/react-universally/tree/redux) __WIP__
+### [`redux`](https://github.com/ctrlplusb/react-universally/tree/redux)
 
 Provides you with an example of how to integrate redux into this starter kit, as well as how to deal with issues such a prefetching of data for server rendering.
 
 ### [`preact`](https://github.com/ctrlplusb/react-universally/tree/preact) __Coming Soon__
- 
+
 Does size matter to you?.  This branch replaces the React libs with `preact` and `preact-compat`.  Use the same React APIs but gain a minimum of 37kb shavings off your gzip bundle size.
 
 ## 3rd Party Extensions
@@ -100,7 +100,7 @@ A This boilerplate provides extended features on top of `react-universally` such
 |  |- client // The client bundle entry and specific source
 |  |- shared // The shared code between the bundles
 |     |- universal // Shared code that is suitable for any of the bundles
-|     |- node      // Shared code that is suitable for the node bundles 
+|     |- node      // Shared code that is suitable for the node bundles
 |                     (i.e. the server or universalMiddleware bundles)
 |- tools
 |  |- development // Tool for hot reloading development
