@@ -61,7 +61,6 @@
     "babel-plugin-transform-object-rest-spread": "6.16.0",
     "babel-preset-latest": "6.16.0",
     "babel-preset-react": "6.16.0",
-    "babel-template": "6.16.0",
     "chokidar": "1.6.0",
     "colors": "1.1.2",
     "css-loader": "0.25.0",

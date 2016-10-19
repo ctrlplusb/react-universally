@@ -1,4 +1,3 @@
-/* @flow */
 /* eslint-disable global-require */
 
 let tempUniversalMiddleware;
@@ -10,9 +9,11 @@ if (process.env.NODE_ENV === 'development') {
   tempUniversalMiddleware = require('../../../tools/development/universalDevMiddleware');
 } else {
   // In production we will just import our universal middleware directly.
-  // It will always be at this relative path, when in the src or build
-  // directories.
-  tempUniversalMiddleware = require('../../universalMiddleware').default;
+  // Our server bundle will be flattened and in "build/server", therfore to import
+  // the middleware we do a relative path to "../universalMiddleware" which
+  // exists in "build/universalMiddleware".
+
+  tempUniversalMiddleware = require('../universalMiddleware').default; // eslint-disable-line
 }
 
 const universalMiddleware = tempUniversalMiddleware;
