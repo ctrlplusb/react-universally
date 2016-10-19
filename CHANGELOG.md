@@ -2,6 +2,20 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [7.0.1] - 2016-10-19
+
+### Fixed
+
+Issue where the universalMiddleware was being bundled into the server bundle.
+
+Duplicate react-router dependency on "devDependencies" and normal "dependencies".
+
+Render function of middleware to not unnecessarily wrap the react output with an additional div.  This seem to have subvented the react checksum guard, even though the checksums should have failed.
+
+### Changed
+
+Updates to latest react-router 4 alpha.
+
 ## [7.0.0] - 2016-10-19
 
 ### Breaking Changes
