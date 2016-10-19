@@ -197,6 +197,12 @@ Executes `esling` (using the Airbnb config) against the src folder. Alternativel
 
 Executes `flow-bin`, performing type checking on the source.  If you really like flow I would recommend getting a plugin for your IDE.  For Atom I recommend `flow-ide`.
 
+### `npm run removetypes`
+
+For those of us not wanting to use `flow`. Running this command removes all `flow` types from the src.
+
+__Warning:__ This is a destructive behavior - it modifies your actual source files. Please make sure you commit any existing changes to your src before running this command.
+
 ## Troubleshooting ##
 
 ___Q:___ __My project fails to build and execute when I deploy it to my host__
