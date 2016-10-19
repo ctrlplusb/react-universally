@@ -74,7 +74,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
       // Don't allow the server to bundle the universal middleware bundle. We
       // want the server to natively require it from the build dir.
       ifServer(/\.\.[\/\\]universalMiddleware/),
-      ifDevServer(/\.\.[\/\\]universalDevMiddleware/),
+      ifDevServer(/development[\/\\]universalDevMiddleware/),
 
       // We don't want our node_modules to be bundled with our server package,
       // prefering them to be resolved via native node module system.  Therefore

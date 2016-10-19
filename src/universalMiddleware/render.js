@@ -70,7 +70,7 @@ function render(rootReactElement : ?ReactElement, initialState : ?Object) {
         <script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
       </head>
       <body>
-        <div id='app'><div>${reactRenderString || ''}</div></div>
+        <div id='app'>${reactRenderString || ''}</div>
 
         <script type='text/javascript'>${
           initialState
