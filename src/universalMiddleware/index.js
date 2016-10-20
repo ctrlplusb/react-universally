@@ -58,7 +58,7 @@ function universalReactAppMiddleware(request: $Request, response: $Response) {
         // If the renderResult contains a "missed" match then we set a 404 code.
         // Our App component will handle the rendering of an Error404 view.
         ? 404
-        // Otherwiser everthing is all good and we send a 200 OK status.
+        // Otherwise everything is all good and we send a 200 OK status.
         : 200
     )
     .send(html);

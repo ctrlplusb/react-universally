@@ -6,7 +6,7 @@
 
 import React from 'react';
 
-export type ReactElement = React.Element<*>;
+export type ReactElement = React.Element<any>;
 
 export type ReactNode = string | number | ReactElement | Array<ReactElement>;
 

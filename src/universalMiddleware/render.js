@@ -29,20 +29,25 @@ const scripts = scriptTags(clientAssets.scripts);
  * Generates a full HTML page containing the render output of the given react
  * element.
  *
- * @param  rootReactElement
- *   [Optional] The root React element to be rendered on the page.
+ * @param  reactAppElement
+ *   [Optional] The react element representing our app to be rendered within the page.
  * @param  initialState
  *   [Optional] A state object to be mounted on window.APP_STATE.
  *   Useful for rehydrating state management containers like Redux/Mobx etc.
  *
  * @return The full HTML page in the form of a React element.
  */
-function render(rootReactElement : ?ReactElement, initialState : ?Object) {
-  const reactRenderString = rootReactElement
-    ? renderToString(rootReactElement)
-    : null;
+function render(reactAppElement : ?ReactElement, initialState : ?Object) {
+  const reactApp = reactAppElement
+    ? renderToString(reactAppElement)
+    : '';
 
-  const helmet = rootReactElement
+  // If we had a reactAppElement then we need to run Helmet.rewind to extract
+  // all the helmet information out of the helmet provider.
+  // Note: you need to have called the renderToString on the react element before
+  // running this!
+  // @see https://github.com/nfl/react-helmet
+  const helmet = reactAppElement
     // We run 'react-helmet' after our renderToString call so that we can fish
     // out all the attributes which need to be attached to our page.
     // React Helmet allows us to control our page header contents via our
@@ -70,7 +75,7 @@ function render(rootReactElement : ?ReactElement, initialState : ?Object) {
         <script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
       </head>
       <body>
-        <div id='app'>${reactRenderString || ''}</div>
+        <div id='app'>${reactApp}</div>
 
         <script type='text/javascript'>${
           initialState
