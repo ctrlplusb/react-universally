@@ -4,7 +4,7 @@
   "description": "A starter kit giving you the minimum requirements for a production ready universal react application.",
   "main": "build/server/main.js",
   "engines": {
-    "node": "~6.7.0"
+    "node": "~6.9.1"
   },
   "scripts": {
     "removetypes": "babel --no-babelrc --plugins 'transform-flow-strip-types' --presets 'react' --out-dir tmp src && copyfiles --up 1 'tmp/**/*.js' src && rimraf tmp",
