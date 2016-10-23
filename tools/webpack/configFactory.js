@@ -300,7 +300,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
               // TODO: When babel-preset-latest-minimal has stabilised use it
               // for our node targets so that only the missing features for
               // our respective node version will be transpiled.
-              ['latest', { modules: false }],
+              ['latest', { es2015: { modules: false } }],
             ],
             plugins: removeEmpty([
               // We are adding the experimental "object rest spread" syntax as
