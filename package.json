@@ -63,6 +63,7 @@
     "babel-preset-react": "6.16.0",
     "chokidar": "1.6.1",
     "colors": "1.1.2",
+    "copyfiles": "1.0.0",
     "css-loader": "0.25.0",
     "dotenv": "2.0.0",
     "eslint": "3.8.1",
