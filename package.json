@@ -7,7 +7,7 @@
     "node": "~6.9.1"
   },
   "scripts": {
-    "removetypes": "babel --no-babelrc --plugins 'transform-flow-strip-types' --presets 'react' --out-dir tmp src && copyfiles --up 1 'tmp/**/*.js' src && rimraf tmp",
+    "removetypes": "node ./tools/flow/removeTypes.js && eslint --fix src",
     "typecheck": "flow",
     "lint": "eslint src",
     "clean": "rimraf build",
@@ -63,7 +63,6 @@
     "babel-preset-react": "6.16.0",
     "chokidar": "1.6.1",
     "colors": "1.1.2",
-    "copyfiles": "1.0.0",
     "css-loader": "0.25.0",
     "dotenv": "2.0.0",
     "eslint": "3.8.1",
@@ -75,9 +74,11 @@
     "extract-text-webpack-plugin": "2.0.0-beta.4",
     "file-loader": "0.9.0",
     "flow-bin": "0.33.0",
+    "flow-remove-types": "1.0.4",
     "json-loader": "0.5.4",
     "node-notifier": "4.6.1",
     "react-hot-loader": "3.0.0-beta.6",
+    "recursive-readdir": "2.1.0",
     "regenerator-runtime": "0.9.5",
     "rimraf": "2.5.4",
     "style-loader": "0.13.1",
