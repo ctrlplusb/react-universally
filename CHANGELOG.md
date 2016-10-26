@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [7.2.0] - 2016-10-26
+
+### Added
+
+A HappyPack and Vendor DLL implementation to improve the development experience.  The Vendor DLL is automatically calculated and build within the development server, reducing any management overhead.  We use a md5 hash against the project's dependencies to know when to rebuild the vendor dll. - thanks goes to @strues
+
 ## [7.1.0] - 2016-10-26
 
 ### Added

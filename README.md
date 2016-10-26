@@ -27,7 +27,7 @@ This starter kit contains all the build tooling and configuration you need to ki
 ## Features
 
   - 🌍 Server side rendering.
-  - 🔥 Extreme live development - hot reloading of client/server source as, with high level of error tolerance.
+  - 🔥 Extreme live development - hot reloading of client/server source, with high level of error tolerance, alongside a HappyPack and Vendor DLL (courtesy of @strues).
   - 🚄 `express` server.
   - 👮 Security on the `express` server using `helmet` and `hpp`.
   - 👀 `react` as the view.
@@ -208,6 +208,12 @@ Executes `flow-coverage-report`, generating a report on your type check coverage
 For those of us not wanting to use `flow`. Running this command removes all `flow` types from the src.
 
 __Warning:__ This is a destructive behavior - it modifies your actual source files. Please make sure you commit any existing changes to your src before running this command.
+
+### `npm run build:dlls`
+
+Compiles a vendor library bundle, which improves build and recompile times by caching this code under the assumption it wont change often. Every time a you add a new dependency you must recompile the vendor DLL using the above command.
+
+Dependencies are added by hand in the `dll.config.js` file located inside `tools/webpack`.
 
 ## Troubleshooting ##
 
