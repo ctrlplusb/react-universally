@@ -209,6 +209,12 @@ For those of us not wanting to use `flow`. Running this command removes all `flo
 
 __Warning:__ This is a destructive behavior - it modifies your actual source files. Please make sure you commit any existing changes to your src before running this command.
 
+### `npm run build:dlls`
+
+Compiles a vendor library bundle, which improves build and recompile times by caching this code under the assumption it wont change often. Every time a you add a new dependency you must recompile the vendor DLL using the above command.
+
+Dependencies are added by hand in the `dll.config.js` file located inside `tools/webpack`.
+
 ## Troubleshooting ##
 
 ___Q:___ __My project fails to build and execute when I deploy it to my host__

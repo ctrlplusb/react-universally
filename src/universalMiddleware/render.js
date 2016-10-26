@@ -23,6 +23,7 @@ function scriptTags(scripts : Array<string>) {
 }
 
 const styles = styleTags(clientAssets.styles);
+
 const scripts = scriptTags(clientAssets.scripts);
 
 /**

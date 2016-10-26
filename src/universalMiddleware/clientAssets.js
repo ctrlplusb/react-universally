@@ -46,4 +46,14 @@ const assets = Object.keys(assetsBundleFileContents)
     return acc;
   }, { scripts: [], styles: [] });
 
+// When we are in development mode our development server will generate a
+// vendor DLL in order to dramatically reduce our compilation times.  Therefore
+// we need to inject the path to the vendor dll bundle below.
+// @see /tools/development/ensureVendorDLLExists.js
+if (process.env.NODE_ENV === 'development') {
+  const vendorPaths = require('../../tools/config/vendorDLLPaths'); // eslint-disable-line global-require
+
+  assets.scripts.splice(0, 0, vendorPaths.dllWebPath);
+}
+
 export default assets;

@@ -1,43 +1,56 @@
-/* eslint-disable no-console */
-/* eslint-disable global-require */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable import/no-extraneous-dependencies */
-/* eslint-disable import/newline-after-import */
-
-const path = require('path');
+const pathResolve = require('path').resolve;
 const chokidar = require('chokidar');
 const webpack = require('webpack');
 const createNotification = require('./createNotification');
 const HotServer = require('./hotServer');
 const HotClient = require('./hotClient');
+const ensureVendorDLLExists = require('./ensureVendorDLLExists');
+const vendorDLLPaths = require('../config/vendorDLLPaths');
 
 class HotDevelopment {
   constructor() {
-    try {
-      const clientConfigFactory = require('../webpack/client.config');
-      const clientConfig = clientConfigFactory({ mode: 'development' });
-      this.clientCompiler = webpack(clientConfig);
+    ensureVendorDLLExists().then(() => {
+      try {
+        const clientConfigFactory = require('../webpack/client.config');
+        const clientConfig = clientConfigFactory({ mode: 'development' });
+        // Install the vendor DLL plugin.
+        clientConfig.plugins.push(
+          new webpack.DllReferencePlugin({
+            manifest: require(vendorDLLPaths.dllJsonPath),
+          })
+        );
+        this.clientCompiler = webpack(clientConfig);
 
-      const middlewareConfigFactory = require('../webpack/universalMiddleware.config');
-      const middlewareConfig = middlewareConfigFactory({ mode: 'development' });
-      this.middlewareCompiler = webpack(middlewareConfig);
+        const middlewareConfigFactory = require('../webpack/universalMiddleware.config');
+        const middlewareConfig = middlewareConfigFactory({ mode: 'development' });
+        this.middlewareCompiler = webpack(middlewareConfig);
 
-      const serverConfigFactory = require('../webpack/server.config');
-      const serverConfig = serverConfigFactory({ mode: 'development' });
-      this.serverCompiler = webpack(serverConfig);
-    } catch (err) {
+        const serverConfigFactory = require('../webpack/server.config');
+        const serverConfig = serverConfigFactory({ mode: 'development' });
+        this.serverCompiler = webpack(serverConfig);
+      } catch (err) {
+        createNotification({
+          title: 'development',
+          level: 'error',
+          message: 'Webpack configs are invalid, please check the console for more information.',
+        });
+        console.log(err);
+        return;
+      }
+
+      this.prepHotServer();
+      this.prepHotUniversalMiddleware();
+      this.prepHotClient();
+    }).catch((err) => {
       createNotification({
-        title: 'development',
+        title: 'vendorDLL',
         level: 'error',
-        message: 'Webpack configs are invalid, please check the console for more information.',
+        message: 'Unfortunately an error occured whilst trying to build the vendor dll used by the development server. Please check the console for more information.',
       });
-      console.log(err);
-      return;
-    }
-
-    this.prepHotServer();
-    this.prepHotUniversalMiddleware();
-    this.prepHotClient();
+      if (err) {
+        console.log(err);
+      }
+    });
   }
 
   prepHotClient() {
@@ -134,7 +147,7 @@ const hotDevelopment = new HotDevelopment();
 // Any changes to our webpack configs should be notified as requiring a restart
 // of the development tool.
 const watcher = chokidar.watch(
-  path.resolve(__dirname, '../webpack')
+  pathResolve(__dirname, '../webpack')
 );
 watcher.on('ready', () => {
   watcher.on('change', () => {

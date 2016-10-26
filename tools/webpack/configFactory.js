@@ -1,16 +1,13 @@
-/* eslint-disable no-console,import/no-extraneous-dependencies */
-
 const path = require('path');
 const webpack = require('webpack');
 const AssetsPlugin = require('assets-webpack-plugin');
 const nodeExternals = require('webpack-node-externals');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const appRoot = require('app-root-path');
+const appRootPath = require('app-root-path').toString();
 const WebpackMd5Hash = require('webpack-md5-hash');
-const { removeEmpty, ifElse, merge } = require('../utils');
-const envVars = require('../config/envVars');
 
-const appRootPath = appRoot.toString();
+const { removeEmpty, ifElse, merge, happyPackPlugin } = require('../utils');
+const envVars = require('../config/envVars');
 
 function webpackConfigFactory({ target, mode }, { json }) {
   if (!target || ['client', 'server', 'universalMiddleware'].findIndex(valid => target === valid) === -1) {
@@ -53,6 +50,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
 
   const ifNodeTarget = ifElse(isNodeTarget);
   const ifDev = ifElse(isDev);
+  const ifProd = ifElse(isProd);
   const ifClient = ifElse(isClient);
   const ifServer = ifElse(isServer);
   const ifDevServer = ifElse(isDev && isServer);
@@ -198,6 +196,8 @@ function webpackConfigFactory({ target, mode }, { json }) {
             // builds as React relies on process.env.NODE_ENV for optimizations.
             'process.env.NODE_ENV': JSON.stringify(mode),
             'process.env.IS_NODE': JSON.stringify(isNodeTarget),
+            'process.env.USE_DLLS': JSON.stringify(process.env.USE_DLLS),
+            'process.env.HAPPY_CACHE': JSON.stringify(process.env.HAPPY_CACHE),
             // NOTE: If you are providing any environment variables from the
             // command line rather than the .env files then you must make sure
             // you add them here so that webpack can use them in during the
@@ -251,8 +251,8 @@ function webpackConfigFactory({ target, mode }, { json }) {
         })
       ),
 
+      // JS Minification.
       ifProdClient(
-        // JS Minification.
         new webpack.optimize.UglifyJsPlugin({
           // sourceMap: true,
           compress: {
@@ -282,14 +282,26 @@ function webpackConfigFactory({ target, mode }, { json }) {
         // CSS files.
         new ExtractTextPlugin({ filename: '[name]-[chunkhash].css', allChunks: true })
       ),
-    ]),
-    module: {
-      rules: [
-        // Javascript
-        {
-          test: /\.jsx?$/,
-          loader: 'babel-loader',
-          include: [path.resolve(appRootPath, './src')],
+
+      // HappyPack plugins
+      // @see https://github.com/amireh/happypack/
+      //
+      // HappyPack allows us to use threads to execute our loaders. This means
+      // that we can get parallel execution of our loaders, significantly
+      // improving build and recompile times.
+      //
+      // This may not be an issue for you whilst your project is small, but
+      // the compile times can be signficant when the project scales. A lengthy
+      // compile time can significantly impare your development experience.
+      // Therefore we employ HappyPack to do threaded execution of our
+      // "heavy-weight" loaders.
+
+      // HappyPack 'javascript' instance.
+      happyPackPlugin({
+        name: 'happypack-javascript',
+        // We will use babel to do all our JS processing.
+        loaders: [{
+          path: 'babel',
           query: {
             presets: [
               // JSX
@@ -310,8 +322,6 @@ function webpackConfigFactory({ target, mode }, { json }) {
               'transform-es2015-destructuring',
               // The class properties plugin is really useful for react components.
               'transform-class-properties',
-              // Our dev client build will need the react hot loader babel plugin
-              ifDevClient('react-hot-loader/babel'),
               // We use the code-split-component/babel plugin and only enable
               // code splitting when bundling a production client bundle.
               // For our node and development client bundles we configure the
@@ -327,7 +337,64 @@ function webpackConfigFactory({ target, mode }, { json }) {
               ],
             ]),
           },
+        }],
+      }),
+
+      // HappyPack 'css' instance for development client.
+      ifDevClient(
+        happyPackPlugin({
+          name: 'happypack-devclient-css',
+          // We will use a straight style & css loader along with source maps.
+          // This combo gives us a better development experience.
+          loaders: [
+            'style-loader',
+            { path: 'css-loader', query: { sourceMap: true } },
+          ],
+        })
+      ),
+    ]),
+    module: {
+      rules: removeEmpty([
+        // Javascript
+        {
+          test: /\.jsx?$/,
+          // We will defer all our js processing to the happypack plugin
+          // named "happypack-javascript".
+          // See the respective plugin within the plugins section for full
+          // details on what loader is being implemented.
+          loader: 'happypack/loader?id=happypack-javascript',
+          include: [path.resolve(appRootPath, './src')],
         },
+
+        // CSS
+        merge(
+          {
+            test: /\.css$/,
+          },
+          // For a production client build we use the ExtractTextPlugin which
+          // will extract our CSS into CSS files.
+          // The plugin needs to be registered within the plugins section too.
+          // Also, as we are using the ExtractTextPlugin we can't use happypack
+          // for this case.
+          ifProdClient({
+            loader: ExtractTextPlugin.extract({
+              fallbackLoader: 'style-loader',
+              loader: 'css-loader',
+            }),
+          }),
+          // When targetting the server we use the "/locals" version of the
+          // css loader, as we don't need any css files for the server.
+          ifNodeTarget({
+            loaders: ['css-loader/locals'],
+          }),
+          // For development clients we will defer all our css processing to the
+          // happypack plugin named "happypack-devclient-css".
+          // See the respective plugin within the plugins section for full
+          // details on what loader is being implemented.
+          ifDevClient({
+            loaders: ['happypack/loader?id=happypack-devclient-css'],
+          })
+        ),
 
         // JSON
         {
@@ -349,37 +416,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
             emitFile: isClient,
           },
         },
-
-        // CSS
-        merge(
-          { test: /\.css$/ },
-          // When targetting the server we use the "/locals" version of the
-          // css loader.
-          ifNodeTarget({
-            loaders: [
-              'css-loader/locals',
-            ],
-          }),
-          // For a production client build we use the ExtractTextPlugin which
-          // will extract our CSS into CSS files.  The plugin needs to be
-          // registered within the plugins section too.
-          ifProdClient({
-            loader: ExtractTextPlugin.extract({
-              fallbackLoader: 'style-loader',
-              loader: 'css-loader',
-            }),
-          }),
-          // For a development client we will use a straight style & css loader
-          // along with source maps.  This combo gives us a better development
-          // experience.
-          ifDevClient({
-            loaders: [
-              'style-loader',
-              { loader: 'css-loader', query: { sourceMap: true } },
-            ],
-          })
-        ),
-      ],
+      ]),
     },
   };
 }

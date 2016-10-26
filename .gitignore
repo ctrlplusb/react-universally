@@ -34,3 +34,6 @@ npm-debug.log
 
 # Flow Coverage Report
 flow-coverage/
+
+# Happypack
+.happypack
