@@ -27,7 +27,7 @@ This starter kit contains all the build tooling and configuration you need to ki
 ## Features
 
   - 🌍 Server side rendering.
-  - 🔥 Extreme live development - hot reloading of client/server source as, with high level of error tolerance.
+  - 🔥 Extreme live development - hot reloading of client/server source as, with high level of error tolerance, alongside a HappyPack and Vendor DLL (courtesy of @strues).
   - 🚄 `express` server.
   - 👮 Security on the `express` server using `helmet` and `hpp`.
   - 👀 `react` as the view.
