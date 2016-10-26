@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [7.1.0] - 2016-10-26
+
+### Added
+
+The flow-coverage-report tool with an associated npm script, allowing us to do coverage reporting for our flow types.
+
+The react-helmet flow definition from flow-typed.
+
 ## [7.0.2] - 2016-10-23
 
 ### Fixed

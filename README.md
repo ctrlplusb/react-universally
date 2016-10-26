@@ -193,11 +193,15 @@ Deletes any build output that would have originated from the other commands.
 
 ### `npm run lint`
 
-Executes `esling` (using the Airbnb config) against the src folder. Alternatively you could look to install the `eslint-loader` and integrate it into the `webpack` bundle process.
+Executes `eslint` (using the Airbnb config) against the src folder. Alternatively you could look to install the `eslint-loader` and integrate it into the `webpack` bundle process.
 
 ### `npm run typecheck`
 
 Executes `flow-bin`, performing type checking on the source.  If you really like flow I would recommend getting a plugin for your IDE.  For Atom I recommend `flow-ide`.
+
+### `npm run typereport`
+
+Executes `flow-coverage-report`, generating a report on your type check coverage.  It returns with an error if your coverage is below 80%.  After you have run it I recommend clicking into the generated flow-coverage directory and opening the HTML report.  You can click through into files to see where your coverage is lacking.
 
 ### `npm run removetypes`
 
