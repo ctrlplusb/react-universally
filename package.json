@@ -7,13 +7,14 @@
     "node": "~6.9.1"
   },
   "scripts": {
-    "removetypes": "node ./tools/flow/removeTypes.js && eslint --fix src",
-    "typecheck": "flow",
-    "lint": "eslint src",
     "clean": "rimraf build",
     "development": "node ./tools/development",
     "build": "npm run clean && webpack --config ./tools/webpack/client.config.js && webpack --config ./tools/webpack/universalMiddleware.config.js && webpack --config ./tools/webpack/server.config.js",
-    "start": "node build/server"
+    "start": "node build/server",
+    "lint": "eslint src",
+    "typecheck": "flow",
+    "typereport": "flow-coverage-report -i 'src/**/*.js' -t html -t json -t text",
+    "removetypes": "node ./tools/flow/removeTypes.js && eslint --fix src"
   },
   "repository": {
     "type": "git",
@@ -74,6 +75,7 @@
     "extract-text-webpack-plugin": "2.0.0-beta.4",
     "file-loader": "0.9.0",
     "flow-bin": "0.33.0",
+    "flow-coverage-report": "0.1.0",
     "flow-remove-types": "1.0.4",
     "json-loader": "0.5.4",
     "node-notifier": "4.6.1",
