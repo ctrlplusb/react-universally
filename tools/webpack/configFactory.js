@@ -2,15 +2,15 @@
 
 const path = require('path');
 const webpack = require('webpack');
+const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin');
 const AssetsPlugin = require('assets-webpack-plugin');
 const nodeExternals = require('webpack-node-externals');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const appRoot = require('app-root-path');
+const appRootPath = require('app-root-path').toString();
 const WebpackMd5Hash = require('webpack-md5-hash');
 const { removeEmpty, ifElse, merge } = require('../utils');
 const envVars = require('../config/envVars');
-
-const appRootPath = appRoot.toString();
+const appName = require('../../package.json').name;
 
 function webpackConfigFactory({ target, mode }, { json }) {
   if (!target || ['client', 'server', 'universalMiddleware'].findIndex(valid => target === valid) === -1) {
@@ -198,6 +198,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
             // builds as React relies on process.env.NODE_ENV for optimizations.
             'process.env.NODE_ENV': JSON.stringify(mode),
             'process.env.IS_NODE': JSON.stringify(isNodeTarget),
+            'process.env.APP_NAME': JSON.stringify(appName),
             // NOTE: If you are providing any environment variables from the
             // command line rather than the .env files then you must make sure
             // you add them here so that webpack can use them in during the
@@ -281,6 +282,15 @@ function webpackConfigFactory({ target, mode }, { json }) {
         // This is a production client so we will extract our CSS into
         // CSS files.
         new ExtractTextPlugin({ filename: '[name]-[chunkhash].css', allChunks: true })
+      ),
+
+      ifProdClient(
+        new SWPrecacheWebpackPlugin(
+          {
+            cacheId: appName,
+            filename: `${appName}-sw.js`,
+          }
+        )
       ),
     ]),
     module: {

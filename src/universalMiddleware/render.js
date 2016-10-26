@@ -5,6 +5,7 @@ import serialize from 'serialize-javascript';
 import Helmet from 'react-helmet';
 import clientAssets from './clientAssets';
 import type { ReactElement } from '../shared/universal/types/react';
+import { notEmpty } from '../shared/universal/utils/guards';
 
 function styleTags(styles : Array<string>) {
   return styles
@@ -74,6 +75,21 @@ function render(reactAppElement : ?ReactElement, initialState : ?Object) {
         ${helmet ? helmet.style.toString() : ''}
 
         <script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
+        ${
+          // In production build we will register our service worker that
+          // controls caching of our client bundle assets.
+          process.env.NODE_ENV === 'production'
+            ? `
+        <script type="text/javascript">
+          (function() {
+            if('serviceWorker' in navigator) {
+              navigator.serviceWorker.register('${notEmpty(process.env.CLIENT_BUNDLE_HTTP_PATH)}${notEmpty(process.env.APP_NAME)}-sw.js');
+            }
+          })();
+        </script>
+          `
+            : ''
+        }
       </head>
       <body>
         <div id='app'>${reactApp}</div>
