@@ -196,8 +196,6 @@ function webpackConfigFactory({ target, mode }, { json }) {
             // builds as React relies on process.env.NODE_ENV for optimizations.
             'process.env.NODE_ENV': JSON.stringify(mode),
             'process.env.IS_NODE': JSON.stringify(isNodeTarget),
-            'process.env.USE_DLLS': JSON.stringify(process.env.USE_DLLS),
-            'process.env.HAPPY_CACHE': JSON.stringify(process.env.HAPPY_CACHE),
             // NOTE: If you are providing any environment variables from the
             // command line rather than the .env files then you must make sure
             // you add them here so that webpack can use them in during the
