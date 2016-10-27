@@ -35,19 +35,19 @@ This starter kit contains all the build tooling and configuration you need to ki
   - 🚄 `express` server.
   - 👮 Security on the `express` server using `helmet` and `hpp`.
   - 👀 `react` as the view.
-  - 🔀 `react-router` v4 as the router, along with `code-split-component` (provides you declarative code splitting for your routes).
+  - 🔀 `react-router` v4 as the rroute.
   - ⛑ `react-helmet` allowing control of the page title/meta/styles/scripts from within your components. Direct control for your SEO needs.
   - 🖌 Very basic CSS support - it's up to you to extend it into CSS Modules, SASS, PostCSS, Aphrodite etc.
   - 🏜 Image and Font support.
   - 🚀 Full ES2017+ support, using `babel` to transpile where needed.
   - 📦 Bundling of both client and server using `webpack` v2.
-  - ✂️ Client bundle is split by routes.
+  - ✂️ Code splitting - `code-split-component` provides you declarative code splitting based on your routes.
   - 🍃 Tree-shaking, supported by `webpack`.
   - ✔️ Type checking via Flow, a beautiful and unobtrusive type framework.
 
       __NOTE:__ Flow is a completely optional feature.  The flow type annotations get ripped out of the source by the webpack build step. You have no obligation to use flow within your code and can even uninstall the dependency (flow-bin) without breaking the project.  I do highly recommend you try it out though.
 
-      If you dont' want the types you can run `npm run removetypes` to remove them from the src.  You'll just need to clean up a few empty lines thereafter.
+      If you dont' want the types you can run `npm run flow:remove` to remove them from the src.  You'll just need to clean up a few empty lines thereafter.
   - 🎛 A development and optimized production configuration.
   - 🔧 Easy environment configuration via cli/host env vars and/or a [`dotenv`](https://github.com/motdotla/dotenv) file.
   - 👼 Airbnb's eslint configuration.
