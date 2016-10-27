@@ -10,6 +10,7 @@
  - [Features](https://github.com/ctrlplusb/react-universally#features)
  - [Overview](https://github.com/ctrlplusb/react-universally#overview)
  - [Application Configuration](https://github.com/ctrlplusb/react-universally#application-configuration)
+ - [Progressive Web Application Ready](https://github.com/ctrlplusb/react-universally#progressive-web-application-ready)
  - [Extensions](https://github.com/ctrlplusb/react-universally#extensions)
  - [3rd Party Extensions](https://github.com/ctrlplusb/react-universally#3rd-party-extensions)
  - [Project Structure](https://github.com/ctrlplusb/react-universally#project-structure)
@@ -28,6 +29,8 @@ This starter kit contains all the build tooling and configuration you need to ki
 ## Features
 
   - 🌍 Server side rendering.
+  - 🐘 Long term caching of assets, with service worker support.
+  - ⚰ Offline support.
   - 🔥 Extreme live development - hot reloading of client/server source, with high level of error tolerance, alongside a HappyPack and Vendor DLL (courtesy of @strues).
   - 🚄 `express` server.
   - 👮 Security on the `express` server using `helmet` and `hpp`.
@@ -39,7 +42,6 @@ This starter kit contains all the build tooling and configuration you need to ki
   - 🚀 Full ES2017+ support, using `babel` to transpile where needed.
   - 📦 Bundling of both client and server using `webpack` v2.
   - ✂️ Client bundle is split by routes.
-  - 🐘 Long term caching of the client bundle.
   - 🍃 Tree-shaking, supported by `webpack`.
   - ✔️ Type checking via Flow, a beautiful and unobtrusive type framework.
 
@@ -49,6 +51,7 @@ This starter kit contains all the build tooling and configuration you need to ki
   - 🎛 A development and optimized production configuration.
   - 🔧 Easy environment configuration via cli/host env vars and/or a [`dotenv`](https://github.com/motdotla/dotenv) file.
   - 👼 Airbnb's eslint configuration.
+  - ❤️ Preconfigured to deploy to `now` with a single command.
 
 ## Overview
 
@@ -90,6 +93,10 @@ ___IMPORTANT!___
 Our webpack configuration interprets the environment variables and then "inline replaces" any "process.env.XXX" environment variable reference with it's associated value.  This means that these environment variables are only needed during compile time, not run time.  Therefore it's possible to only provide the environment variables for the build commands, and then when you execute the compiled output you need not provide any environment variables.
 
 If you do find cases where you would prefer an environment variable to be provided at run time rather than compiled into your source then don't add the respective environment variable identifier to the `.env_whitelist` file.  You will have to make sure that you provide the respective environment variable in run time then (e.g. `FOO_BAR=baz npm run start`).
+
+## Progressive Web Application Ready
+
+We make use of the [`sw-precache-webpack-plugin`](https://github.com/goldhand/sw-precache-webpack-plugin), providing you with a service worker to bridge that gap into a progressive web application that has aggressive caching and offline support.
 
 ## Extensions
 
