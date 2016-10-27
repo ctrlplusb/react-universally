@@ -3,8 +3,7 @@ const pathExtName = require('path').extname;
 const pathResolve = require('path').resolve;
 const md5 = require('md5');
 const fs = require('fs');
-const promisify = require('promisify-node');
-const recursive = promisify(require('recursive-readdir'));
+const globSync = require('glob').sync;
 const appRootPath = require('app-root-path').toString();
 const vendorDLLPaths = require('../config/vendorDLLPaths');
 const createNotification = require('./createNotification');
@@ -47,11 +46,15 @@ function webpackConfigFactory(modules) {
   };
 }
 
+function getJsFilesFromSrcDir(srcPath) {
+  return globSync(`${pathResolve(appRootPath, 'src', srcPath)}/**/*.js`);
+}
+
 function buildVendorDLL() {
   return new Promise((resolve, reject) => {
     Promise.all([
-      recursive(pathResolve(appRootPath, 'src/client')),
-      recursive(pathResolve(appRootPath, 'src/shared/universal')),
+      Promise.resolve(getJsFilesFromSrcDir('client')),
+      Promise.resolve(getJsFilesFromSrcDir('shared/universal')),
     ])
     .then(([clientFiles, universalFiles]) => {
       const isJsFile = file => pathExtName(file) === '.js';

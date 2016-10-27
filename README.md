@@ -39,7 +39,7 @@ This starter kit contains all the build tooling and configuration you need to ki
   - 📦 Bundling of both client and server using `webpack` v2.
   - ✂️ Client bundle is split by routes.
   - 🐘 Long term caching of the client bundle.
-  - 🍃 Tree-shaking, supported by `webpack`.  
+  - 🍃 Tree-shaking, supported by `webpack`.
   - ✔️ Type checking via Flow, a beautiful and unobtrusive type framework.
 
       __NOTE:__ Flow is a completely optional feature.  The flow type annotations get ripped out of the source by the webpack build step. You have no obligation to use flow within your code and can even uninstall the dependency (flow-bin) without breaking the project.  I do highly recommend you try it out though.
@@ -171,7 +171,7 @@ __Step 5: Deploy to "now"__
 
 The above command will create a temporary file to expose your `.env` file to the `now` host.  It will then deploy to `now` and subsequently delete the temp env file.
 
-That's it.  Your clipboard will contain the address of the deployed app. Open your browser, paste, go.  
+That's it.  Your clipboard will contain the address of the deployed app. Open your browser, paste, go.
 
 ## npm script commands##
 
@@ -209,11 +209,6 @@ For those of us not wanting to use `flow`. Running this command removes all `flo
 
 __Warning:__ This is a destructive behavior - it modifies your actual source files. Please make sure you commit any existing changes to your src before running this command.
 
-### `npm run build:dlls`
-
-Compiles a vendor library bundle, which improves build and recompile times by caching this code under the assumption it wont change often. Every time a you add a new dependency you must recompile the vendor DLL using the above command.
-
-Dependencies are added by hand in the `dll.config.js` file located inside `tools/webpack`.
 
 ## Troubleshooting ##
 
