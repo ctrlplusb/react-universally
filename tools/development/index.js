@@ -1,7 +1,7 @@
 const pathResolve = require('path').resolve;
 const chokidar = require('chokidar');
 const webpack = require('webpack');
-const createNotification = require('./createNotification');
+const { createNotification } = require('../utils');
 const HotServer = require('./hotServer');
 const HotClient = require('./hotClient');
 const ensureVendorDLLExists = require('./ensureVendorDLLExists');

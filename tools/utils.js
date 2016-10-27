@@ -1,5 +1,7 @@
 const CPU_COUNT = require('os').cpus().length;
 const HappyPack = require('happypack');
+const notifier = require('node-notifier');
+const colors = require('colors');
 
 // This determines how many threads a HappyPack instance can spin up.
 // See the plugins section of the webpack configuration for more.
@@ -40,9 +42,32 @@ function merge() {
   );
 }
 
+function createNotification(options = {}) {
+  const title = options.title
+    ? `${options.title.toUpperCase()}`
+    : undefined;
+
+  notifier.notify({
+    title,
+    message: options.message,
+    open: options.open,
+  });
+
+  const level = options.level || 'info';
+  const msg = `==> ${title} -> ${options.message}`;
+
+  switch (level) {
+    case 'warn': console.log(colors.red(msg)); break;
+    case 'error': console.log(colors.bgRed.white(msg)); break;
+    case 'info':
+    default: console.log(colors.green(msg));
+  }
+}
+
 module.exports = {
   removeEmpty,
   ifElse,
   merge,
   happyPackPlugin,
+  createNotification,
 };

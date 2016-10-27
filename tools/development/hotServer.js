@@ -1,14 +1,8 @@
-/* eslint-disable no-console */
-/* eslint-disable global-require */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable import/no-extraneous-dependencies */
-/* eslint-disable import/no-dynamic-require */
-
 const path = require('path');
 const chokidar = require('chokidar');
 const envVars = require('../config/envVars');
 const ListenerManager = require('./listenerManager');
-const createNotification = require('./createNotification');
+const { createNotification } = require('../utils');
 
 class HotServer {
   constructor(compiler) {

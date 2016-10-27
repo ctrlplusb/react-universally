@@ -2,6 +2,22 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.0.0] - 2016-10-27
+
+### Breaking Changes
+
+The project has evolved and I was experiencing issues with the rigid environment configuration.  Therefore the application configuration has been refactored, allowing for a much more flexible approach.  Manage your env variables the way you see fit. Provide them at build or runtime, or both.  Read all about it in the updated README.md.
+
+Renamed the flow npm scripts.  Please check the package.json for the new values.
+
+### Added
+
+A new npm script to do deployment to `now`. Stop fighting it, and start using their services! :)
+
+### Changed
+
+Some restructuring and cleaning up of the build tools have taken place.
+
 ## [7.2.0] - 2016-10-26
 
 ### Added

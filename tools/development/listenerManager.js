@@ -1,9 +1,4 @@
-/* eslint-disable no-console */
-/* eslint-disable global-require */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable import/no-extraneous-dependencies */
-
-const createNotification = require('./createNotification');
+const { createNotification } = require('../utils');
 
 class ListenerManager {
   constructor(listener, name) {
