@@ -5,7 +5,21 @@ import serialize from 'serialize-javascript';
 import Helmet from 'react-helmet';
 import clientAssets from './clientAssets';
 import type { ReactElement } from '../shared/universal/types/react';
-import { notEmpty } from '../shared/universal/utils/guards';
+
+// We use a service worker configured created by the sw-precache webpack plugin,
+// providing us with caching and offline application support.
+// @see https://github.com/goldhand/sw-precache-webpack-plugin
+// Please refer the webpack configuration for more information.
+function serviceWorkerScript() {
+  return `
+    <script type="text/javascript">
+      (function() {
+        if('serviceWorker' in navigator) {
+          navigator.serviceWorker.register('/sw.js');
+        }
+      })();
+    </script>`;
+}
 
 function styleTags(styles : Array<string>) {
   return styles
@@ -83,21 +97,7 @@ function render(reactAppElement : ?ReactElement, initialState : ?Object) {
         ${helmet ? helmet.style.toString() : ''}
 
         <script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
-        ${
-          // In production build we will register our service worker that
-          // controls caching of our client bundle assets.
-          process.env.NODE_ENV === 'production'
-            ? `
-        <script type="text/javascript">
-          (function() {
-            if('serviceWorker' in navigator) {
-              navigator.serviceWorker.register('${notEmpty(process.env.CLIENT_BUNDLE_HTTP_PATH)}${notEmpty(process.env.APP_NAME)}-sw.js');
-            }
-          })();
-        </script>
-          `
-            : ''
-        }
+        ${serviceWorkerScript()}
       </head>
       <body>
         <div id='app'>${reactApp}</div>

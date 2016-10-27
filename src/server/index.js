@@ -57,6 +57,18 @@ app.use(
 // Configure static serving of our "public" root http path static files.
 app.use(express.static(path.resolve(appRootPath, './public')));
 
+// When in production mode, bind our service worker folder so that it can
+// be served.
+// Note: the service worker needs to be available at the http root of your
+// application for the offline support to work.
+if (process.env.NODE_ENV === 'production') {
+  app.use(
+    express.static(
+      path.resolve(appRootPath, notEmpty(process.env.BUNDLE_OUTPUT_PATH), './serviceWorker')
+    )
+  );
+}
+
 // The universal middleware for our React application.
 app.get('*', universalMiddleware);
 
