@@ -83,11 +83,11 @@ To get you started quickly we have provided a `.env_example` file that contains 
 
 ___IMPORTANT!___
 
-Our webpack configuration interprets the environment variables and then "inline replaces" any "process.env.XXX" environment variable reference with it's associated value.  This means the environment variables are used at compile time, not run time.  Therefore it's possible to provide the environment variables for the build commands, and then when you execute the compiled output you need not provide any environment variables (as the values will be contained within the source).
+To allow for sourcing the environment variables from multiple sources the build scripts go through a process of merging the environment vars into a single collection. In order to ensure that nothing unexpected gets passed into the build/deploy process you MUST list any expected environment variable identifiers within the `.env_whitelist` file (which lives at the root of the project).  Please make sure that you keep this file up to date with any new environment variables that you expect to consume.  I know this may seem like a bit more effort, but I feel the security around this is worth it.
 
 ___IMPORTANT!___
 
-To allow for sourcing the environment variables from multiple sources the build scripts go through a process of merging the environment vars into a single collection. In order to ensure that nothing unexpected gets passed into the build/deploy process you MUST list any expected environment variable identifiers within the `.env_whitelist` file (which lives at the root of the project).  Please make sure that you keep this file up to date with any new environment variables that you expect to consume.  I know this may seem like a bit more effort, but I feel the security around this is worth it.
+Our webpack configuration interprets the environment variables and then "inline replaces" any "process.env.XXX" environment variable reference with it's associated value.  This means that these environment variables are only needed during compile time, not run time.  Therefore it's possible to only provide the environment variables for the build commands, and then when you execute the compiled output you need not provide any environment variables.
 
 If you do find cases where you would prefer an environment variable to be provided at run time rather than compiled into your source then don't add the respective environment variable identifier to the `.env_whitelist` file.  You will have to make sure that you provide the respective environment variable in run time then (e.g. `FOO_BAR=baz npm run start`).
 
