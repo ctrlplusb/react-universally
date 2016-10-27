@@ -216,15 +216,15 @@ Deploys your application to [`now`](https://zeit.co/now). If you haven't heard o
 
 Executes `eslint` (using the Airbnb config) against the src folder. Alternatively you could look to install the `eslint-loader` and integrate it into the `webpack` bundle process.
 
-### `npm run typecheck`
+### `npm run flow`
 
-Executes `flow-bin`, performing type checking on the source.  If you really like flow I would recommend getting a plugin for your IDE.  For Atom I recommend `flow-ide`.
+Executes `flow-bin`, performing flow based type checking on the source.  If you really like flow I would recommend getting a plugin for your IDE.  For Atom I recommend `flow-ide`.
 
-### `npm run typereport`
+### `npm run flow:report`
 
 Executes `flow-coverage-report`, generating a report on your type check coverage.  It returns with an error if your coverage is below 80%.  After you have run it I recommend clicking into the generated flow-coverage directory and opening the HTML report.  You can click through into files to see where your coverage is lacking.
 
-### `npm run removetypes`
+### `npm run flow:remove`
 
 For those of us not wanting to use `flow`. Running this command removes all `flow` types from the src.
 
