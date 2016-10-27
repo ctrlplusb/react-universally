@@ -48,9 +48,27 @@ function webpackConfigFactory({ target, mode }, { json }) {
   const isUniversalMiddleware = target === 'universalMiddleware';
   const isNodeTarget = isServer || isUniversalMiddleware;
 
+  // These are handy little helpers that use the boolean flags above.
+  // They allow you to wrap a value with an condition check. It the condition
+  // is met the value you provided will be returned, otherwise it will
+  // return null.
+  //
+  // For example, say our "isDev" flag had a value of `true`. Then when we used
+  // our helpers below we would get the following results:
+  //   ifDev('foo');  // => 'foo'
+  //   ifProd('foo'); // => null
+  //
+  // It also allows for a secondary argument, which will be used instead of the
+  // null when the condition is not met. For example:
+  //   ifDev('foo', 'bar');  // => 'foo'
+  //   ifProd('foo', 'bar'); // => 'bar'
+  //
+  // This is really handy for doing inline value resolution within or webpack
+  // configuration.  Then we simply use one of our utility functions (e.g.
+  // removeEmpty) to remove all the nulls.
   const ifNodeTarget = ifElse(isNodeTarget);
   const ifDev = ifElse(isDev);
-  const ifProd = ifElse(isProd);
+  const ifProd = ifElse(isProd); // eslint-disable-line no-unused-vars
   const ifClient = ifElse(isClient);
   const ifServer = ifElse(isServer);
   const ifDevServer = ifElse(isDev && isServer);
@@ -182,34 +200,25 @@ function webpackConfigFactory({ target, mode }, { json }) {
       // This is very useful as we are compiling/bundling our code and we would
       // like our environment variables to persist within the code.
       //
-      // Each key passed into DefinePlugin is an identifier.
-      // The values for each key will be inlined into the code replacing any
-      // instances of the keys that are found.
-      // If the value is a string it will be used as a code fragment.
-      // If the value isn’t a string, it will be stringified (including functions).
-      // If the value is an object all keys are removeEmpty the same way.
-      // If you prefix typeof to the key, it’s only removeEmpty for typeof calls.
+      // At the same time please be careful with what environment variables you
+      // use in each respective bundle.  For example, don't accidentally
+      // expose a database connection string within your client bundle src!
       new webpack.DefinePlugin(
         merge(
           {
             // NOTE: The NODE_ENV key is especially important for production
             // builds as React relies on process.env.NODE_ENV for optimizations.
             'process.env.NODE_ENV': JSON.stringify(mode),
+            // Feel free to add any "dynamic" environment variables, to be
+            // created by this webpack script.  Below I am adding a "IS_NODE"
+            // environment variable which will allow our code to know if it's
+            // being bundled for a node target.
             'process.env.IS_NODE': JSON.stringify(isNodeTarget),
-            // NOTE: If you are providing any environment variables from the
-            // command line rather than the .env files then you must make sure
-            // you add them here so that webpack can use them in during the
-            // compiling process.
-            // e.g.
-            // 'process.env.MY_CUSTOM_VAR': JSON.stringify(process.env.MY_CUSTOM_VAR)
           },
-          // Now we will expose all of the .env config variables to webpack
+          // Now we will expose all of our environment variables to webpack
           // so that it can make all the subtitutions for us.
-          // Note: ALL of these values will be given as string types. Even if you
-          // set numeric/boolean looking values within your .env file. The parsing
-          // that we do of the .env file always returns the values as strings.
-          // Therefore in your code you may need to do operations like the
-          // following:
+          // Note: ALL of these values will be given as string types, therefore
+          // you may need to do operations like the following within your src:
           // const MY_NUMBER = parseInt(process.env.MY_NUMBER, 10);
           // const MY_BOOL = process.env.MY_BOOL === 'true';
           Object.keys(envVars).reduce((acc, cur) => {

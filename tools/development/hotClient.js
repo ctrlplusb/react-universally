@@ -1,14 +1,9 @@
-/* eslint-disable no-console */
-/* eslint-disable global-require */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable import/no-extraneous-dependencies */
-
 const express = require('express');
 const createWebpackMiddleware = require('webpack-dev-middleware');
 const createWebpackHotMiddleware = require('webpack-hot-middleware');
 const envVars = require('../config/envVars');
 const ListenerManager = require('./listenerManager');
-const createNotification = require('./createNotification');
+const { createNotification } = require('../utils');
 
 class HotClient {
   constructor(compiler) {

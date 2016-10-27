@@ -1,4 +1,4 @@
-/* eslint-disable global-require */
+/* eslint-disable import/no-unresolved */
 
 // We have to use this wrapper for our universalMiddleware in development mode
 // as webpack has it's own module require/resolver system which can get in the

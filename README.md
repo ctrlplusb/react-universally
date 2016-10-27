@@ -9,6 +9,7 @@
  - [About](https://github.com/ctrlplusb/react-universally#about)
  - [Features](https://github.com/ctrlplusb/react-universally#features)
  - [Overview](https://github.com/ctrlplusb/react-universally#overview)
+ - [Application Configuration](https://github.com/ctrlplusb/react-universally#application-configuration)
  - [Extensions](https://github.com/ctrlplusb/react-universally#extensions)
  - [3rd Party Extensions](https://github.com/ctrlplusb/react-universally#3rd-party-extensions)
  - [Project Structure](https://github.com/ctrlplusb/react-universally#project-structure)
@@ -46,7 +47,7 @@ This starter kit contains all the build tooling and configuration you need to ki
 
       If you dont' want the types you can run `npm run removetypes` to remove them from the src.  You'll just need to clean up a few empty lines thereafter.
   - 🎛 A development and optimized production configuration.
-  - 🔧 Easy environment configuration via `dotenv` files.
+  - 🔧 Easy environment configuration via cli/host env vars and/or a [`dotenv`](https://github.com/motdotla/dotenv) file.
   - 👼 Airbnb's eslint configuration.
 
 ## Overview
@@ -68,7 +69,27 @@ Using webpack and babel across all of our source allows us to use the same level
 
 Given that we are bundling our server code I have included the `source-map-support` module to ensure that we still get nice stack traces when executing our code.
 
-The application configuration is supported by the `dotenv` module and it requires you to create a `.env` file in the project root (you can use the `.env_example` as a base).  The `.env` file has been explicitly ignored from git as it will typically contain environment sensitive/specific information.  In the usual case your continuous deployment tool of choice should configure the specific `.env` file that is needed for a target environment.
+## Application Configuration
+
+The application configured via environment variables (e.g. `process.env.FOO_BAR`).  
+
+You can provide the environment variables using standard means (e.g `FOO_BAR=baz npm run build`), or by creating a `.env` file within your application root.  The `.env` file is supported by the [`dotenv`](https://github.com/motdotla/dotenv) module. Within this file you can provide key/value pairs representing your required environment variables (e.g. `PORT=1337`).  This can save you a lot of effort in having to provide a large amount of environment variables to your application.  
+
+It's important to note that we have explicitly ignored the `.env` from the git repository, with the expectation that you would manually/automatically create a `.env` that is specific to each environment you compile/execute the application within (e.g. dev/ci/production).
+
+The application has been configured to accept a mix-match of sources for the environment variables. i.e. you can provide some environment variables via the `.env` file, and others via the cli/host (e.g. `FOO=bar npm run build`). This gives you greater flexibility and grants you the opportunity to control the provision of sensitive values (e.g. db connection string).
+
+To get you started quickly we have provided a `.env_example` file that contains all the environment variables this project currently relies on.  Copy this file (e.g. `cp .env_example .env`) and then you should be able to run any of the other npm scripts.
+
+___IMPORTANT!___
+
+Our webpack configuration interprets the environment variables and then "inline replaces" any "process.env.XXX" environment variable reference with it's associated value.  This means the environment variables are used at compile time, not run time.  Therefore it's possible to provide the environment variables for the build commands, and then when you execute the compiled output you need not provide any environment variables (as the values will be contained within the source).
+
+___IMPORTANT!___
+
+To allow for sourcing the environment variables from multiple sources the build scripts go through a process of merging the environment vars into a single collection. In order to ensure that nothing unexpected gets passed into the build/deploy process you MUST list any expected environment variable identifiers within the `.env_whitelist` file (which lives at the root of the project).  Please make sure that you keep this file up to date with any new environment variables that you expect to consume.  I know this may seem like a bit more effort, but I feel the security around this is worth it.
+
+If you do find cases where you would prefer an environment variable to be provided at run time rather than compiled into your source then don't add the respective environment variable identifier to the `.env_whitelist` file.  You will have to make sure that you provide the respective environment variable in run time then (e.g. `FOO_BAR=baz npm run start`).
 
 ## Extensions
 
@@ -141,7 +162,7 @@ Even though we are using webpack to support our universal application we keep th
   - `serialize-javascript` - Allows us to serialize our js in a format safe for embedding in webpages.
   - `source-map-support` - Adds source map support to node.js (for stack traces).
 
-## Deploy your very own Server Side Rendering React App in 5 easy steps ##
+## Deploy your very own "React, Universally" App in 5 easy steps ##
 
 __Step 1: Clone the repository.__
 
@@ -153,25 +174,21 @@ __Step 2: `cd` into the cloned directory__
 
 __Step 3: Set up your env configuration file__
 
-The application depends on environment settings which are exposed to the application via a `.env` file.  You will have to create one of these using the example version (`.env_example`).  You could simply copy the example:
+The application depends on environment settings, which can be provided via the cli/host or via a `.env` file.  You can copy the example version (`.env_example`) provided to ensure that all the required environment variables are available. To do so run the following command:
 
     cp .env_example .env
 
 I would recommend that you review the options within the `.env` file.
 
-__Step 4: Install the awesome "now" CLI__
+__Step 4: Install the awesome [`now`](https://zeit.co/now) CLI__
 
     npm install -g now
 
-These guys are amazing hosts.  [Check them out.](https://zeit.co/now#)
-
 __Step 5: Deploy to "now"__
 
-    cp .env .envnow && now  && rm -r .envnow
+    npm run deploy
 
-The above command will create a temporary file to expose your `.env` file to the `now` host.  It will then deploy to `now` and subsequently delete the temp env file.
-
-That's it.  Your clipboard will contain the address of the deployed app. Open your browser, paste, go.
+That's it.  Your clipboard will contain the address of the deployed app. Open your browser, paste, go.  These guys are seriously awesome hosts. [Check them out.](https://zeit.co/now)
 
 ## npm script commands##
 
@@ -190,6 +207,10 @@ Executes the server.  It expects you to have already built the bundles either vi
 ### `npm run clean`
 
 Deletes any build output that would have originated from the other commands.
+
+### `npm run deploy`
+
+Deploys your application to [`now`](https://zeit.co/now). If you haven't heard of these guys, please check them out. They allow you to hit the ground running! I've included them within this repo as it requires almost zero configuration to allow your project to be deployed to their servers.
 
 ### `npm run lint`
 

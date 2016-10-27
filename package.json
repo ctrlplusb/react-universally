@@ -1,6 +1,6 @@
 {
   "name": "react-universally",
-  "version": "7.2.0",
+  "version": "8.0.0",
   "description": "A starter kit giving you the minimum requirements for a production ready universal react application.",
   "main": "build/server/main.js",
   "engines": {
@@ -11,10 +11,11 @@
     "development": "node ./tools/development",
     "build": "npm run clean && webpack --config ./tools/webpack/client.config.js && webpack --config ./tools/webpack/universalMiddleware.config.js && webpack --config ./tools/webpack/server.config.js",
     "start": "node build/server",
+    "deploy": "node tools/scripts/deploy",
     "lint": "eslint src",
-    "typecheck": "flow",
-    "typereport": "flow-coverage-report -i 'src/**/*.js' -t html -t json -t text",
-    "removetypes": "node ./tools/flow/removeTypes.js && eslint --fix src"
+    "flow": "flow",
+    "flow:report": "flow-coverage-report -i 'src/**/*.js' -t html -t json -t text",
+    "flow:remove": "node ./tools/flow/removeTypes.js && eslint --fix src"
   },
   "repository": {
     "type": "git",
@@ -55,8 +56,8 @@
     "assets-webpack-plugin": "3.5.0",
     "babel-cli": "6.18.0",
     "babel-core": "6.18.0",
-    "babel-eslint": "7.0.0",
-    "babel-loader": "6.2.5",
+    "babel-eslint": "7.1.0",
+    "babel-loader": "6.2.7",
     "babel-plugin-transform-class-properties": "6.18.0",
     "babel-plugin-transform-es2015-destructuring": "6.18.0",
     "babel-plugin-transform-object-rest-spread": "6.16.0",

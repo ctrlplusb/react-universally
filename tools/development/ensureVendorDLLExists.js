@@ -6,7 +6,7 @@ const fs = require('fs');
 const globSync = require('glob').sync;
 const appRootPath = require('app-root-path').toString();
 const vendorDLLPaths = require('../config/vendorDLLPaths');
-const createNotification = require('./createNotification');
+const { createNotification } = require('../utils');
 
 // -----------------------------------------------------------------------------
 // PRIVATES
