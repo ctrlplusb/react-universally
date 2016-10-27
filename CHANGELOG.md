@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.1.0] - 2016-10-27
+
+### Added
+
+Progressive Web Application support via manifest.json as well as a service worker giving us aggressive caching on our assets and offline support.
+
 ## [8.0.0] - 2016-10-27
 
 ### Breaking Changes
