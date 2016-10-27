@@ -71,7 +71,7 @@ Given that we are bundling our server code I have included the `source-map-suppo
 
 ## Application Configuration
 
-The application configured via environment variables (e.g. `process.env.FOO_BAR`).  
+The application is configured via environment variables (e.g. `process.env.FOO_BAR`).  
 
 You can provide the environment variables using standard means (e.g `FOO_BAR=baz npm run build`), or by creating a `.env` file within your application root.  The `.env` file is supported by the [`dotenv`](https://github.com/motdotla/dotenv) module. Within this file you can provide key/value pairs representing your required environment variables (e.g. `PORT=1337`).  This can save you a lot of effort in having to provide a large amount of environment variables to your application.  
 
