@@ -20,14 +20,18 @@ function polyfillIoScript() {
 // @see https://github.com/goldhand/sw-precache-webpack-plugin
 // Please refer the webpack configuration for more information.
 function serviceWorkerScript() {
-  return `
-    <script type="text/javascript">
-      (function() {
-        if('serviceWorker' in navigator) {
-          navigator.serviceWorker.register('/sw.js');
-        }
-      })();
-    </script>`;
+  if (process.env.NODE_ENV === 'production') {
+    return `
+      <script type="text/javascript">
+        (function() {
+          if('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js');
+          }
+        })();
+      </script>`;
+  }
+
+  return '';
 }
 
 function styleTags(styles : Array<string>) {
