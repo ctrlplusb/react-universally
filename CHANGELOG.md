@@ -2,6 +2,29 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+NOTE: This isn't a traditional library style project for which semantic versioning makes sense, it's a project that you clone and extend to your own desire.  Therefore I am not using semantic version in a strict manner, but rather to indicate the level of changes that have occurred.
+
+I'll map them as follows:
+  - Major: Large application structure / technology changes. E.g. moving from react-router v2 to v4.
+  - Minor: New features or changes to the build tools.
+  - Point: Minor fixes/restructuring that I expect will take minimal effort to merge in.
+
+## [8.2.0] - 2016-10-27
+
+## Changed
+
+Updates dependencies, including flow-bin to 0.34.
+
+Removes flow-typed dir from the project and adds a new npm script allowing you to install the latest lib defs based on the project's current dependencies. The flow-typed dir shall remain ignored from the repository.  It will be up to you to include their installation within your CI workflows etc.
+
+Updates the manifest.json to contain all icons as well as a start_url entry.
+
+## Fixed
+
+Disables the service worker script injection unless in production mode.
+
+Fixes the http-equiv meta tags and moves them into the App component, managed by react-helmet now.
+
 ## [8.1.0] - 2016-10-27
 
 ### Added
