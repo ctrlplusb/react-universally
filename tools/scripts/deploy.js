@@ -4,12 +4,7 @@
 // @see https://zeit.co/now
 
 const envVars = require('../config/envVars');
-const execSync = require('child_process').execSync;
-const appRootPath = require('app-root-path').toString();
-
-function exec(command) {
-  execSync(command, { stdio: 'inherit', cwd: appRootPath });
-}
+const { exec } = require('../utils.js');
 
 const cmdEnvVars = Object.keys(envVars)
   .map(key => `-e ${key}=${envVars[key]}`)

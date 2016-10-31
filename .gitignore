@@ -32,6 +32,9 @@ npm-debug.log
 # Visual Studio Code
 .vscode
 
+# flow-typed Lib Defs
+flow-typed/
+
 # Flow Coverage Report
 flow-coverage/
 

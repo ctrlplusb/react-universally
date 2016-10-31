@@ -74,9 +74,9 @@ Given that we are bundling our server code I have included the `source-map-suppo
 
 ## Application Configuration
 
-The application is configured via environment variables (e.g. `process.env.FOO_BAR`).  
+The application is configured via environment variables (e.g. `process.env.FOO_BAR`).
 
-You can provide the environment variables using standard means (e.g `FOO_BAR=baz npm run build`), or by creating a `.env` file within your application root.  The `.env` file is supported by the [`dotenv`](https://github.com/motdotla/dotenv) module. Within this file you can provide key/value pairs representing your required environment variables (e.g. `PORT=1337`).  This can save you a lot of effort in having to provide a large amount of environment variables to your application.  
+You can provide the environment variables using standard means (e.g `FOO_BAR=baz npm run build`), or by creating a `.env` file within your application root.  The `.env` file is supported by the [`dotenv`](https://github.com/motdotla/dotenv) module. Within this file you can provide key/value pairs representing your required environment variables (e.g. `PORT=1337`).  This can save you a lot of effort in having to provide a large amount of environment variables to your application.
 
 It's important to note that we have explicitly ignored the `.env` from the git repository, with the expectation that you would manually/automatically create a `.env` that is specific to each environment you compile/execute the application within (e.g. dev/ci/production).
 
@@ -226,6 +226,10 @@ Executes `eslint` (using the Airbnb config) against the src folder. Alternativel
 ### `npm run flow`
 
 Executes `flow-bin`, performing flow based type checking on the source.  If you really like flow I would recommend getting a plugin for your IDE.  For Atom I recommend `flow-ide`.
+
+### `npm run flow:defs`
+
+Installs the flow type definitions for the projects depenedencies from the official "flow-typed" repository.
 
 ### `npm run flow:report`
 
