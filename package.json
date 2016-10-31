@@ -14,7 +14,7 @@
     "deploy": "node tools/scripts/deploy",
     "lint": "eslint src",
     "flow": "node ./tools/scripts/flow",
-    "flow:defs": "flow-typed install -f 0.34",
+    "flow:defs": "flow-typed install -f 0.34 --overwrite",
     "flow:report": "flow-coverage-report -i 'src/**/*.js' -t html -t json -t text",
     "flow:remove": "node ./tools/flow/removeTypes.js && eslint --fix src"
   },
