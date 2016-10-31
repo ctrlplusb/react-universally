@@ -16,9 +16,8 @@ function polyfillIoScript() {
 }
 
 // We use a service worker configured created by the sw-precache webpack plugin,
-// providing us with caching and offline application support.
+// providing us with prefetched caching and offline application support.
 // @see https://github.com/goldhand/sw-precache-webpack-plugin
-// Please refer the webpack configuration for more information.
 function serviceWorkerScript() {
   if (process.env.NODE_ENV === 'production') {
     return `
@@ -89,9 +88,6 @@ function render(reactAppElement : ?ReactElement, initialState : ?Object) {
   return `<!DOCTYPE html>
     <html ${helmet ? helmet.htmlAttributes.toString() : ''}>
       <head>
-        <meta httpEquiv='X-UA-Compatible' content='IE=edge' />
-        <meta httpEquiv='Content-Language' content='en' />
-
         ${helmet ? helmet.title.toString() : ''}
         ${helmet ? helmet.meta.toString() : ''}
         ${helmet ? helmet.link.toString() : ''}
