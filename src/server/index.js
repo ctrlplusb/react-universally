@@ -29,7 +29,12 @@ app.use(hpp());
 const cspConfig = {
   directives: {
     defaultSrc: ["'self'"],
-    scriptSrc: ["'self'", 'cdn.polyfill.io'],
+    // Note: if you want to be extra secure you should remove the unsafe-inline
+    // option, but then you can use any inline script tags, which can be tricky
+    // for things like rehydrating application state. In those cases you need
+    // to try and wrap the state within a javascript file that gets imported and
+    // executed for it to work.
+    scriptSrc: ["'self'", "'unsafe-inline'", 'cdn.polyfill.io'],
     styleSrc: ["'self'", "'unsafe-inline'", 'blob:'],
     imgSrc: ["'self'", 'data:'],
     connectSrc: ["'self'", 'ws:'],
