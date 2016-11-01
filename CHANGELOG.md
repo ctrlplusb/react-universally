@@ -7,7 +7,17 @@ NOTE: This isn't a traditional library style project for which semantic versioni
 I'll map them as follows:
   - Major: Large application structure / technology changes. E.g. moving from react-router v2 to v4.
   - Minor: New features or changes to the build tools.
-  - Point: Minor fixes/restructuring that I expect will take minimal effort to merge in.
+  - Patch: Small(ish) fixes/restructuring that I expect will take minimal effort to merge in.
+
+## [8.3.0] - 2016-11-01
+
+## Fixed
+
+Finally fixed our Content Security Policy, and included a "nonce" strategy that allows us to declare known inline scripts safe for execution.  I would highly recommend you read the updated README.md as well as the comments within the src/server/index.js file.  Also pay special attention the "nonce" middleware and how we are using it within the "render" function of our universal middleware.  You will see I attach the nonce to the inline script used to load the service worker.  You will need to use a similar strategy for any other inline scripts you attach (for example state rehydration scripts).
+
+Issue where flow exec script was printing extra error information when the flow command returns with a failure.
+
+The flow-typed install will now overwrite existing defs.
 
 ## [8.2.0] - 2016-10-27
 

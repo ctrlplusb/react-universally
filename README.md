@@ -10,6 +10,7 @@
  - [Features](https://github.com/ctrlplusb/react-universally#features)
  - [Overview](https://github.com/ctrlplusb/react-universally#overview)
  - [Application Configuration](https://github.com/ctrlplusb/react-universally#application-configuration)
+ - [Express Server Security](https://github.com/ctrlplusb/react-universally#express-server-security)
  - [Progressive Web Application Ready](https://github.com/ctrlplusb/react-universally#progressive-web-application-ready)
  - [Extensions](https://github.com/ctrlplusb/react-universally#extensions)
  - [3rd Party Extensions](https://github.com/ctrlplusb/react-universally#3rd-party-extensions)
@@ -93,6 +94,19 @@ ___IMPORTANT!___
 Our webpack configuration interprets the environment variables and then "inline replaces" any "process.env.XXX" environment variable reference with it's associated value.  This means that these environment variables are only needed during compile time, not run time.  Therefore it's possible to only provide the environment variables for the build commands, and then when you execute the compiled output you need not provide any environment variables.
 
 If you do find cases where you would prefer an environment variable to be provided at run time rather than compiled into your source then don't add the respective environment variable identifier to the `.env_whitelist` file.  You will have to make sure that you provide the respective environment variable in run time then (e.g. `FOO_BAR=baz npm run start`).
+
+## Express Server Security
+
+We make use of the `helmet` and `hpp` middleware libraries to provide a fairly advanced security configuration for our express server, attempting to follow best practices. If you are unfamiliar with CSPs then I highly recommend that you do some reading on the subject:
+
+  - https://content-security-policy.com/
+  - https://developers.google.com/web/fundamentals/security/csp/
+  - https://developer.mozilla.org/en/docs/Web/Security/CSP
+  - https://helmetjs.github.io/docs/csp/
+
+If you are relying on scripts/styles/assets from CDN or from any other server/application that is not hosted on the same URL as your application then you will need to explicitly add the respective CSN/Server URLs to the Content Security Policy within the express configuration.  For example you can see I have had to add the polyfill.io CDN in order to allow us to use the polyfill script.
+
+You may find CSPs annoying at first, but it is a great habit to build. The CSP configuration is an optional item for helmet, however you should not remove it without making a serious consideration that you do not require the added security.
 
 ## Progressive Web Application Ready
 

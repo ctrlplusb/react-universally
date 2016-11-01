@@ -10,6 +10,6 @@ const cmdEnvVars = Object.keys(envVars)
   .map(key => `-e ${key}=${envVars[key]}`)
   .join(' ');
 
-const cmd = `now ${cmdEnvVars}`;
+const cmd = `now -f ${cmdEnvVars}`;
 
 exec(cmd);

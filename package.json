@@ -1,6 +1,6 @@
 {
   "name": "react-universally",
-  "version": "8.2.0",
+  "version": "8.3.0",
   "description": "A starter kit giving you the minimum requirements for a production ready universal react application.",
   "main": "build/server/main.js",
   "engines": {
@@ -44,6 +44,7 @@
     "express": "4.14.0",
     "helmet": "3.0.0",
     "hpp": "0.2.1",
+    "node-uuid": "1.4.7",
     "normalize.css": "5.0.0",
     "path": "0.12.7",
     "react": "15.3.2",

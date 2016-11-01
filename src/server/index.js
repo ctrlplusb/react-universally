@@ -6,6 +6,7 @@
 import 'source-map-support/register';
 
 import path from 'path';
+import uuid from 'node-uuid';
 import appRoot from 'app-root-path';
 import express from 'express';
 import type { $Request, $Response, NextFunction } from 'express';
@@ -20,6 +21,14 @@ const appRootPath = appRoot.toString();
 // Create our express based server.
 const app = express();
 
+// Attach a unique "nonce" to every response.  This allows use to declare
+// inline scripts as being safe for execution against our content security policy.
+// @see https://helmetjs.github.io/docs/csp/
+app.use((req: $Request, res: $Response, next: NextFunction) => {
+  res.locals.nonce = uuid.v4(); // eslint-disable-line no-param-reassign
+  next();
+});
+
 // Don't expose any software information to potential hackers.
 app.disable('x-powered-by');
 
@@ -28,35 +37,47 @@ app.disable('x-powered-by');
 app.use(hpp());
 
 // Content Security Policy (CSP)
+//
 // If you are unfamiliar with CSPs then I highly recommend that you do some
 // reading on the subject:
 //  - https://content-security-policy.com/
 //  - https://developers.google.com/web/fundamentals/security/csp/
 //  - https://developer.mozilla.org/en/docs/Web/Security/CSP
 //  - https://helmetjs.github.io/docs/csp/
-// If you are relying on scripts/assets from other servers (internal or
+//
+// If you are relying on scripts/styles/assets from other servers (internal or
 // external to your company) then you will need to explicitly configure the
 // CSP below to allow for this.  For example you can see I have had to add
 // the polyfill.io CDN in order to allow us to use the polyfill script.
 // It can be a pain to manage these, but it's a really great habit to get in
 // to.
+//
+// You may find CSPs annoying at first, but it is a great habit to build.
+// The CSP configuration is an optional item for helmet, however you should
+// not remove it without making a serious consideration that you do not require
+// the added security.
 const cspConfig = {
   directives: {
     defaultSrc: ["'self'"],
-    // Note: if you want to be extra secure you should remove the unsafe-inline
-    // option, but then you can't use any inline script tags, which can be tricky
-    // for things like rehydrating application state. For example:
-    //   <script type="text/javascript">window.APP_STATE = {...};</script>
-    // A common requirement if you are using a state management system like
-    // redux/mobx/relay/apollo. In those cases you need to try and wrap the
-    // state within a javascript file that then gets imported somehow.
-    // I have adding a running issue to try and come up with the best solution
-    // in regards to this:
-    // https://github.com/ctrlplusb/react-universally/issues/150
-    scriptSrc: ["'self'", "'unsafe-inline'", 'cdn.polyfill.io'],
+    scriptSrc: [
+      // Allow scripts hosted from our application.
+      "'self'",
+      // Allow scripts from cdn.polyfill.io so that we can import the polyfill.
+      'cdn.polyfill.io',
+      // Note: We will execution of any inline scripts that have the following
+      // nonce identifier attached to them.
+      // This is useful for guarding your application whilst allowing an inline
+      // script to do data store rehydration (redux/mobx/apollo) for example.
+      // @see https://helmetjs.github.io/docs/csp/
+      // $FlowFixMe
+      (req, res) => `'nonce-${res.locals.nonce}'`,
+    ],
     styleSrc: ["'self'", "'unsafe-inline'", 'blob:'],
     imgSrc: ["'self'", 'data:'],
-    connectSrc: ["'self'", 'ws:'],
+    // Note: Setting this to stricter than * breaks the service worker. :(
+    // I can't figure out how to get around this, so if you know of a safer
+    // implementation that is kinder to service workers please let me know.
+    connectSrc: ['*'], // ["'self'", 'ws:'],
     fontSrc: ["'self'"],
     objectSrc: ["'none'"],
     mediaSrc: ["'none'"],

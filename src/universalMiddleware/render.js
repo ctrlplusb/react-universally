@@ -18,9 +18,16 @@ function polyfillIoScript() {
 // We use a service worker configured created by the sw-precache webpack plugin,
 // providing us with prefetched caching and offline application support.
 // @see https://github.com/goldhand/sw-precache-webpack-plugin
-function serviceWorkerScript() {
+function serviceWorkerScript(nonce) {
   if (process.env.NODE_ENV === 'production') {
-    return '<script src="/sw-register.js" type="text/javascript"></script>';
+    return `
+      <script nonce="${nonce}" type="text/javascript">
+        (function swRegister() {
+          if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js');
+          }
+        }());
+      </script>`;
   }
 
   return '';
@@ -46,6 +53,12 @@ const styles = styleTags(clientAssets.styles);
 
 const scripts = scriptTags(clientAssets.scripts);
 
+type RenderArgs = {
+  app?: ReactElement,
+  initialState?: Object,
+  nonce: string,
+};
+
 /**
  * Generates a full HTML page containing the render output of the given react
  * element.
@@ -58,9 +71,11 @@ const scripts = scriptTags(clientAssets.scripts);
  *
  * @return The full HTML page in the form of a React element.
  */
-function render(reactAppElement : ?ReactElement, initialState : ?Object) {
-  const reactApp = reactAppElement
-    ? renderToString(reactAppElement)
+function render(args: RenderArgs) {
+  const { app, initialState, nonce } = args;
+
+  const appString = app
+    ? renderToString(app)
     : '';
 
   // If we had a reactAppElement then we need to run Helmet.rewind to extract
@@ -68,7 +83,7 @@ function render(reactAppElement : ?ReactElement, initialState : ?Object) {
   // Note: you need to have called the renderToString on the react element before
   // running this!
   // @see https://github.com/nfl/react-helmet
-  const helmet = reactAppElement
+  const helmet = app
     // We run 'react-helmet' after our renderToString call so that we can fish
     // out all the attributes which need to be attached to our page.
     // React Helmet allows us to control our page header contents via our
@@ -89,10 +104,10 @@ function render(reactAppElement : ?ReactElement, initialState : ?Object) {
         ${helmet ? helmet.style.toString() : ''}
 
         ${polyfillIoScript()}
-        ${serviceWorkerScript()}
+        ${serviceWorkerScript(nonce)}
       </head>
       <body>
-        <div id='app'>${reactApp}</div>
+        <div id='app'>${appString}</div>
 
         <script type='text/javascript'>${
           initialState
