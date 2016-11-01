@@ -26,17 +26,29 @@ app.disable('x-powered-by');
 app.use(hpp());
 
 // Content Security Policy
-app.use(helmet.contentSecurityPolicy({
-  defaultSrc: ["'self'"],
-  scriptSrc: ["'self'"],
-  styleSrc: ["'self'"],
-  imgSrc: ["'self'"],
-  connectSrc: ["'self'", 'ws:'],
-  fontSrc: ["'self'"],
-  objectSrc: ["'none'"],
-  mediaSrc: ["'none'"],
-  frameSrc: ["'none'"],
-}));
+const cspConfig = {
+  directives: {
+    defaultSrc: ["'self'"],
+    scriptSrc: ["'self'", 'cdn.polyfill.io'],
+    styleSrc: ["'self'", "'unsafe-inline'", 'blob:'],
+    imgSrc: ["'self'", 'data:'],
+    connectSrc: ["'self'", 'ws:'],
+    fontSrc: ["'self'"],
+    objectSrc: ["'none'"],
+    mediaSrc: ["'none'"],
+    childSrc: ["'self'"],
+  },
+};
+if (process.env.NODE_ENV === 'development') {
+  // When in development mode we need to add our secondary express server that
+  // is used to host our client bundle to our csp config.
+  Object.keys(cspConfig.directives).forEach(directive =>
+    cspConfig.directives[directive].push(
+      `localhost:${notEmpty(process.env.CLIENT_DEVSERVER_PORT)}`
+    )
+  );
+}
+app.use(helmet.contentSecurityPolicy(cspConfig));
 app.use(helmet.xssFilter());
 app.use(helmet.frameguard('deny'));
 app.use(helmet.ieNoOpen());

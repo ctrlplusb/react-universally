@@ -20,14 +20,7 @@ function polyfillIoScript() {
 // @see https://github.com/goldhand/sw-precache-webpack-plugin
 function serviceWorkerScript() {
   if (process.env.NODE_ENV === 'production') {
-    return `
-      <script type="text/javascript">
-        (function() {
-          if('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js');
-          }
-        })();
-      </script>`;
+    return '<script src="/sw-register.js" type="text/javascript"></script>';
   }
 
   return '';
