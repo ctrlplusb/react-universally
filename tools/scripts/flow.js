@@ -13,4 +13,8 @@ if (!existsSync(flowTypedDir)) {
   });
 }
 
-exec('flow');
+try {
+  exec('flow');
+} catch (err) {
+  // Flow will print any errors.
+}
