@@ -4,6 +4,7 @@
 // This grants us source map support, which combined with our webpack source
 // maps will give us nice stack traces.
 import 'source-map-support/register';
+
 import path from 'path';
 import appRoot from 'app-root-path';
 import express from 'express';
@@ -19,21 +20,39 @@ const appRootPath = appRoot.toString();
 // Create our express based server.
 const app = express();
 
-// Don't expose any software information to hackers.
+// Don't expose any software information to potential hackers.
 app.disable('x-powered-by');
 
 // Prevent HTTP Parameter pollution.
+// @see http://bit.ly/2f8q7Td
 app.use(hpp());
 
-// Content Security Policy
+// Content Security Policy (CSP)
+// If you are unfamiliar with CSPs then I highly recommend that you do some
+// reading on the subject:
+//  - https://content-security-policy.com/
+//  - https://developers.google.com/web/fundamentals/security/csp/
+//  - https://developer.mozilla.org/en/docs/Web/Security/CSP
+//  - https://helmetjs.github.io/docs/csp/
+// If you are relying on scripts/assets from other servers (internal or
+// external to your company) then you will need to explicitly configure the
+// CSP below to allow for this.  For example you can see I have had to add
+// the polyfill.io CDN in order to allow us to use the polyfill script.
+// It can be a pain to manage these, but it's a really great habit to get in
+// to.
 const cspConfig = {
   directives: {
     defaultSrc: ["'self'"],
     // Note: if you want to be extra secure you should remove the unsafe-inline
-    // option, but then you can use any inline script tags, which can be tricky
-    // for things like rehydrating application state. In those cases you need
-    // to try and wrap the state within a javascript file that gets imported and
-    // executed for it to work.
+    // option, but then you can't use any inline script tags, which can be tricky
+    // for things like rehydrating application state. For example:
+    //   <script type="text/javascript">window.APP_STATE = {...};</script>
+    // A common requirement if you are using a state management system like
+    // redux/mobx/relay/apollo. In those cases you need to try and wrap the
+    // state within a javascript file that then gets imported somehow.
+    // I have adding a running issue to try and come up with the best solution
+    // in regards to this:
+    // https://github.com/ctrlplusb/react-universally/issues/150
     scriptSrc: ["'self'", "'unsafe-inline'", 'cdn.polyfill.io'],
     styleSrc: ["'self'", "'unsafe-inline'", 'blob:'],
     imgSrc: ["'self'", 'data:'],
@@ -54,12 +73,28 @@ if (process.env.NODE_ENV === 'development') {
   );
 }
 app.use(helmet.contentSecurityPolicy(cspConfig));
+
+// The xssFilter middleware sets the X-XSS-Protection header to prevent
+// reflected XSS attacks.
+// @see https://helmetjs.github.io/docs/xss-filter/
 app.use(helmet.xssFilter());
+
+// Frameguard mitigates clickjacking attacks by setting the X-Frame-Options header.
+// @see https://helmetjs.github.io/docs/frameguard/
 app.use(helmet.frameguard('deny'));
+
+// Sets the X-Download-Options to prevent Internet Explorer from executing
+// downloads in your site’s context.
+// @see https://helmetjs.github.io/docs/ienoopen/
 app.use(helmet.ieNoOpen());
+
+// Don’t Sniff Mimetype middleware, noSniff, helps prevent browsers from trying
+// to guess (“sniff”) the MIME type, which can have security implications. It
+// does this by setting the X-Content-Type-Options header to nosniff.
+// @see https://helmetjs.github.io/docs/dont-sniff-mimetype/
 app.use(helmet.noSniff());
 
-// Response compression.
+// Gzip compress the responses.
 app.use(compression());
 
 // Configure static serving of our webpack bundled client files.
