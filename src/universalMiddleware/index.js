@@ -40,10 +40,6 @@ function universalReactAppMiddleware(request: $Request, response: $Response) {
     </ServerRouter>
   );
 
-  if (typeof response.locals.nonce !== 'string') {
-    throw new Error('A "nonce" value has not been attached to the response');
-  }
-
   // Render the app to a string.
   const html = render({
     // Provide the full app react element.
