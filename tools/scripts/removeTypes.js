@@ -16,7 +16,15 @@ const stripTypes = () => {
     .forEach((file) => {
       console.log(`Removing types from "${file}`);
       const input = fs.readFileSync(file, 'utf8');
-      const output = flowRemoveTypes(input);
+      const output =
+        // Remove flow annotations
+        flowRemoveTypes(input)
+        // Remove the empty flow tags.
+        .replace(/\/\*\s+\*\/\n/g, '')
+        // Remove any blank lines at top of file.
+        .replace(/^\n+/, '')
+        // Remove any multiple blank lines in files.
+        .replace(/\n\n\n/g, '\n\n');
       fs.writeFileSync(file, output);
     });
 
