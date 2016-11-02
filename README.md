@@ -46,9 +46,9 @@ This starter kit contains all the build tooling and configuration you need to ki
   - 🍃 Tree-shaking, supported by `webpack`.
   - ✔️ Type checking via Flow, a beautiful and unobtrusive type framework.
 
-      __NOTE:__ Flow is a completely optional feature.  The flow type annotations get ripped out of the source by the webpack build step. You have no obligation to use flow within your code and can even uninstall the dependency (flow-bin) without breaking the project.  I do highly recommend you try it out though.
+      __NOTE:__ Flow is a completely optional feature.  The flow type annotations get ripped out of the source by the webpack build step. You have no obligation to use flow within your code and can happily code without applying it to any new code.  I do highly recommend you try it out though. :)
 
-      If you don't want the types you can run `npm run flow:remove` to remove them from the src.  You'll just need to clean up a few empty lines thereafter.
+      If you don't really don't want to use flow then you can run `npm run flow:remove`. This will make it as though flow never existed within the project.
   - 🎛 A development and optimized production configuration.
   - 🔧 Easy environment configuration via cli/host env vars and/or a [`dotenv`](https://github.com/motdotla/dotenv) file.
   - 👼 Airbnb's eslint configuration.
@@ -237,6 +237,10 @@ Deploys your application to [`now`](https://zeit.co/now). If you haven't heard o
 
 Executes `eslint` (using the Airbnb config) against the src folder. Alternatively you could look to install the `eslint-loader` and integrate it into the `webpack` bundle process.
 
+### `npm run analyze`
+
+Creates an webpack-bundle-analyze session against the production build of the client bundle.  This is super handy for figuring out just exactly what dependencies are being included within your bundle.  Try clicking around, it's an awesome tool.
+
 ### `npm run flow`
 
 Executes `flow-bin`, performing flow based type checking on the source.  If you really like flow I would recommend getting a plugin for your IDE.  For Atom I recommend `flow-ide`.
@@ -251,7 +255,7 @@ Executes `flow-coverage-report`, generating a report on your type check coverage
 
 ### `npm run flow:remove`
 
-For those of us not wanting to use `flow`. Running this command removes all `flow` types from the src.
+For those of us not wanting to use `flow`. Running this command removes everything `flow` related from the project.  It's best to run this against a fresh clone of the project, but it should work fine with a project that has been extended somewhat.
 
 __Warning:__ This is a destructive behavior - it modifies your actual source files. Please make sure you commit any existing changes to your src before running this command.
 
