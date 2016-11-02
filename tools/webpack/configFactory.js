@@ -91,8 +91,8 @@ function webpackConfigFactory({ target, mode }, { json }) {
     externals: removeEmpty([
       // Don't allow the server to bundle the universal middleware bundle. We
       // want the server to natively require it from the build dir.
-      ifServer(/\.\.[\/\\]universalMiddleware/),
-      ifDevServer(/development[\/\\]universalDevMiddleware/),
+      ifServer(/\.\.[/\\]universalMiddleware/),
+      ifDevServer(/development[/\\]universalDevMiddleware/),
 
       // We don't want our node_modules to be bundled with our server package,
       // prefering them to be resolved via native node module system.  Therefore
@@ -302,7 +302,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
       // for our assets, any time their contents change they will be given
       // unique file names, which will cause the service worker to fetch them.
       ifProdClient(
-        new SWPrecacheWebpackPlugin(
+        new SWPrecacheWebpackPlugin(merge(
           {
             // Note: The default cache size is 2mb. This can be reconfigured:
             // maximumFileSizeToCacheInBytes: 2097152,
@@ -328,8 +328,13 @@ function webpackConfigFactory({ target, mode }, { json }) {
                   'https://cdn.polyfill.io/v2/polyfill.min.js': clientBundleAssets,
                 });
             })(),
-          }
-        )
+          },
+          ifElse(!!json)({
+            // When outputing a json stat file we want to silence the output.
+            verbose: false,
+            logger: () => undefined,
+          })
+        ))
       ),
 
       // HappyPack plugins

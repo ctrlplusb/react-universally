@@ -7,16 +7,17 @@
     "node": "~6.9.1"
   },
   "scripts": {
-    "clean": "rimraf build",
-    "development": "node ./tools/development",
-    "build": "npm run clean && webpack --config ./tools/webpack/client.config.js && webpack --config ./tools/webpack/universalMiddleware.config.js && webpack --config ./tools/webpack/server.config.js",
+    "clean": "node tools/scripts/clean",
+    "development": "node tools/development",
+    "build": "node tools/scripts/build",
+    "analyze": "node tools/scripts/analyze",
     "start": "node build/server",
     "deploy": "node tools/scripts/deploy",
     "lint": "eslint src",
-    "flow": "node ./tools/scripts/flow",
+    "flow": "node tools/scripts/flow",
     "flow:defs": "flow-typed install -f 0.34 --overwrite",
     "flow:report": "flow-coverage-report -i 'src/**/*.js' -t html -t json -t text",
-    "flow:remove": "node ./tools/flow/removeTypes.js && eslint --fix src"
+    "flow:remove": "node tools/scripts/removeTypes.js"
   },
   "repository": {
     "type": "git",
@@ -93,6 +94,7 @@
     "sw-precache-webpack-plugin": "0.5.1",
     "url-loader": "0.5.7",
     "webpack": "2.1.0-beta.25",
+    "webpack-bundle-analyzer": "1.3.0",
     "webpack-dev-middleware": "1.8.4",
     "webpack-hot-middleware": "2.13.1",
     "webpack-md5-hash": "0.0.5",
