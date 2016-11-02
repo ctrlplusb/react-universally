@@ -9,6 +9,20 @@ I'll map them as follows:
   - Minor: New features or changes to the build tools.
   - Patch: Small(ish) fixes/restructuring that I expect will take minimal effort to merge in.
 
+## [8.4.0] - 2016-11-02
+
+## Changed
+
+Cleans up existing commands, moving many of them into tools/scripts.
+
+Major improvements to the `npm run flow:remove` command.  It now removes _everything_ flow related from the project.  I mean everything.  Tread carefully. :)
+
+## Added
+
+An .editorconfig configuration. See http://editorconfig.org/
+
+A webpack bundle analyze command.
+
 ## [8.3.0] - 2016-11-01
 
 ## Fixed
