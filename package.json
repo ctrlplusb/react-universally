@@ -17,7 +17,7 @@
     "flow": "node tools/scripts/flow",
     "flow:defs": "flow-typed install -f 0.34 --overwrite",
     "flow:report": "flow-coverage-report -i 'src/**/*.js' -t html -t json -t text",
-    "flow:remove": "node tools/scripts/removeTypes.js"
+    "flow:remove": "node tools/scripts/removeTypes.js && rimraf tools/scripts/removeTypes.js"
   },
   "repository": {
     "type": "git",
