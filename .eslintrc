@@ -18,6 +18,8 @@
     // A .jsx extension is not required for files containing jsx.
     "react/jsx-filename-extension": 0,
     // This rule struggles with flow and class properties.
-    "react/sort-comp": 0
+    "react/sort-comp": 0,
+    // We use global requires in various places, e.g. code splitting instances.
+    "global-require": 0
   }
 }

@@ -5,19 +5,6 @@ import serialize from 'serialize-javascript';
 import { STATE_IDENTIFIER } from 'code-split-component';
 import getAssetsForClientChunks from './getAssetsForClientChunks';
 
-// When we are in development mode our development server will generate a
-// vendor DLL in order to dramatically reduce our compilation times.  Therefore
-// we need to inject the path to the vendor dll bundle below.
-// @see /tools/development/ensureVendorDLLExists.js
-function developmentVendorDLL() {
-  if (process.env.NODE_ENV === 'development') {
-    const vendorPaths = require('../../tools/config/vendorDLLPaths'); // eslint-disable-line global-require
-
-    return vendorPaths.dllWebPath;
-  }
-  return '';
-}
-
 // We use the polyfill.io service which provides the polyfills that a
 // client needs, rather than everything if we used babel-polyfill.
 // This keeps our bundle size down.
@@ -60,6 +47,19 @@ function scriptTags(jsFilePaths : Array<string>) {
   return jsFilePaths.map(scriptTag).join('\n');
 }
 
+// When we are in development mode our development server will generate a
+// vendor DLL in order to dramatically reduce our compilation times.  Therefore
+// we need to inject the path to the vendor dll bundle below.
+// @see /tools/development/ensureVendorDLLExists.js
+function developmentVendorDLL() {
+  if (process.env.NODE_ENV === 'development') {
+    const vendorPaths = require('../../tools/config/vendorDLLPaths'); // eslint-disable-line global-require
+
+    return scriptTag(vendorPaths.dllWebPath);
+  }
+  return '';
+}
+
 type RenderArgs = {
   app?: string,
   initialState?: Object,
@@ -83,23 +83,33 @@ type RenderArgs = {
 function render(args: RenderArgs) {
   const { app, initialState, nonce, helmet, codeSplitState } = args;
 
+  // The chunks that we need to fetch the assets (js/css) for and then include
+  // said assets as script/style tags within our html.
   const chunksForRender = [
     // We always manually add the main entry chunk for our client bundle. It
-    // must always be the first item in the list.
+    // must always be the first item in the collection.
     'index',
   ];
 
   if (codeSplitState) {
     // We add all the chunks that our CodeSplitProvider tracked as being used
     // for this render.  This isn't actually required as the rehydrate function
-    // of code-split-component will ensure all our required chunks are loaded,
-    // but if we can do it we may as well add the expected scripts to the
-    // render output.
+    // of code-split-component which gets executed in our client bundle will
+    // ensure all our required chunks are loaded, but its a nice optimisation as
+    // it means the browser can start fetching the required files before it's
+    // even finished parsing our client bundle entry script.
+    // Having the assets.json file available to us made implementing this
+    // feature rather arbitrary.
     codeSplitState.chunks.forEach(chunk => chunksForRender.push(chunk));
   }
 
   // Now we get the assets (js/css) for the chunks.
   const assetsForRender = getAssetsForClientChunks(chunksForRender);
+
+  const inlineScript = body =>
+    `<script nonce="${nonce}" type='text/javascript'>
+       ${body}
+     </script>`;
 
   return `<!DOCTYPE html>
     <html ${helmet ? helmet.htmlAttributes.toString() : ''}>
@@ -113,14 +123,17 @@ function render(args: RenderArgs) {
       <body>
         <div id='app'>${app || ''}</div>
 
-        <script nonce="${nonce}" type='text/javascript'>
-          ${initialState ? `window.APP_STATE=${serialize(initialState)};` : ''}
-          ${codeSplitState ? `window.${STATE_IDENTIFIER}=${serialize(codeSplitState)};` : ''}
-        </script>
-
+        ${initialState
+           ? inlineScript(`window.APP_STATE=${serialize(initialState)};`)
+           : ''
+         }
+         ${codeSplitState
+            ? inlineScript(`window.${STATE_IDENTIFIER}=${serialize(codeSplitState)};`)
+            : ''
+          }
         ${polyfillIoScript()}
         ${serviceWorkerScript(nonce)}
-        ${scriptTag(developmentVendorDLL())}
+        ${developmentVendorDLL()}
         ${scriptTags(assetsForRender.js)}
         ${helmet ? helmet.script.toString() : ''}
       </body>

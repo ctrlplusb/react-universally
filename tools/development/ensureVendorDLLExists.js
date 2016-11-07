@@ -52,7 +52,9 @@ function getJsFilesFromSrcDir(srcPath) {
 }
 
 function buildVendorDLL() {
-  const ignoreModules = envVars.DEV_DLL_IGNORES.split(',');
+  const ignoreModules = envVars.DEV_DLL_IGNORES
+    ? envVars.DEV_DLL_IGNORES.split(',')
+    : [];
 
   return new Promise((resolve, reject) => {
     Promise.all([

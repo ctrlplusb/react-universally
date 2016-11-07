@@ -13,11 +13,15 @@ import App from '../shared/universal/components/App';
  * An express middleware that is capabable of doing React server side rendering.
  */
 function universalReactAppMiddleware(request: $Request, response: $Response) {
+  // We should have had a nonce provided to us.  See the server/index.js for
+  // more information on what this is.
   if (typeof response.locals.nonce !== 'string') {
     throw new Error('A "nonce" value has not been attached to the response');
   }
   const nonce = response.locals.nonce;
 
+  // It's possible to disable SSR, which can be useful in development mode.
+  // In this case traditional client side only rendering will occur.
   if (process.env.DISABLE_SSR === 'true') {
     if (process.env.NODE_ENV === 'development') {
       console.log('==> Handling react route without SSR');  // eslint-disable-line no-console
@@ -40,8 +44,8 @@ function universalReactAppMiddleware(request: $Request, response: $Response) {
   // to query which chunks/modules were used during the render process.
   const codeSplitContext = createRenderContext();
 
-  // Create the application react element.
-  const app = (
+  // Create our application and render it into a string.
+  const app = renderToString(
     <CodeSplitProvider context={codeSplitContext}>
       <ServerRouter location={request.url} context={reactRouterContext}>
         <App />
@@ -49,17 +53,19 @@ function universalReactAppMiddleware(request: $Request, response: $Response) {
     </CodeSplitProvider>
   );
 
-  // Render the app to a string.
+  // Generate the html response.
   const html = render({
     // Provide the full app react element.
-    app: renderToString(app),
+    app,
     // Nonce which allows us to safely declare inline scripts.
     nonce,
-    // We query the 'react-helmet' after our rendering so that we can get
-    // out all the attributes which will need to be attached to our page.
+    // Running this gets all the helmet properties (e.g. headers/scripts/title etc)
+    // that need to be included within our html.  It's based on the rendered app.
     // @see https://github.com/nfl/react-helmet
     helmet: Helmet.rewind(),
-    // The code split state.
+    // We provide our code split state so that it can be included within the
+    // html, and then the client bundle can use this data to know which chunks/
+    // modules need to be rehydrated prior to the application being rendered.
     codeSplitState: codeSplitContext.getState(),
   });
 
