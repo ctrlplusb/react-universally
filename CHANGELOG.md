@@ -9,6 +9,30 @@ I'll map them as follows:
   - Minor: New features or changes to the build tools.
   - Patch: Small(ish) fixes/restructuring that I expect will take minimal effort to merge in.
 
+## [9.0.0] - 2016-11-07
+
+### Breaking
+
+The v1 of code-split-component was not optimal in design and suffered from double render and checksum issues on production runs.  I have just done an alpha rewrite of this library which is completely optimised for to be used within an SSR environment, allowing for rehydration of code split chunks/modules on the client before a render occurs.  This means that the checksums exactly match the content returned by the server.  I know this is an alpha release of a library, but it's already working tons better than v1, and v1 in my opinion is completely broken.  Therefore I am fast tracking the upgrade of this starter kit to avoid the case where people inadvertently go to production with an inefficient model.
+
+The major areas that have changed are the following:
+ - /tools/webpack/configFactory
+ - /src/client/index.js
+ - /src/universalMiddleware/*
+ - /src/shared/universal/components/App/App.js
+
+Closes #159
+
+### Added
+
+You can disable the development vendor DLL feature via an environment variable. See the .env_example
+
+You can set libraries to be ignored by the vendor DLL. See the .env_example
+
+### Fixed
+
+Issue with HappyPack configuration.  The threadloop configuration causes strange breaking behaviour on our development server. Thanks to @strues for this.  Closes #160
+
 ## [8.4.0] - 2016-11-02
 
 ## Changed
