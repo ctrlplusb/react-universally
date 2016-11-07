@@ -264,22 +264,22 @@ function webpackConfigFactory({ target, mode }, { json }) {
       ),
 
       // JS Minification.
-      // ifProdClient(
-      //   new webpack.optimize.UglifyJsPlugin({
-      //     // sourceMap: true,
-      //     compress: {
-      //       screw_ie8: true,
-      //       warnings: false,
-      //     },
-      //     mangle: {
-      //       screw_ie8: true,
-      //     },
-      //     output: {
-      //       comments: false,
-      //       screw_ie8: true,
-      //     },
-      //   })
-      // ),
+      ifProdClient(
+        new webpack.optimize.UglifyJsPlugin({
+          // sourceMap: true,
+          compress: {
+            screw_ie8: true,
+            warnings: false,
+          },
+          mangle: {
+            screw_ie8: true,
+          },
+          output: {
+            comments: false,
+            screw_ie8: true,
+          },
+        })
+      ),
 
       ifProdClient(
         // This is actually only useful when our deps are installed via npm2.
