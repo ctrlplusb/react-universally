@@ -107,12 +107,8 @@ function render(args: RenderArgs) {
         ${helmet ? helmet.title.toString() : ''}
         ${helmet ? helmet.meta.toString() : ''}
         ${helmet ? helmet.link.toString() : ''}
-
         ${styleTags(assetsForRender.css)}
         ${helmet ? helmet.style.toString() : ''}
-
-        ${polyfillIoScript()}
-        ${serviceWorkerScript(nonce)}
       </head>
       <body>
         <div id='app'>${app || ''}</div>
@@ -122,6 +118,8 @@ function render(args: RenderArgs) {
           ${codeSplitState ? `window.${STATE_IDENTIFIER}=${serialize(codeSplitState)};` : ''}
         </script>
 
+        ${polyfillIoScript()}
+        ${serviceWorkerScript(nonce)}
         ${scriptTag(developmentVendorDLL())}
         ${scriptTags(assetsForRender.js)}
         ${helmet ? helmet.script.toString() : ''}
