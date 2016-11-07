@@ -2,7 +2,10 @@
 
 import type { $Request, $Response, Middleware } from 'express';
 import React from 'react';
+import { renderToString } from 'react-dom/server';
 import { ServerRouter, createServerRenderContext } from 'react-router';
+import { CodeSplitProvider, createRenderContext } from 'code-split-component';
+import Helmet from 'react-helmet';
 import render from './render';
 import App from '../shared/universal/components/App';
 
@@ -21,35 +24,47 @@ function universalReactAppMiddleware(request: $Request, response: $Response) {
     }
     // SSR is disabled so we will just return an empty html page and will
     // rely on the client to initialize and render the react application.
-    const html = render({ nonce });
+    const html = render({
+      // Nonce which allows us to safely declare inline scripts.
+      nonce,
+    });
     response.status(200).send(html);
     return;
   }
 
   // First create a context for <ServerRouter>, which will allow us to
   // query for the results of the render.
-  const context = createServerRenderContext();
+  const reactRouterContext = createServerRenderContext();
+
+  // We also create a context for our <CodeSplitProvider> which will allow us
+  // to query which chunks/modules were used during the render process.
+  const codeSplitContext = createRenderContext();
 
   // Create the application react element.
   const app = (
-    <ServerRouter
-      location={request.url}
-      context={context}
-    >
-      <App />
-    </ServerRouter>
+    <CodeSplitProvider context={codeSplitContext}>
+      <ServerRouter location={request.url} context={reactRouterContext}>
+        <App />
+      </ServerRouter>
+    </CodeSplitProvider>
   );
 
   // Render the app to a string.
   const html = render({
     // Provide the full app react element.
-    app,
-    // Nonce for allowing inline scripts.
+    app: renderToString(app),
+    // Nonce which allows us to safely declare inline scripts.
     nonce,
+    // We query the 'react-helmet' after our rendering so that we can get
+    // out all the attributes which will need to be attached to our page.
+    // @see https://github.com/nfl/react-helmet
+    helmet: Helmet.rewind(),
+    // The code split state.
+    codeSplitState: codeSplitContext.getState(),
   });
 
   // Get the render result from the server render context.
-  const renderResult = context.getResult();
+  const renderResult = reactRouterContext.getResult();
 
   // Check if the render result contains a redirect, if so we need to set
   // the specific status and redirect header and end the response.

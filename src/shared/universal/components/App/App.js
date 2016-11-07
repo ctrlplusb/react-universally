@@ -3,7 +3,7 @@
 import React from 'react';
 import { Match, Miss } from 'react-router';
 import Helmet from 'react-helmet';
-import CodeSplit from 'code-split-component';
+import { CodeSplit } from 'code-split-component';
 import 'normalize.css/normalize.css';
 import './globals.css';
 import Error404 from './Error404';
@@ -54,8 +54,8 @@ function App() {
         exactly
         pattern="/"
         render={routerProps =>
-          <CodeSplit module={System.import('./Home')}>
-            { Home => Home && <Home {...routerProps} /> }
+          <CodeSplit chunkName="home" modules={{ Home: require('./Home') }}>
+            { ({ Home }) => Home && <Home {...routerProps} /> }
           </CodeSplit>
         }
       />
@@ -63,8 +63,8 @@ function App() {
       <Match
         pattern="/about"
         render={routerProps =>
-          <CodeSplit module={System.import('./About')}>
-            { About => About && <About {...routerProps} /> }
+          <CodeSplit chunkName="about" modules={{ About: require('./About') }}>
+            { ({ About }) => About && <About {...routerProps} /> }
           </CodeSplit>
         }
       />

@@ -7,6 +7,7 @@ const globSync = require('glob').sync;
 const appRootPath = require('app-root-path').toString();
 const vendorDLLPaths = require('../config/vendorDLLPaths');
 const { createNotification } = require('../utils');
+const envVars = require('../config/envVars');
 
 // -----------------------------------------------------------------------------
 // PRIVATES
@@ -51,6 +52,8 @@ function getJsFilesFromSrcDir(srcPath) {
 }
 
 function buildVendorDLL() {
+  const ignoreModules = envVars.DEV_DLL_IGNORES.split(',');
+
   return new Promise((resolve, reject) => {
     Promise.all([
       Promise.resolve(getJsFilesFromSrcDir('client')),
@@ -74,9 +77,13 @@ function buildVendorDLL() {
         level: 'info',
         message: 'Vendor DLL build complete. Check console for module list.',
       });
-      console.log([...modules]);
 
-      const webpackConfig = webpackConfigFactory([...modules]);
+      const filteredModules = [...modules]
+        .filter(module => ignoreModules.findIndex(x => x === module) === -1);
+
+      console.log(filteredModules);
+
+      const webpackConfig = webpackConfigFactory(filteredModules);
       const vendorDLLCompiler = webpack(webpackConfig);
       vendorDLLCompiler.run((err) => {
         if (err) {
@@ -99,6 +106,10 @@ function buildVendorDLL() {
 
 function ensureVendorDLLExists() {
   return new Promise((resolve, reject) => {
+    if (envVars.USE_DEV_DLL !== 'true') {
+      resolve();
+    }
+
     if (!fs.existsSync(dependenciesHashFilePath)) {
       // builddll
       createNotification({

@@ -10,6 +10,7 @@ const WebpackMd5Hash = require('webpack-md5-hash');
 const { removeEmpty, ifElse, merge, happyPackPlugin } = require('../utils');
 const envVars = require('../config/envVars');
 const appName = require('../../package.json').name;
+const CodeSplitPlugin = require('code-split-component/webpack');
 
 function webpackConfigFactory({ target, mode }, { json }) {
   if (!target || ['client', 'server', 'universalMiddleware'].findIndex(valid => target === valid) === -1) {
@@ -178,6 +179,8 @@ function webpackConfigFactory({ target, mode }, { json }) {
       ],
     },
     plugins: removeEmpty([
+      ifProd(new CodeSplitPlugin()),
+
       // We use this so that our generated [chunkhash]'s are only different if
       // the content for our respective chunks have changed.  This optimises
       // our long term browser caching strategy for our client bundle, avoiding
@@ -261,22 +264,22 @@ function webpackConfigFactory({ target, mode }, { json }) {
       ),
 
       // JS Minification.
-      ifProdClient(
-        new webpack.optimize.UglifyJsPlugin({
-          // sourceMap: true,
-          compress: {
-            screw_ie8: true,
-            warnings: false,
-          },
-          mangle: {
-            screw_ie8: true,
-          },
-          output: {
-            comments: false,
-            screw_ie8: true,
-          },
-        })
-      ),
+      // ifProdClient(
+      //   new webpack.optimize.UglifyJsPlugin({
+      //     // sourceMap: true,
+      //     compress: {
+      //       screw_ie8: true,
+      //       warnings: false,
+      //     },
+      //     mangle: {
+      //       screw_ie8: true,
+      //     },
+      //     output: {
+      //       comments: false,
+      //       screw_ie8: true,
+      //     },
+      //   })
+      // ),
 
       ifProdClient(
         // This is actually only useful when our deps are installed via npm2.
@@ -385,10 +388,10 @@ function webpackConfigFactory({ target, mode }, { json }) {
               // full server side rendering as well as React Hot Loader 3 on
               // our development client bundle.
               // @see https://github.com/ctrlplusb/code-split-component
-              [
+              ifProd([
                 'code-split-component/babel',
-                { enableCodeSplitting: isProd && isClient },
-              ],
+                { target: isNodeTarget ? 'node' : 'web' },
+              ]),
             ]),
           },
         }],

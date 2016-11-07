@@ -1,10 +1,22 @@
 /* @flow */
 
-import { renderToString } from 'react-dom/server';
+import type { Head } from 'react-helmet';
 import serialize from 'serialize-javascript';
-import Helmet from 'react-helmet';
-import clientAssets from './clientAssets';
-import type { ReactElement } from '../shared/universal/types/react';
+import { STATE_IDENTIFIER } from 'code-split-component';
+import getAssetsForClientChunks from './getAssetsForClientChunks';
+
+// When we are in development mode our development server will generate a
+// vendor DLL in order to dramatically reduce our compilation times.  Therefore
+// we need to inject the path to the vendor dll bundle below.
+// @see /tools/development/ensureVendorDLLExists.js
+function developmentVendorDLL() {
+  if (process.env.NODE_ENV === 'development') {
+    const vendorPaths = require('../../tools/config/vendorDLLPaths'); // eslint-disable-line global-require
+
+    return vendorPaths.dllWebPath;
+  }
+  return '';
+}
 
 // We use the polyfill.io service which provides the polyfills that a
 // client needs, rather than everything if we used babel-polyfill.
@@ -29,7 +41,6 @@ function serviceWorkerScript(nonce) {
         }());
       </script>`;
   }
-
   return '';
 }
 
@@ -41,22 +52,20 @@ function styleTags(styles : Array<string>) {
     .join('\n');
 }
 
-function scriptTags(scripts : Array<string>) {
-  return scripts
-    .map(script =>
-      `<script type="text/javascript" src="${script}"></script>`
-    )
-    .join('\n');
+function scriptTag(jsFilePath: string) {
+  return `<script type="text/javascript" src="${jsFilePath}"></script>`;
 }
 
-const styles = styleTags(clientAssets.styles);
-
-const scripts = scriptTags(clientAssets.scripts);
+function scriptTags(jsFilePaths : Array<string>) {
+  return jsFilePaths.map(scriptTag).join('\n');
+}
 
 type RenderArgs = {
-  app?: ReactElement,
+  app?: string,
   initialState?: Object,
   nonce: string,
+  helmet?: Head,
+  codeSplitState?: { chunks: Array<string>, modules: Array<string> };
 };
 
 /**
@@ -72,26 +81,25 @@ type RenderArgs = {
  * @return The full HTML page in the form of a React element.
  */
 function render(args: RenderArgs) {
-  const { app, initialState, nonce } = args;
+  const { app, initialState, nonce, helmet, codeSplitState } = args;
 
-  const appString = app
-    ? renderToString(app)
-    : '';
+  const chunksForRender = [
+    // We always manually add the main entry chunk for our client bundle. It
+    // must always be the first item in the list.
+    'index',
+  ];
 
-  // If we had a reactAppElement then we need to run Helmet.rewind to extract
-  // all the helmet information out of the helmet provider.
-  // Note: you need to have called the renderToString on the react element before
-  // running this!
-  // @see https://github.com/nfl/react-helmet
-  const helmet = app
-    // We run 'react-helmet' after our renderToString call so that we can fish
-    // out all the attributes which need to be attached to our page.
-    // React Helmet allows us to control our page header contents via our
-    // components.
-    // @see https://github.com/nfl/react-helmet
-    ? Helmet.rewind()
-    // There was no react element, so we just us an empty helmet.
-    : null;
+  if (codeSplitState) {
+    // We add all the chunks that our CodeSplitProvider tracked as being used
+    // for this render.  This isn't actually required as the rehydrate function
+    // of code-split-component will ensure all our required chunks are loaded,
+    // but if we can do it we may as well add the expected scripts to the
+    // render output.
+    codeSplitState.chunks.forEach(chunk => chunksForRender.push(chunk));
+  }
+
+  // Now we get the assets (js/css) for the chunks.
+  const assetsForRender = getAssetsForClientChunks(chunksForRender);
 
   return `<!DOCTYPE html>
     <html ${helmet ? helmet.htmlAttributes.toString() : ''}>
@@ -100,22 +108,22 @@ function render(args: RenderArgs) {
         ${helmet ? helmet.meta.toString() : ''}
         ${helmet ? helmet.link.toString() : ''}
 
-        ${styles}
+        ${styleTags(assetsForRender.css)}
         ${helmet ? helmet.style.toString() : ''}
 
         ${polyfillIoScript()}
         ${serviceWorkerScript(nonce)}
       </head>
       <body>
-        <div id='app'>${appString}</div>
+        <div id='app'>${app || ''}</div>
 
-        <script type='text/javascript'>${
-          initialState
-            ? `window.APP_STATE=${serialize(initialState)};`
-            : ''
-        }</script>
+        <script nonce="${nonce}" type='text/javascript'>
+          ${initialState ? `window.APP_STATE=${serialize(initialState)};` : ''}
+          ${codeSplitState ? `window.${STATE_IDENTIFIER}=${serialize(codeSplitState)};` : ''}
+        </script>
 
-        ${scripts}
+        ${scriptTag(developmentVendorDLL())}
+        ${scriptTags(assetsForRender.js)}
         ${helmet ? helmet.script.toString() : ''}
       </body>
     </html>`;

@@ -6,6 +6,7 @@ const HotServer = require('./hotServer');
 const HotClient = require('./hotClient');
 const ensureVendorDLLExists = require('./ensureVendorDLLExists');
 const vendorDLLPaths = require('../config/vendorDLLPaths');
+const envVars = require('../config/envVars');
 
 class HotDevelopment {
   constructor() {
@@ -13,12 +14,16 @@ class HotDevelopment {
       try {
         const clientConfigFactory = require('../webpack/client.config');
         const clientConfig = clientConfigFactory({ mode: 'development' });
-        // Install the vendor DLL plugin.
-        clientConfig.plugins.push(
-          new webpack.DllReferencePlugin({
-            manifest: require(vendorDLLPaths.dllJsonPath),
-          })
-        );
+
+        if (envVars.USE_DEV_DLL === 'true') {
+          // Install the vendor DLL plugin.
+          clientConfig.plugins.push(
+            new webpack.DllReferencePlugin({
+              manifest: require(vendorDLLPaths.dllJsonPath),
+            })
+          );
+        }
+
         this.clientCompiler = webpack(clientConfig);
 
         const middlewareConfigFactory = require('../webpack/universalMiddleware.config');

@@ -1,17 +1,8 @@
-const CPU_COUNT = require('os').cpus().length;
 const HappyPack = require('happypack');
 const notifier = require('node-notifier');
 const colors = require('colors');
 const execSync = require('child_process').execSync;
 const appRootPath = require('app-root-path').toString();
-
-// This determines how many threads a HappyPack instance can spin up.
-// See the plugins section of the webpack configuration for more.
-const happyPackThreadPool = HappyPack.ThreadPool({ // eslint-disable-line new-cap
-  size: CPU_COUNT >= 4
-    ? Math.round(CPU_COUNT / 2)
-    : 2,
-});
 
 // Generates a HappyPack plugin.
 // @see https://github.com/amireh/happypack/
@@ -19,7 +10,7 @@ function happyPackPlugin({ name, loaders }) {
   return new HappyPack({
     id: name,
     verbose: false,
-    threadPool: happyPackThreadPool,
+    threads: 4,
     loaders,
   });
 }
