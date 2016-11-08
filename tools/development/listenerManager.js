@@ -9,8 +9,10 @@ class ListenerManager {
 
     // Track all connections to our server so that we can close them when needed.
     this.listener.on('connection', (connection) => {
+      // Increment the connection key.
+      this.lastConnectionKey += 1;
       // Generate a new key to represent the connection
-      const connectionKey = this.lastConnectionKey + 1;
+      const connectionKey = this.lastConnectionKey;
       // Add the connection to our map.
       this.connectionMap[connectionKey] = connection;
       // Remove the connection from our map when it closes.
@@ -38,8 +40,6 @@ class ListenerManager {
         });
 
         this.listener.close(() => {
-          this.killAllConnections();
-
           createNotification({
             title: this.name,
             level: 'info',
