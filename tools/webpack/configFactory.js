@@ -131,7 +131,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
     entry: merge(
       {
         index: removeEmpty([
-          // ifDevClient('react-hot-loader/patch'),
+          ifDevClient('react-hot-loader/patch'),
           ifDevClient(`webpack-hot-middleware/client?reload=true&path=http://localhost:${envVars.CLIENT_DEVSERVER_PORT}/__webpack_hmr`),
           // We are using polyfill.io instead of the very heavy babel-polyfill.
           // Therefore we need to add the regenerator-runtime as the babel-polyfill
