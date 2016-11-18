@@ -1,6 +1,6 @@
 const existsSync = require('fs').existsSync;
 const resolvePath = require('path').resolve;
-const appRootPath = require('app-root-path').toString();
+const appRootPath = require('app-root-dir').get();
 const { exec, createNotification } = require('../utils');
 
 const flowTypedDir = resolvePath(appRootPath, 'flow-typed');

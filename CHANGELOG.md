@@ -324,7 +324,7 @@ Replaced "fake-style-loader" with "css-loader/locals".  Thanks @giltig! Closes #
 
 Complete restructure to the development and build tooling.  All put into the "tools" directory now.
 
-Ripped out our runtime dependencies on webpack.  This was done by adding some new environment configuration variables and then combining them with the awesome 'app-root-path' library.
+Ripped out our runtime dependencies on webpack.  This was done by adding some new environment configuration variables and then combining them with the awesome 'app-root-dir' library.
 
 ### Changes
 

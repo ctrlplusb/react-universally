@@ -4,10 +4,10 @@
 
 import fs from 'fs';
 import path from 'path';
-import appRoot from 'app-root-path';
+import appRoot from 'app-root-dir';
 import { notEmpty } from '../shared/universal/utils/guards';
 
-const appRootPath = appRoot.toString();
+const appRootPath = appRoot.get();
 
 const assetsBundleFilePath = path.resolve(
   appRootPath,

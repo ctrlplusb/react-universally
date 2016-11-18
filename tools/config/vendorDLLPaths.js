@@ -1,5 +1,5 @@
 const pathResolve = require('path').resolve;
-const appRootPath = require('app-root-path').toString();
+const appRootPath = require('app-root-dir').get();
 const envVars = require('./envVars');
 
 const dllName = 'vendor';

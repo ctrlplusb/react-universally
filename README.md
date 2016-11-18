@@ -171,7 +171,7 @@ If you do building on your production environment you must ensure that you have 
 Even though we are using webpack to support our universal application we keep the webpack runtime out of our production runtime environment.  Everything is prebundled in prep for production execution.  Therefore we only have the following runtime dependencies:
 
   - `node` v6
-  - `app-root-path` - Gives us the ability to easily resolve files from the root of our app.
+  - `app-root-dir` - Gives us the ability to easily resolve files from the root of our app.
   - `compression` - Gzip compression support for express server responses.
   - `express` - Web server.
   - `helmet` - Provides a content security policy for express.

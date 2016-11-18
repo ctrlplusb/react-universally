@@ -1,6 +1,6 @@
 const globSync = require('glob').sync;
 const path = require('path');
-const appRootPath = require('app-root-path').toString();
+const appRootPath = require('app-root-dir').get();
 const flowRemoveTypes = require('flow-remove-types');
 const fs = require('fs');
 const rimraf = require('rimraf');

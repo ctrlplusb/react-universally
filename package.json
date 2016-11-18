@@ -39,7 +39,7 @@
   },
   "homepage": "https://github.com/ctrlplusb/react-universally#readme",
   "dependencies": {
-    "app-root-path": "2.0.1",
+    "app-root-dir": "^1.0.2",
     "code-split-component": "^2.0.0-alpha.2",
     "compression": "1.6.2",
     "express": "4.14.0",
