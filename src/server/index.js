@@ -6,7 +6,7 @@
 import 'source-map-support/register';
 
 import path from 'path';
-import uuid from 'node-uuid';
+import uuid from 'uuid';
 import appRoot from 'app-root-dir';
 import express from 'express';
 import type { $Request, $Response, NextFunction } from 'express';
@@ -25,7 +25,7 @@ const app = express();
 // inline scripts as being safe for execution against our content security policy.
 // @see https://helmetjs.github.io/docs/csp/
 app.use((req: $Request, res: $Response, next: NextFunction) => {
-  res.locals.nonce = uuid.v4(); // eslint-disable-line no-param-reassign
+  res.locals.nonce = uuid(); // eslint-disable-line no-param-reassign
   next();
 });
 
