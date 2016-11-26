@@ -89,8 +89,8 @@ if (process.env.NODE_ENV === 'development') {
   // is used to host our client bundle to our csp config.
   Object.keys(cspConfig.directives).forEach(directive =>
     cspConfig.directives[directive].push(
-      `localhost:${notEmpty(process.env.CLIENT_DEVSERVER_PORT)}`
-    )
+      `localhost:${notEmpty(process.env.CLIENT_DEVSERVER_PORT)}`,
+    ),
   );
 }
 app.use(helmet.contentSecurityPolicy(cspConfig));
@@ -123,8 +123,8 @@ app.use(
   notEmpty(process.env.CLIENT_BUNDLE_HTTP_PATH),
   express.static(
     path.resolve(appRootPath, notEmpty(process.env.BUNDLE_OUTPUT_PATH), './client'),
-    { maxAge: notEmpty(process.env.CLIENT_BUNDLE_CACHE_MAXAGE) }
-  )
+    { maxAge: notEmpty(process.env.CLIENT_BUNDLE_CACHE_MAXAGE) },
+  ),
 );
 
 // Configure static serving of our "public" root http path static files.
@@ -137,8 +137,8 @@ app.use(express.static(path.resolve(appRootPath, './public')));
 if (process.env.NODE_ENV === 'production') {
   app.use(
     express.static(
-      path.resolve(appRootPath, notEmpty(process.env.BUNDLE_OUTPUT_PATH), './serviceWorker')
-    )
+      path.resolve(appRootPath, notEmpty(process.env.BUNDLE_OUTPUT_PATH), './serviceWorker'),
+    ),
   );
 }
 
@@ -167,7 +167,7 @@ app.use((err: ?Error, req: $Request, res: $Response, next: NextFunction) => { //
 // Create an http listener for our express app.
 const port = parseInt(notEmpty(process.env.SERVER_PORT), 10);
 const listener = app.listen(port, () =>
-  console.log(`Server listening on port ${port}`)
+  console.log(`Server listening on port ${port}`),
 );
 
 // We export the listener as it will be handy for our development hot reloader.

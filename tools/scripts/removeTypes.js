@@ -50,7 +50,7 @@ globSync(`${path.resolve(appRootPath, 'src')}/**/*.js`)
 safeDelete(
   flowTypesPath,
   // Then do an eslint fix parse on the src files.
-  () => exec(`eslint --fix ${srcPath}`)
+  () => exec(`eslint --fix ${srcPath}`),
 );
 
 // Remove the .flowconfig
@@ -70,5 +70,5 @@ fs.writeFileSync(
     // Remove any multiple blank lines in files.
     .replace(/\n\n+/g, '\n')
     // Fix any hanging ',' chars
-    .replace(/,+([\s\n]+)\}/g, '$1}')
+    .replace(/,+([\s\n]+)\}/g, '$1}'),
 );

@@ -34,7 +34,7 @@ function serviceWorkerScript(nonce) {
 function styleTags(styles : Array<string>) {
   return styles
     .map(style =>
-      `<link href="${style}" media="screen, projection" rel="stylesheet" type="text/css" />`
+      `<link href="${style}" media="screen, projection" rel="stylesheet" type="text/css" />`,
     )
     .join('\n');
 }

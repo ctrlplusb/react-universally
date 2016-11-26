@@ -15,13 +15,13 @@ const CodeSplitPlugin = require('code-split-component/webpack');
 function webpackConfigFactory({ target, mode }, { json }) {
   if (!target || ['client', 'server', 'universalMiddleware'].findIndex(valid => target === valid) === -1) {
     throw new Error(
-      'You must provide a "target" (client|server|universalMiddleware) to the webpackConfigFactory.'
+      'You must provide a "target" (client|server|universalMiddleware) to the webpackConfigFactory.',
     );
   }
 
   if (!mode || ['development', 'production'].findIndex(valid => mode === valid) === -1) {
     throw new Error(
-      'You must provide a "mode" (development|production) to the webpackConfigFactory.'
+      'You must provide a "mode" (development|production) to the webpackConfigFactory.',
     );
   }
 
@@ -125,7 +125,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
       // When in production client mode we don't want any source maps to
       // decrease our payload sizes.
       // This form has almost no cost.
-      'hidden-source-map'
+      'hidden-source-map',
     ),
     // Define our entry chunks for our bundle.
     entry: merge(
@@ -139,7 +139,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
           ifClient('regenerator-runtime/runtime'),
           path.resolve(appRootPath, `./src/${target}/index.js`),
         ]),
-      }
+      },
     ),
     output: {
       // The dir in which our bundle should be output.
@@ -155,7 +155,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
         // npm scripts.  We don't care about caching on the server anyway.
         // We also want our client development builds to have a determinable
         // name for our hot reloading client bundle server.
-        '[name].js'
+        '[name].js',
       ),
       chunkFilename: '[name]-[chunkhash].js',
       // This is the web path under which our webpack bundled output should
@@ -165,7 +165,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
         // need to use an absolute http path for our assets public path.
         `http://localhost:${envVars.CLIENT_DEVSERVER_PORT}${envVars.CLIENT_BUNDLE_HTTP_PATH}`,
         // Otherwise we expect our bundled output to be served from this path.
-        envVars.CLIENT_BUNDLE_HTTP_PATH
+        envVars.CLIENT_BUNDLE_HTTP_PATH,
       ),
       // When in server mode we will output our bundle as a commonjs2 module.
       libraryTarget: ifNodeTarget('commonjs2', 'var'),
@@ -234,8 +234,8 @@ function webpackConfigFactory({ target, mode }, { json }) {
           Object.keys(envVars).reduce((acc, cur) => {
             acc[`process.env.${cur}`] = JSON.stringify(envVars[cur]); // eslint-disable-line no-param-reassign
             return acc;
-          }, {})
-        )
+          }, {}),
+        ),
       ),
 
       ifClient(
@@ -246,7 +246,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
         new AssetsPlugin({
           filename: envVars.BUNDLE_ASSETS_FILENAME,
           path: path.resolve(appRootPath, envVars.BUNDLE_OUTPUT_PATH, `./${target}`),
-        })
+        }),
       ),
 
       // We don't want webpack errors to occur during development as it will
@@ -265,7 +265,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
           // Indicates to our loaders that they should enter into debug mode
           // should they support it.
           debug: false,
-        })
+        }),
       ),
 
       // JS Minification.
@@ -283,7 +283,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
             comments: false,
             screw_ie8: true,
           },
-        })
+        }),
       ),
 
       ifProdClient(
@@ -291,13 +291,13 @@ function webpackConfigFactory({ target, mode }, { json }) {
         // In npm2 its possible to get duplicates of dependencies bundled
         // given the nested module structure. npm3 is flat, so this doesn't
         // occur.
-        new webpack.optimize.DedupePlugin()
+        new webpack.optimize.DedupePlugin(),
       ),
 
       ifProdClient(
         // This is a production client so we will extract our CSS into
         // CSS files.
-        new ExtractTextPlugin({ filename: '[name]-[chunkhash].css', allChunks: true })
+        new ExtractTextPlugin({ filename: '[name]-[chunkhash].css', allChunks: true }),
       ),
 
       // Service Worker.
@@ -318,7 +318,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
             filepath: path.resolve(envVars.BUNDLE_OUTPUT_PATH, './serviceWorker/sw.js'),
             dynamicUrlToDependencies: (() => {
               const clientBundleAssets = globSync(
-                path.resolve(appRootPath, envVars.BUNDLE_OUTPUT_PATH, './client/*.js')
+                path.resolve(appRootPath, envVars.BUNDLE_OUTPUT_PATH, './client/*.js'),
               );
               return globSync(path.resolve(appRootPath, './public/*'))
                 .reduce((acc, cur) => {
@@ -341,8 +341,8 @@ function webpackConfigFactory({ target, mode }, { json }) {
             // When outputing a json stat file we want to silence the output.
             verbose: false,
             logger: () => undefined,
-          })
-        ))
+          }),
+        )),
       ),
 
       // HappyPack plugins
@@ -419,7 +419,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
             'style-loader',
             { path: 'css-loader', query: { sourceMap: true } },
           ],
-        })
+        }),
       ),
     ]),
     module: {
@@ -462,7 +462,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
           // details on what loader is being implemented.
           ifDevClient({
             loaders: ['happypack/loader?id=happypack-devclient-css'],
-          })
+          }),
         ),
 
         // JSON

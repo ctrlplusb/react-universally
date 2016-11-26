@@ -50,7 +50,7 @@ function universalReactAppMiddleware(request: $Request, response: $Response) {
       <ServerRouter location={request.url} context={reactRouterContext}>
         <App />
       </ServerRouter>
-    </CodeSplitProvider>
+    </CodeSplitProvider>,
   );
 
   // Generate the html response.
@@ -87,7 +87,7 @@ function universalReactAppMiddleware(request: $Request, response: $Response) {
         // Our App component will handle the rendering of an Error404 view.
         ? 404
         // Otherwise everything is all good and we send a 200 OK status.
-        : 200
+        : 200,
     )
     .send(html);
 }

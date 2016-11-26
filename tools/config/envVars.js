@@ -29,7 +29,7 @@ const mergedEnvVars = fs.existsSync(envFile)
     // Merge the standard "process.env" environment variables object.
     process.env,
     // With the items from our ".env" file
-    dotenv.parse(fs.readFileSync(envFile, 'utf8'))
+    dotenv.parse(fs.readFileSync(envFile, 'utf8')),
   )
   // No .env file, so we will just use standard vars.
   : process.env;

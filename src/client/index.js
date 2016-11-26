@@ -29,8 +29,8 @@ function renderApp(TheApp) {
           </BrowserRouter>
         </CodeSplitProvider>
       </ReactHotLoader>,
-      container
-    )
+      container,
+    ),
   );
 }
 
@@ -41,7 +41,7 @@ if (process.env.NODE_ENV === 'development' && module.hot) {
   // Any changes to our App will cause a hotload re-render.
   module.hot.accept(
     '../shared/universal/components/App',
-    () => renderApp(require('../shared/universal/components/App').default)
+    () => renderApp(require('../shared/universal/components/App').default),
   );
 }
 

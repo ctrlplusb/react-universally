@@ -25,7 +25,7 @@ const {
 // to determine if dependencies have changed since the last time we built
 // the vendor dll.
 const currentDependenciesHash = md5(
-  JSON.stringify(require(pathResolve(appRootPath, 'package.json')).dependencies)
+  JSON.stringify(require(pathResolve(appRootPath, 'package.json')).dependencies),
 );
 
 function webpackConfigFactory(modules) {
