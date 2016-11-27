@@ -20,7 +20,7 @@ class HotDevelopment {
           clientConfig.plugins.push(
             new webpack.DllReferencePlugin({
               manifest: require(vendorDLLPaths.dllJsonPath),
-            }),
+            })
           );
         }
 
@@ -152,7 +152,7 @@ const hotDevelopment = new HotDevelopment();
 // Any changes to our webpack configs should be notified as requiring a restart
 // of the development tool.
 const watcher = chokidar.watch(
-  pathResolve(__dirname, '../webpack'),
+  pathResolve(__dirname, '../webpack')
 );
 watcher.on('ready', () => {
   watcher.on('change', () => {

@@ -31,7 +31,7 @@ function merge() {
 
   return Object.assign.apply(
     null,
-    removeEmpty([{}].concat(funcArgs)),
+    removeEmpty([{}].concat(funcArgs))
   );
 }
 

@@ -19,7 +19,7 @@ class HotServer {
     };
 
     const compiledOutputPath = path.resolve(
-      compiler.options.output.path, `${Object.keys(compiler.options.entry)[0]}.js`,
+      compiler.options.output.path, `${Object.keys(compiler.options.entry)[0]}.js`
     );
 
     compiler.plugin('done', (stats) => {
