@@ -25,6 +25,7 @@ const app = express();
 // inline scripts as being safe for execution against our content security policy.
 // @see https://helmetjs.github.io/docs/csp/
 app.use((req: $Request, res: $Response, next: NextFunction) => {
+  // $FlowFixMe
   res.locals.nonce = uuid(); // eslint-disable-line no-param-reassign
   next();
 });
