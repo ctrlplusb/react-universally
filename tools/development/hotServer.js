@@ -1,5 +1,4 @@
 const path = require('path');
-const chokidar = require('chokidar');
 const envVars = require('../config/envVars');
 const ListenerManager = require('./listenerManager');
 const { createNotification } = require('../utils');
@@ -7,39 +6,21 @@ const { createNotification } = require('../utils');
 class HotServer {
   constructor(compiler) {
     this.listenerManager = null;
-
-    const runCompiler = () => {
-      createNotification({
-        title: 'server',
-        level: 'info',
-        message: 'Building new server bundle...',
-      });
-
-      compiler.run(() => undefined);
-    };
+    this.watcher = null;
 
     const compiledOutputPath = path.resolve(
       compiler.options.output.path, `${Object.keys(compiler.options.entry)[0]}.js`
     );
 
-    compiler.plugin('done', (stats) => {
-      if (stats.hasErrors()) {
-        createNotification({
-          title: 'server',
-          level: 'error',
-          message: 'Build failed, check the console for more information.',
-        });
-        console.log(stats.toString());
-        return;
-      }
+    compiler.plugin('compile', () =>
+      createNotification({
+        title: 'server',
+        level: 'info',
+        message: 'Building new server bundle...',
+      })
+    );
 
-      // Make sure our newly built server bundles aren't in the module cache.
-      Object.keys(require.cache).forEach((modulePath) => {
-        if (modulePath.indexOf(compiler.options.output.path) !== -1) {
-          delete require.cache[modulePath];
-        }
-      });
-
+    const startServer = () => {
       try {
         // The server bundle  will automatically start the web server just by
         // requiring it. It returns the http listener too.
@@ -62,39 +43,45 @@ class HotServer {
         });
         console.log(err);
       }
-    });
-
-    // Now we will configure `chokidar` to watch our server specific source folder.
-    // Any changes will cause a rebuild of the server bundle.
-
-    const compileHotServer = () => {
-      // Shut down any existing running listener if necessary before starting the
-      // compile, else just compile.
-      if (this.listenerManager) {
-        this.listenerManager.dispose(true).then(runCompiler);
-      } else {
-        runCompiler();
-      }
     };
 
-    this.watcher = chokidar.watch([path.resolve(__dirname, '../../src/server')]);
-    this.watcher.on('ready', () => {
-      this.watcher
-        .on('add', compileHotServer)
-        .on('addDir', compileHotServer)
-        .on('change', compileHotServer)
-        .on('unlink', compileHotServer)
-        .on('unlinkDir', compileHotServer);
+    compiler.plugin('done', (stats) => {
+      if (stats.hasErrors()) {
+        createNotification({
+          title: 'server',
+          level: 'error',
+          message: 'Build failed, check the console for more information.',
+        });
+        console.log(stats.toString());
+        return;
+      }
+
+      // Make sure our newly built server bundles aren't in the module cache.
+      Object.keys(require.cache).forEach((modulePath) => {
+        if (modulePath.indexOf(compiler.options.output.path) !== -1) {
+          delete require.cache[modulePath];
+        }
+      });
+
+      // Shut down any existing running listener if necessary.
+      if (this.listenerManager) {
+        this.listenerManager.dispose(true).then(startServer);
+      } else {
+        startServer();
+      }
     });
 
-    // Lets start the compile.
-    runCompiler();
+    // Lets start the compiler.
+    this.watcher = compiler.watch(null, () => undefined);
   }
 
   dispose() {
-    return this.listenerManager
-      ? this.listenerManager.dispose()
-      : Promise.resolve();
+    const stopWatcher = () => new Promise(resolve => this.watcher.close(resolve));
+
+    return Promise.all([
+      this.watcher ? stopWatcher() : Promise.resolve(),
+      this.listenerManager ? this.listenerManager.dispose() : Promise.resolve(),
+    ]);
   }
 }
 
