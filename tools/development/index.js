@@ -76,8 +76,7 @@ class HotDevelopment {
 
 let hotDevelopment = new HotDevelopment();
 
-// Any changes to our webpack configs should be notified as requiring a restart
-// of the development tool.
+// Any changes to our webpack configs should restart the development server.
 const watcher = chokidar.watch(
   pathResolve(__dirname, '../webpack')
 );
@@ -86,7 +85,7 @@ watcher.on('ready', () => {
     createNotification({
       title: 'webpack',
       level: 'warn',
-      message: 'Webpack config changed. Please restart your development server to use the latest version of the configs.',
+      message: 'Webpack configs have changed. The development server is restarting...',
     });
     hotDevelopment.dispose().then(() => {
       // Make sure our new webpack configs aren't in the module cache.
@@ -96,6 +95,7 @@ watcher.on('ready', () => {
         }
       });
 
+      // Create a new development server.
       hotDevelopment = new HotDevelopment();
     });
   });
