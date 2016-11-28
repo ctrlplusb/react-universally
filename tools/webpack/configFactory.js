@@ -13,9 +13,9 @@ const appName = require('../../package.json').name;
 const CodeSplitPlugin = require('code-split-component/webpack');
 
 function webpackConfigFactory({ target, mode }, { json }) {
-  if (!target || ['client', 'server', 'universalMiddleware'].findIndex(valid => target === valid) === -1) {
+  if (!target || ['client', 'server'].findIndex(valid => target === valid) === -1) {
     throw new Error(
-      'You must provide a "target" (client|server|universalMiddleware) to the webpackConfigFactory.'
+      'You must provide a "target" (client|server) to the webpackConfigFactory.'
     );
   }
 
@@ -48,8 +48,6 @@ function webpackConfigFactory({ target, mode }, { json }) {
   const isProd = mode === 'production';
   const isClient = target === 'client';
   const isServer = target === 'server';
-  const isUniversalMiddleware = target === 'universalMiddleware';
-  const isNodeTarget = isServer || isUniversalMiddleware;
 
   // These are handy little helpers that use the boolean flags above.
   // They allow you to wrap a value with an condition check. It the condition
@@ -69,18 +67,16 @@ function webpackConfigFactory({ target, mode }, { json }) {
   // This is really handy for doing inline value resolution within or webpack
   // configuration.  Then we simply use one of our utility functions (e.g.
   // removeEmpty) to remove all the nulls.
-  const ifNodeTarget = ifElse(isNodeTarget);
   const ifDev = ifElse(isDev);
   const ifProd = ifElse(isProd); // eslint-disable-line no-unused-vars
   const ifClient = ifElse(isClient);
   const ifServer = ifElse(isServer);
-  const ifDevServer = ifElse(isDev && isServer);
   const ifDevClient = ifElse(isDev && isClient);
   const ifProdClient = ifElse(isProd && isClient);
 
   return {
     // We need to state that we are targetting "node" for our server bundle.
-    target: ifNodeTarget('node', 'web'),
+    target: ifServer('node', 'web'),
     // We have to set this to be able to use these items when executing a
     // server bundle.  Otherwise strangeness happens, like __dirname resolving
     // to '/'.  There is no effect on our client bundle.
@@ -90,16 +86,11 @@ function webpackConfigFactory({ target, mode }, { json }) {
     },
     // Anything listed in externals will not be included in our bundle.
     externals: removeEmpty([
-      // Don't allow the server to bundle the universal middleware bundle. We
-      // want the server to natively require it from the build dir.
-      ifServer(/\.\.[/\\]universalMiddleware/),
-      ifDevServer(/development[/\\]universalDevMiddleware/),
-
       // We don't want our node_modules to be bundled with our server package,
       // prefering them to be resolved via native node module system.  Therefore
       // we use the `webpack-node-externals` library to help us generate an
       // externals config that will ignore all node_modules.
-      ifNodeTarget(nodeExternals({
+      ifServer(nodeExternals({
         // NOTE: !!!
         // However the node_modules may contain files that will rely on our
         // webpack loaders in order to be used/resolved, for example CSS or
@@ -113,7 +104,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
         ],
       })),
     ]),
-    devtool: ifElse(isNodeTarget || isDev)(
+    devtool: ifElse(isServer || isDev)(
       // We want to be able to get nice stack traces when running our server
       // bundle.  To fully support this we'll also need to configure the
       // `node-source-map-support` module to execute at the start of the server
@@ -168,7 +159,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
         envVars.CLIENT_BUNDLE_HTTP_PATH
       ),
       // When in server mode we will output our bundle as a commonjs2 module.
-      libraryTarget: ifNodeTarget('commonjs2', 'var'),
+      libraryTarget: ifServer('commonjs2', 'var'),
     },
     resolve: {
       // These extensions are tried when resolving a file.
@@ -223,7 +214,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
             // created by this webpack script.  Below I am adding a "IS_NODE"
             // environment variable which will allow our code to know if it's
             // being bundled for a node target.
-            'process.env.IS_NODE': JSON.stringify(isNodeTarget),
+            'process.env.IS_NODE': JSON.stringify(isServer),
           },
           // Now we will expose all of our environment variables to webpack
           // so that it can make all the subtitutions for us.
@@ -401,7 +392,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
                   // When a node target (i.e. a server rendering bundle) then
                   // we will set the role as being server which will ensure that
                   // our code split components are resolved synchronously.
-                  role: isNodeTarget ? 'server' : 'client',
+                  role: isServer ? 'server' : 'client',
                 },
               ],
             ]),
@@ -453,7 +444,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
           }),
           // When targetting the server we use the "/locals" version of the
           // css loader, as we don't need any css files for the server.
-          ifNodeTarget({
+          ifServer({
             loaders: ['css-loader/locals'],
           }),
           // For development clients we will defer all our css processing to the
@@ -474,7 +465,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
         // Images and Fonts
         {
           test: /\.(jpg|jpeg|png|gif|ico|eot|svg|ttf|woff|woff2|otf)$/,
-          loader: 'url-loader',
+          loader: 'file-loader',
           query: {
             // Any file with a byte smaller than this will be "inlined" via
             // a base64 representation.

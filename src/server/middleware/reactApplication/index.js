@@ -6,8 +6,8 @@ import { renderToString } from 'react-dom/server';
 import { ServerRouter, createServerRenderContext } from 'react-router';
 import { CodeSplitProvider, createRenderContext } from 'code-split-component';
 import Helmet from 'react-helmet';
-import render from './render';
-import App from '../shared/universal/components/App';
+import generateHTML from './generateHTML';
+import App from '../../../shared/components/App';
 
 /**
  * An express middleware that is capabable of doing React server side rendering.
@@ -28,7 +28,7 @@ function universalReactAppMiddleware(request: $Request, response: $Response) {
     }
     // SSR is disabled so we will just return an empty html page and will
     // rely on the client to initialize and render the react application.
-    const html = render({
+    const html = generateHTML({
       // Nonce which allows us to safely declare inline scripts.
       nonce,
     });
@@ -54,7 +54,7 @@ function universalReactAppMiddleware(request: $Request, response: $Response) {
   );
 
   // Generate the html response.
-  const html = render({
+  const html = generateHTML({
     // Provide the full app react element.
     app,
     // Nonce which allows us to safely declare inline scripts.

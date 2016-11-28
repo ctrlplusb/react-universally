@@ -3,7 +3,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 
 import React from 'react';
-import type { ReactChildren } from '../../shared/universal/types/react';
+import type { ReactChildren } from '../../shared/types/react';
 
 const ReactHotLoader =
   process.env.NODE_ENV === 'development'

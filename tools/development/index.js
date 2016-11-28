@@ -14,7 +14,6 @@ class HotDevelopment {
       try {
         const clientConfigFactory = require('../webpack/client.config');
         const clientConfig = clientConfigFactory({ mode: 'development' });
-
         if (envVars.USE_DEV_DLL === 'true') {
           // Install the vendor DLL plugin.
           clientConfig.plugins.push(
@@ -23,12 +22,7 @@ class HotDevelopment {
             })
           );
         }
-
         this.clientCompiler = webpack(clientConfig);
-
-        const middlewareConfigFactory = require('../webpack/universalMiddleware.config');
-        const middlewareConfig = middlewareConfigFactory({ mode: 'development' });
-        this.middlewareCompiler = webpack(middlewareConfig);
 
         const serverConfigFactory = require('../webpack/server.config');
         const serverConfig = serverConfigFactory({ mode: 'development' });
@@ -43,9 +37,7 @@ class HotDevelopment {
         return;
       }
 
-      this.prepHotServer();
-      this.prepHotUniversalMiddleware();
-      this.prepHotClient();
+      this.start();
     }).catch((err) => {
       createNotification({
         title: 'vendorDLL',
@@ -58,82 +50,17 @@ class HotDevelopment {
     });
   }
 
-  prepHotClient() {
-    this.clientBundle = new HotClient(this.clientCompiler);
-  }
-
-  prepHotUniversalMiddleware() {
-    let started = false;
-
-    const runMiddlewareCompiler = () => {
-      this.middlewareCompiler.watch({}, () => undefined);
-    };
+  start() {
+    let serverStarted = false;
 
     this.clientCompiler.plugin('done', (stats) => {
-      if (!stats.hasErrors() && !started) {
-        started = true;
-        runMiddlewareCompiler();
-      }
-    });
-
-    this.middlewareCompiler.plugin('compile', () => {
-      createNotification({
-        title: 'universalMiddleware',
-        level: 'info',
-        message: 'Building new bundle...',
-      });
-    });
-
-    this.middlewareCompiler.plugin('done', (stats) => {
-      if (!stats.hasErrors()) {
-        // Make sure our newly built bundle is removed from the module cache.
-        Object.keys(require.cache).forEach((modulePath) => {
-          if (modulePath.indexOf('universalMiddleware') !== -1) {
-            delete require.cache[modulePath];
-          }
-        });
-
-        createNotification({
-          title: 'universalMiddleware',
-          level: 'info',
-          message: 'Available with latest changes.',
-        });
-      } else {
-        createNotification({
-          title: 'universalMiddleware',
-          level: 'error',
-          message: 'Build failed, please check the console for more information.',
-        });
-        console.log(stats.toString());
-      }
-    });
-  }
-
-  prepHotServer() {
-    let clientBuilt = false;
-    let middlewareBuilt = false;
-    let started = false;
-
-    const startServerBundleWhenReady = () => {
-      if (!started && (clientBuilt && middlewareBuilt)) {
-        started = true;
+      if (!stats.hasErrors() && !serverStarted) {
+        serverStarted = true;
         this.serverBundle = new HotServer(this.serverCompiler);
       }
-    };
-
-    this.clientCompiler.plugin('done', (stats) => {
-      if (!stats.hasErrors() && !clientBuilt) {
-        clientBuilt = true;
-        startServerBundleWhenReady();
-      }
     });
 
-    this.middlewareCompiler.plugin('done', (stats) => {
-      if (!stats.hasErrors() && !middlewareBuilt) {
-        middlewareBuilt = true;
-        startServerBundleWhenReady();
-      }
-    });
+    this.clientBundle = new HotClient(this.clientCompiler);
   }
 
   dispose() {
@@ -147,7 +74,7 @@ class HotDevelopment {
   }
 }
 
-const hotDevelopment = new HotDevelopment();
+let hotDevelopment = new HotDevelopment();
 
 // Any changes to our webpack configs should be notified as requiring a restart
 // of the development tool.
@@ -160,6 +87,16 @@ watcher.on('ready', () => {
       title: 'webpack',
       level: 'warn',
       message: 'Webpack config changed. Please restart your development server to use the latest version of the configs.',
+    });
+    hotDevelopment.dispose().then(() => {
+      // Make sure our new webpack configs aren't in the module cache.
+      Object.keys(require.cache).forEach((modulePath) => {
+        if (modulePath.indexOf('webpack') !== -1) {
+          delete require.cache[modulePath];
+        }
+      });
+
+      hotDevelopment = new HotDevelopment();
     });
   });
 });

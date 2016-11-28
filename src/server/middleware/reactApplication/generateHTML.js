@@ -53,19 +53,19 @@ function scriptTags(jsFilePaths : Array<string>) {
 // @see /tools/development/ensureVendorDLLExists.js
 function developmentVendorDLL() {
   if (process.env.NODE_ENV === 'development') {
-    const vendorPaths = require('../../tools/config/vendorDLLPaths'); // eslint-disable-line global-require
+    const vendorPaths = require('../../../../tools/config/vendorDLLPaths'); // eslint-disable-line global-require
 
     return scriptTag(vendorPaths.dllWebPath);
   }
   return '';
 }
 
-type RenderArgs = {
+type Args = {
   app?: string,
   initialState?: Object,
   nonce: string,
   helmet?: Head,
-  codeSplitState?: { chunks: Array<string>, modules: Array<string> };
+  codeSplitState?: { chunks: Array<string>, modules: Array<string> },
 };
 
 /**
@@ -80,7 +80,7 @@ type RenderArgs = {
  *
  * @return The full HTML page in the form of a React element.
  */
-function render(args: RenderArgs) {
+function generateHTML(args: Args) {
   const { app, initialState, nonce, helmet, codeSplitState } = args;
 
   // The chunks that we need to fetch the assets (js/css) for and then include
@@ -140,4 +140,4 @@ function render(args: RenderArgs) {
     </html>`;
 }
 
-export default render;
+export default generateHTML;

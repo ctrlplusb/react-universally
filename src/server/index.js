@@ -13,8 +13,8 @@ import type { $Request, $Response, NextFunction } from 'express';
 import compression from 'compression';
 import hpp from 'hpp';
 import helmet from 'helmet';
-import universalMiddleware from './middleware/universalMiddleware';
-import { notEmpty } from '../shared/universal/utils/guards';
+import reactApplication from './middleware/reactApplication';
+import { notEmpty } from '../shared/utils/guards';
 
 const appRootPath = appRoot.get();
 
@@ -143,8 +143,8 @@ if (process.env.NODE_ENV === 'production') {
   );
 }
 
-// The universal middleware for our React application.
-app.get('*', universalMiddleware);
+// The React application middleware.
+app.get('*', reactApplication);
 
 // Handle 404 errors.
 // Note: the react application middleware hands 404 paths, but it is good to

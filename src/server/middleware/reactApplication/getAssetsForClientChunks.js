@@ -5,7 +5,7 @@
 import fs from 'fs';
 import path from 'path';
 import appRoot from 'app-root-dir';
-import { notEmpty } from '../shared/universal/utils/guards';
+import { notEmpty } from '../../../shared/utils/guards';
 
 const appRootPath = appRoot.get();
 

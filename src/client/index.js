@@ -9,7 +9,7 @@ import { BrowserRouter } from 'react-router';
 // @see https://github.com/ctrlplusb/code-split-component
 import { CodeSplitProvider, rehydrateState } from 'code-split-component';
 import ReactHotLoader from './components/ReactHotLoader';
-import App from '../shared/universal/components/App';
+import App from '../shared/components/App';
 
 // Get the DOM Element that will host our React application.
 const container = document.querySelector('#app');
@@ -40,8 +40,8 @@ if (process.env.NODE_ENV === 'development' && module.hot) {
   module.hot.accept('./index.js');
   // Any changes to our App will cause a hotload re-render.
   module.hot.accept(
-    '../shared/universal/components/App',
-    () => renderApp(require('../shared/universal/components/App').default),
+    '../shared/components/App',
+    () => renderApp(require('../shared/components/App').default),
   );
 }
 

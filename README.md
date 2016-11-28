@@ -60,16 +60,15 @@ Redux/MobX, data persistence, test frameworks, and all the other bells and whist
 
 > __NEW!__ If you really want an example of a data library integration along with an example of how to go about solving data prefetching for the server then feel free to take a look at the [`redux`](https://github.com/ctrlplusb/react-universally/tree/redux) branch which provides exactly this.
 
-This boilerplate uses Webpack 2 to produce bundles for both the client, the
-server, and the middleware that the server will use to support SSR rendering of the React application.  You will notice the following Webpack configuration files:
+This boilerplate uses Webpack 2 to produce bundles for both the client and the
+server.  You will notice the following Webpack configuration files:
 
    - `tools/webpack/client.config.js`
    - `tools/webpack/server.config.js`
-   - `tools/webpack/universalMiddleware.config.js`
 
-All of these call into the `tools/webpack/configFactory.js` in order to generate their respective webpack configurations. I've tried to keep the webpack configuration as centralized as possible to allow easier reuse of the configuration and allow you to not have to do constant file jumping whilst trying to analyse the configuration for a target bundle.  I've also included a fair amount of comments as I know webpack can be a bit daunting at first.
+All of these call into the `tools/webpack/configFactory.js` in order to generate their respective Webpack configurations. I've tried to keep the Webpack configuration as centralized as possible to allow easier reuse of the configuration and allow you to not have to do constant file jumping whilst trying to analyse the configuration for a target bundle.  I've also included a fair amount of comments as I know Webpack can be a bit daunting at first.
 
-Using webpack and babel across all of our source allows us to use the same level of javascript (e.g. es2015/2016/2017) without having to worry about what each target environment supports.  In addition to this it allows our client/server code to both support the additional file types that a typical React application may import (e.g. CSS/Images).
+Using Webpack and babel across all of our source allows us to use the same level of javascript (e.g. es2015/2016/2017) without having to worry about what each target environment supports.  In addition to this it allows our client/server code to both support the additional file types that a typical React application may import (e.g. CSS/Images).
 
 Given that we are bundling our server code I have included the `source-map-support` module to ensure that we still get nice stack traces when executing our code.
 
@@ -140,25 +139,21 @@ A This boilerplate provides extended features on top of `react-universally` such
 |
 |- src  // All the source code
 |  |- server // The server bundle entry and specific source
-|  |- universalMiddleware // the universal middleware bundle entry and specific source
 |  |- client // The client bundle entry and specific source
-|  |- shared // The shared code between the bundles
-|     |- universal // Shared code that is suitable for any of the bundles
-|     |- node      // Shared code that is suitable for the node bundles
-|                     (i.e. the server or universalMiddleware bundles)
+|  |- shared // The shared code between the bundles)
+|
 |- tools
 |  |- development // Tool for hot reloading development
 |  |
 |  |- webpack
 |     |- client.config.js // Client webpack configuration
 |     |- server.config.js // Server webpack configuration
-|     |- universalMiddleware.config.js // Universal middleware webpack configuration
 |     |- configFactory.js  // Webpack configuration builder
 |
 |- .env_example // An example from which to create your own .env file.
 ```
 
-I highly recommend putting most of your application code into the `shared` folders where possible.  Then put anything that is specific to the `server`/`client`/`universalMiddleware` within their respective folder.
+I highly recommend putting most of your application code into the `shared` folder where possible.  Then put anything that is specific to the `server`/`client` within their respective folder.
 
 ## Project Dependencies
 
