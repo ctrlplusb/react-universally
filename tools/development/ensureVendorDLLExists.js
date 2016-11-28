@@ -47,7 +47,10 @@ function webpackConfigFactory(modules) {
 }
 
 function getJsFilesFromSrcDir(srcPath) {
-  return globSync(`${pathResolve(appRootPath, 'src', srcPath)}/**/*.js`);
+  return ['js', 'jsx'].reduce((acc, ext) =>
+    acc.concat(globSync(`${pathResolve(appRootPath, 'src', srcPath)}/**/*.${ext}`)),
+    []
+  );
 }
 
 function buildVendorDLL() {
