@@ -363,7 +363,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
         name: 'happypack-javascript',
         // We will use babel to do all our JS processing.
         loaders: [{
-          path: 'babel',
+          path: 'babel-loader',
           query: {
             presets: [
               // JSX
