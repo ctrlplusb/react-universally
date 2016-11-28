@@ -8,11 +8,10 @@ const appRootPath = require('app-root-dir').get();
 const vendorDLLPaths = require('../config/vendorDLLPaths');
 const { createNotification } = require('../utils');
 const envVars = require('../config/envVars');
+const matchRequire = require('match-require');
 
 // -----------------------------------------------------------------------------
 // PRIVATES
-
-const importRegex = /(from '|require\(')([\w\-_]+)/g;
 
 const {
   dllName,
@@ -66,23 +65,21 @@ function buildVendorDLL() {
       const allJSFiles = [...clientFiles, ...universalFiles].filter(isJsFile);
       const modules = allJSFiles.reduce((acc, cur) => {
         const fileContents = fs.readFileSync(cur, 'utf8');
-        let match = importRegex.exec(fileContents);
-        while (match != null) {
-          acc.add(match[2]);
-          match = importRegex.exec(fileContents);
-        }
+        matchRequire.findAll(fileContents).forEach(match => acc.add(match));
         return acc;
       }, new Set());
+
+      const filteredModules = [...modules]
+        // Remove any modules that have been configured to be ignored.
+        .filter(module => ignoreModules.findIndex(x => x === module) === -1)
+        // We only want to include absolute imports, no relative required modules.
+        .filter(module => !matchRequire.isRelativeModule(module));
 
       createNotification({
         title: 'vendorDLL',
         level: 'info',
         message: 'Vendor DLL build complete. Check console for module list.',
       });
-
-      const filteredModules = [...modules]
-        .filter(module => ignoreModules.findIndex(x => x === module) === -1);
-
       console.log(filteredModules);
 
       const webpackConfig = webpackConfigFactory(filteredModules);
