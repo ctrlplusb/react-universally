@@ -46,7 +46,6 @@
     "helmet": "^3.1.0",
     "hpp": "^0.2.1",
     "normalize.css": "^5.0.0",
-    "path": "^0.12.7",
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
     "react-helmet": "^3.2.2",
