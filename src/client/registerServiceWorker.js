@@ -1,11 +1,14 @@
 // We use the offline-plugin to generate a service worker.  See the webpack
 // config for more details.
+//
 // We need to ensure that the runtime is installed so that the generated
 // service worker is executed.
+//
 // We will only be doing this for production builds.
-import OfflinePluginRuntime from 'offline-plugin/runtime';
 
 if (process.env.NODE_ENV === 'production') {
+  const OfflinePluginRuntime = require('offline-plugin/runtime');
+
   // Install the offline plugin, which instantiates our service worker and app
   // cache to support precaching of assets and offline support.
   OfflinePluginRuntime.install({

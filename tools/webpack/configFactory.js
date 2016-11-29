@@ -7,9 +7,9 @@ const nodeExternals = require('webpack-node-externals');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const appRootPath = require('app-root-dir').get();
 const WebpackMd5Hash = require('webpack-md5-hash');
+const CodeSplitPlugin = require('code-split-component/webpack');
 const { removeEmpty, ifElse, merge, happyPackPlugin, getFilename } = require('../utils');
 const envVars = require('../config/envVars');
-const CodeSplitPlugin = require('code-split-component/webpack');
 
 function webpackConfigFactory({ target, mode }, { json }) {
   if (!target || ['client', 'server'].findIndex(valid => target === valid) === -1) {
@@ -24,24 +24,17 @@ function webpackConfigFactory({ target, mode }, { json }) {
     );
   }
 
-  if (!json) {
-    // Our bundle is outputing json for bundle analysis, therefore we don't
-    // want to do this console output as it will interfere with the json output.
-    //
-    // You can run a bundle analysis by executing the following:
-    //
-    // $(npm bin)/webpack \
-    //   --env.mode production \
-    //   --config webpack.client.config.js \
-    //   --json \
-    //   --profile \
-    //   > build/client/analysis.json
-    //
-    // And then upload the build/client/analysis.json to http://webpack.github.io/analyse/
-    // This allows you to analyse your webpack bundle to make sure it is
-    // optimal.
-    console.log(`==> Creating webpack config for "${target}" in "${mode}" mode`);
-  }
+  // The json flag has been set indicating a json output, which is required
+  // for bundle analysis is being requested.  When this is the case we must
+  // make sure that no console.log statements are executed otherwise they will
+  // be included in the json output and break our bundle analysis.
+  const isWebpackAnalyzeSession = !!json;
+
+  // Use this instead of console.log directly to take into account any
+  // webpack analyze sessions.
+  const safeLog = (msg) => { if (!isWebpackAnalyzeSession) { console.log(msg); } };
+
+  safeLog(`==> Creating webpack config for "${target}" in "${mode}" mode`);
 
   const isDev = mode === 'development';
   const isProd = mode === 'production';
@@ -169,6 +162,8 @@ function webpackConfigFactory({ target, mode }, { json }) {
       ],
     },
     plugins: removeEmpty([
+      // Required support for code-split-component, which provides us with our
+      // code splitting functionality.
       new CodeSplitPlugin({
         // The code-split-component doesn't work nicely with hot module reloading,
         // which we use in our development builds, so we will disable it (which
@@ -228,11 +223,12 @@ function webpackConfigFactory({ target, mode }, { json }) {
         )
       ),
 
+      // Generates a JSON file containing a map of all the output files for
+      // our webpack bundle.  A necessisty for our server rendering process
+      // as we need to interogate these files in order to know what JS/CSS
+      // we need to inject into our HTML. We only need to know the assets for
+      // our client bundle.
       ifClient(
-        // Generates a JSON file containing a map of all the output files for
-        // our webpack bundle.  A necessisty for our server rendering process
-        // as we need to interogate these files in order to know what JS/CSS
-        // we need to inject into our HTML.
         new AssetsPlugin({
           filename: envVars.BUNDLE_ASSETS_FILENAME,
           path: path.resolve(appRootPath, envVars.BUNDLE_OUTPUT_PATH, `./${target}`),
@@ -282,90 +278,17 @@ function webpackConfigFactory({ target, mode }, { json }) {
         new ExtractTextPlugin({ filename: '[name]-[chunkhash].css', allChunks: true })
       ),
 
-      // NOTE: HappyPack plugins coming up next.
-      // @see https://github.com/amireh/happypack/
-      //
-      // HappyPack allows us to use threads to execute our loaders. This means
-      // that we can get parallel execution of our loaders, significantly
-      // improving build and recompile times.
-      //
-      // This may not be an issue for you whilst your project is small, but
-      // the compile times can be signficant when the project scales. A lengthy
-      // compile time can significantly impare your development experience.
-      // Therefore we employ HappyPack to do threaded execution of our
-      // "heavy-weight" loaders.
-
-      // HappyPack 'javascript' instance.
-      happyPackPlugin({
-        name: 'happypack-javascript',
-        // We will use babel to do all our JS processing.
-        loaders: [{
-          path: 'babel-loader',
-          query: {
-            presets: [
-              // JSX
-              'react',
-              // All the latest JS goodies, except for ES6 modules which
-              // webpack has native support for and uses in the tree shaking
-              // process.
-              // TODO: When babel-preset-latest-minimal has stabilised use it
-              // for our node targets so that only the missing features for
-              // our respective node version will be transpiled.
-              ['latest', { es2015: { modules: false } }],
-            ],
-            plugins: removeEmpty([
-              ifDevClient('react-hot-loader/babel'),
-              // We are adding the experimental "object rest spread" syntax as
-              // it is super useful.  There is a caviat with the plugin that
-              // requires us to include the destructuring plugin too.
-              'transform-object-rest-spread',
-              'transform-es2015-destructuring',
-              // The class properties plugin is really useful for react components.
-              'transform-class-properties',
-              // This plugin transpiles the code-split-component component
-              // instances, taking care of all the heavy boilerplate that we
-              // would have had to do ourselves to get code splitting w/SSR
-              // support working.
-              // @see https://github.com/ctrlplusb/code-split-component
-              [
-                'code-split-component/babel',
-                {
-                  // The code-split-component doesn't work nicely with hot
-                  // module reloading, which we use in our development builds,
-                  // so we will disable it (which ensures synchronously
-                  // behaviour on the CodeSplit instances).
-                  disabled: isDev,
-                  // When a node target (i.e. a server rendering bundle) then
-                  // we will set the role as being server which will ensure that
-                  // our code split components are resolved synchronously.
-                  role: isServer ? 'server' : 'client',
-                },
-              ],
-            ]),
-          },
-        }],
-      }),
-
-      // HappyPack 'css' instance for development client.
-      ifDevClient(
-        happyPackPlugin({
-          name: 'happypack-devclient-css',
-          // We will use a straight style & css loader along with source maps.
-          // This combo gives us a better development experience.
-          loaders: [
-            'style-loader',
-            { path: 'css-loader', query: { sourceMap: true } },
-          ],
-        })
-      ),
-
       // Offline Plugin.
+      //
       // @see https://github.com/NekR/offline-plugin
+      //
       // This plugin generates a service worker script which as configured below
       // will precache all our generated client bundle assets as well as our
       // static "public" folder assets.
+      //
       // This gives us aggressive caching on these assets for an improved
       // user experience.
+      //
       // Any time our static files or generated bundle files change the user's
       // cache will be updated.
       ifProdClient(
@@ -411,6 +334,87 @@ function webpackConfigFactory({ target, mode }, { json }) {
             .map(publicFile => `/${getFilename(publicFile)}`),
         })
       ),
+
+      // NOTE: HappyPack plugins coming up next.
+      //
+      // @see https://github.com/amireh/happypack/
+      //
+      // HappyPack allows us to use threads to execute our loaders. This means
+      // that we can get parallel execution of our loaders, significantly
+      // improving build and recompile times.
+      //
+      // This may not be an issue for you whilst your project is small, but
+      // the compile times can be signficant when the project scales. A lengthy
+      // compile time can significantly impare your development experience.
+      // Therefore we employ HappyPack to do threaded execution of our
+      // "heavy-weight" loaders.
+
+      // HappyPack 'javascript' instance.
+      happyPackPlugin({
+        name: 'happypack-javascript',
+        // We will use babel to do all our JS processing.
+        loaders: [{
+          path: 'babel-loader',
+          query: {
+            presets: [
+              // JSX
+              'react',
+              // All the latest JS goodies, except for ES6 modules which
+              // webpack has native support for and uses in the tree shaking
+              // process.
+              // TODO: When babel-preset-latest-minimal has stabilised use it
+              // for our node targets so that only the missing features for
+              // our respective node version will be transpiled.
+              ['latest', { es2015: { modules: false } }],
+            ],
+            plugins: removeEmpty([
+              ifDevClient('react-hot-loader/babel'),
+              // We are adding the experimental "object rest spread" syntax as
+              // it is super useful.  There is a caviat with the plugin that
+              // requires us to include the destructuring plugin too.
+              'transform-object-rest-spread',
+              'transform-es2015-destructuring',
+              // The class properties plugin is really useful for react components.
+              'transform-class-properties',
+              // The following plugin supports the code-split-component
+              // instances, taking care of all the heavy boilerplate that we
+              // would have had to do ourselves to get code splitting w/SSR
+              // support working.
+              // @see https://github.com/ctrlplusb/code-split-component
+              [
+                'code-split-component/babel',
+                {
+                  // The code-split-component doesn't work nicely with hot
+                  // module reloading, which we use in our development builds,
+                  // so we will disable it (which ensures synchronously
+                  // behaviour on the CodeSplit instances).
+                  disabled: isDev,
+                  // For our server bundle we will set the role as being 'server'
+                  // which will ensure that our code split components can be
+                  // resolved synchronously, being much more helpful for
+                  // pre-rendering.
+                  role: isServer ? 'server' : 'client',
+                },
+              ],
+            ]),
+          },
+        }],
+      }),
+
+      // HappyPack 'css' instance for development client.
+      ifDevClient(
+        happyPackPlugin({
+          name: 'happypack-devclient-css',
+          loaders: [
+            'style-loader',
+            {
+              path: 'css-loader',
+              // Include sourcemaps for dev experience++.
+              query: { sourceMap: true },
+            },
+          ],
+        })
+      ),
     ]),
     module: {
       rules: removeEmpty([
@@ -426,32 +430,35 @@ function webpackConfigFactory({ target, mode }, { json }) {
         },
 
         // CSS
+        // At the moment this is configured to do some basic css file processing,
+        // combining any CSS files into a single file for production output.
         merge(
           {
             test: /\.css$/,
           },
-          // For a production client build we use the ExtractTextPlugin which
-          // will extract our CSS into CSS files.
-          // The plugin needs to be registered within the plugins section too.
-          // Also, as we are using the ExtractTextPlugin we can't use happypack
-          // for this case.
-          ifProdClient({
-            loader: ExtractTextPlugin.extract({
-              fallbackLoader: 'style-loader',
-              loader: 'css-loader',
-            }),
-          }),
-          // When targetting the server we use the "/locals" version of the
-          // css loader, as we don't need any css files for the server.
-          ifServer({
-            loaders: ['css-loader/locals'],
-          }),
           // For development clients we will defer all our css processing to the
           // happypack plugin named "happypack-devclient-css".
           // See the respective plugin within the plugins section for full
           // details on what loader is being implemented.
           ifDevClient({
             loaders: ['happypack/loader?id=happypack-devclient-css'],
+          }),
+          // For a production client build we use the ExtractTextPlugin which
+          // will extract our CSS into CSS files. We don't use happypack here
+          // as there are some edge cases where it fails when used within
+          // an ExtractTextPlugin instance.
+          // Note: The ExtractTextPlugin needs to be registered within the
+          // plugins section too.
+          ifProdClient({
+            loader: ExtractTextPlugin.extract({
+              fallbackLoader: 'style-loader',
+              loader: ['css-loader'],
+            }),
+          }),
+          // When targetting the server we use the "/locals" version of the
+          // css loader, as we don't need any css files for the server.
+          ifServer({
+            loaders: ['css-loader/locals'],
           })
         ),
 
