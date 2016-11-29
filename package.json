@@ -64,6 +64,7 @@
     "babel-plugin-transform-class-properties": "^6.19.0",
     "babel-plugin-transform-es2015-destructuring": "^6.19.0",
     "babel-plugin-transform-object-rest-spread": "^6.19.0",
+    "babel-preset-env": "^0.0.9",
     "babel-preset-latest": "^6.16.0",
     "babel-preset-react": "^6.16.0",
     "chokidar": "^1.6.1",

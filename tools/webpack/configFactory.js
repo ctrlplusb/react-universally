@@ -356,17 +356,26 @@ function webpackConfigFactory({ target, mode }, { json }) {
         loaders: [{
           path: 'babel-loader',
           query: {
-            presets: [
+            presets: removeEmpty([
               // JSX
               'react',
-              // All the latest JS goodies, except for ES6 modules which
-              // webpack has native support for and uses in the tree shaking
-              // process.
-              // TODO: When babel-preset-latest-minimal has stabilised use it
-              // for our node targets so that only the missing features for
-              // our respective node version will be transpiled.
-              ['latest', { es2015: { modules: false } }],
-            ],
+              // For our client bundles we transpile all the latest ratified
+              // ES201X code into ES5, safe for browsers.  We exclude module
+              // transilation as webpack takes care of this for us, doing
+              // tree shaking in the process.
+              ifClient(['latest', { es2015: { modules: false } }]),
+              // For our client bundle we use the awesome babel-preset-env which
+              // acts like babel-preset-latest in that it supports the latest
+              // ratified ES201X syntax, however, it will only transpile what
+              // is necessary for a target environment.  We have configured it
+              // to target our current node version.  This is cool because
+              // recent node versions have extensive support for ES201X syntax.
+              // Also, we have disabled modules transpilation as webpack will
+              // take care of that for us ensuring tree shaking takes place.
+              // NOTE: Make sure you use the same node version for development
+              // and production.
+              ifServer(['env', { targets: { node: true }, modules: false }]),
+            ]),
             plugins: removeEmpty([
               ifDevClient('react-hot-loader/babel'),
               // We are adding the experimental "object rest spread" syntax as
