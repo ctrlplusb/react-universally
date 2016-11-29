@@ -1,5 +1,6 @@
 /* @flow */
 /* eslint-disable no-console */
+/* eslint-disable no-unused-vars */
 
 // This grants us source map support, which combined with our webpack source
 // maps will give us nice stack traces.
@@ -80,8 +81,8 @@ const cspConfig = {
     // implementation that is kinder to service workers please let me know.
     connectSrc: ['*'], // ["'self'", 'ws:'],
     fontSrc: ["'self'"],
-    objectSrc: ["'none'"],
-    mediaSrc: ["'none'"],
+    objectSrc: ["'self'"],
+    mediaSrc: ["'self'"],
     childSrc: ["'self'"],
   },
 };
@@ -119,6 +120,17 @@ app.use(helmet.noSniff());
 // Gzip compress the responses.
 app.use(compression());
 
+// When in production mode, we will serve our service worker which was generated
+// by the offline-plugin webpack plugin. See the webpack plugins section for
+// more information.
+// Note: the service worker needs to be served from the http root of your
+// application for it to work correctly.
+if (process.env.NODE_ENV === 'production') {
+  app.get('/sw.js', (req: $Request, res: $Response, next: NextFunction) => res.sendFile(
+    path.resolve(appRootPath, notEmpty(process.env.BUNDLE_OUTPUT_PATH), './client/sw.js'),
+  ));
+}
+
 // Configure static serving of our webpack bundled client files.
 app.use(
   notEmpty(process.env.CLIENT_BUNDLE_HTTP_PATH),
@@ -130,18 +142,6 @@ app.use(
 
 // Configure static serving of our "public" root http path static files.
 app.use(express.static(path.resolve(appRootPath, './public')));
-
-// When in production mode, bind our service worker folder so that it can
-// be served.
-// Note: the service worker needs to be available at the http root of your
-// application for the offline support to work.
-if (process.env.NODE_ENV === 'production') {
-  app.use(
-    express.static(
-      path.resolve(appRootPath, notEmpty(process.env.BUNDLE_OUTPUT_PATH), './serviceWorker'),
-    ),
-  );
-}
 
 // The React application middleware.
 app.get('*', reactApplication);
@@ -157,7 +157,7 @@ app.use((req: $Request, res: $Response, next: NextFunction) => { // eslint-disab
 // Handle all other errors (i.e. 500).
 // Note: You must provide specify all 4 parameters on this callback function
 // even if they aren't used, otherwise it won't be used.
-app.use((err: ?Error, req: $Request, res: $Response, next: NextFunction) => { // eslint-disable-line no-unused-vars,max-len
+app.use((err: ?Error, req: $Request, res: $Response, next: NextFunction) => {
   if (err) {
     console.log(err);
     console.log(err.stack);

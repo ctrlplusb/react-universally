@@ -3,6 +3,7 @@ const notifier = require('node-notifier');
 const colors = require('colors');
 const execSync = require('child_process').execSync;
 const appRootPath = require('app-root-dir').get();
+const path = require('path');
 
 // Generates a HappyPack plugin.
 // @see https://github.com/amireh/happypack/
@@ -61,6 +62,11 @@ function exec(command) {
   execSync(command, { stdio: 'inherit', cwd: appRootPath });
 }
 
+// :: string -> string
+function getFilename(filePath) {
+  return path.relative(path.dirname(filePath), filePath);
+}
+
 module.exports = {
   removeEmpty,
   ifElse,
@@ -68,4 +74,5 @@ module.exports = {
   happyPackPlugin,
   createNotification,
   exec,
+  getFilename,
 };

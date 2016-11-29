@@ -8,6 +8,8 @@ import { BrowserRouter } from 'react-router';
 // splitting within our application.
 // @see https://github.com/ctrlplusb/code-split-component
 import { CodeSplitProvider, rehydrateState } from 'code-split-component';
+// This registers our service worker for asset caching and offline support.
+import './registerServiceWorker';
 import ReactHotLoader from './components/ReactHotLoader';
 import App from '../shared/components/App';
 

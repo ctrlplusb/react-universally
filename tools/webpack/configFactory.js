@@ -1,15 +1,14 @@
 const path = require('path');
 const globSync = require('glob').sync;
 const webpack = require('webpack');
-const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin');
+const OfflinePlugin = require('offline-plugin');
 const AssetsPlugin = require('assets-webpack-plugin');
 const nodeExternals = require('webpack-node-externals');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const appRootPath = require('app-root-dir').get();
 const WebpackMd5Hash = require('webpack-md5-hash');
-const { removeEmpty, ifElse, merge, happyPackPlugin } = require('../utils');
+const { removeEmpty, ifElse, merge, happyPackPlugin, getFilename } = require('../utils');
 const envVars = require('../config/envVars');
-const appName = require('../../package.json').name;
 const CodeSplitPlugin = require('code-split-component/webpack');
 
 function webpackConfigFactory({ target, mode }, { json }) {
@@ -283,52 +282,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
         new ExtractTextPlugin({ filename: '[name]-[chunkhash].css', allChunks: true })
       ),
 
-      // Service Worker.
-      // @see https://github.com/goldhand/sw-precache-webpack-plugin
-      // This plugin generates a service worker script which as configured below
-      // will precache all our generated client bundle assets as well as the
-      // index page for our application.
-      // This gives us aggressive caching as well as offline support.
-      // Don't worry about cache invalidation. As we are using the Md5HashPlugin
-      // for our assets, any time their contents change they will be given
-      // unique file names, which will cause the service worker to fetch them.
-      ifProdClient(
-        new SWPrecacheWebpackPlugin(merge(
-          {
-            // Note: The default cache size is 2mb. This can be reconfigured:
-            // maximumFileSizeToCacheInBytes: 2097152,
-            cacheId: `${appName}-sw`,
-            filepath: path.resolve(envVars.BUNDLE_OUTPUT_PATH, './serviceWorker/sw.js'),
-            dynamicUrlToDependencies: (() => {
-              const clientBundleAssets = globSync(
-                path.resolve(appRootPath, envVars.BUNDLE_OUTPUT_PATH, './client/*.js')
-              );
-              return globSync(path.resolve(appRootPath, './public/**/*.*'))
-                .reduce((acc, cur) => {
-                  // We will precache our public asset, with it being invalidated
-                  // any time our client bundle assets change.
-                  acc[`/${path.relative(path.resolve(appRootPath, 'public'), cur)}`] = clientBundleAssets; // eslint-disable-line no-param-reassign,max-len
-                  return acc;
-                },
-                {
-                  // Our index.html page will be precatched and it will be
-                  // invalidated and refetched any time our client bundle
-                  // assets change.
-                  '/': clientBundleAssets,
-                  // Lets cache the call to the polyfill.io service too.
-                  'https://cdn.polyfill.io/v2/polyfill.min.js': clientBundleAssets,
-                });
-            })(),
-          },
-          ifElse(!!json)({
-            // When outputing a json stat file we want to silence the output.
-            verbose: false,
-            logger: () => undefined,
-          })
-        ))
-      ),
-
-      // HappyPack plugins
+      // NOTE: HappyPack plugins coming up next.
       // @see https://github.com/amireh/happypack/
       //
       // HappyPack allows us to use threads to execute our loaders. This means
@@ -402,6 +356,59 @@ function webpackConfigFactory({ target, mode }, { json }) {
             'style-loader',
             { path: 'css-loader', query: { sourceMap: true } },
           ],
+        })
+      ),
+
+      // Offline Plugin.
+      // @see https://github.com/NekR/offline-plugin
+      // This plugin generates a service worker script which as configured below
+      // will precache all our generated client bundle assets as well as our
+      // static "public" folder assets.
+      // This gives us aggressive caching on these assets for an improved
+      // user experience.
+      // Any time our static files or generated bundle files change the user's
+      // cache will be updated.
+      ifProdClient(
+        new OfflinePlugin({
+          // Setting this value lets the plugin know where our generated client
+          // assets will be served from.
+          // e.g. /client/home-123abc.js
+          publicPath: envVars.CLIENT_BUNDLE_HTTP_PATH,
+          // When using the publicPath we need to disable the "relativePaths"
+          // feature of this plugin.
+          relativePaths: false,
+          // Our offline support will be done via a service worker.
+          // Read more on them here:
+          // http://bit.ly/2f8q7Td
+          ServiceWorker: {
+            output: 'sw.js',
+            events: true,
+            // By default the service worker will be ouput and served from the
+            // publicPath setting above in the root config of the OfflinePlugin.
+            // This means that it would be served from /client/sw.js
+            // We do not want this! Service workers have to be served from the
+            // root of our application in order for them to work correctly.
+            // Therefore we override the publicPath here. The sw.js will still
+            // live in at the /build/client/sw.js output location therefore in
+            // our server configuration we need to make sure that any requests
+            // to /sw.js will serve the /build/client/sw.js file.
+            publicPath: '/sw.js',
+            // When a user has no internet connectivity and a path is not available
+            // in our service worker cache then the following file will be
+            // served to them.  Go and make it pretty. :)
+            navigateFallbackURL: '/offline.html',
+          },
+          // We aren't going to use AppCache and will instead only rely on
+          // a Service Worker.
+          AppCache: false,
+          // NOTE: This will include ALL of our public folder assets.  We do
+          // a glob pull of them and then map them to /foo paths as all the
+          // public folder assets get served off the root of our application.
+          // You may or may not want to be including these assets.  Feel free
+          // to remove this or instead include only a very specific set of
+          // assets.
+          externals: globSync(path.resolve(appRootPath, './public/**/*'))
+            .map(publicFile => `/${getFilename(publicFile)}`),
         })
       ),
     ]),
