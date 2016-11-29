@@ -320,11 +320,11 @@ function webpackConfigFactory({ target, mode }, { json }) {
               const clientBundleAssets = globSync(
                 path.resolve(appRootPath, envVars.BUNDLE_OUTPUT_PATH, './client/*.js')
               );
-              return globSync(path.resolve(appRootPath, './public/*'))
+              return globSync(path.resolve(appRootPath, './public/**/*.*'))
                 .reduce((acc, cur) => {
                   // We will precache our public asset, with it being invalidated
                   // any time our client bundle assets change.
-                  acc[`/${path.basename(cur)}`] = clientBundleAssets; // eslint-disable-line no-param-reassign,max-len
+                  acc[`/${path.relative(path.resolve(appRootPath, 'public'), cur)}`] = clientBundleAssets; // eslint-disable-line no-param-reassign,max-len
                   return acc;
                 },
                 {
