@@ -1,3 +1,11 @@
+## NOTE
+
+A significant update is being prepared in the [`next`](https://github.com/ctrlplusb/react-universally/tree/next) branch.  I am using a new strategy of incubating updates for a bit in this branch until I am sure that I haven't introduced broken code/configuration (which unfortunately has happened before).  Given that many people seem interested and are using this starter kit I want to be more respectful to them.
+
+That being said I would highly recommend you use the `next` branch over the current `master` as there are significant improvements and fixes (especially for the service worker configuration which is currently broken).  I am pushing hard to simplify this project in many ways and the `next` branch has all this love.  Much more to come still, but if you are in hurry to get started then go ahead and use `next` as is. :) 
+
+---
+
 <p align='center'>
   <h1 align='center'>React, Universally</h1>
   <p align='center'><img width='150' src='https://raw.githubusercontent.com/ctrlplusb/assets/master/logos/react-universally.png' /></p>
