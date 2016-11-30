@@ -1,5 +1,3 @@
-/* @flow */
-
 const webpack = require('webpack');
 const pathExtName = require('path').extname;
 const md5 = require('md5');

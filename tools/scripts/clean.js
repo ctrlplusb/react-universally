@@ -1,5 +1,3 @@
-/* @flow */
-
 // This script removes any exisitng build output.
 
 const { exec } = require('../utils.js');
