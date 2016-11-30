@@ -1,23 +1,18 @@
 /* @flow */
 /* eslint-disable no-console */
-/* eslint-disable no-unused-vars */
 
 // This grants us source map support, which combined with our webpack source
 // maps will give us nice stack traces.
 import 'source-map-support/register';
 
-import path from 'path';
 import uuid from 'uuid';
-import appRoot from 'app-root-dir';
 import express from 'express';
 import type { $Request, $Response, NextFunction } from 'express';
 import compression from 'compression';
 import hpp from 'hpp';
 import helmet from 'helmet';
 import reactApplication from './middleware/reactApplication';
-import projectConfig from '../../config/project';
-
-const appRootPath = appRoot.get();
+import config from '../../tools/config';
 
 // Create our express based server.
 const app = express();
@@ -91,7 +86,7 @@ if (process.env.NODE_ENV === 'development') {
   // is used to host our client bundle to our csp config.
   Object.keys(cspConfig.directives).forEach(directive =>
     cspConfig.directives[directive].push(
-      `${projectConfig.server.host}:${projectConfig.development.clientDevServerPort}`,
+      `${config.server.host}:${config.development.clientDevServerPort}`,
     ),
   );
 }
@@ -127,30 +122,25 @@ app.use(compression());
 // application for it to work correctly.
 if (process.env.NODE_ENV === 'production') {
   app.get(
-    `/${projectConfig.serviceWorker.filename}`,
-    (req: $Request, res: $Response, next: NextFunction) => {
-      res.sendFile(
-        path.resolve(
-          projectConfig.client.outputPath,
-          projectConfig.serviceWorker.filename,
-        ),
-      );
+    `/${config.serviceWorker.name}.js`,
+    (req: $Request, res: $Response, next: NextFunction) => { // eslint-disable-line no-unused-vars
+      res.sendFile(config.paths.serviceWorker);
     },
   );
 }
 
 // Configure static serving of our webpack bundled client files.
 app.use(
-  projectConfig.client.publicPath,
+  config.client.webRoot,
   express.static(
-    projectConfig.client.outputPath,
-    { maxAge: projectConfig.server.cacheMaxAge },
+    config.paths.clientBundle,
+    { maxAge: config.server.cacheMaxAge },
   ),
 );
 
 // Configure static serving of our "public" root http path static files.
 // Note: these will be served off the root (i.e. '/') of our application.
-app.use(express.static(projectConfig.server.publicAssetsPath));
+app.use(express.static(config.paths.publicAssets));
 
 // The React application middleware.
 app.get('*', reactApplication);
@@ -166,7 +156,7 @@ app.use((req: $Request, res: $Response, next: NextFunction) => { // eslint-disab
 // Handle all other errors (i.e. 500).
 // Note: You must provide specify all 4 parameters on this callback function
 // even if they aren't used, otherwise it won't be used.
-app.use((err: ?Error, req: $Request, res: $Response, next: NextFunction) => {
+app.use((err: ?Error, req: $Request, res: $Response, next: NextFunction) => { // eslint-disable-line no-unused-vars,max-len
   if (err) {
     console.log(err);
     console.log(err.stack);
@@ -175,8 +165,8 @@ app.use((err: ?Error, req: $Request, res: $Response, next: NextFunction) => {
 });
 
 // Create an http listener for our express app.
-const listener = app.listen(projectConfig.server.port, () =>
-  console.log(`Server listening on port ${projectConfig.server.port}`),
+const listener = app.listen(config.server.port, () =>
+  console.log(`Server listening on port ${config.server.port}`),
 );
 
 // We export the listener as it will be handy for our development hot reloader.

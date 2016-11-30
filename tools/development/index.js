@@ -5,7 +5,7 @@ const { createNotification } = require('../utils');
 const HotServer = require('./hotServer');
 const HotClient = require('./hotClient');
 const ensureVendorDLLExists = require('./ensureVendorDLLExists');
-const projectConfig = require('../../config/project');
+const config = require('../config');
 
 class HotDevelopment {
   constructor() {
@@ -13,16 +13,11 @@ class HotDevelopment {
       try {
         const clientConfigFactory = require('../webpack/client.config');
         const clientConfig = clientConfigFactory({ mode: 'development' });
-        if (projectConfig.development.vendorDLL.enabled) {
+        if (config.development.vendorDLL.enabled) {
           // Install the vendor DLL plugin.
           clientConfig.plugins.push(
             new webpack.DllReferencePlugin({
-              manifest: require(
-                pathResolve(
-                  projectConfig.client.outputPath,
-                  `${projectConfig.development.vendorDLL.name}.json`
-                )
-              ),
+              manifest: require(config.paths.vendorDLLJSON),
             })
           );
         }

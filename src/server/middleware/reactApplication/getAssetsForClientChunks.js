@@ -3,26 +3,16 @@
 // This file resolves the assets available from our client bundle.
 
 import fs from 'fs';
-import path from 'path';
-import projectConfig from '../../../../config/project';
+import config from '../../../../tools/config';
 
-const assetsBundleFilePath = path.resolve(
-  projectConfig.client.outputPath,
-  projectConfig.client.assetsFilename,
-);
-
-if (!fs.existsSync(assetsBundleFilePath)) {
+if (!fs.existsSync(config.paths.clientBundleAssetsJSON)) {
   throw new Error(
-    `We could not find the "${assetsBundleFilePath}" file, which contains a ` +
-    'list of the assets of the client bundle.  Please ensure that the client ' +
-    'bundle has been built before the server bundle and that the required ' +
-    'environment variables are configured (BUNDLE_OUTPUT_PATH & ' +
-    'BUNDLE_ASSETS_FILENAME)',
+    `We could not find the "${config.paths.clientBundleAssetsJSON}" file, which contains a list of the assets of the client bundle.  Please ensure that the client bundle has been built before the server bundle and that the required environment variables are configured (BUNDLE_OUTPUT_PATH & BUNDLE_ASSETS_FILENAME)`,
   );
 }
 
 const assetsJSON = JSON.parse(
-  fs.readFileSync(assetsBundleFilePath, 'utf8'),
+  fs.readFileSync(config.paths.clientBundleAssetsJSON, 'utf8'),
 );
 
 /**

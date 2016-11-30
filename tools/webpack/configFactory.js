@@ -1,5 +1,3 @@
-/* @flow */
-
 const path = require('path');
 const globSync = require('glob').sync;
 const webpack = require('webpack');
@@ -11,8 +9,7 @@ const appRootPath = require('app-root-dir').get();
 const WebpackMd5Hash = require('webpack-md5-hash');
 const CodeSplitPlugin = require('code-split-component/webpack');
 const { removeEmpty, ifElse, merge, happyPackPlugin, getFilename } = require('../utils');
-
-const projectConfig = require('../../config/project');
+const config = require('../config');
 
 function webpackConfigFactory({ target, mode }, { json }) {
   if (!target || ['client', 'server'].findIndex(valid => target === valid) === -1) {
@@ -118,20 +115,20 @@ function webpackConfigFactory({ target, mode }, { json }) {
       {
         index: removeEmpty([
           ifDevClient('react-hot-loader/patch'),
-          ifDevClient(`webpack-hot-middleware/client?reload=true&path=${projectConfig.server.protocol}://${projectConfig.server.host}:${projectConfig.development.clientDevServerPort}/__webpack_hmr`),
+          ifDevClient(`webpack-hot-middleware/client?reload=true&path=${config.server.protocol}://${config.server.host}:${config.development.clientDevServerPort}/__webpack_hmr`),
           // We are using polyfill.io instead of the very heavy babel-polyfill.
           // Therefore we need to add the regenerator-runtime as the babel-polyfill
           // included this, which polyfill.io doesn't include.
           ifClient('regenerator-runtime/runtime'),
-          path.resolve(appRootPath, `./src/${target}/index.js`),
+          isServer ? config.paths.serverSrc : config.paths.clientSrc,
         ]),
       }
     ),
     output: {
       // The dir in which our bundle should be output.
       path: isServer
-        ? projectConfig.server.outputPath
-        : projectConfig.client.outputPath,
+        ? config.paths.serverBundle
+        : config.paths.clientBundle,
       // The filename format for our bundle's entries.
       filename: ifProdClient(
         // We include a hash for client caching purposes.  Including a unique
@@ -151,9 +148,9 @@ function webpackConfigFactory({ target, mode }, { json }) {
       publicPath: ifDev(
         // As we run a seperate server for our client and server bundles we
         // need to use an absolute http path for our assets public path.
-        `${projectConfig.server.protocol}://${projectConfig.server.host}:${projectConfig.development.clientDevServerPort}${projectConfig.client.publicPath}`,
+        `${config.server.protocol}://${config.server.host}:${config.development.clientDevServerPort}${config.client.webRoot}`,
         // Otherwise we expect our bundled output to be served from this path.
-        projectConfig.client.publicPath
+        config.client.webRoot
       ),
       // When in server mode we will output our bundle as a commonjs2 module.
       libraryTarget: ifServer('commonjs2', 'var'),
@@ -220,10 +217,8 @@ function webpackConfigFactory({ target, mode }, { json }) {
       // our client bundle.
       ifClient(
         new AssetsPlugin({
-          filename: projectConfig.client.assetsFilename,
-          path: isServer
-            ? projectConfig.server.outputPath
-            : projectConfig.client.outputPath,
+          filename: config.client.assetsFilename,
+          path: config.paths.clientBundle,
         })
       ),
 
@@ -287,8 +282,8 @@ function webpackConfigFactory({ target, mode }, { json }) {
         new OfflinePlugin({
           // Setting this value lets the plugin know where our generated client
           // assets will be served from.
-          // e.g. /client/home-123abc.js
-          publicPath: projectConfig.client.publicPath,
+          // e.g. /client/
+          publicPath: config.client.webRoot,
           // When using the publicPath we need to disable the "relativePaths"
           // feature of this plugin.
           relativePaths: false,
@@ -296,7 +291,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
           // Read more on them here:
           // http://bit.ly/2f8q7Td
           ServiceWorker: {
-            output: projectConfig.serviceWorker.filename,
+            output: `${config.serviceWorker.name}.js`,
             events: true,
             // By default the service worker will be ouput and served from the
             // publicPath setting above in the root config of the OfflinePlugin.
@@ -307,11 +302,11 @@ function webpackConfigFactory({ target, mode }, { json }) {
             // live in at the /build/client/sw.js output location therefore in
             // our server configuration we need to make sure that any requests
             // to /sw.js will serve the /build/client/sw.js file.
-            publicPath: `/${projectConfig.serviceWorker.filename}`,
+            publicPath: `/${config.serviceWorker.name}.js`,
             // When a user has no internet connectivity and a path is not available
             // in our service worker cache then the following file will be
             // served to them.  Go and make it pretty. :)
-            navigateFallbackURL: projectConfig.serviceWorker.navigateFallbackURL,
+            navigateFallbackURL: config.serviceWorker.navigateFallbackURL,
           },
           // We aren't going to use AppCache and will instead only rely on
           // a Service Worker.
@@ -322,7 +317,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
           // You may or may not want to be including these assets.  Feel free
           // to remove this or instead include only a very specific set of
           // assets.
-          externals: globSync(`${projectConfig.server.publicAssetsPath}/**/*`)
+          externals: globSync(`${config.paths.publicAssets}/**/*`)
             .map(publicFile => `/${getFilename(publicFile)}`),
         })
       ),

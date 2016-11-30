@@ -9,14 +9,13 @@
  - [About](https://github.com/ctrlplusb/react-universally#about)
  - [Features](https://github.com/ctrlplusb/react-universally#features)
  - [Overview](https://github.com/ctrlplusb/react-universally#overview)
- - [Application Configuration](https://github.com/ctrlplusb/react-universally#application-configuration)
+ - [Environment Configuration](https://github.com/ctrlplusb/react-universally#environment-configuration)
  - [Express Server Security](https://github.com/ctrlplusb/react-universally#express-server-security)
  - [Progressive Web Application Ready](https://github.com/ctrlplusb/react-universally#progressive-web-application-ready)
  - [Extensions](https://github.com/ctrlplusb/react-universally#extensions)
  - [3rd Party Extensions](https://github.com/ctrlplusb/react-universally#3rd-party-extensions)
  - [Project Structure](https://github.com/ctrlplusb/react-universally#project-structure)
  - [Project Dependencies](https://github.com/ctrlplusb/react-universally#project-dependencies)
- - [Server Runtime Dependencies](https://github.com/ctrlplusb/react-universally#server-runtime-dependencies)
  - [Deploy your very own Server Side Rendering React App in 5 easy steps](https://github.com/ctrlplusb/react-universally#deploy-your-very-own-server-side-rendering-react-app-in-5-easy-steps)
  - [npm script commands](https://github.com/ctrlplusb/react-universally#npm-script-commands)
  - [References](https://github.com/ctrlplusb/react-universally#references)
@@ -72,27 +71,15 @@ Using Webpack and babel across all of our source allows us to use the same level
 
 Given that we are bundling our server code I have included the `source-map-support` module to ensure that we still get nice stack traces when executing our code.
 
-## Application Configuration
+## Environment Configuration
 
-The application is configured via environment variables (e.g. `process.env.FOO_BAR`).
+Environment specific configuration is support via standard environment variables (e.g. passed in via the CLI like `FOO=bar npm run start`) and/or via a `.env` file within your application root.  
 
-You can provide the environment variables using standard means (e.g `FOO_BAR=baz npm run build`), or by creating a `.env` file within your application root.  The `.env` file is supported by the [`dotenv`](https://github.com/motdotla/dotenv) module. Within this file you can provide key/value pairs representing your required environment variables (e.g. `PORT=1337`).  This can save you a lot of effort in having to provide a large amount of environment variables to your application.
-
-It's important to note that we have explicitly ignored the `.env` from the git repository, with the expectation that you would manually/automatically create a `.env` that is specific to each environment you compile/execute the application within (e.g. dev/ci/production).
+The `.env` file is supported by the [`dotenv`](https://github.com/motdotla/dotenv) module. Within this file you can provide key/value pairs representing your required environment variables (e.g. `PORT=1337`).  This can save you a lot of effort in having to provide a large amount of environment variables to your application.
 
 The application has been configured to accept a mix-match of sources for the environment variables. i.e. you can provide some environment variables via the `.env` file, and others via the cli/host (e.g. `FOO=bar npm run build`). This gives you greater flexibility and grants you the opportunity to control the provision of sensitive values (e.g. db connection string).
 
-To get you started quickly we have provided a `.env_example` file that contains all the environment variables this project currently relies on.  Copy this file (e.g. `cp .env_example .env`) and then you should be able to run any of the other npm scripts.
-
-___IMPORTANT!___
-
-To allow for sourcing the environment variables from multiple sources the build scripts go through a process of merging the environment vars into a single collection. In order to ensure that nothing unexpected gets passed into the build/deploy process you MUST list any expected environment variable identifiers within the `.env_whitelist` file (which lives at the root of the project).  Please make sure that you keep this file up to date with any new environment variables that you expect to consume.  I know this may seem like a bit more effort, but I feel the security around this is worth it.
-
-___IMPORTANT!___
-
-Our webpack configuration interprets the environment variables and then "inline replaces" any "process.env.XXX" environment variable reference with it's associated value.  This means that these environment variables are only needed during compile time, not run time.  Therefore it's possible to only provide the environment variables for the build commands, and then when you execute the compiled output you need not provide any environment variables.
-
-If you do find cases where you would prefer an environment variable to be provided at run time rather than compiled into your source then don't add the respective environment variable identifier to the `.env_whitelist` file.  You will have to make sure that you provide the respective environment variable in run time then (e.g. `FOO_BAR=baz npm run start`).
+To get you started quickly we have provided a `.env_example` file that contains all the environment variables this project currently relies on.  Copy this file (e.g. `cp .env_example .env`) and modify the file as you please.
 
 ## Express Server Security
 
@@ -109,19 +96,15 @@ You may find CSPs annoying at first, but it is a great habit to build. The CSP c
 
 ## Progressive Web Application Ready
 
-We make use of the [`sw-precache-webpack-plugin`](https://github.com/goldhand/sw-precache-webpack-plugin), providing you with a service worker to bridge that gap into a progressive web application that has aggressive caching and offline support.
+We make use of the [`offline-plugin`](https://github.com/NekR/offline-plugin), providing you with a service worker to bridge that gap into a progressive web application that has aggressive caching and simple offline support.
 
 ## Extensions
 
-We provide extensions to this project within branches, detailed below.
+We provide extensions to this project within branches. The stable branches are detailed below.
 
 ### [`redux`](https://github.com/ctrlplusb/react-universally/tree/redux)
 
 Provides you with an example of how to integrate redux into this starter kit, as well as how to deal with issues such a prefetching of data for server rendering.
-
-### [`preact`](https://github.com/ctrlplusb/react-universally/tree/preact) __Coming Soon__
-
-Does size matter to you?.  This branch replaces the React libs with `preact` and `preact-compat`.  Use the same React APIs but gain a minimum of 37kb shavings off your gzip bundle size.
 
 ## 3rd Party Extensions
 
@@ -160,23 +143,6 @@ I highly recommend putting most of your application code into the `shared` folde
 The dependencies within `package.json` are structured so that the libraries required to transpile/bundle the source are contained within the `devDependencies` section, whilst the libraries required during the server runtime are contained within the `dependencies` section.
 
 If you do building on your production environment you must ensure that you have allowed the installation of the `devDependencies` too (Heroku, for example doesn't do this by default).
-
-## Server Runtime Dependencies
-
-Even though we are using webpack to support our universal application we keep the webpack runtime out of our production runtime environment.  Everything is prebundled in prep for production execution.  Therefore we only have the following runtime dependencies:
-
-  - `node` v6
-  - `app-root-dir` - Gives us the ability to easily resolve files from the root of our app.
-  - `compression` - Gzip compression support for express server responses.
-  - `express` - Web server.
-  - `helmet` - Provides a content security policy for express.
-  - `hpp` - Express middleware to protect against HTTP Parameter Pollution attacks.
-  - `react` - A declarative, efficient, and flexible JavaScript library for building user interfaces.
-  - `react-dom` - React support for the DOM.
-  - `react-helmet` - Control the page header from your components.
-  - `react-router` - A complete routing library for React.
-  - `serialize-javascript` - Allows us to serialize our js in a format safe for embedding in webpages.
-  - `source-map-support` - Adds source map support to node.js (for stack traces).
 
 ## Deploy your very own "React, Universally" App in 5 easy steps ##
 
@@ -293,12 +259,6 @@ externals: removeEmpty([
 ```
 
 As you can see above we have already added the most common formats, so you are unlikely to hit this issue, however, it is good to be aware of.
-
-__Q:__ __I get checksum warning errors after receiving content from a server rendered request__
-
-I have experienced some cases of this myself.  The below stackoverflow post talks about a strange case where you are required to surround the server rendered content with an additional `div`.  At the moment this boilerplate doesn't seem to require it, but I have extended versions of this boilerplate where all of a sudden I had to do this.  It is worth knowing about.
-
-[Here is the post.](http://stackoverflow.com/questions/33521047/warning-react-attempted-to-reuse-markup-in-a-container-but-the-checksum-was-inv)
 
 ## References ##
 

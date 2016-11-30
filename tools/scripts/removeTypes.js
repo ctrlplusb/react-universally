@@ -1,3 +1,5 @@
+/* @flow */
+
 const globSync = require('glob').sync;
 const path = require('path');
 const appRootPath = require('app-root-dir').get();

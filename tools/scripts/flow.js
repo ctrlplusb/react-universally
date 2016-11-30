@@ -1,3 +1,5 @@
+/* @flow */
+
 const existsSync = require('fs').existsSync;
 const resolvePath = require('path').resolve;
 const appRootPath = require('app-root-dir').get();

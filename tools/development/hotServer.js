@@ -1,7 +1,7 @@
 const path = require('path');
 const ListenerManager = require('./listenerManager');
 const { createNotification } = require('../utils');
-const projectConfig = require('../../config/project');
+const config = require('../config');
 
 class HotServer {
   constructor(compiler) {
@@ -27,7 +27,7 @@ class HotServer {
         const listener = require(compiledOutputPath).default;
         this.listenerManager = new ListenerManager(listener, 'server');
 
-        const url = `${projectConfig.server.protocol}://${projectConfig.server.host}:${projectConfig.server.port}`;
+        const url = `${config.server.protocol}://${config.server.host}:${config.server.port}`;
 
         createNotification({
           title: 'server',

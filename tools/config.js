@@ -1,37 +1,35 @@
 /* @flow */
 
-// Project configuration settings.
+// Application configuration.
 
 const pathResolve = require('path').resolve;
 const appRootPath = require('app-root-dir').get();
-const envVars = require('./utils/envVars');
+const { ensureNotInClientBundle, getEnvVars } = require('./utils');
 
-if (process.env.IS_CLIENT) {
-  throw new Error(
-    'You are importing the application configuration into the client bundle! This is super dangerous as you will essentially be exposing all your internals/logins/etc to the world.  If you need some configuration that will be consumed by the client bundle then add it to the clientSafe configuration file.'
-  );
-}
+ensureNotInClientBundle();
+
+// Get possible environment configuration variables.
+const envVars = getEnvVars();
 
 const buildOutputPath = pathResolve(appRootPath, 'build');
 const clientBundleName = 'client';
-const clientPublicPath = `/${clientBundleName}/`;
+const clientBundlePath = pathResolve(buildOutputPath, clientBundleName);
+const clientBundleWebRoot = `/${clientBundleName}/`;
+const clientBundleAssetsJSONFilename = 'assets.json';
 const serverBundleName = 'server';
 const vendorDLLName = '__dev_vendor_dll__';
-const serviceWorkerFilename = 'sw.js';
+const serviceWorkerName = 'sw';
 
 module.exports = {
   // SSR enabled?
   ssrEnabled: true,
 
-  // Where does our build output go?
-  buildOutputPath,
-
   // Configuration settings for the service worker.
   serviceWorker: {
     // Enable the service worker?
     enabled: true,
-    // Service worker filename
-    filename: serviceWorkerFilename,
+    // Service worker name
+    name: serviceWorkerName,
     // When a user has no internet connectivity and a path is not available
     // in our service worker cache then the following file will be
     // served to them.  Go and make it pretty. :)
@@ -40,13 +38,11 @@ module.exports = {
 
   // Client bundle specific configuration.
   client: {
-    // Where should we output the bundle?
-    outputPath: pathResolve(buildOutputPath, clientBundleName),
     // What should we name the json output file that webpack generates containing
     // details of all output files for a bundle?
-    assetsFilename: 'assets.json',
+    assetsFilename: clientBundleAssetsJSONFilename,
     // What is the public http path at which we must serve our client from?
-    publicPath: clientPublicPath,
+    webRoot: clientBundleWebRoot,
   },
 
   // Server bundle specific configuration.
@@ -55,8 +51,6 @@ module.exports = {
     protocol: envVars.SERVER_PROTOCOL || 'http',
     // The host endpoint for the server.
     host: envVars.SERVER_HOST || 'localhost',
-    // The output path for the bundle.
-    outputPath: pathResolve(buildOutputPath, serverBundleName),
     // What port must the server run on?
     port: envVars.SERVER_PORT
       ? parseInt(envVars.SERVER_PORT, 10)
@@ -67,9 +61,6 @@ module.exports = {
     // We are using the "ms" format to set the length.
     // @see https://www.npmjs.com/package/ms
     cacheMaxAge: '365d',
-    // Path to the public assets that will be served off the root of the
-    // HTTP server.
-    publicAssetsPath: pathResolve(appRootPath, '/public'),
   },
 
   // Development specific configuration.
@@ -99,11 +90,42 @@ module.exports = {
       ignores: ['normalize.css/normalize.css'],
       // The name of the vendor DLL file that gets generated.
       name: vendorDLLName,
-      // The name of the hash file we will use to check to see if new dependencies
-      // have been installed and therefore the vendor DLL should be regenerated.
-      hashFilename: `${vendorDLLName}__hash__`,
       // The web path at which the vendor DLL will be served from.
-      webPath: `${clientPublicPath}${vendorDLLName}.js`,
+      webPath: `${clientBundleWebRoot}${vendorDLLName}.js`,
     },
+  },
+
+  // Pre-resolved paths that can then be easily referenced throughout the project
+  // without having to resolve them in multiple places.
+  paths: {
+    // Where does our build output live?
+    buildOutput: buildOutputPath,
+    // Where does the client bundle output live?
+    clientBundle: clientBundlePath,
+    // The assets json file for the client bundle.
+    clientBundleAssetsJSON: pathResolve(
+      clientBundlePath, clientBundleAssetsJSONFilename
+    ),
+    // Where does the server bundle output live?
+    serverBundle: pathResolve(buildOutputPath, serverBundleName),
+    // Path to the public assets that will be served off the root of the
+    // HTTP server.
+    publicAssets: pathResolve(appRootPath, '/public'),
+    // The package.json file path
+    packageJSON: pathResolve(appRootPath, 'package.json'),
+    // The hash file for the vendor DLL.
+    vendorDLLHash: pathResolve(clientBundlePath, `${vendorDLLName}__hash__`),
+    // The vendor DLL JSON file.
+    vendorDLLJSON: pathResolve(clientBundlePath, `${vendorDLLName}.json`),
+    // Client src
+    clientSrc: pathResolve(appRootPath, './src/client'),
+    // Server src
+    serverSrc: pathResolve(appRootPath, './src/server'),
+    // Shared src
+    sharedSrc: pathResolve(appRootPath, './src/shared'),
+    // The service worker.
+    serviceWorker: pathResolve(clientBundlePath, `${serviceWorkerName}.js`),
+    // The webpack bundle analyze stats file.
+    bundleAnalyze: pathResolve(buildOutputPath, 'client-analyze.json'),
   },
 };

@@ -1,3 +1,5 @@
+/* @flow */
+
 // This script builds a production output of all of our bundles.
 
 const pathResolve = require('path').resolve;

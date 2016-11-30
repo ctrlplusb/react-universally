@@ -3,7 +3,7 @@ const createWebpackMiddleware = require('webpack-dev-middleware');
 const createWebpackHotMiddleware = require('webpack-hot-middleware');
 const ListenerManager = require('./listenerManager');
 const { createNotification } = require('../utils');
-const projectConfig = require('../../config/project');
+const config = require('../config');
 
 class HotClient {
   constructor(compiler) {
@@ -24,7 +24,7 @@ class HotClient {
     app.use(this.webpackDevMiddleware);
     app.use(createWebpackHotMiddleware(compiler));
 
-    const listener = app.listen(projectConfig.development.clientDevServerPort);
+    const listener = app.listen(config.development.clientDevServerPort);
 
     this.listenerManager = new ListenerManager(listener, 'client');
 
