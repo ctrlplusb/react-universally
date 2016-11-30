@@ -4,16 +4,11 @@
 
 import fs from 'fs';
 import path from 'path';
-import appRoot from 'app-root-dir';
-import { notEmpty } from '../../../shared/utils/guards';
-
-const appRootPath = appRoot.get();
+import projectConfig from '../../../../config/project';
 
 const assetsBundleFilePath = path.resolve(
-  appRootPath,
-  notEmpty(process.env.BUNDLE_OUTPUT_PATH),
-  './client',
-  `./${notEmpty(process.env.BUNDLE_ASSETS_FILENAME)}`,
+  projectConfig.client.outputPath,
+  projectConfig.client.assetsFilename,
 );
 
 if (!fs.existsSync(assetsBundleFilePath)) {

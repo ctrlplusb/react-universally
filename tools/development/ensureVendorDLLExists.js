@@ -5,20 +5,12 @@ const md5 = require('md5');
 const fs = require('fs');
 const globSync = require('glob').sync;
 const appRootPath = require('app-root-dir').get();
-const vendorDLLPaths = require('../config/vendorDLLPaths');
-const { createNotification } = require('../utils');
-const envVars = require('../config/envVars');
 const matchRequire = require('match-require');
+const { createNotification } = require('../utils');
+const projectConfig = require('../../config/project');
 
 // -----------------------------------------------------------------------------
 // PRIVATES
-
-const {
-  dllName,
-  dllOutputDir,
-  dllJsonPath,
-  dependenciesHashFilePath,
-} = vendorDLLPaths;
 
 // We calculate a hash of the package.json's dependencies, which we can use
 // to determine if dependencies have changed since the last time we built
@@ -27,20 +19,28 @@ const currentDependenciesHash = md5(
   JSON.stringify(require(pathResolve(appRootPath, 'package.json')).dependencies)
 );
 
+const dependenciesHashFilePath = pathResolve(
+  projectConfig.client.outputPath,
+  projectConfig.development.vendorDLL.hashFilename
+);
+
 function webpackConfigFactory(modules) {
   return {
     // We only use this for development, so lets always include source maps.
     devtool: 'inline-source-map',
-    entry: { [dllName]: modules },
+    entry: { [projectConfig.development.vendorDLL.name]: modules },
     output: {
-      path: dllOutputDir,
-      filename: `${dllName}.js`,
-      library: dllName,
+      path: projectConfig.client.outputPath,
+      filename: `${projectConfig.development.vendorDLL.name}.js`,
+      library: projectConfig.development.vendorDLL.name,
     },
     plugins: [
       new webpack.DllPlugin({
-        path: dllJsonPath,
-        name: dllName,
+        path: pathResolve(
+          projectConfig.client.outputPath,
+          `${projectConfig.development.vendorDLL.name}.json`
+        ),
+        name: projectConfig.development.vendorDLL.name,
       }),
     ],
   };
@@ -54,14 +54,12 @@ function getJsFilesFromSrcDir(srcPath) {
 }
 
 function buildVendorDLL() {
-  const ignoreModules = envVars.DEV_DLL_IGNORES
-    ? envVars.DEV_DLL_IGNORES.split(',')
-    : [];
+  const ignoreModules = projectConfig.development.vendorDLL.ignores;
 
   return new Promise((resolve, reject) => {
     Promise.all([
       Promise.resolve(getJsFilesFromSrcDir('client')),
-      Promise.resolve(getJsFilesFromSrcDir('shared/universal')),
+      Promise.resolve(getJsFilesFromSrcDir('shared')),
     ])
     .then(([clientFiles, universalFiles]) => {
       const isJsFile = file => pathExtName(file) === '.js';
@@ -90,11 +88,9 @@ function buildVendorDLL() {
       vendorDLLCompiler.run((err) => {
         if (err) {
           reject(err);
+          return;
         }
         // Update the dependency hash
-        if (!fs.existsSync(dllOutputDir)) {
-          fs.mkdirSync(dllOutputDir);
-        }
         fs.writeFileSync(dependenciesHashFilePath, currentDependenciesHash);
 
         resolve();
@@ -108,7 +104,7 @@ function buildVendorDLL() {
 
 function ensureVendorDLLExists() {
   return new Promise((resolve, reject) => {
-    if (envVars.USE_DEV_DLL !== 'true') {
+    if (!projectConfig.development.vendorDLL.enabled) {
       resolve();
     }
 

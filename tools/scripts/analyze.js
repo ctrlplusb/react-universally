@@ -5,13 +5,11 @@
 // @see https://github.com/th0r/webpack-bundle-analyzer
 
 const pathResolve = require('path').resolve;
-const appRootPath = require('app-root-dir').get();
-const envVars = require('../config/envVars');
 const { exec } = require('../utils.js');
+const projectConfig = require('../../config/project');
 
-const jsonPath = pathResolve(appRootPath, envVars.BUNDLE_OUTPUT_PATH, 'clientStats.json');
-const clientBundlePath = pathResolve(appRootPath, envVars.BUNDLE_OUTPUT_PATH, 'client');
+const jsonPath = pathResolve(projectConfig.buildOutputPath, 'client-analyze.json');
 
-const cmd = `$(npm bin)/webpack --config ./tools/webpack/client.config.js --json > ${jsonPath} && webpack-bundle-analyzer ${jsonPath} ${clientBundlePath}`;
+const cmd = `$(npm bin)/webpack --config ./tools/webpack/client.config.js --json > ${jsonPath} && webpack-bundle-analyzer ${jsonPath} ${projectConfig.client.outputPath}`;
 
 exec(cmd);

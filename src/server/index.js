@@ -15,7 +15,7 @@ import compression from 'compression';
 import hpp from 'hpp';
 import helmet from 'helmet';
 import reactApplication from './middleware/reactApplication';
-import { notEmpty } from '../shared/utils/guards';
+import projectConfig from '../../config/project';
 
 const appRootPath = appRoot.get();
 
@@ -91,7 +91,7 @@ if (process.env.NODE_ENV === 'development') {
   // is used to host our client bundle to our csp config.
   Object.keys(cspConfig.directives).forEach(directive =>
     cspConfig.directives[directive].push(
-      `localhost:${notEmpty(process.env.CLIENT_DEVSERVER_PORT)}`,
+      `${projectConfig.server.host}:${projectConfig.development.clientDevServerPort}`,
     ),
   );
 }
@@ -126,22 +126,31 @@ app.use(compression());
 // Note: the service worker needs to be served from the http root of your
 // application for it to work correctly.
 if (process.env.NODE_ENV === 'production') {
-  app.get('/sw.js', (req: $Request, res: $Response, next: NextFunction) => res.sendFile(
-    path.resolve(appRootPath, notEmpty(process.env.BUNDLE_OUTPUT_PATH), './client/sw.js'),
-  ));
+  app.get(
+    `/${projectConfig.serviceWorker.filename}`,
+    (req: $Request, res: $Response, next: NextFunction) => {
+      res.sendFile(
+        path.resolve(
+          projectConfig.client.outputPath,
+          projectConfig.serviceWorker.filename,
+        ),
+      );
+    },
+  );
 }
 
 // Configure static serving of our webpack bundled client files.
 app.use(
-  notEmpty(process.env.CLIENT_BUNDLE_HTTP_PATH),
+  projectConfig.client.publicPath,
   express.static(
-    path.resolve(appRootPath, notEmpty(process.env.BUNDLE_OUTPUT_PATH), './client'),
-    { maxAge: notEmpty(process.env.CLIENT_BUNDLE_CACHE_MAXAGE) },
+    projectConfig.client.outputPath,
+    { maxAge: projectConfig.server.cacheMaxAge },
   ),
 );
 
 // Configure static serving of our "public" root http path static files.
-app.use(express.static(path.resolve(appRootPath, './public')));
+// Note: these will be served off the root (i.e. '/') of our application.
+app.use(express.static(projectConfig.server.publicAssetsPath));
 
 // The React application middleware.
 app.get('*', reactApplication);
@@ -166,9 +175,8 @@ app.use((err: ?Error, req: $Request, res: $Response, next: NextFunction) => {
 });
 
 // Create an http listener for our express app.
-const port = parseInt(notEmpty(process.env.SERVER_PORT), 10);
-const listener = app.listen(port, () =>
-  console.log(`Server listening on port ${port}`),
+const listener = app.listen(projectConfig.server.port, () =>
+  console.log(`Server listening on port ${projectConfig.server.port}`),
 );
 
 // We export the listener as it will be handy for our development hot reloader.

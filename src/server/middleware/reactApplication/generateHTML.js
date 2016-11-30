@@ -36,9 +36,9 @@ function scriptTags(jsFilePaths : Array<string>) {
 // @see /tools/development/ensureVendorDLLExists.js
 function developmentVendorDLL() {
   if (process.env.NODE_ENV === 'development') {
-    const vendorPaths = require('../../../../tools/config/vendorDLLPaths'); // eslint-disable-line global-require
+    const projectConfig = require('../../../../config/project'); // eslint-disable-line global-require
 
-    return scriptTag(vendorPaths.dllWebPath);
+    return scriptTag(projectConfig.development.vendorDLL.webPath);
   }
   return '';
 }

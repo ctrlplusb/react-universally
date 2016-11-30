@@ -1,3 +1,5 @@
+/* @flow */
+
 const path = require('path');
 const globSync = require('glob').sync;
 const webpack = require('webpack');
@@ -9,7 +11,8 @@ const appRootPath = require('app-root-dir').get();
 const WebpackMd5Hash = require('webpack-md5-hash');
 const CodeSplitPlugin = require('code-split-component/webpack');
 const { removeEmpty, ifElse, merge, happyPackPlugin, getFilename } = require('../utils');
-const envVars = require('../config/envVars');
+
+const projectConfig = require('../../config/project');
 
 function webpackConfigFactory({ target, mode }, { json }) {
   if (!target || ['client', 'server'].findIndex(valid => target === valid) === -1) {
@@ -115,7 +118,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
       {
         index: removeEmpty([
           ifDevClient('react-hot-loader/patch'),
-          ifDevClient(`webpack-hot-middleware/client?reload=true&path=http://localhost:${envVars.CLIENT_DEVSERVER_PORT}/__webpack_hmr`),
+          ifDevClient(`webpack-hot-middleware/client?reload=true&path=${projectConfig.server.protocol}://${projectConfig.server.host}:${projectConfig.development.clientDevServerPort}/__webpack_hmr`),
           // We are using polyfill.io instead of the very heavy babel-polyfill.
           // Therefore we need to add the regenerator-runtime as the babel-polyfill
           // included this, which polyfill.io doesn't include.
@@ -126,7 +129,9 @@ function webpackConfigFactory({ target, mode }, { json }) {
     ),
     output: {
       // The dir in which our bundle should be output.
-      path: path.resolve(appRootPath, envVars.BUNDLE_OUTPUT_PATH, `./${target}`),
+      path: isServer
+        ? projectConfig.server.outputPath
+        : projectConfig.client.outputPath,
       // The filename format for our bundle's entries.
       filename: ifProdClient(
         // We include a hash for client caching purposes.  Including a unique
@@ -146,9 +151,9 @@ function webpackConfigFactory({ target, mode }, { json }) {
       publicPath: ifDev(
         // As we run a seperate server for our client and server bundles we
         // need to use an absolute http path for our assets public path.
-        `http://localhost:${envVars.CLIENT_DEVSERVER_PORT}${envVars.CLIENT_BUNDLE_HTTP_PATH}`,
+        `${projectConfig.server.protocol}://${projectConfig.server.host}:${projectConfig.development.clientDevServerPort}${projectConfig.client.publicPath}`,
         // Otherwise we expect our bundled output to be served from this path.
-        envVars.CLIENT_BUNDLE_HTTP_PATH
+        projectConfig.client.publicPath
       ),
       // When in server mode we will output our bundle as a commonjs2 module.
       libraryTarget: ifServer('commonjs2', 'var'),
@@ -198,30 +203,15 @@ function webpackConfigFactory({ target, mode }, { json }) {
       // At the same time please be careful with what environment variables you
       // use in each respective bundle.  For example, don't accidentally
       // expose a database connection string within your client bundle src!
-      new webpack.DefinePlugin(
-        merge(
-          {
-            // NOTE: The NODE_ENV key is especially important for production
-            // builds as React relies on process.env.NODE_ENV for optimizations.
-            'process.env.NODE_ENV': JSON.stringify(mode),
-            // Feel free to add any "dynamic" environment variables, to be
-            // created by this webpack script.  Below I am adding a "IS_NODE"
-            // environment variable which will allow our code to know if it's
-            // being bundled for a node target.
-            'process.env.IS_NODE': JSON.stringify(isServer),
-          },
-          // Now we will expose all of our environment variables to webpack
-          // so that it can make all the subtitutions for us.
-          // Note: ALL of these values will be given as string types, therefore
-          // you may need to do operations like the following within your src:
-          // const MY_NUMBER = parseInt(process.env.MY_NUMBER, 10);
-          // const MY_BOOL = process.env.MY_BOOL === 'true';
-          Object.keys(envVars).reduce((acc, cur) => {
-            acc[`process.env.${cur}`] = JSON.stringify(envVars[cur]); // eslint-disable-line no-param-reassign
-            return acc;
-          }, {})
-        )
-      ),
+      new webpack.DefinePlugin({
+        // Adding the NODE_ENV key is especially important as React relies
+        // on it to optimize production builds.
+        'process.env.NODE_ENV': JSON.stringify(mode),
+        // Is this bundle a client bundle?
+        'process.env.IS_CLIENT': JSON.stringify(isClient),
+        // Is this bundle a server bundle?
+        'process.env.IS_SERVER': JSON.stringify(isServer),
+      }),
 
       // Generates a JSON file containing a map of all the output files for
       // our webpack bundle.  A necessisty for our server rendering process
@@ -230,8 +220,10 @@ function webpackConfigFactory({ target, mode }, { json }) {
       // our client bundle.
       ifClient(
         new AssetsPlugin({
-          filename: envVars.BUNDLE_ASSETS_FILENAME,
-          path: path.resolve(appRootPath, envVars.BUNDLE_OUTPUT_PATH, `./${target}`),
+          filename: projectConfig.client.assetsFilename,
+          path: isServer
+            ? projectConfig.server.outputPath
+            : projectConfig.client.outputPath,
         })
       ),
 
@@ -296,7 +288,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
           // Setting this value lets the plugin know where our generated client
           // assets will be served from.
           // e.g. /client/home-123abc.js
-          publicPath: envVars.CLIENT_BUNDLE_HTTP_PATH,
+          publicPath: projectConfig.client.publicPath,
           // When using the publicPath we need to disable the "relativePaths"
           // feature of this plugin.
           relativePaths: false,
@@ -304,7 +296,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
           // Read more on them here:
           // http://bit.ly/2f8q7Td
           ServiceWorker: {
-            output: 'sw.js',
+            output: projectConfig.serviceWorker.filename,
             events: true,
             // By default the service worker will be ouput and served from the
             // publicPath setting above in the root config of the OfflinePlugin.
@@ -315,11 +307,11 @@ function webpackConfigFactory({ target, mode }, { json }) {
             // live in at the /build/client/sw.js output location therefore in
             // our server configuration we need to make sure that any requests
             // to /sw.js will serve the /build/client/sw.js file.
-            publicPath: '/sw.js',
+            publicPath: `/${projectConfig.serviceWorker.filename}`,
             // When a user has no internet connectivity and a path is not available
             // in our service worker cache then the following file will be
             // served to them.  Go and make it pretty. :)
-            navigateFallbackURL: '/offline.html',
+            navigateFallbackURL: projectConfig.serviceWorker.navigateFallbackURL,
           },
           // We aren't going to use AppCache and will instead only rely on
           // a Service Worker.
@@ -330,7 +322,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
           // You may or may not want to be including these assets.  Feel free
           // to remove this or instead include only a very specific set of
           // assets.
-          externals: globSync(path.resolve(appRootPath, './public/**/*'))
+          externals: globSync(`${projectConfig.server.publicAssetsPath}/**/*`)
             .map(publicFile => `/${getFilename(publicFile)}`),
         })
       ),
