@@ -385,6 +385,12 @@ function webpackConfigFactory({ target, mode }, { json }) {
               'transform-es2015-destructuring',
               // The class properties plugin is really useful for react components.
               'transform-class-properties',
+              // This decorates our components with  __self prop to JSX elements,
+              // which React will use to generate some runtime warnings.
+              ifDev('transform-react-jsx-self'),
+              // Adding this will give us the path to our components in the
+              // react dev tools.
+              ifDev('transform-react-jsx-source'),
               // The following plugin supports the code-split-component
               // instances, taking care of all the heavy boilerplate that we
               // would have had to do ourselves to get code splitting w/SSR
