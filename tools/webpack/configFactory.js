@@ -351,7 +351,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
               // transilation as webpack takes care of this for us, doing
               // tree shaking in the process.
               ifClient(['latest', { es2015: { modules: false } }]),
-              // For our client bundle we use the awesome babel-preset-env which
+              // For our server bundle we use the awesome babel-preset-env which
               // acts like babel-preset-latest in that it supports the latest
               // ratified ES201X syntax, however, it will only transpile what
               // is necessary for a target environment.  We have configured it
