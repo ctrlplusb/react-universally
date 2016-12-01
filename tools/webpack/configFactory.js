@@ -14,7 +14,7 @@ import { removeEmpty, ifElse, merge, happyPackPlugin, getFilename } from '../uti
 import config from '../config';
 
 type BuildOptions = {
-  target: 'server'|'client'|'tools',
+  target: 'server'|'client',
   mode?: 'development'|'production',
 };
 
