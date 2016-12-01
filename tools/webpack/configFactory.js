@@ -1,66 +1,37 @@
-const path = require('path');
-const globSync = require('glob').sync;
-const webpack = require('webpack');
-const OfflinePlugin = require('offline-plugin');
-const AssetsPlugin = require('assets-webpack-plugin');
-const nodeExternals = require('webpack-node-externals');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const appRootPath = require('app-root-dir').get();
-const WebpackMd5Hash = require('webpack-md5-hash');
-const CodeSplitPlugin = require('code-split-component/webpack');
-const { removeEmpty, ifElse, merge, happyPackPlugin, getFilename } = require('../utils');
-const config = require('../config');
+/* @flow */
 
-function webpackConfigFactory({ target, mode }, { json }) {
-  if (!target || ['client', 'server'].findIndex(valid => target === valid) === -1) {
-    throw new Error(
-      'You must provide a "target" (client|server) to the webpackConfigFactory.'
-    );
-  }
+import path from 'path';
+import { sync as globSync } from 'glob';
+import webpack from 'webpack';
+import OfflinePlugin from 'offline-plugin';
+import AssetsPlugin from 'assets-webpack-plugin';
+import nodeExternals from 'webpack-node-externals';
+import ExtractTextPlugin from 'extract-text-webpack-plugin';
+import appRootDir from 'app-root-dir';
+import WebpackMd5Hash from 'webpack-md5-hash';
+import CodeSplitPlugin from 'code-split-component/webpack';
+import { removeEmpty, ifElse, merge, happyPackPlugin, getFilename } from '../utils';
+import config from '../config';
 
-  if (!mode || ['development', 'production'].findIndex(valid => mode === valid) === -1) {
-    throw new Error(
-      'You must provide a "mode" (development|production) to the webpackConfigFactory.'
-    );
-  }
+type BuildOptions = {
+  target: 'server'|'client'|'tools',
+  mode?: 'development'|'production',
+};
 
-  // The json flag has been set indicating a json output, which is required
-  // for bundle analysis is being requested.  When this is the case we must
-  // make sure that no console.log statements are executed otherwise they will
-  // be included in the json output and break our bundle analysis.
-  const isWebpackAnalyzeSession = !!json;
+export default function webpackConfigFactory(options: BuildOptions) {
+  const { target, mode = 'production' } = options;
+  console.log(`==> Creating webpack config for "${target}" in "${mode}" mode`);
 
-  // Use this instead of console.log directly to take into account any
-  // webpack analyze sessions.
-  const safeLog = (msg) => { if (!isWebpackAnalyzeSession) { console.log(msg); } };
-
-  safeLog(`==> Creating webpack config for "${target}" in "${mode}" mode`);
+  const appRootPath = appRootDir.get();
 
   const isDev = mode === 'development';
   const isProd = mode === 'production';
   const isClient = target === 'client';
   const isServer = target === 'server';
 
-  // These are handy little helpers that use the boolean flags above.
-  // They allow you to wrap a value with an condition check. It the condition
-  // is met the value you provided will be returned, otherwise it will
-  // return null.
-  //
-  // For example, say our "isDev" flag had a value of `true`. Then when we used
-  // our helpers below we would get the following results:
-  //   ifDev('foo');  // => 'foo'
-  //   ifProd('foo'); // => null
-  //
-  // It also allows for a secondary argument, which will be used instead of the
-  // null when the condition is not met. For example:
-  //   ifDev('foo', 'bar');  // => 'foo'
-  //   ifProd('foo', 'bar'); // => 'bar'
-  //
-  // This is really handy for doing inline value resolution within or webpack
-  // configuration.  Then we simply use one of our utility functions (e.g.
-  // removeEmpty) to remove all the nulls.
+  // Preconfigure some ifElse helper instnaces. See the util docs for more
+  // information on how this util works.
   const ifDev = ifElse(isDev);
-  const ifProd = ifElse(isProd); // eslint-disable-line no-unused-vars
   const ifClient = ifElse(isClient);
   const ifServer = ifElse(isServer);
   const ifDevClient = ifElse(isDev && isClient);
@@ -108,22 +79,20 @@ function webpackConfigFactory({ target, mode }, { json }) {
       // When in production client mode we don't want any source maps to
       // decrease our payload sizes.
       // This form has almost no cost.
-      'hidden-source-map'
+      'hidden-source-map',
     ),
     // Define our entry chunks for our bundle.
-    entry: merge(
-      {
-        index: removeEmpty([
-          ifDevClient('react-hot-loader/patch'),
-          ifDevClient(`webpack-hot-middleware/client?reload=true&path=${config.server.protocol}://${config.server.host}:${config.development.clientDevServerPort}/__webpack_hmr`),
-          // We are using polyfill.io instead of the very heavy babel-polyfill.
-          // Therefore we need to add the regenerator-runtime as the babel-polyfill
-          // included this, which polyfill.io doesn't include.
-          ifClient('regenerator-runtime/runtime'),
-          isServer ? config.paths.serverSrc : config.paths.clientSrc,
-        ]),
-      }
-    ),
+    entry: {
+      index: removeEmpty([
+        ifDevClient('react-hot-loader/patch'),
+        ifDevClient(`webpack-hot-middleware/client?reload=true&path=http://${config.server.host}:${config.development.clientDevServerPort}/__webpack_hmr`),
+        // We are using polyfill.io instead of the very heavy babel-polyfill.
+        // Therefore we need to add the regenerator-runtime as the babel-polyfill
+        // included this, which polyfill.io doesn't include.
+        ifClient('regenerator-runtime/runtime'),
+        isServer ? config.paths.serverSrc : config.paths.clientSrc,
+      ]),
+    },
     output: {
       // The dir in which our bundle should be output.
       path: isServer
@@ -140,7 +109,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
         // npm scripts.  We don't care about caching on the server anyway.
         // We also want our client development builds to have a determinable
         // name for our hot reloading client bundle server.
-        '[name].js'
+        '[name].js',
       ),
       chunkFilename: '[name]-[chunkhash].js',
       // This is the web path under which our webpack bundled output should
@@ -148,9 +117,9 @@ function webpackConfigFactory({ target, mode }, { json }) {
       publicPath: ifDev(
         // As we run a seperate server for our client and server bundles we
         // need to use an absolute http path for our assets public path.
-        `${config.server.protocol}://${config.server.host}:${config.development.clientDevServerPort}${config.client.webRoot}`,
+        `http://${config.server.host}:${config.development.clientDevServerPort}${config.client.webRoot}`,
         // Otherwise we expect our bundled output to be served from this path.
-        config.client.webRoot
+        config.client.webRoot,
       ),
       // When in server mode we will output our bundle as a commonjs2 module.
       libraryTarget: ifServer('commonjs2', 'var'),
@@ -219,7 +188,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
         new AssetsPlugin({
           filename: config.client.assetsFilename,
           path: config.paths.clientBundle,
-        })
+        }),
       ),
 
       // We don't want webpack errors to occur during development as it will
@@ -238,7 +207,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
           // Indicates to our loaders that they should enter into debug mode
           // should they support it.
           debug: false,
-        })
+        }),
       ),
 
       // JS Minification.
@@ -256,13 +225,13 @@ function webpackConfigFactory({ target, mode }, { json }) {
             comments: false,
             screw_ie8: true,
           },
-        })
+        }),
       ),
 
       ifProdClient(
         // This is a production client so we will extract our CSS into
         // CSS files.
-        new ExtractTextPlugin({ filename: '[name]-[chunkhash].css', allChunks: true })
+        new ExtractTextPlugin({ filename: '[name]-[chunkhash].css', allChunks: true }),
       ),
 
       // Offline Plugin.
@@ -319,7 +288,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
           // assets.
           externals: globSync(`${config.paths.publicAssets}/**/*`)
             .map(publicFile => `/${getFilename(publicFile)}`),
-        })
+        }),
       ),
 
       // NOTE: HappyPack plugins coming up next.
@@ -415,7 +384,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
               query: { sourceMap: true },
             },
           ],
-        })
+        }),
       ),
     ]),
     module: {
@@ -428,7 +397,10 @@ function webpackConfigFactory({ target, mode }, { json }) {
           // See the respective plugin within the plugins section for full
           // details on what loader is being implemented.
           loader: 'happypack/loader?id=happypack-javascript',
-          include: [path.resolve(appRootPath, './src')],
+          include: [
+            path.resolve(appRootPath, './src'),
+            path.resolve(appRootPath, './tools'),
+          ],
         },
 
         // CSS
@@ -461,7 +433,7 @@ function webpackConfigFactory({ target, mode }, { json }) {
           // css loader, as we don't need any css files for the server.
           ifServer({
             loaders: ['css-loader/locals'],
-          })
+          }),
         ),
 
         // JSON
@@ -488,5 +460,3 @@ function webpackConfigFactory({ target, mode }, { json }) {
     },
   };
 }
-
-module.exports = webpackConfigFactory;

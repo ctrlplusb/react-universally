@@ -8,7 +8,6 @@ import { CodeSplitProvider, createRenderContext } from 'code-split-component';
 import Helmet from 'react-helmet';
 import generateHTML from './generateHTML';
 import App from '../../../shared/components/App';
-import config from '../../../../tools/config';
 
 /**
  * An express middleware that is capabable of doing React server side rendering.
@@ -23,7 +22,7 @@ function universalReactAppMiddleware(request: $Request, response: $Response) {
 
   // It's possible to disable SSR, which can be useful in development mode.
   // In this case traditional client side only rendering will occur.
-  if (!config.ssrEnabled) {
+  if (!process.env.SSR_ENABLED === 'false') {
     if (process.env.NODE_ENV === 'development') {
       console.log('==> Handling react route without SSR');  // eslint-disable-line no-console
     }

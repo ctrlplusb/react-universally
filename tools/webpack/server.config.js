@@ -1,6 +1,10 @@
-const webpackConfigFactory = require('./configFactory');
+/* @flow */
 
-module.exports = function serverConfigFactory(options = {}, args = {}) {
+import webpackConfigFactory from './configFactory';
+
+type Options = { mode?: 'production'|'development' };
+
+export default function clientConfigFactory(options : Options = {}) {
   const { mode = 'production' } = options;
-  return webpackConfigFactory({ target: 'server', mode }, args);
-};
+  return webpackConfigFactory({ target: 'server', mode });
+}

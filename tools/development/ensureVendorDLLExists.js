@@ -1,14 +1,13 @@
-const webpack = require('webpack');
-const pathExtName = require('path').extname;
-const md5 = require('md5');
-const fs = require('fs');
-const globSync = require('glob').sync;
-const matchRequire = require('match-require');
-const { createNotification } = require('../utils');
-const config = require('../config');
+/* @flow */
 
-// -----------------------------------------------------------------------------
-// PRIVATES
+import webpack from 'webpack';
+import { extname as pathExtName } from 'path';
+import md5 from 'md5';
+import fs from 'fs';
+import { sync as globSync } from 'glob';
+import matchRequire from 'match-require';
+import { createNotification } from '../utils';
+import config from '../config';
 
 // $FlowFixMe
 const packageJSON = require(config.paths.packageJSON);
@@ -40,7 +39,7 @@ function webpackConfigFactory(modules) {
 function getJsFilesFromDir(targetPath) {
   return ['js', 'jsx'].reduce((acc, ext) =>
     acc.concat(globSync(`${targetPath}/**/*.${ext}`)),
-    []
+    [],
   );
 }
 
@@ -91,9 +90,6 @@ function buildVendorDLL() {
   });
 }
 
-// -----------------------------------------------------------------------------
-// DEFAULT EXPORT
-
 function ensureVendorDLLExists() {
   return new Promise((resolve, reject) => {
     if (!config.development.vendorDLL.enabled) {
@@ -132,4 +128,4 @@ function ensureVendorDLLExists() {
   });
 }
 
-module.exports = ensureVendorDLLExists;
+export default ensureVendorDLLExists;

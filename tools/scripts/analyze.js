@@ -1,12 +1,28 @@
+/* @flow */
+
 // This script creates a webpack stats file on our production build of the
 // client bundle and then launches the webpack-bundle-analyzer tool allowing
 // you to easily see what is being included within your bundle.  Really helpful
 // in those parses at trimming your bundle sizes down.
 // @see https://github.com/th0r/webpack-bundle-analyzer
 
-const { exec } = require('../utils.js');
-const config = require('../config');
+import webpack from 'webpack';
+import fs from 'fs';
+import clientConfigFactory from '../webpack/client.config';
+import { exec } from '../utils';
+import config from '../config';
 
-const cmd = `$(npm bin)/webpack --config ./tools/webpack/client.config.js --json > ${config.paths.bundleAnalyze} && webpack-bundle-analyzer ${config.paths.bundleAnalyze} ${config.paths.clientBundle}`;
+const clientCompiler = webpack(clientConfigFactory());
 
-exec(cmd);
+clientCompiler.run((err, stats) => {
+  if (err) {
+    console.error(err);
+  } else {
+    // Write out the json stats file.
+    fs.writeFileSync(config.paths.bundleAnalyze, JSON.stringify(stats.toJson('verbose'), null, 4));
+
+    // Run the bundle analyzer against the stats file.
+    const cmd = `webpack-bundle-analyzer ${config.paths.bundleAnalyze} ${config.paths.clientBundle}`;
+    exec(cmd);
+  }
+});

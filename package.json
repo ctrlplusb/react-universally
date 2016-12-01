@@ -7,17 +7,17 @@
     "node": "~6.9.1"
   },
   "scripts": {
-    "clean": "node tools/scripts/clean",
-    "development": "node tools/development",
-    "build": "node tools/scripts/build",
-    "analyze": "node tools/scripts/analyze",
+    "clean": "babel-node tools/scripts/clean",
+    "development": "babel-node tools/development",
+    "build": "babel-node tools/scripts/build",
+    "analyze": "babel-node tools/scripts/analyze",
     "start": "node build/server",
-    "deploy": "node tools/scripts/deploy",
+    "deploy": "babel-node tools/scripts/deploy",
     "lint": "eslint src",
-    "flow": "node tools/scripts/flow",
+    "flow": "babel-node tools/scripts/flow",
     "flow:defs": "flow-typed install -f 0.34 --overwrite",
     "flow:report": "flow-coverage-report -i 'src/**/*.js' -t html -t json -t text",
-    "flow:remove": "node tools/scripts/removeTypes.js && rimraf tools/scripts/removeTypes.js"
+    "flow:remove": "babel-node tools/scripts/removeTypes && rimraf tools/scripts/removeTypes.js"
   },
   "repository": {
     "type": "git",

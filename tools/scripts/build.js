@@ -1,13 +1,13 @@
+/* @flow */
+
 // This script builds a production output of all of our bundles.
 
-const pathResolve = require('path').resolve;
-const appRootPath = require('app-root-dir').get();
-const { exec } = require('../utils.js');
+import webpack from 'webpack';
+import clientConfigFactory from '../webpack/client.config';
+import serverConfigFactory from '../webpack/server.config';
 
-const webpackConfigs = pathResolve(appRootPath, './tools/webpack');
-const clientConfig = pathResolve(webpackConfigs, 'client.config.js');
-const serverConfig = pathResolve(webpackConfigs, 'server.config.js');
+const clientCompiler = webpack(clientConfigFactory());
+const serverCompiler = webpack(serverConfigFactory());
 
-const cmd = `npm run clean && webpack --config ${clientConfig} && webpack --config ${serverConfig}`;
-
-exec(cmd);
+clientCompiler.run(() => console.log('Client built.'));
+serverCompiler.run(() => console.log('Server built.'));

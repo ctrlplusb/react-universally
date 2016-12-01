@@ -1,12 +1,17 @@
-const express = require('express');
-const createWebpackMiddleware = require('webpack-dev-middleware');
-const createWebpackHotMiddleware = require('webpack-hot-middleware');
-const ListenerManager = require('./listenerManager');
-const { createNotification } = require('../utils');
-const config = require('../config');
+/* @flow */
+
+import express from 'express';
+import createWebpackMiddleware from 'webpack-dev-middleware';
+import createWebpackHotMiddleware from 'webpack-hot-middleware';
+import ListenerManager from './listenerManager';
+import { createNotification } from '../utils';
+import config from '../config';
 
 class HotClient {
-  constructor(compiler) {
+  webpackDevMiddleware: any;
+  listenerManager: ListenerManager;
+
+  constructor(compiler : Object) {
     const app = express();
 
     this.webpackDevMiddleware = createWebpackMiddleware(compiler, {
@@ -59,8 +64,8 @@ class HotClient {
 
     return this.listenerManager
       ? this.listenerManager.dispose()
-      : Promise.resolve();
+      : Promise.resolve([]);
   }
 }
 
-module.exports = HotClient;
+export default HotClient;

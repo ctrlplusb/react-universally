@@ -1,15 +1,20 @@
-const path = require('path');
-const ListenerManager = require('./listenerManager');
-const { createNotification } = require('../utils');
-const config = require('../config');
+/* @flow */
+
+import path from 'path';
+import ListenerManager from './listenerManager';
+import { createNotification } from '../utils';
+import config from '../config';
 
 class HotServer {
-  constructor(compiler) {
+  listenerManager: ?ListenerManager;
+  watcher: any;
+
+  constructor(compiler : Object) {
     this.listenerManager = null;
     this.watcher = null;
 
     const compiledOutputPath = path.resolve(
-      compiler.options.output.path, `${Object.keys(compiler.options.entry)[0]}.js`
+      compiler.options.output.path, `${Object.keys(compiler.options.entry)[0]}.js`,
     );
 
     compiler.plugin('compile', () =>
@@ -17,17 +22,18 @@ class HotServer {
         title: 'server',
         level: 'info',
         message: 'Building new server bundle...',
-      })
+      }),
     );
 
     const startServer = () => {
       try {
         // The server bundle  will automatically start the web server just by
         // requiring it. It returns the http listener too.
+        // $FlowFixMe
         const listener = require(compiledOutputPath).default;
         this.listenerManager = new ListenerManager(listener, 'server');
 
-        const url = `${config.server.protocol}://${config.server.host}:${config.server.port}`;
+        const url = `http://${config.server.host}:${config.server.port}`;
 
         createNotification({
           title: 'server',
@@ -85,4 +91,4 @@ class HotServer {
   }
 }
 
-module.exports = HotServer;
+export default HotServer;

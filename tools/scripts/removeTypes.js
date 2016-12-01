@@ -1,10 +1,14 @@
-const globSync = require('glob').sync;
-const path = require('path');
-const appRootPath = require('app-root-dir').get();
-const flowRemoveTypes = require('flow-remove-types');
-const fs = require('fs');
-const rimraf = require('rimraf');
-const { exec } = require('../utils');
+/* @flow */
+
+import { sync as globSync } from 'glob';
+import path from 'path';
+import appRootDir from 'app-root-dir';
+import flowRemoveTypes from 'flow-remove-types';
+import fs from 'fs';
+import rimraf from 'rimraf';
+import { exec } from '../utils';
+
+const appRootPath = appRootDir.get();
 
 function safeDelete(target, cb) {
   if (fs.existsSync(target)) {
@@ -50,7 +54,7 @@ globSync(`${path.resolve(appRootPath, 'src')}/**/*.js`)
 safeDelete(
   flowTypesPath,
   // Then do an eslint fix parse on the src files.
-  () => exec(`eslint --fix ${srcPath}`)
+  () => exec(`eslint --fix ${srcPath}`),
 );
 
 // Remove the .flowconfig
@@ -70,5 +74,5 @@ fs.writeFileSync(
     // Remove any multiple blank lines in files.
     .replace(/\n\n+/g, '\n')
     // Fix any hanging ',' chars
-    .replace(/,+([\s\n]+)\}/g, '$1}')
+    .replace(/,+([\s\n]+)\}/g, '$1}'),
 );

@@ -1,5 +1,8 @@
+/* @flow */
+
+// Deploys to now.
 // @see https://zeit.co/now
 
-const { exec } = require('../utils.js');
+import { exec } from '../utils';
 const cmd = 'now';
 exec(cmd);

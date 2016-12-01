@@ -1,6 +1,17 @@
-// We don't use the .babelrc file for our babel configuration, preferring for
-// our webpack loaders to have full control over the babel configuration.
-// This allows us to build up our babel config in a much more dynamic fashion
-// easily targetting a mix mash of server vs browser vs dev vs prod etc.
-// @see webpackConfigFactory.js
-{}
+// We use the .babelrc here to help with tooling.
+// I would recommend that you keep this file in relative feature parity with
+// the babel config used to transpile the client/server src bundles. That way
+// you get to use the same level of javascript syntax across the entire project.
+// It's nice not having to worry/think about what level of javascript syntax
+// is supported for each context.
+{
+  "presets": [
+    ["env", { "targets": { "node": true } }]
+  ],
+  "plugins": [
+    "transform-object-rest-spread",
+    "transform-es2015-destructuring",
+    "transform-class-properties",
+    "transform-flow-strip-types"
+  ]
+}

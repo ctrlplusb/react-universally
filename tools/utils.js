@@ -1,15 +1,29 @@
-const HappyPack = require('happypack');
-const notifier = require('node-notifier');
-const colors = require('colors');
-const execSync = require('child_process').execSync;
-const appRootPath = require('app-root-dir').get();
-const path = require('path');
-const fs = require('fs');
-const dotenv = require('dotenv');
+/* @flow */
+
+import HappyPack from 'happypack';
+import notifier from 'node-notifier';
+import colors from 'colors';
+import { execSync } from 'child_process';
+import appRootDir from 'app-root-dir';
+import path from 'path';
+import fs from 'fs';
+import dotenv from 'dotenv';
+
+const appRootPath = appRootDir.get();
+
+type HappyPackLoaderConfig = {
+  path: string,
+  query?: Object,
+};
+
+type HappyPackConfig = {
+  name: string,
+  loaders: Array<string|HappyPackLoaderConfig>,
+};
 
 // Generates a HappyPack plugin.
 // @see https://github.com/amireh/happypack/
-function happyPackPlugin({ name, loaders }) {
+export function happyPackPlugin({ name, loaders } : HappyPackConfig) {
   // TODO: Try out the thread pool again since we upgraded to v3
   return new HappyPack({
     id: name,
@@ -19,30 +33,69 @@ function happyPackPlugin({ name, loaders }) {
   });
 }
 
-// :: [Any] -> [Any]
-function removeEmpty(x) {
-  return x.filter(y => !!y);
+export function removeEmpty(x : Array<any>) : Array<any> {
+  return x.filter(y => y != null);
 }
 
-// :: bool -> (Any, Any) -> Any
-function ifElse(condition) {
-  return (then, or) => (condition ? then : or);
+// This is a higher order function that accepts a boolean condition and will
+// return a function allowing you to provide if/else values that should be
+// resolved based on the boolean condition.
+//
+// That sounds complicated, but it isn't really.  See the examples below. :)
+//
+// For example, say that we have a "isDev" boolean flag had a value of `true`,
+// and we would like to create a webpack loader based on this value being true.
+// Then when we used this function like so:
+//   const ifDev = ifElse(isDev);
+//   ifDev('foo');  // => 'foo'
+//
+// You can also set an "else" value. In the below case the "isDev" flag is false.
+//   const ifDev = ifElse(isDev);
+//   ifDev('foo', 'bar');  // => 'bar'
+//
+// The "else" value is optional, in which case a null value would be returned.
+//
+// This is really handy for doing inline value resolution within or webpack
+// configuration.  Then we simply use one of our other utility functions (e.g.
+// removeEmpty) to remove all the nulls from our objects/arrays.
+export function ifElse(condition : boolean) {
+  // TODO: Allow the then/or to accept a function for lazy value resolving.
+  return function ifElseResolver<X, Y>(then : X, or : Y) : X|Y {
+    return condition ? then : or;
+  };
 }
 
-// :: ...Object -> Object
-function merge() {
-  const funcArgs = Array.prototype.slice.call(arguments); // eslint-disable-line prefer-rest-params
-
-  return Object.assign.apply(
-    null,
-    removeEmpty([{}].concat(funcArgs))
-  );
+// Merges a set of objects together.
+// NOTE: This performs a deep merge.
+export function merge(...args : Array<?Object>) {
+  const filtered : Array<Object> = removeEmpty(args);
+  if (filtered.length < 1) {
+    return {};
+  }
+  if (filtered.length === 1) {
+    return args[0];
+  }
+  return filtered.reduce((acc, cur) => {
+    Object.keys(cur).forEach((key) => {
+      if (typeof acc[key] === 'object' && typeof cur[key] === 'object') {
+        acc[key] = merge(acc[key], cur[key]); // eslint-disable-line no-param-reassign
+      } else {
+        acc[key] = cur[key]; // eslint-disable-line no-param-reassign
+      }
+    });
+    return acc;
+  }, {});
 }
 
-function createNotification(options = {}) {
-  const title = options.title
-    ? `${options.title.toUpperCase()}`
-    : undefined;
+type NotificationOptions = {
+  title: string,
+  message: string,
+  open?: string,
+  level?: 'info'|'warn'|'error'
+};
+
+export function createNotification(options : NotificationOptions) {
+  const title = `${options.title.toUpperCase()}`;
 
   notifier.notify({
     title,
@@ -61,19 +114,19 @@ function createNotification(options = {}) {
   }
 }
 
-function exec(command) {
+export function exec(command : string) {
+  // $FlowFixMe
   execSync(command, { stdio: 'inherit', cwd: appRootPath });
 }
 
-// :: string -> string
-function getFilename(filePath) {
+export function getFilename(filePath : string) {
   return path.relative(path.dirname(filePath), filePath);
 }
 
-function ensureNotInClientBundle() {
+export function ensureNotInClientBundle() {
   if (process.env.IS_CLIENT) {
     throw new Error(
-      'You are importing the application configuration into the client bundle! This is super dangerous as you will essentially be exposing all your internals/logins/etc to the world.  If you need some configuration that will be consumed by the client bundle then add it to the clientSafe configuration file.'
+      'You are importing the application configuration into the client bundle! This is super dangerous as you will essentially be exposing all your internals/logins/etc to the world.  If you need some configuration that will be consumed by the client bundle then add it to the clientSafe configuration file.',
     );
   }
 }
@@ -90,7 +143,7 @@ function ensureNotInClientBundle() {
 //  This gives us a nice degree of flexibility in deciding where we would
 //  like our environment variables to be loaded from, which can be especially
 //  useful for environment variables that we consider sensitive.
-function getEnvVars() {
+export function getEnvVars() {
   const envFile = path.resolve(appRootPath, './.env');
 
   return fs.existsSync(envFile)
@@ -100,20 +153,8 @@ function getEnvVars() {
       // Merge the standard "process.env" environment variables object.
       process.env,
       // With the items from our ".env" file
-      dotenv.parse(fs.readFileSync(envFile, 'utf8'))
+      dotenv.parse(fs.readFileSync(envFile, 'utf8')),
     )
     // No .env file, so we will just use standard vars.
     : process.env;
 }
-
-module.exports = {
-  removeEmpty,
-  ifElse,
-  merge,
-  happyPackPlugin,
-  createNotification,
-  exec,
-  getFilename,
-  ensureNotInClientBundle,
-  getEnvVars,
-};

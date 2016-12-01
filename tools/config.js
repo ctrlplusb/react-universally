@@ -2,9 +2,11 @@
 
 // Application configuration.
 
-const pathResolve = require('path').resolve;
-const appRootPath = require('app-root-dir').get();
-const { ensureNotInClientBundle, getEnvVars } = require('./utils');
+import { resolve as pathResolve } from 'path';
+import appRootDir from 'app-root-dir';
+import { ensureNotInClientBundle, getEnvVars } from './utils';
+
+const appRootPath = appRootDir.get();
 
 ensureNotInClientBundle();
 
@@ -20,7 +22,7 @@ const serverBundleName = 'server';
 const vendorDLLName = '__dev_vendor_dll__';
 const serviceWorkerName = 'sw';
 
-module.exports = {
+export default {
   // SSR enabled?
   ssrEnabled: true,
 
@@ -47,8 +49,6 @@ module.exports = {
 
   // Server bundle specific configuration.
   server: {
-    // The protocol for the server.
-    protocol: envVars.SERVER_PROTOCOL || 'http',
     // The host endpoint for the server.
     host: envVars.SERVER_HOST || 'localhost',
     // What port must the server run on?
@@ -104,7 +104,7 @@ module.exports = {
     clientBundle: clientBundlePath,
     // The assets json file for the client bundle.
     clientBundleAssetsJSON: pathResolve(
-      clientBundlePath, clientBundleAssetsJSONFilename
+      clientBundlePath, clientBundleAssetsJSONFilename,
     ),
     // Where does the server bundle output live?
     serverBundle: pathResolve(buildOutputPath, serverBundleName),

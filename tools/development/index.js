@@ -1,29 +1,37 @@
-const pathResolve = require('path').resolve;
-const chokidar = require('chokidar');
-const webpack = require('webpack');
-const { createNotification } = require('../utils');
-const HotServer = require('./hotServer');
-const HotClient = require('./hotClient');
-const ensureVendorDLLExists = require('./ensureVendorDLLExists');
-const config = require('../config');
+/* @flow */
+
+import { resolve as pathResolve } from 'path';
+import chokidar from 'chokidar';
+import webpack from 'webpack';
+import { createNotification } from '../utils';
+import HotServer from './hotServer';
+import HotClient from './hotClient';
+import ensureVendorDLLExists from './ensureVendorDLLExists';
+import config from '../config';
 
 class HotDevelopment {
+  clientCompiler: any;
+  serverCompiler: any;
+  serverBundle: HotServer;
+  clientBundle: HotClient;
+
   constructor() {
     ensureVendorDLLExists().then(() => {
       try {
-        const clientConfigFactory = require('../webpack/client.config');
+        const clientConfigFactory = require('../webpack/client.config').default;
         const clientConfig = clientConfigFactory({ mode: 'development' });
         if (config.development.vendorDLL.enabled) {
           // Install the vendor DLL plugin.
           clientConfig.plugins.push(
             new webpack.DllReferencePlugin({
+              // $FlowFixMe
               manifest: require(config.paths.vendorDLLJSON),
-            })
+            }),
           );
         }
         this.clientCompiler = webpack(clientConfig);
 
-        const serverConfigFactory = require('../webpack/server.config');
+        const serverConfigFactory = require('../webpack/server.config').default;
         const serverConfig = serverConfigFactory({ mode: 'development' });
         this.serverCompiler = webpack(serverConfig);
       } catch (err) {
@@ -63,7 +71,7 @@ class HotDevelopment {
   }
 
   dispose() {
-    const safeDisposer = bundle => () => (bundle ? bundle.dispose() : Promise.resolve());
+    const safeDisposer = bundle => () => (bundle ? bundle.dispose() : Promise.resolve([]));
     const safeDisposeClient = safeDisposer(this.clientBundle);
     const safeDisposeServer = safeDisposer(this.serverBundle);
 
@@ -77,7 +85,7 @@ let hotDevelopment = new HotDevelopment();
 
 // Any changes to our webpack configs should restart the development server.
 const watcher = chokidar.watch(
-  pathResolve(__dirname, '../webpack')
+  pathResolve(__dirname, '../webpack'),
 );
 watcher.on('ready', () => {
   watcher.on('change', () => {
