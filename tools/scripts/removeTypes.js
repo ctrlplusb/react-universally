@@ -34,6 +34,7 @@ const isJsFile = file => path.extname(file) === '.js';
 
 // Strip the flow types from our src files.
 globSync(`${path.resolve(appRootPath, 'src')}/**/*.js`)
+  .concat(globSync(`${path.resolve(appRootPath, 'tools')}/**/*.js`))
   .filter(isJsFile)
   .forEach((file) => {
     console.log(`Removing types from "${file}`);
