@@ -1,36 +1,51 @@
 /* @flow */
 
 import webpack from 'webpack';
-import { extname as pathExtName } from 'path';
+import { extname as pathExtName, resolve as pathResolve } from 'path';
+import appRootDir from 'app-root-dir';
 import md5 from 'md5';
 import fs from 'fs';
 import { sync as globSync } from 'glob';
 import matchRequire from 'match-require';
 import { createNotification } from '../utils';
-import config from '../config';
+import staticConfig from '../../config/static';
+
+const appRootPath = appRootDir.get();
 
 // $FlowFixMe
-const packageJSON = require(config.paths.packageJSON);
+const packageJSON = require(pathResolve(appRootPath, './package.json'));
 
 // We calculate a hash of the package.json's dependencies, which we can use
 // to determine if dependencies have changed since the last time we built
 // the vendor dll.
 const currentDependenciesHash = md5(JSON.stringify(packageJSON.dependencies));
 
+const vendorDLLHashFilePath = pathResolve(
+  appRootPath,
+  staticConfig.clientBundle.outputPath,
+  `${staticConfig.development.vendorDLL.name}_hash`,
+);
+
+console.log(vendorDLLHashFilePath);
+
 function webpackConfigFactory(modules) {
   return {
     // We only use this for development, so lets always include source maps.
     devtool: 'inline-source-map',
-    entry: { [config.development.vendorDLL.name]: modules },
+    entry: { [staticConfig.development.vendorDLL.name]: modules },
     output: {
-      path: config.paths.clientBundle,
-      filename: `${config.development.vendorDLL.name}.js`,
-      library: config.development.vendorDLL.name,
+      path: pathResolve(appRootPath, staticConfig.clientBundle.outputPath),
+      filename: `${staticConfig.development.vendorDLL.name}.js`,
+      library: staticConfig.development.vendorDLL.name,
     },
     plugins: [
       new webpack.DllPlugin({
-        path: config.paths.vendorDLLJSON,
-        name: config.development.vendorDLL.name,
+        path: pathResolve(
+          appRootPath,
+          staticConfig.clientBundle.outputPath,
+          `${staticConfig.development.vendorDLL.name}.json`,
+        ),
+        name: staticConfig.development.vendorDLL.name,
       }),
     ],
   };
@@ -44,12 +59,20 @@ function getJsFilesFromDir(targetPath) {
 }
 
 function buildVendorDLL() {
-  const ignoreModules = config.development.vendorDLL.ignores;
+  const ignoreModules = staticConfig.development.vendorDLL.ignores;
 
   return new Promise((resolve, reject) => {
     Promise.all([
-      Promise.resolve(getJsFilesFromDir(config.paths.clientSrc)),
-      Promise.resolve(getJsFilesFromDir(config.paths.sharedSrc)),
+      Promise.resolve(
+        getJsFilesFromDir(
+          pathResolve(appRootPath, staticConfig.clientBundle.srcPath),
+        ),
+      ),
+      Promise.resolve(
+        getJsFilesFromDir(
+          pathResolve(appRootPath, staticConfig.bundlesSharedSrcPath),
+        ),
+      ),
     ])
     .then(([clientFiles, universalFiles]) => {
       const isJsFile = file => pathExtName(file) === '.js';
@@ -75,6 +98,7 @@ function buildVendorDLL() {
       console.log(filteredModules);
 
       const webpackConfig = webpackConfigFactory(filteredModules);
+      console.log(JSON.stringify(webpackConfig, null, 4));
       const vendorDLLCompiler = webpack(webpackConfig);
       vendorDLLCompiler.run((err) => {
         if (err) {
@@ -82,7 +106,7 @@ function buildVendorDLL() {
           return;
         }
         // Update the dependency hash
-        fs.writeFileSync(config.paths.vendorDLLHash, currentDependenciesHash);
+        fs.writeFileSync(vendorDLLHashFilePath, currentDependenciesHash);
 
         resolve();
       });
@@ -92,11 +116,11 @@ function buildVendorDLL() {
 
 function ensureVendorDLLExists() {
   return new Promise((resolve, reject) => {
-    if (!config.development.vendorDLL.enabled) {
+    if (!staticConfig.development.vendorDLL.enabled) {
       resolve();
     }
 
-    if (!fs.existsSync(config.paths.vendorDLLHash)) {
+    if (!fs.existsSync(vendorDLLHashFilePath)) {
       // builddll
       createNotification({
         title: 'vendorDLL',
@@ -106,7 +130,7 @@ function ensureVendorDLLExists() {
       buildVendorDLL().then(resolve).catch(reject);
     } else {
       // first check if the md5 hashes match
-      const dependenciesHash = fs.readFileSync(config.paths.vendorDLLHash, 'utf8');
+      const dependenciesHash = fs.readFileSync(vendorDLLHashFilePath, 'utf8');
       const dependenciesChanged = dependenciesHash !== currentDependenciesHash;
 
       if (dependenciesChanged) {

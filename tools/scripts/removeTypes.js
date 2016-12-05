@@ -23,19 +23,29 @@ function safeDelete(target, cb) {
   }
 }
 
-const srcPath = path.resolve(appRootPath, 'src');
-const flowConfigPath = path.resolve(appRootPath, '.flowconfig');
-const packageJsonPath = path.resolve(appRootPath, 'package.json');
-const flowToolsPath = path.resolve(appRootPath, 'tools/flow');
-const flowTypesPath = path.resolve(appRootPath, 'src/shared/universal/types');
-const flowScriptPath = path.resolve(appRootPath, 'tools/scripts/flow.js');
-
-const isJsFile = file => path.extname(file) === '.js';
+const srcPaths = [
+  path.resolve(appRootPath, './src'),
+  path.resolve(appRootPath, './tools'),
+  path.resolve(appRootPath, './config'),
+];
+const flowTypesPaths = [
+  path.resolve(appRootPath, './src/shared/types'),
+  path.resolve(appRootPath, './tools/types'),
+];
+const flowConfigPath = path.resolve(appRootPath, './.flowconfig');
+const packageJsonPath = path.resolve(appRootPath, './package.json');
+const flowToolsPath = path.resolve(appRootPath, './tools/flow');
+const flowScriptPath = path.resolve(appRootPath, './tools/scripts/flow.js');
 
 // Strip the flow types from our src files.
-globSync(`${path.resolve(appRootPath, 'src')}/**/*.js`)
-  .concat(globSync(`${path.resolve(appRootPath, 'tools')}/**/*.js`))
-  .filter(isJsFile)
+srcPaths
+  // Get all the files.
+  .reduce((acc, cur) =>
+    acc
+      .concat(globSync(path.resolve(cur, './**/*.js')))
+      .concat(globSync(path.resolve(cur, './**/*.jsx')))
+  , [])
+  // Remoe the types from each file.
   .forEach((file) => {
     console.log(`Removing types from "${file}`);
     const input = fs.readFileSync(file, 'utf8');
@@ -51,12 +61,19 @@ globSync(`${path.resolve(appRootPath, 'src')}/**/*.js`)
     fs.writeFileSync(file, output);
   });
 
-// Delete the types folder in the src
-safeDelete(
-  flowTypesPath,
+Promise
+  // Delete the types folders.
+  .all(
+    flowTypesPaths.map(typesPath => new Promise((resolve) => {
+      safeDelete(typesPath, resolve);
+    })),
+  )
   // Then do an eslint fix parse on the src files.
-  () => exec(`eslint --fix ${srcPath}`),
-);
+  .then(() => {
+    srcPaths.forEach((srcPath) => {
+      exec(`eslint --fix ${srcPath}`);
+    });
+  });
 
 // Remove the .flowconfig
 safeDelete(flowConfigPath);

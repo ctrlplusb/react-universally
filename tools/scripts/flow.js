@@ -7,10 +7,7 @@ import { resolve as resolvePath } from 'path';
 import appRootDir from 'app-root-dir';
 import { exec, createNotification } from '../utils';
 
-const appRootPath = appRootDir.get();
-const flowTypedDir = resolvePath(appRootPath, 'flow-typed');
-
-if (!existsSync(flowTypedDir)) {
+if (!existsSync(resolvePath(appRootDir.get(), './flow-typed'))) {
   createNotification({
     title: 'flow',
     level: 'warn',

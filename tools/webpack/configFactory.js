@@ -10,16 +10,15 @@ import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import appRootDir from 'app-root-dir';
 import WebpackMd5Hash from 'webpack-md5-hash';
 import CodeSplitPlugin from 'code-split-component/webpack';
-import { removeEmpty, ifElse, merge, happyPackPlugin, getFilename } from '../utils';
-import config from '../config';
+import { removeEmpty, ifElse, merge, happyPackPlugin } from '../utils';
+import staticConfig from '../../config/static';
+import envConfig from '../../config/environment';
+import babelConfigResolver from '../../config/babelConfigResolver';
+import webpackConfigMiddleware from '../../config/webpackConfigMiddleware';
+import type { BuildOptions } from '../types';
 
-type BuildOptions = {
-  target: 'server'|'client',
-  mode?: 'development'|'production',
-};
-
-export default function webpackConfigFactory(options: BuildOptions) {
-  const { target, mode = 'production' } = options;
+export default function webpackConfigFactory(buildOptions: BuildOptions) {
+  const { target, mode } = buildOptions;
   console.log(`==> Creating webpack config for "${target}" in "${mode}" mode`);
 
   const appRootPath = appRootDir.get();
@@ -37,12 +36,11 @@ export default function webpackConfigFactory(options: BuildOptions) {
   const ifDevClient = ifElse(isDev && isClient);
   const ifProdClient = ifElse(isProd && isClient);
 
-  return {
+  const config = {
     // We need to state that we are targetting "node" for our server bundle.
     target: ifServer('node', 'web'),
-    // We have to set this to be able to use these items when executing a
-    // server bundle.  Otherwise strangeness happens, like __dirname resolving
-    // to '/'.  There is no effect on our client bundle.
+    // Ensure that webpack polyfills the following node features for use
+    // within any bundles that use them.
     node: {
       __dirname: true,
       __filename: true,
@@ -54,17 +52,11 @@ export default function webpackConfigFactory(options: BuildOptions) {
       // we use the `webpack-node-externals` library to help us generate an
       // externals config that will ignore all node_modules.
       ifServer(nodeExternals({
-        // NOTE: !!!
         // However the node_modules may contain files that will rely on our
         // webpack loaders in order to be used/resolved, for example CSS or
         // SASS. For these cases please make sure that the file extensions
-        // are added to the below list. We have added the most common formats.
-        whitelist: [
-          /\.(eot|woff|woff2|ttf|otf)$/,
-          /\.(svg|png|jpg|jpeg|gif|ico)$/,
-          /\.(mp4|mp3|ogg|swf|webp)$/,
-          /\.(css|scss|sass|sss|less)$/,
-        ],
+        // are added to the below list.
+        whitelist: staticConfig.serverBundle.externalsWhitelist,
       })),
     ]),
     devtool: ifElse(isServer || isDev)(
@@ -85,20 +77,18 @@ export default function webpackConfigFactory(options: BuildOptions) {
     entry: {
       index: removeEmpty([
         ifDevClient('react-hot-loader/patch'),
-        ifDevClient(`webpack-hot-middleware/client?reload=true&path=http://${config.server.host}:${config.development.clientDevServerPort}/__webpack_hmr`),
+        ifDevClient(`webpack-hot-middleware/client?reload=true&path=http://${envConfig.host}:${envConfig.clientDevServerPort}/__webpack_hmr`),
         // We are using polyfill.io instead of the very heavy babel-polyfill.
         // Therefore we need to add the regenerator-runtime as the babel-polyfill
         // included this, which polyfill.io doesn't include.
         ifClient('regenerator-runtime/runtime'),
-        isServer ? config.paths.serverSrc : config.paths.clientSrc,
+        staticConfig[`${target}Bundle`].srcPath,
       ]),
     },
     output: {
       // The dir in which our bundle should be output.
-      path: isServer
-        ? config.paths.serverBundle
-        : config.paths.clientBundle,
-      // The filename format for our bundle's entries.
+      path: path.resolve(appRootPath, staticConfig[`${target}Bundle`].outputPath),
+      // The filename format for our bundle's entries.2
       filename: ifProdClient(
         // We include a hash for client caching purposes.  Including a unique
         // has for every build will ensure browsers always fetch our newest
@@ -112,25 +102,21 @@ export default function webpackConfigFactory(options: BuildOptions) {
         '[name].js',
       ),
       chunkFilename: '[name]-[chunkhash].js',
-      // This is the web path under which our webpack bundled output should
+      // This is the web path under which our webpack bundled client should
       // be considered as being served from.
       publicPath: ifDev(
         // As we run a seperate server for our client and server bundles we
         // need to use an absolute http path for our assets public path.
-        `http://${config.server.host}:${config.development.clientDevServerPort}${config.client.webRoot}`,
-        // Otherwise we expect our bundled output to be served from this path.
-        config.client.webRoot,
+        `http://${envConfig.host}:${envConfig.clientDevServerPort}${staticConfig.clientBundle.webPath}`,
+        // Otherwise we expect our bundled client to be served from this path.
+        staticConfig.clientBundle.webPath,
       ),
       // When in server mode we will output our bundle as a commonjs2 module.
       libraryTarget: ifServer('commonjs2', 'var'),
     },
     resolve: {
       // These extensions are tried when resolving a file.
-      extensions: [
-        '.js',
-        '.jsx',
-        '.json',
-      ],
+      extensions: staticConfig.bundleSrcTypes.map(ext => `.${ext}`),
     },
     plugins: removeEmpty([
       // Required support for code-split-component, which provides us with our
@@ -186,8 +172,8 @@ export default function webpackConfigFactory(options: BuildOptions) {
       // our client bundle.
       ifClient(
         new AssetsPlugin({
-          filename: config.client.assetsFilename,
-          path: config.paths.clientBundle,
+          filename: staticConfig.clientBundle.assetsFileName,
+          path: staticConfig.clientBundle.outputPath,
         }),
       ),
 
@@ -203,7 +189,7 @@ export default function webpackConfigFactory(options: BuildOptions) {
         new webpack.LoaderOptionsPlugin({
           // Indicates to our loaders that they should minify their output
           // if they have the capability to do so.
-          minimize: true,
+          minimize: staticConfig.optimizeProductionBuilds,
           // Indicates to our loaders that they should enter into debug mode
           // should they support it.
           debug: false,
@@ -212,20 +198,22 @@ export default function webpackConfigFactory(options: BuildOptions) {
 
       // JS Minification.
       ifProdClient(
-        new webpack.optimize.UglifyJsPlugin({
-          // sourceMap: true,
-          compress: {
-            screw_ie8: true,
-            warnings: false,
-          },
-          mangle: {
-            screw_ie8: true,
-          },
-          output: {
-            comments: false,
-            screw_ie8: true,
-          },
-        }),
+        ifElse(staticConfig.optimizeProductionBuilds)(
+          new webpack.optimize.UglifyJsPlugin({
+            sourceMap: staticConfig.includeSourceMapsForProductionBuilds,
+            compress: {
+              screw_ie8: true,
+              warnings: false,
+            },
+            mangle: {
+              screw_ie8: true,
+            },
+            output: {
+              comments: false,
+              screw_ie8: true,
+            },
+          }),
+        ),
       ),
 
       ifProdClient(
@@ -252,7 +240,7 @@ export default function webpackConfigFactory(options: BuildOptions) {
           // Setting this value lets the plugin know where our generated client
           // assets will be served from.
           // e.g. /client/
-          publicPath: config.client.webRoot,
+          publicPath: staticConfig.clientBundle.webPath,
           // When using the publicPath we need to disable the "relativePaths"
           // feature of this plugin.
           relativePaths: false,
@@ -260,7 +248,7 @@ export default function webpackConfigFactory(options: BuildOptions) {
           // Read more on them here:
           // http://bit.ly/2f8q7Td
           ServiceWorker: {
-            output: `${config.serviceWorker.name}.js`,
+            output: staticConfig.serviceWorker.fileName,
             events: true,
             // By default the service worker will be ouput and served from the
             // publicPath setting above in the root config of the OfflinePlugin.
@@ -271,23 +259,37 @@ export default function webpackConfigFactory(options: BuildOptions) {
             // live in at the /build/client/sw.js output location therefore in
             // our server configuration we need to make sure that any requests
             // to /sw.js will serve the /build/client/sw.js file.
-            publicPath: `/${config.serviceWorker.name}.js`,
+            publicPath: `/${staticConfig.serviceWorker.fileName}`,
             // When a user has no internet connectivity and a path is not available
             // in our service worker cache then the following file will be
             // served to them.  Go and make it pretty. :)
-            navigateFallbackURL: config.serviceWorker.navigateFallbackURL,
+            navigateFallbackURL: staticConfig.serviceWorker.navigateFallbackURL,
           },
           // We aren't going to use AppCache and will instead only rely on
           // a Service Worker.
           AppCache: false,
-          // NOTE: This will include ALL of our public folder assets.  We do
-          // a glob pull of them and then map them to /foo paths as all the
-          // public folder assets get served off the root of our application.
-          // You may or may not want to be including these assets.  Feel free
-          // to remove this or instead include only a very specific set of
-          // assets.
-          externals: globSync(`${config.paths.publicAssets}/**/*`)
-            .map(publicFile => `/${getFilename(publicFile)}`),
+
+          // Which external files should be included with the service worker?
+          externals:
+            staticConfig.serviceWorker.includePublicAssets.reduce((acc, cur) => {
+              const publicAssetPathGlob = path.resolve(
+                appRootPath, staticConfig.publicAssetsPath, cur,
+              );
+              const publicFileWebPaths = acc.concat(
+                // First get all the matching public folder assets.
+                globSync(publicAssetPathGlob)
+                // Then map them to relative paths against the public folder.
+                // We need to do this as we need the "web" paths for each one.
+                .map(publicFile => path.relative(
+                  path.resolve(appRootPath, staticConfig.publicAssetsPath),
+                  publicFile,
+                ))
+                // Add the leading "/" indicating the file is being hosted
+                // off the root of the application.
+                .map(relativePath => `/${relativePath}`),
+              );
+              return publicFileWebPaths;
+            }, []),
         }),
       ),
 
@@ -311,64 +313,7 @@ export default function webpackConfigFactory(options: BuildOptions) {
         // We will use babel to do all our JS processing.
         loaders: [{
           path: 'babel-loader',
-          query: {
-            presets: removeEmpty([
-              // JSX
-              'react',
-              // For our client bundles we transpile all the latest ratified
-              // ES201X code into ES5, safe for browsers.  We exclude module
-              // transilation as webpack takes care of this for us, doing
-              // tree shaking in the process.
-              ifClient(['latest', { es2015: { modules: false } }]),
-              // For our server bundle we use the awesome babel-preset-env which
-              // acts like babel-preset-latest in that it supports the latest
-              // ratified ES201X syntax, however, it will only transpile what
-              // is necessary for a target environment.  We have configured it
-              // to target our current node version.  This is cool because
-              // recent node versions have extensive support for ES201X syntax.
-              // Also, we have disabled modules transpilation as webpack will
-              // take care of that for us ensuring tree shaking takes place.
-              // NOTE: Make sure you use the same node version for development
-              // and production.
-              ifServer(['env', { targets: { node: true }, modules: false }]),
-            ]),
-            plugins: removeEmpty([
-              ifDevClient('react-hot-loader/babel'),
-              // We are adding the experimental "object rest spread" syntax as
-              // it is super useful.  There is a caviat with the plugin that
-              // requires us to include the destructuring plugin too.
-              'transform-object-rest-spread',
-              'transform-es2015-destructuring',
-              // The class properties plugin is really useful for react components.
-              'transform-class-properties',
-              // This decorates our components with  __self prop to JSX elements,
-              // which React will use to generate some runtime warnings.
-              ifDev('transform-react-jsx-self'),
-              // Adding this will give us the path to our components in the
-              // react dev tools.
-              ifDev('transform-react-jsx-source'),
-              // The following plugin supports the code-split-component
-              // instances, taking care of all the heavy boilerplate that we
-              // would have had to do ourselves to get code splitting w/SSR
-              // support working.
-              // @see https://github.com/ctrlplusb/code-split-component
-              [
-                'code-split-component/babel',
-                {
-                  // The code-split-component doesn't work nicely with hot
-                  // module reloading, which we use in our development builds,
-                  // so we will disable it (which ensures synchronously
-                  // behaviour on the CodeSplit instances).
-                  disabled: isDev,
-                  // For our server bundle we will set the role as being 'server'
-                  // which will ensure that our code split components can be
-                  // resolved synchronously, being much more helpful for
-                  // pre-rendering.
-                  role: isServer ? 'server' : 'client',
-                },
-              ],
-            ]),
-          },
+          query: babelConfigResolver(buildOptions),
         }],
       }),
 
@@ -397,10 +342,16 @@ export default function webpackConfigFactory(options: BuildOptions) {
           // See the respective plugin within the plugins section for full
           // details on what loader is being implemented.
           loader: 'happypack/loader?id=happypack-javascript',
-          include: [
+          include: removeEmpty([
             path.resolve(appRootPath, './src'),
-            path.resolve(appRootPath, './tools'),
-          ],
+            // Our server bundle will be accessing the configs.
+            // NOTE: The client bundle should never have access to these files
+            // as it poses a security risk.  The last thing you want is your
+            // internals bundled and sent across the wire.  If your client
+            // needs config have the server create an inline script within
+            // the html response that binds values to the "window" object.
+            path.resolve(appRootPath, './config'),
+          ]),
         },
 
         // CSS
@@ -444,12 +395,9 @@ export default function webpackConfigFactory(options: BuildOptions) {
 
         // Images and Fonts
         {
-          test: /\.(jpg|jpeg|png|gif|ico|eot|svg|ttf|woff|woff2|otf)$/,
+          test: new RegExp(`\\.(${staticConfig.bundleAssetTypes.join('|')})$`, 'i'),
           loader: 'file-loader',
           query: {
-            // Any file with a byte smaller than this will be "inlined" via
-            // a base64 representation.
-            limit: 10000,
             // We only emit files when building a client bundle, for the server
             // bundles this will just make sure any file imports will not fall
             // over.
@@ -459,4 +407,7 @@ export default function webpackConfigFactory(options: BuildOptions) {
       ]),
     },
   };
+
+  // Apply the configuration middleware.
+  return webpackConfigMiddleware(config, buildOptions);
 }

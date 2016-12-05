@@ -5,11 +5,6 @@ import notifier from 'node-notifier';
 import colors from 'colors';
 import { execSync } from 'child_process';
 import appRootDir from 'app-root-dir';
-import path from 'path';
-import fs from 'fs';
-import dotenv from 'dotenv';
-
-const appRootPath = appRootDir.get();
 
 type HappyPackLoaderConfig = {
   path: string,
@@ -116,45 +111,5 @@ export function createNotification(options : NotificationOptions) {
 
 export function exec(command : string) {
   // $FlowFixMe
-  execSync(command, { stdio: 'inherit', cwd: appRootPath });
-}
-
-export function getFilename(filePath : string) {
-  return path.relative(path.dirname(filePath), filePath);
-}
-
-export function ensureNotInClientBundle() {
-  if (process.env.IS_CLIENT) {
-    throw new Error(
-      'You are importing the application configuration into the client bundle! This is super dangerous as you will essentially be exposing all your internals/logins/etc to the world.  If you need some configuration that will be consumed by the client bundle then add it to the clientSafe configuration file.',
-    );
-  }
-}
-
-// This exists so that we can support the recieving of environment variables
-// from multiple sources. i.e.
-//  - standard environment variables
-//  - a '.env' file, supported by  https://github.com/motdotla/dotenv
-//
-//  If a .env file exists, the contents of it will read and then it will be
-//  merged over the standard environment variables object, otherwise the
-//  standard environment variables object (process.env) will be used.
-//
-//  This gives us a nice degree of flexibility in deciding where we would
-//  like our environment variables to be loaded from, which can be especially
-//  useful for environment variables that we consider sensitive.
-export function getEnvVars() {
-  const envFile = path.resolve(appRootPath, './.env');
-
-  return fs.existsSync(envFile)
-    // We have a .env file, which we need to merge with the standard vars.
-    ? Object.assign(
-      {},
-      // Merge the standard "process.env" environment variables object.
-      process.env,
-      // With the items from our ".env" file
-      dotenv.parse(fs.readFileSync(envFile, 'utf8')),
-    )
-    // No .env file, so we will just use standard vars.
-    : process.env;
+  execSync(command, { stdio: 'inherit', cwd: appRootDir.get() });
 }

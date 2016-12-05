@@ -4,12 +4,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { BrowserRouter } from 'react-router';
-// This library provides us with the capability to have declerative code
-// splitting within our application.
-// @see https://github.com/ctrlplusb/code-split-component
 import { CodeSplitProvider, rehydrateState } from 'code-split-component';
-// This registers our service worker for asset caching and offline support.
-import './registerServiceWorker';
 import ReactHotLoader from './components/ReactHotLoader';
 import App from '../shared/components/App';
 
@@ -17,10 +12,14 @@ import App from '../shared/components/App';
 const container = document.querySelector('#app');
 
 function renderApp(TheApp) {
-  // Firstly we ensure that we rehydrate any code split state provided to us
-  // by the server response. This state typically indicates which bundles/chunks
-  // need to be registered for our application to render and the React checksum
-  // to match the server response.
+  // We use the code-split-component library to provide us with code splitting
+  // within our application.  This library supports server rendered applications,
+  // but for server rendered applications it requires that we rehydrate any
+  // code split modules that may have been rendered for a request.  We use
+  // the provided helper and then pass the result to the CodeSplitProvider
+  // instance which takes care of the rest for us.  This is really important
+  // to do as it will ensure that our React checksum for the client will match
+  // the content returned by the server.
   // @see https://github.com/ctrlplusb/code-split-component
   rehydrateState().then(codeSplitState =>
     render(
@@ -47,4 +46,10 @@ if (process.env.NODE_ENV === 'development' && module.hot) {
   );
 }
 
+// Execute the first render of our app.
 renderApp(App);
+
+// This registers our service worker for asset caching and offline support.
+// Keep this as the last item, just in case the code execution failed (thanks
+// to react-boilerplate for that tip.)
+require('./registerServiceWorker');

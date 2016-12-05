@@ -3,7 +3,7 @@
 import path from 'path';
 import ListenerManager from './listenerManager';
 import { createNotification } from '../utils';
-import config from '../config';
+import envConfig from '../../config/environment';
 
 class HotServer {
   listenerManager: ?ListenerManager;
@@ -33,7 +33,7 @@ class HotServer {
         const listener = require(compiledOutputPath).default;
         this.listenerManager = new ListenerManager(listener, 'server');
 
-        const url = `http://${config.server.host}:${config.server.port}`;
+        const url = `http://${envConfig.host}:${envConfig.port}`;
 
         createNotification({
           title: 'server',

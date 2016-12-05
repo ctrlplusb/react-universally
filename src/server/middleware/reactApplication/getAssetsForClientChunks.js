@@ -3,20 +3,26 @@
 // This file resolves the assets available from our client bundle.
 
 import fs from 'fs';
-import config from '../../../../tools/config';
+import { resolve as pathResolve } from 'path';
+import appRootDir from 'app-root-dir';
+import staticConfig from '../../../../config/static';
 
-if (!fs.existsSync(config.paths.clientBundleAssetsJSON)) {
+const assetsFilePath = pathResolve(
+  appRootDir.get(),
+  staticConfig.clientBundle.outputPath,
+  staticConfig.clientBundle.assetsFileName,
+);
+
+if (!fs.existsSync(assetsFilePath)) {
   throw new Error(
-    `We could not find the "${config.paths.clientBundleAssetsJSON}" file, which contains a list of the assets of the client bundle.  Please ensure that the client bundle has been built before the server bundle and that the required environment variables are configured (BUNDLE_OUTPUT_PATH & BUNDLE_ASSETS_FILENAME)`,
+    `We could not find the "${assetsFilePath}" file, which contains a list of the assets of the client bundle.  Please ensure that the client bundle has been built.`,
   );
 }
 
-const assetsJSON = JSON.parse(
-  fs.readFileSync(config.paths.clientBundleAssetsJSON, 'utf8'),
-);
+const assetsJSON = JSON.parse(fs.readFileSync(assetsFilePath, 'utf8'));
 
 /**
- * Retrieves the js/css for the given chunks that belong to our client bundle.
+ * Retrieves the js/css for the named chunks that belong to our client bundle.
  *
  * Note: the order of the chunk names is important. The same ordering will be
  * used when rendering the scripts.

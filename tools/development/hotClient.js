@@ -5,7 +5,7 @@ import createWebpackMiddleware from 'webpack-dev-middleware';
 import createWebpackHotMiddleware from 'webpack-hot-middleware';
 import ListenerManager from './listenerManager';
 import { createNotification } from '../utils';
-import config from '../config';
+import envConfig from '../../config/environment';
 
 class HotClient {
   webpackDevMiddleware: any;
@@ -29,7 +29,7 @@ class HotClient {
     app.use(this.webpackDevMiddleware);
     app.use(createWebpackHotMiddleware(compiler));
 
-    const listener = app.listen(config.development.clientDevServerPort);
+    const listener = app.listen(envConfig.clientDevServerPort);
 
     this.listenerManager = new ListenerManager(listener, 'client');
 

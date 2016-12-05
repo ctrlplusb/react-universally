@@ -4,7 +4,7 @@ import type { Head } from 'react-helmet';
 import serialize from 'serialize-javascript';
 import { STATE_IDENTIFIER } from 'code-split-component';
 import getAssetsForClientChunks from './getAssetsForClientChunks';
-import config from '../../../../tools/config';
+import staticConfig from '../../../../config/static';
 
 // We use the polyfill.io service which provides the polyfills that a
 // client needs, rather than everything if we used babel-polyfill.
@@ -37,7 +37,7 @@ function scriptTags(jsFilePaths : Array<string>) {
 // @see /tools/development/ensureVendorDLLExists.js
 function developmentVendorDLL() {
   if (process.env.NODE_ENV === 'development') {
-    return scriptTag(config.development.vendorDLL.webPath);
+    return scriptTag(staticConfig.development.vendorDLL.webPath);
   }
   return '';
 }

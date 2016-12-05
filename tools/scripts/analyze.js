@@ -8,9 +8,16 @@
 
 import webpack from 'webpack';
 import fs from 'fs';
+import { resolve as pathResolve } from 'path';
+import appRootDir from 'app-root-dir';
 import clientConfigFactory from '../webpack/client.config';
 import { exec } from '../utils';
-import config from '../config';
+import staticConfig from '../../config/static';
+
+const appRootPath = appRootDir.get();
+const anaylzeFilePath = pathResolve(
+  appRootPath, staticConfig.clientBundle.outputPath, '__analyze__.json',
+);
 
 const clientCompiler = webpack(clientConfigFactory());
 
@@ -19,10 +26,13 @@ clientCompiler.run((err, stats) => {
     console.error(err);
   } else {
     // Write out the json stats file.
-    fs.writeFileSync(config.paths.bundleAnalyze, JSON.stringify(stats.toJson('verbose'), null, 4));
+    fs.writeFileSync(
+      anaylzeFilePath,
+      JSON.stringify(stats.toJson('verbose'), null, 4),
+    );
 
     // Run the bundle analyzer against the stats file.
-    const cmd = `webpack-bundle-analyzer ${config.paths.bundleAnalyze} ${config.paths.clientBundle}`;
+    const cmd = `webpack-bundle-analyzer ${anaylzeFilePath} ${staticConfig.clientBundle.outputPath}`;
     exec(cmd);
   }
 });

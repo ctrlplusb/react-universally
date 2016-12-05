@@ -3,11 +3,12 @@
 import { resolve as pathResolve } from 'path';
 import chokidar from 'chokidar';
 import webpack from 'webpack';
+import appRootDir from 'app-root-dir';
 import { createNotification } from '../utils';
 import HotServer from './hotServer';
 import HotClient from './hotClient';
 import ensureVendorDLLExists from './ensureVendorDLLExists';
-import config from '../config';
+import staticConfig from '../../config/static';
 
 class HotDevelopment {
   clientCompiler: any;
@@ -20,12 +21,18 @@ class HotDevelopment {
       try {
         const clientConfigFactory = require('../webpack/client.config').default;
         const clientConfig = clientConfigFactory({ mode: 'development' });
-        if (config.development.vendorDLL.enabled) {
+        if (staticConfig.development.vendorDLL.enabled) {
           // Install the vendor DLL plugin.
           clientConfig.plugins.push(
             new webpack.DllReferencePlugin({
               // $FlowFixMe
-              manifest: require(config.paths.vendorDLLJSON),
+              manifest: require(
+                pathResolve(
+                  appRootDir.get(),
+                  staticConfig.clientBundle.outputPath,
+                  `${staticConfig.development.vendorDLL.name}.json`,
+                ),
+              ),
             }),
           );
         }
