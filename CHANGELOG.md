@@ -9,6 +9,12 @@ I'll map them as follows:
   - Minor: New features or changes to the build tools.
   - Patch: Small(ish) fixes/restructuring that I expect will take minimal effort to merge in.
 
+## [9.1.0] - 2016-12-05
+
+### Fixed
+
+The previous service worker implementation was completely incorrect, causing an aggressive cache on production that would not expire.  Please update to this latest version which makes use of the `offline-plugin` now.
+
 ## [9.0.0] - 2016-11-07
 
 ### Breaking
