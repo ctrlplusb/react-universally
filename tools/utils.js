@@ -2,7 +2,7 @@
 
 import HappyPack from 'happypack';
 import notifier from 'node-notifier';
-import colors from 'colors';
+import colors from 'colors/safe';
 import { execSync } from 'child_process';
 import appRootDir from 'app-root-dir';
 
