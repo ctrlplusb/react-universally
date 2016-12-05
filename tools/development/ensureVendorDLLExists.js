@@ -26,8 +26,6 @@ const vendorDLLHashFilePath = pathResolve(
   `${staticConfig.development.vendorDLL.name}_hash`,
 );
 
-console.log(vendorDLLHashFilePath);
-
 function webpackConfigFactory(modules) {
   return {
     // We only use this for development, so lets always include source maps.
@@ -98,7 +96,6 @@ function buildVendorDLL() {
       console.log(filteredModules);
 
       const webpackConfig = webpackConfigFactory(filteredModules);
-      console.log(JSON.stringify(webpackConfig, null, 4));
       const vendorDLLCompiler = webpack(webpackConfig);
       vendorDLLCompiler.run((err) => {
         if (err) {
