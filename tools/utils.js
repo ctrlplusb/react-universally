@@ -16,14 +16,15 @@ type HappyPackConfig = {
   loaders: Array<string|HappyPackLoaderConfig>,
 };
 
+const happyThreadPool = HappyPack.ThreadPool({ size: 5 });
+
 // Generates a HappyPack plugin.
 // @see https://github.com/amireh/happypack/
 export function happyPackPlugin({ name, loaders } : HappyPackConfig) {
-  // TODO: Try out the thread pool again since we upgraded to v3
   return new HappyPack({
     id: name,
     verbose: false,
-    threads: 4,
+    threadPool: happyThreadPool,
     loaders,
   });
 }
