@@ -343,14 +343,22 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
           // details on what loader is being implemented.
           loader: 'happypack/loader?id=happypack-javascript',
           include: removeEmpty([
-            path.resolve(appRootPath, './src'),
+            // We only add the client bundle path for a client build to prevent
+            // any erroneous imports by a server bundle.
+            ifClient(path.resolve(appRootPath, './src/client')),
+            // We only add the server bundle path for a server build to prevent
+            // any erroneous imports by a client bundle.
+            ifServer(path.resolve(appRootPath, './src/server')),
+            path.resolve(appRootPath, './src/shared'),
             // Our server bundle will be accessing the configs.
             // NOTE: The client bundle should never have access to these files
             // as it poses a security risk.  The last thing you want is your
-            // internals bundled and sent across the wire.  If your client
-            // needs config have the server create an inline script within
-            // the html response that binds values to the "window" object.
-            path.resolve(appRootPath, './config'),
+            // internal setup details bundled and sent across the wire.
+            // If your client needs config have the server create an inline
+            // script within the html response that binds values to the
+            // "window" object.
+            path.resolve(appRootPath, './config/environment.js'),
+            path.resolve(appRootPath, './config/static.js'),
           ]),
         },
 

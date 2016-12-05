@@ -13,7 +13,7 @@ import type { BuildOptions } from '../tools/types';
 export default function babelConfigResolver(buildOptions : BuildOptions) {
   const { target, mode } = buildOptions;
 
-  const babelConfig = {
+  return {
     presets: [
       // JSX
       'react',
@@ -82,8 +82,4 @@ export default function babelConfigResolver(buildOptions : BuildOptions) {
       ],
     ].filter(x => x != null),
   };
-
-  console.log(JSON.stringify(babelConfig, null, 4));
-
-  return babelConfig;
 }
