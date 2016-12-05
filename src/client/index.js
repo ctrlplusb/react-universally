@@ -46,3 +46,8 @@ if (process.env.NODE_ENV === 'development' && module.hot) {
 }
 
 renderApp(App);
+
+// This registers our service worker for asset caching and offline support.
+// Keep this as the last item, just in case the code execution failed (thanks
+// to react-boilerplate for that tip.)
+require('./registerServiceWorker');

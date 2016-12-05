@@ -14,23 +14,6 @@ function polyfillIoScript() {
   return '<script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>';
 }
 
-// We use a service worker configured created by the sw-precache webpack plugin,
-// providing us with prefetched caching and offline application support.
-// @see https://github.com/goldhand/sw-precache-webpack-plugin
-function serviceWorkerScript(nonce) {
-  if (process.env.NODE_ENV === 'production') {
-    return `
-      <script nonce="${nonce}" type="text/javascript">
-        (function swRegister() {
-          if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js');
-          }
-        }());
-      </script>`;
-  }
-  return '';
-}
-
 function styleTags(styles : Array<string>) {
   return styles
     .map(style =>
@@ -132,7 +115,6 @@ function render(args: RenderArgs) {
             : ''
           }
         ${polyfillIoScript()}
-        ${serviceWorkerScript(nonce)}
         ${developmentVendorDLL()}
         ${scriptTags(assetsForRender.js)}
         ${helmet ? helmet.script.toString() : ''}
