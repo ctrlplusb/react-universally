@@ -1,6 +1,6 @@
 ## NOTE
 
-A significant update is being prepared in the [`next`](https://github.com/ctrlplusb/react-universally/tree/next) branch.  It contains a lot of significant improvements and is not far off from being ready.  If you are considering on using this project as a base for your own work I would consider that you monitor this project and use the next version as soon as it is published to the master branch.
+A significant update is being prepared in the [`next`](https://github.com/ctrlplusb/react-universally/tree/next) branch.  It contains a lot of improvements and is not far off from being ready.  If you are considering on using this project as a base for your own work I would consider that you monitor this project and use the next version as soon as it is published to the master branch.
 
 ---
 
