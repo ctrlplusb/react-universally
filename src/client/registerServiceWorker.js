@@ -5,7 +5,6 @@
 // service worker is executed.
 //
 // We will only be doing this for production builds.
-
 if (process.env.NODE_ENV === 'production') {
   const OfflinePluginRuntime = require('offline-plugin/runtime');
 

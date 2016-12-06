@@ -41,6 +41,7 @@
   "dependencies": {
     "app-root-dir": "1.0.2",
     "code-split-component": "2.0.0-alpha.2",
+    "colors": "1.1.2",
     "compression": "1.6.2",
     "dotenv": "2.0.0",
     "express": "4.14.0",
@@ -73,7 +74,6 @@
     "babel-preset-react": "6.16.0",
     "babel-template": "6.16.0",
     "chokidar": "1.6.1",
-    "colors": "1.1.2",
     "css-loader": "0.26.1",
     "eslint": "3.11.1",
     "eslint-config-airbnb": "13.0.0",

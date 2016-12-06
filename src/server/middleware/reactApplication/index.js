@@ -11,9 +11,10 @@ import App from '../../../shared/components/App';
 import envConfig from '../../../../config/environment';
 
 /**
- * An express middleware that is capabable of doing React server side rendering.
+ * An express middleware that is capabable of service our React application,
+ * supporting server side rendering of the application.
  */
-function universalReactAppMiddleware(request: $Request, response: $Response) {
+function reactApplicationMiddleware(request: $Request, response: $Response) {
   // We should have had a nonce provided to us.  See the server/index.js for
   // more information on what this is.
   if (typeof response.locals.nonce !== 'string') {
@@ -93,4 +94,4 @@ function universalReactAppMiddleware(request: $Request, response: $Response) {
     .send(html);
 }
 
-export default (universalReactAppMiddleware : Middleware);
+export default (reactApplicationMiddleware : Middleware);

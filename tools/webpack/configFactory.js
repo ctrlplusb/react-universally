@@ -21,11 +21,8 @@ import type { BuildOptions } from '../types';
  * all of our bundles.
  *
  * It has been configured to support one "client/web" bundle, and any number of
- * additional "node" bundles (i.e. our "server").
- *
- * A common requirement is to add additional "node" target bundles (e.g an
- * APi server endpoint). Therefore flexibility has been baked into this
- * config factory to allow for this.
+ * additional "node" bundles (i.e. our "server").  You can define additional
+ * node bundles by editing the config/project.js file.
  *
  * This factory does not and will not support building multiple web target
  * bundles.  We expect there to be only one web client representing the full

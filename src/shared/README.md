@@ -1,9 +1,5 @@
 # src/shared
 
-This directory should contain code that is considered safe to execute on a `node` or `web` target bundle.
+This directory should contain code that is considered safe to execute on a `node` or `web` target bundle. i.e. It's "Universal" code. :)
 
-This means all our bundles:
- - src/server
- - src/client
-
-The bundles at these locations can safely consume this code.
+This means all our bundles can use this code.
