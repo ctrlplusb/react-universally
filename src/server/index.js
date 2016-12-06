@@ -17,8 +17,6 @@ import errorHandlers from './middleware/errorHandlers';
 import staticConfig from '../../config/static';
 import envConfig from '../../config/environment';
 
-const appRootPath = appRootDir.get();
-
 // Create our express based server.
 const app = express();
 
@@ -45,7 +43,7 @@ app.use(staticConfig.bundles.client.webPath, clientBundle);
 
 // Configure static serving of our "public" root http path static files.
 // Note: these will be served off the root (i.e. '/') of our application.
-app.use(express.static(pathResolve(appRootPath, staticConfig.publicAssetsPath)));
+app.use(express.static(pathResolve(appRootDir.get(), staticConfig.publicAssetsPath)));
 
 // The React application middleware.
 app.get('*', reactApplication);

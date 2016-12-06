@@ -8,8 +8,6 @@ import fs from 'fs';
 import rimraf from 'rimraf';
 import { exec } from '../utils';
 
-const appRootPath = appRootDir.get();
-
 function safeDelete(target, cb) {
   if (fs.existsSync(target)) {
     rimraf(target, (err) => {
@@ -24,18 +22,18 @@ function safeDelete(target, cb) {
 }
 
 const srcPaths = [
-  path.resolve(appRootPath, './src'),
-  path.resolve(appRootPath, './tools'),
-  path.resolve(appRootPath, './config'),
+  path.resolve(appRootDir.get(), './src'),
+  path.resolve(appRootDir.get(), './tools'),
+  path.resolve(appRootDir.get(), './config'),
 ];
 const flowTypesPaths = [
-  path.resolve(appRootPath, './src/shared/types'),
-  path.resolve(appRootPath, './tools/types'),
+  path.resolve(appRootDir.get(), './src/shared/types'),
+  path.resolve(appRootDir.get(), './tools/types'),
 ];
-const flowConfigPath = path.resolve(appRootPath, './.flowconfig');
-const packageJsonPath = path.resolve(appRootPath, './package.json');
-const flowToolsPath = path.resolve(appRootPath, './tools/flow');
-const flowScriptPath = path.resolve(appRootPath, './tools/scripts/flow.js');
+const flowConfigPath = path.resolve(appRootDir.get(), './.flowconfig');
+const packageJsonPath = path.resolve(appRootDir.get(), './package.json');
+const flowToolsPath = path.resolve(appRootDir.get(), './tools/flow');
+const flowScriptPath = path.resolve(appRootDir.get(), './tools/scripts/flow.js');
 
 // Strip the flow types from our src files.
 srcPaths
