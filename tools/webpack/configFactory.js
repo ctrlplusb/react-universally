@@ -13,8 +13,7 @@ import CodeSplitPlugin from 'code-split-component/webpack';
 import { removeEmpty, ifElse, merge, happyPackPlugin } from '../utils';
 import staticConfig from '../../config/static';
 import envConfig from '../../config/environment';
-import babelConfigResolver from '../../config/babelConfigResolver';
-import webpackConfigEnhancer from '../../config/webpackConfigEnhancer';
+import plugins from '../../config/plugins';
 import type { BuildOptions } from '../types';
 
 /**
@@ -375,7 +374,7 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
         // We will use babel to do all our JS processing.
         loaders: [{
           path: 'babel-loader',
-          query: babelConfigResolver(buildOptions),
+          query: plugins.bundles.babelConfig(buildOptions),
         }],
       }),
 
@@ -478,5 +477,5 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
   };
 
   // Apply the configuration middleware.
-  return webpackConfigEnhancer(config, buildOptions);
+  return plugins.bundles.webpackConfig(config, buildOptions);
 }
