@@ -9,6 +9,7 @@
  - [About](https://github.com/ctrlplusb/react-universally#about)
  - [Features](https://github.com/ctrlplusb/react-universally#features)
  - [Overview](https://github.com/ctrlplusb/react-universally#overview)
+ - [Project Configuration](https://github.com/ctrlplusb/react-universally#project-configuration)
  - [Environment Configuration](https://github.com/ctrlplusb/react-universally#environment-configuration)
  - [Express Server Security](https://github.com/ctrlplusb/react-universally#express-server-security)
  - [Progressive Web Application Ready](https://github.com/ctrlplusb/react-universally#progressive-web-application-ready)
@@ -16,15 +17,12 @@
  - [3rd Party Extensions](https://github.com/ctrlplusb/react-universally#3rd-party-extensions)
  - [Project Structure](https://github.com/ctrlplusb/react-universally#project-structure)
  - [Project Dependencies](https://github.com/ctrlplusb/react-universally#project-dependencies)
- - [Deploy your very own Server Side Rendering React App in 5 easy steps](https://github.com/ctrlplusb/react-universally#deploy-your-very-own-server-side-rendering-react-app-in-5-easy-steps)
+ - [Deploy your very own Server Side Rendering React App in 4 easy steps](https://github.com/ctrlplusb/react-universally#deploy-your-very-own-server-side-rendering-react-app-in-4-easy-steps)
  - [npm script commands](https://github.com/ctrlplusb/react-universally#npm-script-commands)
- - [References](https://github.com/ctrlplusb/react-universally#references)
 
 ## About
 
 This starter kit contains all the build tooling and configuration you need to kick off your next universal react project, whilst containing a minimal "project" set up allowing you to make your own architecture decisions (redux/mobx etc).
-
-> __NEW!__ If you really want an example of a data library integration along with an example of how to go about solving data prefetching for the server then feel free to take a look at the [`redux`](https://github.com/ctrlplusb/react-universally/tree/redux) branch which provides exactly this.
 
 ## Features
 
@@ -37,49 +35,56 @@ This starter kit contains all the build tooling and configuration you need to ki
   - 👀 `react` as the view.
   - 🔀 `react-router` v4 as the router.
   - ⛑ `react-helmet` allowing control of the page title/meta/styles/scripts from within your components. Direct control for your SEO needs.
-  - 🖌 Very basic CSS support - it's up to you to extend it into CSS Modules, SASS, PostCSS, Aphrodite etc.
-  - 🏜 Image and Font support.
-  - 🚀 Full ES2017+ support, using `babel` to transpile where needed.
-  - 📦 Bundling of both client and server using `webpack` v2.
+  - 🖌 Very basic CSS support - it's up to you to extend it with CSS Modules etc.
+  - 🏜 Asset bundling support. e.g. images/fonts.
+  - 🚀 Full ES2017+ support, use the exact same JS syntax across the entire project (src/tools/config).
+  - 📦 All source bundled using `webpack` v2.
   - ✂️ Code splitting - `code-split-component` provides you declarative code splitting based on your routes.
-  - 🍃 Tree-shaking, supported by `webpack`.
+  - 🍃 Tree-shaking, courtesy of `webpack`.
   - ✔️ Type checking via Flow, a beautiful and unobtrusive type framework.
 
-      __NOTE:__ Flow is a completely optional feature.  The flow type annotations get ripped out of the source by the webpack build step. You have no obligation to use flow within your code and can happily code without applying it to any new code.  I do highly recommend you try it out though. :)
+      __NOTE:__ Flow is a completely optional feature.  The flow type annotations get ripped out of the source by the Webpack build step. You have no obligation to use flow within your code and can happily code without applying it to any new code.  I do highly recommend you try it out though. :)
 
       If you don't really don't want to use flow then you can run `npm run flow:remove`. This will make it as though flow never existed within the project.
-  - 🎛 A development and optimized production configuration.
-  - 🔧 Easy environment configuration via cli/host env vars and/or a [`dotenv`](https://github.com/motdotla/dotenv) file.
-  - 👼 Airbnb's eslint configuration.
+  - 🎛 A development and optimised production configuration.
+  - 🔧 Centralised project customisation and environment.
+  - 👼 Airbnb's ESlint configuration.
   - ❤️ Preconfigured to deploy to `now` with a single command.
 
 ## Overview
 
 Redux/MobX, data persistence, test frameworks, and all the other bells and whistles have been explicitly excluded from this boilerplate.  It's up to you to decide what technologies you would like to add to your own implementation based upon your own needs, this boilerplate simply serves as a clean base upon which to do so.
 
-> __NEW!__ If you really want an example of a data library integration along with an example of how to go about solving data prefetching for the server then feel free to take a look at the [`redux`](https://github.com/ctrlplusb/react-universally/tree/redux) branch which provides exactly this.
-
 This boilerplate uses Webpack 2 to produce bundles for both the client and the
-server.  You will notice the following Webpack configuration files:
+server.  `tools/webpack/configFactory.js` is used to generate the respective Webpack configuration for all our bundles. The factory is heavily commented to help you understand what is going on within the Webpack configuration.
 
-   - `tools/webpack/client.config.js`
-   - `tools/webpack/server.config.js`
+We use babel across the entire project, which allows us to use the same level of javascript (e.g. es2015/2016/2017) without having to worry which level of the language within each separate slice of the project.  
 
-All of these call into the `tools/webpack/configFactory.js` in order to generate their respective Webpack configurations. I've tried to keep the Webpack configuration as centralized as possible to allow easier reuse of the configuration and allow you to not have to do constant file jumping whilst trying to analyse the configuration for a target bundle.  I've also included a fair amount of comments as I know Webpack can be a bit daunting at first.
+Note: Given that we are bundling our server code I have included the `source-map-support` module to ensure that we still get nice stack traces when executing our code.
 
-Using Webpack and babel across all of our source allows us to use the same level of javascript (e.g. es2015/2016/2017) without having to worry about what each target environment supports.  In addition to this it allows our client/server code to both support the additional file types that a typical React application may import (e.g. CSS/Images).
+## Project Configuration
 
-Given that we are bundling our server code I have included the `source-map-support` module to ensure that we still get nice stack traces when executing our code.
+We have centralised the configuration of the project to be contained within the `./config` folder.  The files within this folder can be described as follows:
+
+  - `environment.js` - parses and provides the environment specific values which will be used at runtime.  See the "Environment configuration" section below for more information.
+  - `plugins.js` - provides useful plugin points into the internals of the project toolchain allowing you to easily manage/extend the Babel and Webpack configurations.
+  - `project.js` - global project configuration options, with the capability to easily define new additional "node" target bundles (for e.g. an "apiServer").
+
+In addition to having an easy "go to" location for configuration we hope that this centralised strategy will allow you to easily pull and merge any updates from the starter kit origin without having to pick apart configuration customisations you may have had to scatter throughout the tools folder.
 
 ## Environment Configuration
 
-Environment specific configuration is support via standard environment variables (e.g. passed in via the CLI like `FOO=bar npm run start`) and/or via a `.env` file within your application root.  
+Environment specific configuration is support via standard environment variables (e.g. passed in via the CLI like `FOO=bar npm run start`) and/or by providing an "env" file.  
 
-The `.env` file is supported by the [`dotenv`](https://github.com/motdotla/dotenv) module. Within this file you can provide key/value pairs representing your required environment variables (e.g. `PORT=1337`).  This can save you a lot of effort in having to provide a large amount of environment variables to your application.
+"env" files is an optional feature that is supported by the [`dotenv`](https://github.com/motdotla/dotenv) module. This module allows you to define files containing key/value pairs representing your required environment variables (e.g. `PORT=1337`). To use this feature create an `.env` file within the root of the project (we have provided an example file called `.env_example`, which contains all the environment variables this project currently relies on).
 
-The application has been configured to accept a mix-match of sources for the environment variables. i.e. you can provide some environment variables via the `.env` file, and others via the cli/host (e.g. `FOO=bar npm run build`). This gives you greater flexibility and grants you the opportunity to control the provision of sensitive values (e.g. db connection string).
+> Note: The `.env` file has been ignored from the git repository in anticipation that it will most likely be used to house development specific configuration.
 
-To get you started quickly we have provided a `.env_example` file that contains all the environment variables this project currently relies on.  Copy this file (e.g. `cp .env_example .env`) and modify the file as you please.
+We generally recommend that you don't persist any environment configuration values within the repository, and instead rely on your target host environments or deployment servers to provide the necessary values per environment.  However, if you would like to create and persist configs per environment you can create environment specific "env" files. To do so create a ".env" file that is postfix'ed with the environment you would like to define values for. For e.g. `.env.development` or `.env.staging` or `.env.production`
+
+ > Note: if an environment specific configuration file exists, it will be used over the more generic `.env` file.
+
+As stated before, the application has been configured to accept a mix-match of sources for the environment variables. i.e. you can provide some/all of the environment variables via the `.env` file, and others via the cli/host (e.g. `FOO=bar npm run build`). This gives you greater flexibility and grants you the opportunity to control the provision of sensitive values (e.g. db connection string).  Please do note that "env" file values will take preference over any values provided by the host/CLI.
 
 ## Express Server Security
 
@@ -116,6 +121,11 @@ A This boilerplate provides extended features on top of `react-universally` such
 
 ```
 /
+|- config // Centralised project configuration
+|  |- project      // Project configuration
+|  |- environment  // Environment variable parsing/support
+|  |- plugins      // Plugin points for tool internals
+|
 |- build // The target output dir for our build commands.
 |  |- client // The built client module.
 |  |- server // The built server module
@@ -129,8 +139,6 @@ A This boilerplate provides extended features on top of `react-universally` such
 |  |- development // Tool for hot reloading development
 |  |
 |  |- webpack
-|     |- client.config.js // Client webpack configuration
-|     |- server.config.js // Server webpack configuration
 |     |- configFactory.js  // Webpack configuration builder
 |
 |- .env_example // An example from which to create your own .env file.
@@ -142,9 +150,9 @@ I highly recommend putting most of your application code into the `shared` folde
 
 The dependencies within `package.json` are structured so that the libraries required to transpile/bundle the source are contained within the `devDependencies` section, whilst the libraries required during the server runtime are contained within the `dependencies` section.
 
-If you do building on your production environment you must ensure that you have allowed the installation of the `devDependencies` too (Heroku, for example doesn't do this by default).
+If you perform build tasks on your production environment you must ensure that you have allowed the installation of the `devDependencies` too (Heroku, for example doesn't do this by default).
 
-## Deploy your very own "React, Universally" App in 5 easy steps ##
+## Deploy your very own "React, Universally" App in 4 easy steps ##
 
 __Step 1: Clone the repository.__
 
@@ -154,19 +162,11 @@ __Step 2: `cd` into the cloned directory__
 
     cd react-universally
 
-__Step 3: Set up your env configuration file__
-
-The application depends on environment settings, which can be provided via the cli/host or via a `.env` file.  You can copy the example version (`.env_example`) provided to ensure that all the required environment variables are available. To do so run the following command:
-
-    cp .env_example .env
-
-I would recommend that you review the options within the `.env` file.
-
-__Step 4: Install the awesome [`now`](https://zeit.co/now) CLI__
+__Step 3: Install the awesome [`now`](https://zeit.co/now) CLI__
 
     npm install -g now
 
-__Step 5: Deploy to "now"__
+__Step 4: Deploy to "now"__
 
     npm run deploy
 
@@ -180,7 +180,7 @@ Starts a development server for both the client and server bundles.  We use `rea
 
 ### `npm run build`
 
-Builds the client and server bundles, with the output being production optimized.
+Builds the client and server bundles, with the output being production optimised.
 
 ### `npm run start`
 
@@ -218,7 +218,7 @@ Executes `flow-coverage-report`, generating a report on your type check coverage
 
 For those of us not wanting to use `flow`. Running this command removes everything `flow` related from the project.  It's best to run this against a fresh clone of the project, but it should work fine with a project that has been extended somewhat.
 
-__Warning:__ This is a destructive behavior - it modifies your actual source files. Please make sure you commit any existing changes to your src before running this command.
+__Warning:__ This is a destructive behaviour - it modifies your actual source files. Please make sure you commit any existing changes to your src before running this command.
 
 
 ## Troubleshooting ##
@@ -230,38 +230,3 @@ You two options to fix this:
 
  1. Prebuild your project and then deploy it along with the build output.
  2. Change your host configuration so that it will install the `devDependencies` too.  In the case of Heroku for example see [here](https://devcenter.heroku.com/articles/nodejs-support#devdependencies).
-
-___Q:___ __My server bundle fails to execute after installing a new library.__
-
-This may occur if the library you added contains a file format that depends on one of your webpack loaders to process it (e.g. `react-toolbox` contains sass/css).  For these cases you need to ensure that you add the file types to the whitelist of the `externals` section in the `webpackConfigFactory`.  For example:
-
-```
-// Anything listed in externals will not be included in our bundle.
-externals: removeEmpty([
-  // We don't want our node_modules to be bundled with our server package,
-  // prefering them to be resolved via native node module system.  Therefore
-  // we use the `webpack-node-externals` library to help us generate an
-  // externals config that will ignore all node_modules.
-  ifServer(nodeExternals({
-    // NOTE: !!!
-    // However the node_modules may contain files that will rely on our
-    // webpack loaders in order to be used/resolved, for example CSS or
-    // SASS. For these cases please make sure that the file extensions
-    // are added to the below list. We have added the most common formats.
-    whitelist: [
-      /\.(eot|woff|woff2|ttf|otf)$/,
-      /\.(svg|png|jpg|jpeg|gif)$/,
-      /\.(mp4|mp3|ogg|swf|webp)$/,
-      /\.(css|scss|sass|sss|less)$/,
-    ],
-  })),
-]),
-```
-
-As you can see above we have already added the most common formats, so you are unlikely to hit this issue, however, it is good to be aware of.
-
-## References ##
-
-  - __Webpack 2__ - https://gist.github.com/sokra/27b24881210b56bbaff7
-  - __React Hot Loader v3__ - https://github.com/gaearon/react-hot-boilerplate/pull/61
-  - __dotenv__ - https://github.com/bkeepers/dotenv
