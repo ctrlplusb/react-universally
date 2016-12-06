@@ -7,6 +7,7 @@
     "node": "~6.9.1"
   },
   "scripts": {
+    "preinstall": "babel-node tools/scripts/preinstall",
     "clean": "babel-node tools/scripts/clean",
     "development": "babel-node tools/development",
     "build": "babel-node tools/scripts/build",
@@ -96,6 +97,7 @@
     "react-hot-loader": "3.0.0-beta.6",
     "regenerator-runtime": "0.10.0",
     "rimraf": "2.5.4",
+    "semver": "^5.3.0",
     "style-loader": "0.13.1",
     "webpack": "2.1.0-beta.27",
     "webpack-bundle-analyzer": "2.1.1",
