@@ -54,6 +54,11 @@ export function removeEmpty(x : Array<any>) : Array<any> {
 // This is really handy for doing inline value resolution within or webpack
 // configuration.  Then we simply use one of our other utility functions (e.g.
 // removeEmpty) to remove all the nulls from our objects/arrays.
+//
+// As an additional feature: if you pass a function as the "then"/"or" value
+// then this function will only be interpretted after the ifElse has run. This
+// can be handy for values that require some complex initialization process.
+// e.g. ifDev(() => 'lazy', 'not lazy');
 export function ifElse(condition : boolean) {
   // TODO: Allow the then/or to accept a function for lazy value resolving.
   return function ifElseResolver<X, Y>(then : X, or : Y) : X|Y {

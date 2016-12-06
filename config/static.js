@@ -11,6 +11,9 @@
 // absolute paths should be resolved during runtime by our build tools/server.
 
 export default {
+  // Base name of the optional environment configuration file.
+  envFileName: '.env',
+
   // How long should we set the browser cache for the served assets?
   // Don't worry, we add hashes to the files, so if they change the new files
   // will be served to browsers.

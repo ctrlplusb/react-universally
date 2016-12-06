@@ -4,31 +4,60 @@
 //
 // This represents the configuration settings that typically change between
 // each hosting environment.  You can pass the settings via host environment
-// variables (e.g. `SERVER_PORT=1234 npm run start`) or by creating a `./env`
-// file (supported by the `dotenv` library).
+// variables (e.g. `SERVER_PORT=1234 npm run start`) or by creating an
+// environment configuration file (supported by the `dotenv` library).
+// @see https://github.com/motdotla/dotenv
+//
+// The environment configuration file is optional. We will check for the
+// existence of an environemnt configuration file in a priority ordered manner
+// across the file system.  Please see the envFileResolutionOrder variable
+// below for details on this.
+//
+// This gives us a nice degree of flexibility in deciding where we would
+// like our environment variables to be loaded from.
 
 import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
 import appRootDir from 'app-root-dir';
+import userHome from 'user-home';
+import colors from 'colors/safe';
+import pkg from '../package.json';
+import staticConfig from './static';
 
-if (fs.existsSync(path.resolve(appRootDir.get(), './.env'))) {
-  // This exists so that we can support the recieving of environment variables
-  // from multiple sources. i.e.
-  //  - standard environment variables
-  //  and/or
-  //  - a '.env' file, supported by  https://github.com/motdotla/dotenv
-  //
-  //  If a .env file exists, the contents of it will read and the contained
-  //  environment variables will be registered.
-  //
-  //  This gives us a nice degree of flexibility in deciding where we would
-  //  like our environment variables to be loaded from.
-  //
-  //  It is recommended that you keep the .env file ignored from source control,
-  //  as it should always be host/environment specific.  This allows you to
-  //  create your own .env file for your local development.
-  dotenv.config();
+function registerEnvFile() {
+  const envName = process.env.NODE_ENV || 'development';
+  const envFile = staticConfig.envFileName;
+
+  // This is the order in which we will try to resolve an environment configuration
+  // file.
+  const envFileResolutionOrder = [
+    // Is there an environment config file at the app root for our target
+    // environment name?
+    // e.g. /projects/react-universally/.env.development
+    path.resolve(appRootDir.get(), `${envFile}.${envName}`),
+    // Is there an environment config file at the app root?
+    // e.g. /projects/react-universally/.env
+    path.resolve(appRootDir.get(), envFile),
+    // Is there an environment config file in the executing user's home dir
+    // that is targetting the specific environment?
+    // e.g. /Users/ctrlplusb/.config/react-universally/.env.development
+    path.resolve(userHome, '.config', pkg.name, `${envFile}.${envName}`),
+    // Is there an environment config file in the executing user's home dir?
+    // e.g. /Users/ctrlplusb/.config/react-universally/.env
+    path.resolve(userHome, '.config', pkg.name, envFile),
+  ];
+
+  // Find the first env file path match.
+  const envFilePath = envFileResolutionOrder.find(filePath => fs.existsSync(filePath));
+
+  // If we found an env file match the register it.
+  if (envFilePath) {
+    console.log( // eslint-disable-line no-console
+      colors.bgBlue.white(`==> Registering environment variables from: ${envFilePath}`),
+    );
+    dotenv.config({ path: envFilePath });
+  }
 }
 
 function getStringEnvVar(name : string, defaultVal : string) {
@@ -46,6 +75,10 @@ function getBoolVar(name : string, defaultVal : boolean) {
     ? process.env[name] === 'true'
     : defaultVal;
 }
+
+// Ensure that we first register any environment variables from an existing
+// env file.
+registerEnvFile();
 
 export default {
   // The host on which the server should run.
