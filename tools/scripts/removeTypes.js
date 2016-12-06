@@ -28,7 +28,7 @@ const srcPaths = [
 ];
 const flowTypesPaths = [
   path.resolve(appRootDir.get(), './src/shared/types'),
-  path.resolve(appRootDir.get(), './tools/types'),
+  path.resolve(appRootDir.get(), './tools/types.js'),
 ];
 const flowConfigPath = path.resolve(appRootDir.get(), './.flowconfig');
 const packageJsonPath = path.resolve(appRootDir.get(), './package.json');
@@ -55,7 +55,7 @@ srcPaths
       // Remove any blank lines at top of file.
       .replace(/^\n+/, '')
       // Remove any multiple blank lines in files.
-      .replace(/\n\n\n/g, '\n\n');
+      .replace(/\n\n+/g, '\n\n');
     fs.writeFileSync(file, output);
   });
 
