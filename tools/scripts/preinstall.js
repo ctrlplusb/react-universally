@@ -1,25 +1,40 @@
-// Preinstall checks.
+/* eslint-disable */
 
-import appRootDir from 'app-root-dir';
-import { resolve as pathResolve } from 'path';
-import semver from 'semver';
-import colors from 'colors/safe';
+// NOTE: ENSURE THIS FILE USES ES5 SYNTAX ONLY!
+//
+// This script will ensure that users are using a supported version of node
+// for the project.
 
-// Lifted from "create-react-app". Thanks @gaearon :)
+var exec = require('child_process').exec;
+
+// Inspired by "create-react-app". Thanks @gaearon :)
 function checkNodeVersion() {
-  const packageJson = require(pathResolve(appRootDir.get(), 'package.json'));
-  if (!packageJson.engines || !packageJson.engines.node) {
-    return;
-  }
+  var semver = require('semver');
 
   if (!semver.satisfies(process.version, packageJson.engines.node)) {
     console.error(
-      colors.red(
-        `You are currently running Node ${process.version} but ${packageJson.name} requires ${packageJson.engines.node}. Please use a supported version of Node.\n`,
-      ),
+      'You are currently running Node %s but %s requires %s. Please use a supported version of Node.\n',
+      process.version,
+      packageJson.name,
+      packageJson.engines.node
     );
     process.exit(1);
   }
 }
 
-checkNodeVersion();
+var packageJson = require('../../package.json');
+if (!packageJson.engines
+  || !packageJson.engines.node
+  || !packageJson.devDependencies
+  || !packageJson.devDependencies.semver) {
+  // The package has already been customised. Ignore this script.
+  return;
+}
+
+exec(
+  'npm install semver@' + packageJson.devDependencies.semver,
+  function installSemverCb(err, stdout, stderr) {
+    if (err) throw err;
+    checkNodeVersion();
+  }
+)

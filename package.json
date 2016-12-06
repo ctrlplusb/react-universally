@@ -4,10 +4,10 @@
   "description": "A starter kit giving you the minimum requirements for a production ready universal react application.",
   "main": "build/server/main.js",
   "engines": {
-    "node": "~6.9.1"
+    "node": "~6.9.2"
   },
   "scripts": {
-    "preinstall": "babel-node tools/scripts/preinstall",
+    "preinstall": "node tools/scripts/preinstall",
     "clean": "babel-node tools/scripts/clean",
     "development": "babel-node tools/development",
     "build": "babel-node tools/scripts/build",
