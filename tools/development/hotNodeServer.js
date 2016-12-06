@@ -1,27 +1,29 @@
 /* @flow */
 
 import path from 'path';
+import appRootDir from 'app-root-dir';
 import ListenerManager from './listenerManager';
 import { createNotification } from '../utils';
-import envConfig from '../../config/environment';
 
-class HotServer {
+class HotNodeServer {
   listenerManager: ?ListenerManager;
   watcher: any;
 
-  constructor(compiler : Object) {
+  constructor(name: string, compiler : Object) {
     this.listenerManager = null;
     this.watcher = null;
 
-    const compiledOutputPath = path.resolve(
-      compiler.options.output.path, `${Object.keys(compiler.options.entry)[0]}.js`,
+    const compiledEntryFile = path.resolve(
+      appRootDir.get(),
+      compiler.options.output.path,
+      `${Object.keys(compiler.options.entry)[0]}.js`,
     );
 
     compiler.plugin('compile', () =>
       createNotification({
-        title: 'server',
+        title: name,
         level: 'info',
-        message: 'Building new server bundle...',
+        message: 'Building new bundle...',
       }),
     );
 
@@ -30,16 +32,18 @@ class HotServer {
         // The server bundle  will automatically start the web server just by
         // requiring it. It returns the http listener too.
         // $FlowFixMe
-        const listener = require(compiledOutputPath).default;
-        this.listenerManager = new ListenerManager(listener, 'server');
+        const listener = require(compiledEntryFile).default;
+        this.listenerManager = new ListenerManager(listener, name);
 
-        const url = `http://${envConfig.host}:${envConfig.port}`;
-
-        createNotification({
-          title: 'server',
-          level: 'info',
-          message: `Running on ${url} with latest changes.`,
-          open: url,
+        listener.on('listening', () => {
+          const { address, port } = listener.address();
+          const url = `http://${address}:${port}`;
+          createNotification({
+            title: 'server',
+            level: 'info',
+            message: `Running on ${url} with latest changes.`,
+            open: url,
+          });
         });
       } catch (err) {
         createNotification({
@@ -91,4 +95,4 @@ class HotServer {
   }
 }
 
-export default HotServer;
+export default HotNodeServer;

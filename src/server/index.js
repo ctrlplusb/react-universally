@@ -40,8 +40,8 @@ if (process.env.NODE_ENV === 'production') {
   app.get(staticConfig.serviceWorker.webPath, serviceWorker);
 }
 
-// Configure serving of our webpack bundled client.
-app.use(staticConfig.clientBundle.webPath, clientBundle);
+// Configure serving of our client bundle.
+app.use(staticConfig.bundles.client.webPath, clientBundle);
 
 // Configure static serving of our "public" root http path static files.
 // Note: these will be served off the root (i.e. '/') of our application.

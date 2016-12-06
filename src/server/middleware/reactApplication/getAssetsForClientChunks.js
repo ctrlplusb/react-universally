@@ -9,8 +9,8 @@ import staticConfig from '../../../../config/static';
 
 const assetsFilePath = pathResolve(
   appRootDir.get(),
-  staticConfig.clientBundle.outputPath,
-  staticConfig.clientBundle.assetsFileName,
+  staticConfig.bundles.client.outputPath,
+  `./${staticConfig.bundleAssetsFileName}`,
 );
 
 if (!fs.existsSync(assetsFilePath)) {

@@ -57,7 +57,8 @@ export function removeEmpty(x : Array<any>) : Array<any> {
 export function ifElse(condition : boolean) {
   // TODO: Allow the then/or to accept a function for lazy value resolving.
   return function ifElseResolver<X, Y>(then : X, or : Y) : X|Y {
-    return condition ? then : or;
+    const execIfFuc = x => (typeof x === 'function' ? x() : x);
+    return condition ? execIfFuc(then) : (or);
   };
 }
 

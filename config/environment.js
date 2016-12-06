@@ -10,10 +10,9 @@
 import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
-import appRoot from 'app-root-dir';
-import staticConfig from './static';
+import appRootDir from 'app-root-dir';
 
-if (fs.existsSync(path.resolve(appRoot.get(), staticConfig.envFilePath))) {
+if (fs.existsSync(path.resolve(appRootDir.get(), './.env'))) {
   // This exists so that we can support the recieving of environment variables
   // from multiple sources. i.e.
   //  - standard environment variables

@@ -11,7 +11,7 @@ function serviceWorkerMiddleware(
   res.sendFile(
     pathResolve(
       appRootDir.get(),
-      staticConfig.clientBundle.outputPath,
+      staticConfig.bundles.client.outputPath,
       staticConfig.serviceWorker.fileName,
     ),
   );

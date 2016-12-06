@@ -3,11 +3,12 @@
 // This script builds a production output of all of our bundles.
 
 import webpack from 'webpack';
-import clientConfigFactory from '../webpack/client.config';
-import serverConfigFactory from '../webpack/server.config';
+import webpackConfigFactory from '../webpack/configFactory';
+import staticConfig from '../../config/static';
 
-const clientCompiler = webpack(clientConfigFactory());
-const serverCompiler = webpack(serverConfigFactory());
-
-clientCompiler.run(() => console.log('Client built.'));
-serverCompiler.run(() => console.log('Server built.'));
+Object.keys(staticConfig.bundles).forEach((bundleName) => {
+  const compiler = webpack(
+    webpackConfigFactory({ target: bundleName, mode: 'production' }),
+  );
+  compiler.run(() => console.log(`"${bundleName}" bundle built.`));
+});

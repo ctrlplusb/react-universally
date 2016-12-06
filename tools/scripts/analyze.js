@@ -14,9 +14,8 @@ import clientConfigFactory from '../webpack/client.config';
 import { exec } from '../utils';
 import staticConfig from '../../config/static';
 
-const appRootPath = appRootDir.get();
 const anaylzeFilePath = pathResolve(
-  appRootPath, staticConfig.clientBundle.outputPath, '__analyze__.json',
+  appRootDir.get(), staticConfig.bundles.client.outputPath, '__analyze__.json',
 );
 
 const clientCompiler = webpack(clientConfigFactory());
@@ -32,7 +31,7 @@ clientCompiler.run((err, stats) => {
     );
 
     // Run the bundle analyzer against the stats file.
-    const cmd = `webpack-bundle-analyzer ${anaylzeFilePath} ${staticConfig.clientBundle.outputPath}`;
+    const cmd = `webpack-bundle-analyzer ${anaylzeFilePath} ${staticConfig.bundles.client.outputPath}`;
     exec(cmd);
   }
 });

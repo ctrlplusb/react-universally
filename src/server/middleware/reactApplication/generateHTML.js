@@ -37,7 +37,9 @@ function scriptTags(jsFilePaths : Array<string>) {
 // @see /tools/development/ensureVendorDLLExists.js
 function developmentVendorDLL() {
   if (process.env.NODE_ENV === 'development') {
-    return scriptTag(staticConfig.development.vendorDLL.webPath);
+    return scriptTag(
+      `${staticConfig.bundles.client.webPath}${staticConfig.bundles.client.devVendorDLL.name}.js`,
+    );
   }
   return '';
 }

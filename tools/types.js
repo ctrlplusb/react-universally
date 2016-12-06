@@ -1,4 +1,4 @@
 export type BuildOptions = {
-  target: 'server'|'client',
+  target: 'server'|'client'|string,
   mode: 'development'|'production',
 };
