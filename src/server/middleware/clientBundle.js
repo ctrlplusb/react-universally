@@ -3,9 +3,9 @@
 import express from 'express';
 import { resolve as pathResolve } from 'path';
 import appRootDir from 'app-root-dir';
-import staticConfig from '../../../config/static';
+import projConfig from '../../../config/project';
 
 export default express.static(
-  pathResolve(appRootDir.get(), staticConfig.bundles.client.outputPath),
-  { maxAge: staticConfig.browserCacheMaxAge },
+  pathResolve(appRootDir.get(), projConfig.bundles.client.outputPath),
+  { maxAge: projConfig.browserCacheMaxAge },
 );

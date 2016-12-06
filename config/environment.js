@@ -23,7 +23,7 @@ import appRootDir from 'app-root-dir';
 import userHome from 'user-home';
 import colors from 'colors/safe';
 import pkg from '../package.json';
-import staticConfig from './static';
+import staticConfig from './project';
 
 function registerEnvFile() {
   const envName = process.env.NODE_ENV || 'development';

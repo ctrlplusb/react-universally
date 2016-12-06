@@ -4,15 +4,15 @@
 import { resolve as pathResolve } from 'path';
 import appRootDir from 'app-root-dir';
 import type { $Request, $Response, NextFunction } from 'express';
-import staticConfig from '../../../config/static';
+import projConfig from '../../../config/project';
 
 function serviceWorkerMiddleware(
   req: $Request, res: $Response, next: NextFunction) {
   res.sendFile(
     pathResolve(
       appRootDir.get(),
-      staticConfig.bundles.client.outputPath,
-      staticConfig.serviceWorker.fileName,
+      projConfig.bundles.client.outputPath,
+      projConfig.serviceWorker.fileName,
     ),
   );
 }

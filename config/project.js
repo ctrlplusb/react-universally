@@ -1,6 +1,6 @@
 /* @flow */
 
-// Static project configuration.
+// Project configuration.
 //
 // General project configuration as well as values that are used in multiple
 // places across the project. It is useful not to have duplicated strings/values

@@ -12,10 +12,10 @@ import { resolve as pathResolve } from 'path';
 import appRootDir from 'app-root-dir';
 import clientConfigFactory from '../webpack/client.config';
 import { exec } from '../utils';
-import staticConfig from '../../config/static';
+import projConfig from '../../config/project';
 
 const anaylzeFilePath = pathResolve(
-  appRootDir.get(), staticConfig.bundles.client.outputPath, '__analyze__.json',
+  appRootDir.get(), projConfig.bundles.client.outputPath, '__analyze__.json',
 );
 
 const clientCompiler = webpack(clientConfigFactory());
@@ -31,7 +31,7 @@ clientCompiler.run((err, stats) => {
     );
 
     // Run the bundle analyzer against the stats file.
-    const cmd = `webpack-bundle-analyzer ${anaylzeFilePath} ${staticConfig.bundles.client.outputPath}`;
+    const cmd = `webpack-bundle-analyzer ${anaylzeFilePath} ${projConfig.bundles.client.outputPath}`;
     exec(cmd);
   }
 });

@@ -9,7 +9,7 @@ import HotNodeServer from './hotNodeServer';
 import HotClientServer from './hotClientServer';
 import createVendorDLL from './createVendorDLL';
 import webpackConfigFactory from '../webpack/configFactory';
-import staticConfig from '../../config/static';
+import projConfig from '../../config/project';
 
 const usesDevVendorDLL = bundleConfig =>
   bundleConfig.devVendorDLL != null && bundleConfig.devVendorDLL.enabled;
@@ -70,18 +70,18 @@ class HotDevelopment {
     this.hotClientServer = null;
     this.hotNodeServers = [];
 
-    const clientBundle = initializeBundle('client', staticConfig.bundles.client);
+    const clientBundle = initializeBundle('client', projConfig.bundles.client);
 
-    const nodeBundles = [initializeBundle('server', staticConfig.bundles.server)]
-      .concat(Object.keys(staticConfig.additionalNodeBundles).map(name =>
-        initializeBundle(name, staticConfig.additionalNodeBundles[name]),
+    const nodeBundles = [initializeBundle('server', projConfig.bundles.server)]
+      .concat(Object.keys(projConfig.additionalNodeBundles).map(name =>
+        initializeBundle(name, projConfig.additionalNodeBundles[name]),
       ));
 
     Promise
       // First ensure the client dev vendor DLLs is created if needed.
       .resolve(
-        usesDevVendorDLL(staticConfig.bundles.client)
-          ? createVendorDLL('client', staticConfig.bundles.client)
+        usesDevVendorDLL(projConfig.bundles.client)
+          ? createVendorDLL('client', projConfig.bundles.client)
           : true,
       )
       // Then start the client development server.

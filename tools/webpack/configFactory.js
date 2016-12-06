@@ -11,7 +11,7 @@ import appRootDir from 'app-root-dir';
 import WebpackMd5Hash from 'webpack-md5-hash';
 import CodeSplitPlugin from 'code-split-component/webpack';
 import { removeEmpty, ifElse, merge, happyPackPlugin } from '../utils';
-import staticConfig from '../../config/static';
+import projConfig from '../../config/project';
 import envConfig from '../../config/environment';
 import plugins from '../../config/plugins';
 import type { BuildOptions } from '../types';
@@ -37,7 +37,7 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
   const { target, mode } = buildOptions;
   console.log(`==> Creating webpack config for "${target}" in "${mode}" mode`);
 
-  const bundleConfig = staticConfig.bundles[target];
+  const bundleConfig = projConfig.bundles[target];
   if (!bundleConfig) {
     throw new Error('No bundle configuration exists for target:', target);
   }
@@ -84,7 +84,7 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
           // loaders, e.g. CSS or SASS.
           // For these cases please make sure that the file extensions are
           // registered within the following configuration setting.
-          { whitelist: staticConfig.nodeBundlesIncludeNodeModuleFileTypes },
+          { whitelist: projConfig.nodeBundlesIncludeNodeModuleFileTypes },
         ),
       ),
     ]),
@@ -99,7 +99,7 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
         || isDev
         // Allow for the following flag to force source maps even for production
         // builds.
-        || staticConfig.includeSourceMapsForProductionBuilds,
+        || projConfig.includeSourceMapsForProductionBuilds,
       )(
       // Produces an external source map (lives next to bundle output files).
       'source-map',
@@ -161,7 +161,7 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
         publicPath: ifDev(
           // As we run a seperate development server for our client and server
           // bundles we need to use an absolute http path for the public path.
-          `http://${envConfig.host}:${envConfig.clientDevServerPort}${staticConfig.bundles.client.webPath}`,
+          `http://${envConfig.host}:${envConfig.clientDevServerPort}${projConfig.bundles.client.webPath}`,
           // Otherwise we expect our bundled client to be served from this path.
           bundleConfig.webPath,
         ),
@@ -170,7 +170,7 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
 
     resolve: {
       // These extensions are tried when resolving a file.
-      extensions: staticConfig.bundleSrcTypes.map(ext => `.${ext}`),
+      extensions: projConfig.bundleSrcTypes.map(ext => `.${ext}`),
     },
 
     plugins: removeEmpty([
@@ -229,7 +229,7 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
       // our client bundle.
       ifClient(() =>
         new AssetsPlugin({
-          filename: staticConfig.bundleAssetsFileName,
+          filename: projConfig.bundleAssetsFileName,
           path: path.resolve(appRootDir.get(), bundleConfig.outputPath),
         }),
       ),
@@ -245,16 +245,16 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
       // configuration to ensure that the output is minimized/optimized.
       ifProdClient(
         () => new webpack.LoaderOptionsPlugin({
-          minimize: staticConfig.optimizeProductionBuilds,
+          minimize: projConfig.optimizeProductionBuilds,
         }),
       ),
 
       // For our production client we need to make sure we pass the required
       // configuration to ensure that the output is minimized/optimized.
       ifProdClient(
-        ifElse(staticConfig.optimizeProductionBuilds)(
+        ifElse(projConfig.optimizeProductionBuilds)(
           () => new webpack.optimize.UglifyJsPlugin({
-            sourceMap: staticConfig.includeSourceMapsForProductionBuilds,
+            sourceMap: projConfig.includeSourceMapsForProductionBuilds,
             compress: {
               screw_ie8: true,
               warnings: false,
@@ -308,7 +308,7 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
           // Read more on them here:
           // http://bit.ly/2f8q7Td
           ServiceWorker: {
-            output: staticConfig.serviceWorker.fileName,
+            output: projConfig.serviceWorker.fileName,
             events: true,
             // By default the service worker will be ouput and served from the
             // publicPath setting above in the root config of the OfflinePlugin.
@@ -319,11 +319,11 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
             // live in at the /build/client/sw.js output location therefore in
             // our server configuration we need to make sure that any requests
             // to /sw.js will serve the /build/client/sw.js file.
-            publicPath: `/${staticConfig.serviceWorker.fileName}`,
+            publicPath: `/${projConfig.serviceWorker.fileName}`,
             // When a user has no internet connectivity and a path is not available
             // in our service worker cache then the following file will be
             // served to them.  Go and make it pretty. :)
-            navigateFallbackURL: staticConfig.serviceWorker.navigateFallbackURL,
+            navigateFallbackURL: projConfig.serviceWorker.navigateFallbackURL,
           },
           // We aren't going to use AppCache and will instead only rely on
           // a Service Worker.
@@ -331,9 +331,9 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
 
           // Which external files should be included with the service worker?
           externals:
-            staticConfig.serviceWorker.includePublicAssets.reduce((acc, cur) => {
+            projConfig.serviceWorker.includePublicAssets.reduce((acc, cur) => {
               const publicAssetPathGlob = path.resolve(
-                appRootDir.get(), staticConfig.publicAssetsPath, cur,
+                appRootDir.get(), projConfig.publicAssetsPath, cur,
               );
               const publicFileWebPaths = acc.concat(
                 // First get all the matching public folder assets.
@@ -341,7 +341,7 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
                 // Then map them to relative paths against the public folder.
                 // We need to do this as we need the "web" paths for each one.
                 .map(publicFile => path.relative(
-                  path.resolve(appRootDir.get(), staticConfig.publicAssetsPath),
+                  path.resolve(appRootDir.get(), projConfig.publicAssetsPath),
                   publicFile,
                 ))
                 // Add the leading "/" indicating the file is being hosted
@@ -458,14 +458,14 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
         // serving the client bundle as a Single Page Application through the
         // server.
         ifElse(isClient || isServer)(() => ({
-          test: new RegExp(`\\.(${staticConfig.bundleAssetTypes.join('|')})$`, 'i'),
+          test: new RegExp(`\\.(${projConfig.bundleAssetTypes.join('|')})$`, 'i'),
           loader: 'file-loader',
           query: {
             // What is the web path that the client bundle will be served from?
             // The same value has to be used for both the client and the
             // server bundles in order to ensure that SSR paths match the
             // paths used on the client.
-            publicPath: staticConfig.bundles.client.webPath,
+            publicPath: projConfig.bundles.client.webPath,
             // We only emit files when building a web bundle, for the server
             // bundle we only care about the file loader being able to create
             // the correct asset URLs.

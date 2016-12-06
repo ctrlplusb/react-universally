@@ -14,7 +14,7 @@ import security from './middleware/security';
 import clientBundle from './middleware/clientBundle';
 import serviceWorker from './middleware/serviceWorker';
 import errorHandlers from './middleware/errorHandlers';
-import staticConfig from '../../config/static';
+import projConfig from '../../config/project';
 import envConfig from '../../config/environment';
 
 // Create our express based server.
@@ -35,15 +35,15 @@ app.use(compression());
 // Note: the service worker needs to be served from the http root of your
 // application for it to work correctly.
 if (process.env.NODE_ENV === 'production') {
-  app.get(staticConfig.serviceWorker.webPath, serviceWorker);
+  app.get(projConfig.serviceWorker.webPath, serviceWorker);
 }
 
 // Configure serving of our client bundle.
-app.use(staticConfig.bundles.client.webPath, clientBundle);
+app.use(projConfig.bundles.client.webPath, clientBundle);
 
 // Configure static serving of our "public" root http path static files.
 // Note: these will be served off the root (i.e. '/') of our application.
-app.use(express.static(pathResolve(appRootDir.get(), staticConfig.publicAssetsPath)));
+app.use(express.static(pathResolve(appRootDir.get(), projConfig.publicAssetsPath)));
 
 // The React application middleware.
 app.get('*', reactApplication);

@@ -4,7 +4,7 @@ import uuid from 'uuid';
 import hpp from 'hpp';
 import helmet from 'helmet';
 import type { Middleware, $Request, $Response, NextFunction } from 'express';
-import staticConfig from '../../../config/static';
+import projConfig from '../../../config/project';
 import envConfig from '../../../config/environment';
 
 const cspConfig = {
@@ -37,10 +37,10 @@ const cspConfig = {
 };
 
 // Add any additional CSP from the static config.
-Object.keys(staticConfig.cspExtensions).forEach((key) => {
+Object.keys(projConfig.cspExtensions).forEach((key) => {
   cspConfig.directives[key] = [
     ...cspConfig.directives[key],
-    ...staticConfig.cspExtensions[key],
+    ...projConfig.cspExtensions[key],
   ];
 });
 

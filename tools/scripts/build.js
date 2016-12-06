@@ -4,9 +4,9 @@
 
 import webpack from 'webpack';
 import webpackConfigFactory from '../webpack/configFactory';
-import staticConfig from '../../config/static';
+import projConfig from '../../config/project';
 
-Object.keys(staticConfig.bundles).forEach((bundleName) => {
+Object.keys(projConfig.bundles).forEach((bundleName) => {
   const compiler = webpack(
     webpackConfigFactory({ target: bundleName, mode: 'production' }),
   );
