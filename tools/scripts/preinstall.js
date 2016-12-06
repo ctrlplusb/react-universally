@@ -1,6 +1,7 @@
 /* eslint-disable */
 
-// NOTE: ENSURE THIS FILE USES ES5 SYNTAX ONLY!
+// NOTE: Ensure this script uses ES5 only as the user may be running an old
+// version of Node, which this script wants to test against.
 //
 // This script will ensure that users are using a supported version of node
 // for the project.

@@ -4,7 +4,7 @@
   "description": "A starter kit giving you the minimum requirements for a production ready universal react application.",
   "main": "build/server/main.js",
   "engines": {
-    "node": "~6.9.2"
+    "node": ">=6"
   },
   "scripts": {
     "preinstall": "node tools/scripts/preinstall",
