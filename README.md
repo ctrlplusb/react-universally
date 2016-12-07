@@ -1,7 +1,7 @@
 <p align='center'>
   <h1 align='center'>React, Universally</h1>
   <p align='center'><img width='150' src='https://raw.githubusercontent.com/ctrlplusb/assets/master/logos/react-universally.png' /></p>
-  <p align='center'>A starter kit giving you the minimum requirements for a modern universal react application.</p>
+  <p align='center'>A starter kit giving you the minimum requirements for a modern universal React application.</p>
 </p>
 
 ## TOC
@@ -22,7 +22,7 @@
 
 ## About
 
-This starter kit contains all the build tooling and configuration you need to kick off your next universal react project, whilst containing a minimal "project" set up allowing you to make your own architecture decisions (redux/mobx etc).
+This starter kit contains all the build tooling and configuration you need to kick off your next universal React project, whilst containing a minimal "project" set up allowing you to make your own architecture decisions (Redux/MobX etc).
 
 ## Features
 
@@ -125,27 +125,27 @@ __COMING SOON__
 
 ```
 /
-|- config // Centralised project configuration
+|- config // Centralised project configuration.
 |  |- public // insensitive information. i.e. safe for bundling in client.
 |     |- htmlPage     // Customise meta tags for the online/offline html pages.
-|  |- private  // Sensitive configuration. i.e. don't expose publicly
-|     |- project      // Project configuration
-|     |- environment  // Environment variable parsing/support
-|     |- plugins      // Plugin points for tool internals
+|  |- private  // Sensitive configuration. i.e. don't expose publicly.
+|     |- project      // Project configuration.
+|     |- environment  // Environment variable parsing/support.
+|     |- plugins      // Plugin points for tool internals.
 |
 |- build // The target output dir for our build commands.
 |  |- client // The built client module.
-|  |- server // The built server module
+|  |- server // The built server module.
 |
-|- src  // All the source code
-|  |- server // The server bundle entry and specific source
-|  |- client // The client bundle entry and specific source
-|  |- shared // The shared code between the bundles)
+|- src  // All the source code.
+|  |- server // The server bundle entry and specific source.
+|  |- client // The client bundle entry and specific source.
+|  |- shared // The shared code between the bundles.
 |
 |- tools
 |  |- development // Development server.
 |  |- webpack
-|     |- configFactory.js  // Webpack configuration builder
+|     |- configFactory.js  // Webpack configuration builder.
 |
 |- .env_example // An example from which to create your own .env file.
 ```
@@ -206,7 +206,7 @@ Executes `eslint` (using the Airbnb config) against the src folder. Alternativel
 
 ### `npm run analyze`
 
-Creates an webpack-bundle-analyze session against the production build of the client bundle.  This is super handy for figuring out just exactly what dependencies are being included within your bundle.  Try clicking around, it's an awesome tool.
+Creates an 'webpack-bundle-analyze' session against the production build of the client bundle.  This is super handy for figuring out just exactly what dependencies are being included within your bundle.  Try clicking around, it's an awesome tool.
 
 ### `npm run flow`
 
@@ -214,7 +214,7 @@ Executes `flow-bin`, performing flow based type checking on the source.  If you 
 
 ### `npm run flow:defs`
 
-Installs the flow type definitions for the projects depenedencies from the official "flow-typed" repository.
+Installs the flow type definitions for the projects dependencies from the official "flow-typed" repository.
 
 ### `npm run flow:report`
 
