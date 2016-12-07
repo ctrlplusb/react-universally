@@ -189,14 +189,25 @@ export default {
     // listener.
     /*
     apiServer: {
-      srcEntryFile: './src/server/index.js',
+      srcEntryFile: './src/api/index.js',
       srcPaths: [
-        './src/apiServer',
+        './src/api',
         './src/shared',
         './config',
       ],
-      outputPath: './build/apiServer',
+      outputPath: './build/api',
     }
     */
+
+    api: {
+      // Src entry file.
+      srcEntryFile: './src/api/index.js',
+      srcPaths: [
+        './src/api',
+        './src/shared',
+        './config',
+      ],
+      outputPath: './build/api',
+    },
   },
 };

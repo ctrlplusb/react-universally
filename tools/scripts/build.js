@@ -12,8 +12,12 @@ import { exec } from '../utils';
 // First clear the build output dir.
 exec(`rimraf ${pathResolve(appRootDir.get(), projConfig.buildOutputPath)}`);
 
-// Then build our bundles
-Object.keys(projConfig.bundles).forEach((bundleName) => {
+// Get our "fixed" bundle names
+Object.keys(projConfig.bundles)
+// And the "additional" bundle names
+.concat(Object.keys(projConfig.additionalNodeBundles))
+// And then build them all.
+.forEach((bundleName) => {
   const compiler = webpack(
     webpackConfigFactory({ target: bundleName, mode: 'production' }),
   );

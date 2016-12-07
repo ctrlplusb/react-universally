@@ -36,11 +36,6 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
   const { target, mode } = buildOptions;
   console.log(`==> Creating webpack config for "${target}" in "${mode}" mode`);
 
-  const bundleConfig = projConfig.bundles[target];
-  if (!bundleConfig) {
-    throw new Error('No bundle configuration exists for target:', target);
-  }
-
   const isDev = mode === 'development';
   const isProd = mode === 'production';
   const isClient = target === 'client';
@@ -54,6 +49,17 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
   const ifClient = ifElse(isClient);
   const ifDevClient = ifElse(isDev && isClient);
   const ifProdClient = ifElse(isProd && isClient);
+
+  // Resolve the bundle configuration.
+  const bundleConfig = isServer || isClient
+    // This is either our "server" or "client" bundle.
+    ? projConfig.bundles[target]
+    // Otherwise it must be an additional node bundle.
+    : projConfig.additionalNodeBundles[target];
+
+  if (!bundleConfig) {
+    throw new Error('No bundle configuration exists for target:', target);
+  }
 
   const config = {
 
