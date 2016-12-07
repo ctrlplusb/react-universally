@@ -111,19 +111,12 @@ export default {
       // assets.
       './**/*',
     ],
-  },
-
-  // The app cache provides us with offline support.
-  appCache: {
-    // The sub directory (under the client output) that the app cache will
-    // live in.
-    subDirectory: 'appcache/',
-    // Name of the manifest file that gets generated.
-    manifestFileName: 'manifest.appcache',
-    // When a user has no internet connectivity and a path is not available
-    // in the app cache then the following file will be served to them.  Go and
-    // make it pretty. :)
-    offlineURL: '/offline.html',
+    // Path to the template used by HtmlWebpackPlugin to generate an offline
+    // page that will be used by the service worker to render our application
+    // offline.
+    offlinePageTemplate: './tools/webpack/offlinePage',
+    // Offline page file name.
+    offlinePageFileName: 'offline.html',
   },
 
   bundles: {
@@ -135,6 +128,7 @@ export default {
       srcPaths: [
         './src/client',
         './src/shared',
+        './config/public',
       ],
 
       // Where does the client bundle output live?
@@ -172,7 +166,8 @@ export default {
       srcPaths: [
         './src/server',
         './src/shared',
-        './config',
+        './config/private',
+        './config/public',
       ],
 
       // Where does the server bundle output live?

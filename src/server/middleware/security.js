@@ -4,8 +4,8 @@ import uuid from 'uuid';
 import hpp from 'hpp';
 import helmet from 'helmet';
 import type { Middleware, $Request, $Response, NextFunction } from 'express';
-import projConfig from '../../../config/project';
-import envConfig from '../../../config/environment';
+import projConfig from '../../../config/private/project';
+import envConfig from '../../../config/private/environment';
 
 const cspConfig = {
   directives: {

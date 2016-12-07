@@ -22,7 +22,7 @@ import path from 'path';
 import appRootDir from 'app-root-dir';
 import userHome from 'user-home';
 import colors from 'colors/safe';
-import pkg from '../package.json';
+import pkg from '../../package.json';
 import staticConfig from './project';
 
 function registerEnvFile() {

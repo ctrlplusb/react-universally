@@ -8,7 +8,7 @@ import { CodeSplitProvider, createRenderContext } from 'code-split-component';
 import Helmet from 'react-helmet';
 import generateHTML from './generateHTML';
 import App from '../../../shared/components/App';
-import envConfig from '../../../../config/environment';
+import envConfig from '../../../../config/private/environment';
 
 /**
  * An express middleware that is capabable of service our React application,

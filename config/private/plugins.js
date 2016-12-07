@@ -8,7 +8,7 @@
 // configuration adjustments.  Additionally it helps to make merging
 // from the origin starter kit a bit easier.
 
-import type { BuildOptions } from '../tools/types';
+import type { BuildOptions } from '../../tools/types';
 
 export default {
   // Plugins for the bundles/bundling process.

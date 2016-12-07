@@ -3,7 +3,7 @@
 import express from 'express';
 import { resolve as pathResolve } from 'path';
 import appRootDir from 'app-root-dir';
-import projConfig from '../../../config/project';
+import projConfig from '../../../config/private/project';
 
 // Middleware to server our client bundle.
 export default express.static(

@@ -27,9 +27,15 @@ This starter kit contains all the build tooling and configuration you need to ki
 ## Features
 
   - 🌍 Server side rendering.
-  - 🐘 Long term caching of assets.
-  - ⚰ Offline support.
-  - 🔥 Extreme live development - hot reloading of client/server source, with high level of error tolerance, alongside a HappyPack and Vendor DLL (courtesy of @strues).
+  - ⚰ Offline support via a Service Worker.
+  - 🐘 Long term browser caching of assets with automated cache invalidation.
+  - 📦 All source bundled using `webpack` v2.
+  - 🚀 Full ES2017+ support - use the exact same JS syntax across the entire project (src/tools/config). No more folder context switching!
+  - 🔧 Centralised project customisation/configuration and environment settings management.
+  - 🔥 Extreme live development - hot reloading of ALL changes to client/server source, with auto development server restarts when your application configuration changes.  All this with a high level of error tolerance and verbose logging to the console.
+  - 🤖 Optimised Webpack builds via HappyPack and an auto generated Vendor DLL for smooth development experiences.
+  - ✂️ Code splitting - `code-split-component` provides you declarative code splitting based on your routes.
+  - 🍃 Tree-shaking, courtesy of `webpack`.
   - 🚄 `express` server.
   - 👮 Security on the `express` server using `helmet` and `hpp`.
   - 👀 `react` as the view.
@@ -37,17 +43,12 @@ This starter kit contains all the build tooling and configuration you need to ki
   - ⛑ `react-helmet` allowing control of the page title/meta/styles/scripts from within your components. Direct control for your SEO needs.
   - 🖌 Very basic CSS support - it's up to you to extend it with CSS Modules etc.
   - 🏜 Asset bundling support. e.g. images/fonts.
-  - 🚀 Full ES2017+ support, use the exact same JS syntax across the entire project (src/tools/config).
-  - 📦 All source bundled using `webpack` v2.
-  - ✂️ Code splitting - `code-split-component` provides you declarative code splitting based on your routes.
-  - 🍃 Tree-shaking, courtesy of `webpack`.
   - ✔️ Type checking via Flow, a beautiful and unobtrusive type framework.
 
       __NOTE:__ Flow is a completely optional feature.  The flow type annotations get ripped out of the source by the Webpack build step. You have no obligation to use flow within your code and can happily code without applying it to any new code.  I do highly recommend you try it out though. :)
 
       If you don't really don't want to use flow then you can run `npm run flow:remove`. This will make it as though flow never existed within the project.
-  - 🎛 A development and optimised production configuration.
-  - 🔧 Centralised project customisation and environment.
+  - 🎛 Preconfigured to support development and optimised production builds.
   - 👼 Airbnb's ESlint configuration.
   - ❤️ Preconfigured to deploy to `now` with a single command.
 
@@ -99,32 +100,27 @@ If you are relying on scripts/styles/assets from CDN or from any other server/ap
 
 You may find CSPs annoying at first, but it is a great habit to build. The CSP configuration is an optional item for helmet, however you should not remove it without making a serious consideration that you do not require the added security.
 
-## Progressive Web Application Ready
+## Offline Ready
 
-We make use of the [`offline-plugin`](https://github.com/NekR/offline-plugin), providing you with a service worker to bridge that gap into a progressive web application that has aggressive caching and simple offline support.
+We make use of the [`offline-plugin`](https://github.com/NekR/offline-plugin), providing you with a Service Worker configuration that supports offline rendering of your application.
 
 ## Extensions
 
-We provide extensions to this project within branches. The stable branches are detailed below.
+We provide extensions to this project within branches. The stable branches are detailed below:
 
-### [`redux`](https://github.com/ctrlplusb/react-universally/tree/redux)
-
-Provides you with an example of how to integrate redux into this starter kit, as well as how to deal with issues such a prefetching of data for server rendering.
-
-## 3rd Party Extensions
-
-### [`advanced-boilerplate`](https://github.com/sebastian-software/advanced-boilerplate)
-
-A This boilerplate provides extended features on top of `react-universally` such as CSS Support with CSS modules alongside a flexible full PostCSS chain for advanced transformations e.g. autoprefixer.
+__COMING SOON__
 
 ## Project Structure
 
 ```
 /
 |- config // Centralised project configuration
-|  |- project      // Project configuration
-|  |- environment  // Environment variable parsing/support
-|  |- plugins      // Plugin points for tool internals
+|  |- public // insensitive information. i.e. safe for bundling in client.
+|     |- htmlPage     // Customise meta tags for the online/offline html pages.
+|  |- private  // Sensitive configuration. i.e. don't expose publicly
+|     |- project      // Project configuration
+|     |- environment  // Environment variable parsing/support
+|     |- plugins      // Plugin points for tool internals
 |
 |- build // The target output dir for our build commands.
 |  |- client // The built client module.
@@ -136,8 +132,7 @@ A This boilerplate provides extended features on top of `react-universally` such
 |  |- shared // The shared code between the bundles)
 |
 |- tools
-|  |- development // Tool for hot reloading development
-|  |
+|  |- development // Development server.
 |  |- webpack
 |     |- configFactory.js  // Webpack configuration builder
 |

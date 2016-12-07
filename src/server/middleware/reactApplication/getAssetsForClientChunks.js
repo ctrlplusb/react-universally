@@ -5,7 +5,7 @@
 import fs from 'fs';
 import { resolve as pathResolve } from 'path';
 import appRootDir from 'app-root-dir';
-import projConfig from '../../../../config/project';
+import projConfig from '../../../../config/private/project';
 
 const assetsFilePath = pathResolve(
   appRootDir.get(),

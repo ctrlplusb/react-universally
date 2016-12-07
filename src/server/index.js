@@ -14,8 +14,8 @@ import security from './middleware/security';
 import clientBundle from './middleware/clientBundle';
 import serviceWorker from './middleware/serviceWorker';
 import errorHandlers from './middleware/errorHandlers';
-import projConfig from '../../config/project';
-import envConfig from '../../config/environment';
+import projConfig from '../../config/private/project';
+import envConfig from '../../config/private/environment';
 
 // Create our express based server.
 const app = express();
@@ -36,18 +36,6 @@ app.use(compression());
 // application for it to work correctly.
 if (process.env.NODE_ENV === 'production') {
   app.get(`/${projConfig.serviceWorker.fileName}`, serviceWorker);
-  // app.get(
-  //   '/manifest.appcache',
-  //   (req, res, next) => {
-  //     res.sendFile(
-  //       pathResolve(
-  //         appRootDir.get(),
-  //         projConfig.bundles.client.outputPath,
-  //         'appcache/manifest.appcache',
-  //       ),
-  //     );
-  //   },
-  // );
 }
 
 // Configure serving of our client bundle.

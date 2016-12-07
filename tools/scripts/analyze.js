@@ -12,7 +12,7 @@ import { resolve as pathResolve } from 'path';
 import appRootDir from 'app-root-dir';
 import clientConfigFactory from '../webpack/client.config';
 import { exec } from '../utils';
-import projConfig from '../../config/project';
+import projConfig from '../../config/private/project';
 
 const anaylzeFilePath = pathResolve(
   appRootDir.get(), projConfig.bundles.client.outputPath, '__analyze__.json',
