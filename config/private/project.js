@@ -198,16 +198,5 @@ export default {
       outputPath: './build/api',
     }
     */
-
-    api: {
-      // Src entry file.
-      srcEntryFile: './src/api/index.js',
-      srcPaths: [
-        './src/api',
-        './src/shared',
-        './config',
-      ],
-      outputPath: './build/api',
-    },
   },
 };
