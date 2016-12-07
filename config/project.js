@@ -99,15 +99,6 @@ export default {
   serviceWorker: {
     // Service worker name
     fileName: 'sw.js',
-
-    // Web path.
-    webPath: '/sw.js',
-
-    // When a user has no internet connectivity and a path is not available
-    // in our service worker cache then the following file will be
-    // served to them.  Go and make it pretty. :)
-    navigateFallbackURL: '/offline.html',
-
     // Paths to the public assets which should be included within our
     // service worker. Relative to our public folder path, and accepts glob
     // syntax.
@@ -120,6 +111,19 @@ export default {
       // assets.
       './**/*',
     ],
+  },
+
+  // The app cache provides us with offline support.
+  appCache: {
+    // The sub directory (under the client output) that the app cache will
+    // live in.
+    subDirectory: 'appcache/',
+    // Name of the manifest file that gets generated.
+    manifestFileName: 'manifest.appcache',
+    // When a user has no internet connectivity and a path is not available
+    // in the app cache then the following file will be served to them.  Go and
+    // make it pretty. :)
+    offlineURL: '/offline.html',
   },
 
   bundles: {

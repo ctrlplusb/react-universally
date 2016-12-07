@@ -306,6 +306,7 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
           // http://bit.ly/2f8q7Td
           ServiceWorker: {
             output: projConfig.serviceWorker.fileName,
+            // Enable events so that we can register updates.
             events: true,
             // By default the service worker will be ouput and served from the
             // publicPath setting above in the root config of the OfflinePlugin.
@@ -317,14 +318,17 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
             // our server configuration we need to make sure that any requests
             // to /sw.js will serve the /build/client/sw.js file.
             publicPath: `/${projConfig.serviceWorker.fileName}`,
-            // When a user has no internet connectivity and a path is not available
-            // in our service worker cache then the following file will be
-            // served to them.  Go and make it pretty. :)
-            navigateFallbackURL: projConfig.serviceWorker.navigateFallbackURL,
           },
-          // We aren't going to use AppCache and will instead only rely on
-          // a Service Worker.
-          AppCache: false,
+          // We use the AppCache to provide Offline support along with a fallback
+          // page should the user have no internet connectivity and they hit
+          // a page which is not in the cache.
+          AppCache: {
+            directory: projConfig.appCache.subDirectory,
+            disableInstall: true,
+            FALLBACK: {
+              '/': projConfig.appCache.offlineURL,
+            },
+          },
 
           // Which external files should be included with the service worker?
           externals:

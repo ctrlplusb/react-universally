@@ -35,7 +35,19 @@ app.use(compression());
 // Note: the service worker needs to be served from the http root of your
 // application for it to work correctly.
 if (process.env.NODE_ENV === 'production') {
-  app.get(projConfig.serviceWorker.webPath, serviceWorker);
+  app.get(`/${projConfig.serviceWorker.fileName}`, serviceWorker);
+  // app.get(
+  //   '/manifest.appcache',
+  //   (req, res, next) => {
+  //     res.sendFile(
+  //       pathResolve(
+  //         appRootDir.get(),
+  //         projConfig.bundles.client.outputPath,
+  //         'appcache/manifest.appcache',
+  //       ),
+  //     );
+  //   },
+  // );
 }
 
 // Configure serving of our client bundle.
