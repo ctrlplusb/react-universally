@@ -1,8 +1,8 @@
 {
   "name": "react-universally",
   "version": "9.0.0",
-  "description": "A starter kit giving you the minimum requirements for a production ready universal react application.",
-  "main": "build/server/main.js",
+  "description": "A starter kit giving you the minimum requirements for a modern universal react application.",
+  "main": "build/server/index.js",
   "engines": {
     "node": ">=6"
   },

@@ -1,7 +1,7 @@
 <p align='center'>
   <h1 align='center'>React, Universally</h1>
   <p align='center'><img width='150' src='https://raw.githubusercontent.com/ctrlplusb/assets/master/logos/react-universally.png' /></p>
-  <p align='center'>A starter kit giving you the minimum requirements for a production ready universal react application.</p>
+  <p align='center'>A starter kit giving you the minimum requirements for a modern universal react application.</p>
 </p>
 
 ## TOC
@@ -12,7 +12,7 @@
  - [Project Configuration](https://github.com/ctrlplusb/react-universally#project-configuration)
  - [Environment Configuration](https://github.com/ctrlplusb/react-universally#environment-configuration)
  - [Express Server Security](https://github.com/ctrlplusb/react-universally#express-server-security)
- - [Progressive Web Application Ready](https://github.com/ctrlplusb/react-universally#progressive-web-application-ready)
+ - [Offline Ready](https://github.com/ctrlplusb/react-universally#offline-ready)
  - [Extensions](https://github.com/ctrlplusb/react-universally#extensions)
  - [3rd Party Extensions](https://github.com/ctrlplusb/react-universally#3rd-party-extensions)
  - [Project Structure](https://github.com/ctrlplusb/react-universally#project-structure)
@@ -67,11 +67,22 @@ Note: Given that we are bundling our server code I have included the `source-map
 
 We have centralised the configuration of the project to be contained within the `./config` folder.  The files within this folder can be described as follows:
 
-  - `environment.js` - parses and provides the environment specific values which will be used at runtime.  See the "Environment configuration" section below for more information.
-  - `plugins.js` - provides useful plugin points into the internals of the project toolchain allowing you to easily manage/extend the Babel and Webpack configurations.
-  - `project.js` - global project configuration options, with the capability to easily define new additional "node" target bundles (for e.g. an "apiServer").
+ - `private` - all configuration in here is considered "private"; i.e. don't bundle with the client.
+    - `environment.js` - parses and provides the environment specific values which will be used at runtime.  See the "Environment configuration" section below for more information.
+    - `plugins.js` - provides useful plugin points into the internals of the project toolchain allowing you to easily manage/extend the Babel and Webpack configurations.
+    - `project.js` - global project configuration options, with the capability to easily define new additional "node" target bundles (for e.g. an "apiServer").
+ - `public` - all configuration in here is safe to use anywhere; i.e. including client.
+   - `htmlPage.js` - provides a centralised configuration for the html pages used by the server rendering process and the service worker (for offline support).
 
 In addition to having an easy "go to" location for configuration we hope that this centralised strategy will allow you to easily pull and merge any updates from the starter kit origin without having to pick apart configuration customisations you may have had to scatter throughout the tools folder.
+
+### Easily add an "API" bundle
+
+A fairly common requirement for a project that scales is to create additional servers bundles, e.g. an API server.
+
+Instead of requiring you to hack the Webpack configuration we have have provided a section within the centralised project configuration that allows you to easily declare additional bundles.  You simply need to provide the source, entry, and output paths - we take care of the rest.  
+
+_IMPORTANT:_ One further requirement for this feature is that within your new server bundle you export the created http listener.  This exported listener can then be automatically hooked into our development server so that it can automatically start and the restart your server any time the source files for it change.
 
 ## Environment Configuration
 
