@@ -32,7 +32,7 @@ export default {
   // Sometimes you don't want this to happen to aid in debugging complex
   // problems.  Having this configuration flag here allows you to quickly
   // toggle the feature.
-  optimizeProductionBuilds: false,
+  optimizeProductionBuilds: true,
 
   // Do you want to included source maps (will be served as seperate files)
   // for production builds?
