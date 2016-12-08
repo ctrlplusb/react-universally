@@ -33,7 +33,18 @@
     "express",
     "webpack"
   ],
-  "author": "Sean Matheson <sean@ctrlplusb.com>",
+  "contributors": [
+    "Sean Matheson <sean@ctrlplusb.com>",
+    "Steven Enten <steven@enten.fr>",
+    "Carson Perrotti <carsonperrotti@gmail.com>",
+    "Steven Truesdell <steven@strues.io>",
+    "Benjamin Kniffler <bkniffler@me.com>",
+    "Christian Glombek",
+    "Joe Kohlmann <kohlmannj@mac.com>",
+    "Evgeny Boxer",
+    "Alin Porumb",
+    "David Edmondson"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/ctrlplusb/react-universally/issues"
