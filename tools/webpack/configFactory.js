@@ -525,7 +525,12 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
             // The same value has to be used for both the client and the
             // server bundles in order to ensure that SSR paths match the
             // paths used on the client.
-            publicPath: projConfig.bundles.client.webPath,
+            publicPath: isDev
+              // When running in dev mode the client bundle runs on a
+              // seperate port so we need to put an absolute path here.
+              ? `http://${envConfig.host}:${envConfig.clientDevServerPort}${projConfig.bundles.client.webPath}`
+              // Otherwise we just use the configured web path for the client.
+              : projConfig.bundles.client.webPath,
             // We only emit files when building a web bundle, for the server
             // bundle we only care about the file loader being able to create
             // the correct asset URLs.
