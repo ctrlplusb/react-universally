@@ -29,18 +29,18 @@ This starter kit contains all the build tooling and configuration you need to ki
   - 🌍 Server side rendering.
   - ⚰ Offline support via a Service Worker.
   - 🐘 Long term browser caching of assets with automated cache invalidation.
-  - 📦 All source bundled using `webpack` v2.
+  - 📦 All source is bundled using Webpack v2.
   - 🚀 Full ES2017+ support - use the exact same JS syntax across the entire project (src/tools/config). No more folder context switching!
-  - 🔧 Centralised project customisation/configuration and environment settings management.
+  - 🔧 Centralised project configuration and environment settings.
   - 🔥 Extreme live development - hot reloading of ALL changes to client/server source, with auto development server restarts when your application configuration changes.  All this with a high level of error tolerance and verbose logging to the console.
+  - ⛑ SEO friendly - `react-helmet` provides control of the page title/meta/styles/scripts from within your components.
   - 🤖 Optimised Webpack builds via HappyPack and an auto generated Vendor DLL for smooth development experiences.
-  - ✂️ Code splitting - `code-split-component` provides you declarative code splitting based on your routes.
-  - 🍃 Tree-shaking, courtesy of `webpack`.
+  - ✂️ Code splitting - easily define code split points in your source using `code-split-component`.
+  - 🍃 Tree-shaking, courtesy of Webpack.
   - 🚄 `express` server.
   - 👮 Security on the `express` server using `helmet` and `hpp`.
   - 👀 `react` as the view.
   - 🔀 `react-router` v4 as the router.
-  - ⛑ `react-helmet` allowing control of the page title/meta/styles/scripts from within your components. Direct control for your SEO needs.
   - 🖌 Very basic CSS support - it's up to you to extend it with CSS Modules etc.
   - 🏜 Asset bundling support. e.g. images/fonts.
   - ✔️ Type checking via Flow, a beautiful and unobtrusive type framework.
@@ -228,6 +228,37 @@ __Warning:__ This is a destructive behaviour - it modifies your actual source fi
 
 
 ## Troubleshooting ##
+
+___Q:___ __After adding a module that contains SASS/CSS (e.g. material-ui or bootstrap) the hot development server fails__
+
+The development server has been configured to automatically generate a "Vendor DLL" containing all the modules that are used in your source.  We do this so that any rebuilds by Webpack are optimised as it need not bundle all your project's dependencies every time.  This works great most of the time, however, if you introduce a module that depends on one of your Webpack loaders (e.g. CSS/Images) then you need to make sure that you add the respective module to the vendor DLL ignores list within your project configuration.
+
+For example, say you added `bootstrap` and were referencing the CSS file like so in your client bundle:
+
+```js
+import 'bootstrap/dist/css/bootstrap.css';
+```
+
+You would then need to edit `./config/private/project.js` and make the following adjustment:
+
+```js
+export default {
+  ...
+  bundles: {
+    client: {
+      ...,
+      devVendorDLL: {
+        ...,
+        ignores: ['bootstrap/dist/css/bootstrap.css']
+      }  
+    },
+    ...
+  }
+  ...
+}
+```
+
+This ensures that the respective import will be ignored when generating the development "Vendor DLL" which means it will get processed by Webpack and included successfully in your project.
 
 ___Q:___ __My project fails to build and execute when I deploy it to my host__
 
