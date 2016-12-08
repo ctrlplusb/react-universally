@@ -82,11 +82,11 @@ export default {
               // so we will disable it (which ensures synchronously
               // behaviour on the CodeSplit instances).
               disabled: mode === 'development',
-              // For our server bundle we will set the role as being 'server'
+              // For our server bundle we will set the mode as being 'server'
               // which will ensure that our code split components can be
               // resolved synchronously, being much more helpful for
               // pre-rendering.
-              role: target,
+              mode: target,
             },
           ],
         ].filter(x => x != null),
