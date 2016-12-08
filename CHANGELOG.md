@@ -29,6 +29,12 @@ Some of the highlights below:
 
 I am sorry if this a pain to update to from your existing projects, but I genuinely feel that future updates to this project will be far less dramatic. In a way this feels like a "1.0.0" release, with all the previous ones being beta releases.
 
+## [9.1.0] - 2016-12-05
+
+### Fixed
+
+The previous service worker implementation was completely incorrect, causing an aggressive cache on production that would not expire.  Please update to this latest version which makes use of the `offline-plugin` now.
+
 ## [9.0.0] - 2016-11-07
 
 ### Breaking
