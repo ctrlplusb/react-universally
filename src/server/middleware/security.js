@@ -23,8 +23,18 @@ const cspConfig = {
       // $FlowFixMe
       (req, res) => `'nonce-${res.locals.nonce}'`,
     ],
-    styleSrc: ["'self'", "'unsafe-inline'", 'blob:'],
-    imgSrc: ["'self'", 'data:'],
+    styleSrc: [
+      "'self'",
+      // Webpack generates JS that loads our CSS, so this is needed:
+      "'unsafe-inline'",
+      'blob:',
+    ],
+    imgSrc: [
+      "'self'",
+      // If you use Base64 encoded images (i.e. inlined images), then you will
+      // need the following:
+      // 'data:',
+    ],
     // Note: Setting this to stricter than * breaks the service worker. :(
     // I can't figure out how to get around this, so if you know of a safer
     // implementation that is kinder to service workers please let me know.
@@ -38,18 +48,22 @@ const cspConfig = {
 
 // Add any additional CSP from the static config.
 Object.keys(projConfig.cspExtensions).forEach((key) => {
-  cspConfig.directives[key] = [
-    ...cspConfig.directives[key],
-    ...projConfig.cspExtensions[key],
-  ];
+  if (cspConfig.directives[key]) {
+    cspConfig.directives[key] = cspConfig.directives[key]
+      .concat(projConfig.cspExtensions[key]);
+  } else {
+    cspConfig.directives[key] = projConfig.cspExtensions[key];
+  }
 });
 
 if (process.env.NODE_ENV === 'development') {
   // When in development mode we need to add our secondary express server that
   // is used to host our client bundle to our csp config.
-  Object.keys(cspConfig.directives).forEach(directive =>
-    cspConfig.directives[directive].push(`${envConfig.host}:${envConfig.clientDevServerPort}`),
-  );
+  Object.keys(cspConfig.directives).forEach((directive) => {
+    cspConfig.directives[directive].push(
+      `${envConfig.host}:${envConfig.clientDevServerPort}`,
+    );
+  });
 }
 
 // Attach a unique "nonce" to every response.  This allows use to declare
