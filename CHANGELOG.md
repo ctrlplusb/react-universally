@@ -9,6 +9,26 @@ I'll map them as follows:
   - Minor: New features or changes to the build tools.
   - Patch: Small(ish) fixes/restructuring that I expect will take minimal effort to merge in.
 
+## [10.0.0] - 2016-12-08
+
+HUGE update!  This is the result of a culmination of work and input by @strues @enten @carsonperrotti @bkniffler.
+
+The end result is a project which is far cleaner, well structured, and ready to scale for real world needs.
+
+Some of the highlights below:
+
+ - No more "universalMiddleware" bundle - this has been merged into the server source as a "reactApplication" middleware.
+ - Centralised application configuration via the "./config" folder.
+ - Environment variables have been dramatically simplified in way.  They are no longer used at build time, but rather at run time, giving you a greater degree of flexibility.  We have adjusted the way that we use the `dotenv` library to give you a greater degree of flexibility when defining configuration for multiple environments.  See the updated readme and comments within the source.
+  - Fully functional offline capabilities! We finally cracked the service worker configuration to do this in a dependable manner that will respect any changes to future builds of your application - automatically pulling the updated content.
+  - The webpack configuration has been generalised so that you can easily add new "node" bundles as and when needed.  It's a common requirement for larger scale projects to add a seperate "api" server for example.  This is now trivial to do, check the `./config/private/project.js` configuration file for more information.
+  - Our node bundle transpilation has been optimised by using `babel-preset-env` which ensures that we only transpile the missing features for our target node version.
+  - The entire project (including the tools) has been configured to use the exact same level of javascript syntax (i.e ES2017), using Babel to help us wherever needed. No more folder context switching!
+  - Huuuuge clean up of source and documentation.
+  - Tons of bug fixes.
+
+I am sorry if this a pain to update to from your existing projects, but I genuinely feel that future updates to this project will be far less dramatic. In a way this feels like a "1.0.0" release, with all the previous ones being beta releases.
+
 ## [9.0.0] - 2016-11-07
 
 ### Breaking
