@@ -1193,9 +1193,9 @@ code-point-at@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/code-point-at/-/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"
 
-code-split-component@2.0.0-alpha.3:
-  version "2.0.0-alpha.3"
-  resolved "https://registry.yarnpkg.com/code-split-component/-/code-split-component-2.0.0-alpha.3.tgz#7de933a42c6e9c29bc1f41aeea14f65fb4dd9524"
+code-split-component@2.0.0-alpha.4:
+  version "2.0.0-alpha.4"
+  resolved "https://registry.yarnpkg.com/code-split-component/-/code-split-component-2.0.0-alpha.4.tgz#6e1b538abdefeec3a9ec91ca4d68593b1a0cee8d"
   dependencies:
     invariant "^2.2.1"
     md5 "^2.2.1"
