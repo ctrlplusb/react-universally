@@ -52,7 +52,7 @@
   "homepage": "https://github.com/ctrlplusb/react-universally#readme",
   "dependencies": {
     "app-root-dir": "1.0.2",
-    "code-split-component": "2.0.0-alpha.4",
+    "code-split-component": "2.0.0-alpha.3",
     "colors": "1.1.2",
     "compression": "1.6.2",
     "dotenv": "2.0.0",
