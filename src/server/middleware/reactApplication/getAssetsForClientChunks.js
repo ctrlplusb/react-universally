@@ -44,6 +44,7 @@ const assetsJSONResolver = () => (
  *     the respective assets simply by using a chunk name. :)
  */
 function getAssetsForClientChunks(chunks: Array<string>) {
+  throw new Error('Poop!');
   return chunks.reduce((acc, chunkName) => {
     const chunkAssets = assetsJSONResolver()[chunkName];
     if (chunkAssets) {

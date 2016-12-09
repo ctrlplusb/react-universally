@@ -35,7 +35,7 @@ export default {
   optimizeProductionBuilds: true,
 
   // Do you want to included source maps (will be served as seperate files)
-  // for production builds?
+  // for production builds? (meaning the client bundle)
   includeSourceMapsForProductionBuilds: false,
 
   // Path to the shared src between the bundles.
