@@ -2,17 +2,16 @@
 
 import path from 'path';
 import appRootDir from 'app-root-dir';
-import ListenerManager from './listenerManager';
+import { spawn } from 'child_process';
 import { createNotification } from '../utils';
 
 class HotNodeServer {
-  listenerManager: ?ListenerManager;
   watcher: any;
   disposing: bool;
+  server: ?Object;
 
   constructor(name: string, compiler : Object) {
-    this.listenerManager = null;
-    this.watcher = null;
+    let firstMessageOutput = false;
 
     const compiledEntryFile = path.resolve(
       appRootDir.get(),
@@ -20,69 +19,59 @@ class HotNodeServer {
       `${Object.keys(compiler.options.entry)[0]}.js`,
     );
 
-    compiler.plugin('compile', () =>
+    compiler.plugin('compile', () => {
+      firstMessageOutput = false;
       createNotification({
         title: name,
         level: 'info',
         message: 'Building new bundle...',
-      }),
-    );
+      });
+    });
 
-    const startServer = () => {
+
+    compiler.plugin('done', (stats) => {
       if (this.disposing) {
         return;
       }
 
       try {
-        // The server bundle  will automatically start the web server just by
-        // requiring it. It returns the http listener too.
-        // $FlowFixMe
-        const listener = require(compiledEntryFile).default;
-        this.listenerManager = new ListenerManager(listener, name);
+        if (this.server) {
+          this.server.kill();
+          this.server = null;
+        }
 
-        listener.on('listening', () => {
-          const { address, port } = listener.address();
-          const url = `http://${address}:${port}`;
+        if (stats.hasErrors()) {
           createNotification({
-            title: 'server',
-            level: 'info',
-            message: `Running on ${url} with latest changes.`,
-            open: url,
+            title: name,
+            level: 'error',
+            message: 'Build failed, check the console for more information.',
           });
+          console.log(stats.toString());
+          return;
+        }
+
+        const newServer = spawn('node', [compiledEntryFile]);
+        newServer.stdout.on('data', (data) => {
+          const message = data.toString().trim();
+          if (!firstMessageOutput) {
+            firstMessageOutput = true;
+            createNotification({
+              title: 'server',
+              level: 'info',
+              message,
+            });
+          }
+          console.log(message);
         });
+        newServer.stderr.on('data', data => console.error(data.toString().trim()));
+        this.server = newServer;
       } catch (err) {
         createNotification({
-          title: 'server',
+          title: name,
           level: 'error',
           message: 'Failed to start, please check the console for more information.',
         });
         console.log(err);
-      }
-    };
-
-    compiler.plugin('done', (stats) => {
-      if (stats.hasErrors()) {
-        createNotification({
-          title: 'server',
-          level: 'error',
-          message: 'Build failed, check the console for more information.',
-        });
-        console.log(stats.toString());
-        return;
-      }
-
-      // Make sure our newly built server bundles aren't in the module cache.
-      Object.keys(require.cache).forEach((modulePath) => {
-        if (modulePath.indexOf(compiler.options.output.path) !== -1) {
-          delete require.cache[modulePath];
-        }
-      });
-
-      // Shut down any existing running listener if necessary.
-      if (this.listenerManager) {
-        this.listenerManager.dispose().then(startServer);
-      } else {
-        startServer();
       }
     });
 
@@ -93,16 +82,11 @@ class HotNodeServer {
   dispose() {
     this.disposing = true;
 
-    const stopWatcher = () => new Promise((resolve) => {
+    const stopWatcher = new Promise((resolve) => {
       this.watcher.close(resolve);
     });
 
-    return Promise.all([
-      this.watcher ? stopWatcher() : Promise.resolve(),
-      this.listenerManager ? this.listenerManager.dispose() : Promise.resolve(),
-    ]).then(() => {
-      this.disposing = false;
-    });
+    return stopWatcher.then(() => this.server && this.server.kill());
   }
 }
 
