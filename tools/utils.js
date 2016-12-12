@@ -90,18 +90,19 @@ export function merge(...args : Array<?Object>) {
 type NotificationOptions = {
   title: string,
   message: string,
-  open?: string,
+  notify?: boolean,
   level?: 'info'|'warn'|'error'
 };
 
-export function createNotification(options : NotificationOptions) {
+export function log(options : NotificationOptions) {
   const title = `${options.title.toUpperCase()}`;
 
-  notifier.notify({
-    title,
-    message: options.message,
-    open: options.open,
-  });
+  if (options.notify) {
+    notifier.notify({
+      title,
+      message: options.message,
+    });
+  }
 
   const level = options.level || 'info';
   const msg = `==> ${title} -> ${options.message}`;

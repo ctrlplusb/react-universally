@@ -1,7 +1,7 @@
 import { resolve as pathResolve } from 'path';
 import webpack from 'webpack';
 import appRootDir from 'app-root-dir';
-import { createNotification } from '../utils';
+import { log } from '../utils';
 import HotNodeServer from './hotNodeServer';
 import HotClientServer from './hotClientServer';
 import createVendorDLL from './createVendorDLL';
@@ -12,10 +12,11 @@ const usesDevVendorDLL = bundleConfig =>
   bundleConfig.devVendorDLL != null && bundleConfig.devVendorDLL.enabled;
 
 const vendorDLLsFailed = (err) => {
-  createNotification({
+  log({
     title: 'vendorDLL',
     level: 'error',
     message: 'Unfortunately an error occured whilst trying to build the vendor dll(s) used by the development server. Please check the console for more information.',
+    notify: true,
   });
   if (err) {
     console.log(err);
@@ -23,8 +24,8 @@ const vendorDLLsFailed = (err) => {
 };
 
 const initializeBundle = (name, bundleConfig) => {
-  try {
-    const createCompiler = () => {
+  const createCompiler = () => {
+    try {
       const webpackConfig = webpackConfigFactory({
         target: name,
         mode: 'development',
@@ -46,17 +47,18 @@ const initializeBundle = (name, bundleConfig) => {
         );
       }
       return webpack(webpackConfig);
-    };
-    return { name, bundleConfig, createCompiler };
-  } catch (err) {
-    createNotification({
-      title: 'development',
-      level: 'error',
-      message: 'Webpack bundleConfigs are invalid, please check the console for more information.',
-    });
-    console.log(err);
-    throw err;
-  }
+    } catch (err) {
+      log({
+        title: 'development',
+        level: 'error',
+        message: 'Webpack config is invalid, please check the console for more information.',
+        notify: true,
+      });
+      console.error(err);
+      throw err;
+    }
+  };
+  return { name, bundleConfig, createCompiler };
 };
 
 class HotDevelopment {

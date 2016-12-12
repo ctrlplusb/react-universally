@@ -3,7 +3,7 @@
 import path from 'path';
 import appRootDir from 'app-root-dir';
 import { spawn } from 'child_process';
-import { createNotification } from '../utils';
+import { log } from '../utils';
 
 class HotNodeServer {
   watcher: any;
@@ -21,7 +21,7 @@ class HotNodeServer {
 
     compiler.plugin('compile', () => {
       firstMessageOutput = false;
-      createNotification({
+      log({
         title: name,
         level: 'info',
         message: 'Building new bundle...',
@@ -41,35 +41,48 @@ class HotNodeServer {
         }
 
         if (stats.hasErrors()) {
-          createNotification({
+          log({
             title: name,
             level: 'error',
             message: 'Build failed, check the console for more information.',
+            notify: true,
           });
           console.log(stats.toString());
           return;
         }
 
         const newServer = spawn('node', [compiledEntryFile]);
+
+        log({
+          title: 'server',
+          level: 'info',
+          message: 'Server running with latest changes. Check the console for more info.',
+          notify: true,
+        });
+
         newServer.stdout.on('data', (data) => {
           const message = data.toString().trim();
-          if (!firstMessageOutput) {
-            firstMessageOutput = true;
-            createNotification({
-              title: 'server',
-              level: 'info',
-              message,
-            });
-          }
-          console.log(message);
+          log({
+            title: 'server',
+            level: 'info',
+            message,
+          });
         });
-        newServer.stderr.on('data', data => console.error(data.toString().trim()));
+        newServer.stderr.on('data', (data) => {
+          const message = data.toString().trim();
+          log({
+            title: 'server',
+            level: 'error',
+            message,
+          });
+        });
         this.server = newServer;
       } catch (err) {
-        createNotification({
+        log({
           title: name,
           level: 'error',
           message: 'Failed to start, please check the console for more information.',
+          notify: true,
         });
         console.log(err);
       }

@@ -3,7 +3,7 @@
 import chokidar from 'chokidar';
 import { resolve as pathResolve } from 'path';
 import appRootDir from 'app-root-dir';
-import { createNotification } from '../utils';
+import { log } from '../utils';
 
 let HotDevelopment = require('./hotDevelopment').default;
 let devServer = new HotDevelopment();
@@ -15,7 +15,7 @@ const watcher = chokidar.watch([
 ]);
 watcher.on('ready', () => {
   watcher.on('change', () => {
-    createNotification({
+    log({
       title: 'webpack',
       level: 'warn',
       message: 'Project build configuration has changed. Restarting the development devServer...',
