@@ -25,6 +25,12 @@ export default {
       const { target, mode } = buildOptions;
 
       return {
+        // We need to ensure that we do this otherwise the babelrc will
+        // get interpretted and for the current configuration this will mean
+        // that it will kill our webpack treeshaking feature as the modules
+        // transpilation has not been disabled within in.
+        babelrc: false,
+
         presets: [
           // JSX
           'react',
@@ -49,6 +55,7 @@ export default {
             ? ['env', { targets: { node: true }, modules: false }]
             : null,
         ].filter(x => x != null),
+
         plugins: [
           // Required to support react hot loader.
           mode === 'development'
