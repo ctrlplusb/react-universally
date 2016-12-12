@@ -145,6 +145,16 @@ export default {
         // Enabled?
         enabled: true,
 
+        // Any source files that match the following regular expressions will
+        // not be considered when trying to find out which modules are used
+        // for the client bundle.
+        // Typically you want to exclude test files as they may contain
+        // modules which are node specific.
+        srcFileIgnores: [
+          /.*\.test\.js$/ig,
+          /.*-test\.js$/i,
+        ],
+
         // It is also possible that some modules require specific
         // webpack loaders in order to be processed (e.g. CSS/SASS etc).
         // For these cases you don't want to include them in the vendor dll,

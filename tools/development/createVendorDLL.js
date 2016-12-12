@@ -9,13 +9,6 @@ import { sync as globSync } from 'glob';
 import matchRequire from 'match-require';
 import { log } from '../utils';
 
-function getJsFilesFromDir(targetPath) {
-  return ['js', 'jsx'].reduce((acc, ext) =>
-    acc.concat(globSync(`${targetPath}/**/*.${ext}`)),
-    [],
-  );
-}
-
 function createVendorDLL(bundleName : string, bundleConfig : Object) {
   // $FlowFixMe
   const packageJSON = require(pathResolve(appRootDir.get(), './package.json'));
@@ -77,7 +70,18 @@ function createVendorDLL(bundleName : string, bundleConfig : Object) {
       // Get all the src files.
       Promise.all(
         bundleConfig.srcPaths.map(srcPath =>
-          Promise.resolve(getJsFilesFromDir(pathResolve(appRootDir.get(), srcPath))),
+          Promise.resolve(
+            ['js', 'jsx']
+              .reduce((acc, ext) =>
+                acc.concat(globSync(`${pathResolve(appRootDir.get(), srcPath)}/**/*.${ext}`)),
+                [],
+              )
+              .filter(srcFilePath =>
+                bundleConfig.devVendorDLL.srcFileIgnores.findIndex(
+                  srcFileRegex => srcFileRegex.test(srcFilePath),
+                ) === -1,
+              ),
+          ),
         ),
       )
       // then extract the modules

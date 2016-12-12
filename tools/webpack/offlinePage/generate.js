@@ -12,6 +12,7 @@
 import htmlPageConfig from '../../../config/public/htmlPage';
 
 const htmlAttributes = attrs => Object.keys(attrs)
+  // $FlowFixMe
   .map(attrName => `${attrName}="${attrs[attrName]}"`)
   .join(' ');
 
