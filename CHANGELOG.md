@@ -9,15 +9,34 @@ I'll map them as follows:
   - Minor: New features or changes to the build tools.
   - Patch: Small(ish) fixes/restructuring that I expect will take minimal effort to merge in.
 
+## [10.1.0] - 2016-12-12
+
+### Fixed
+
+ - Babel plugin config for bundles no longer includes the `.babelrc`.
+ - Missing flow annotations preventing the flow removal script from working.
+ - The happypack threadpool issue causing development server restarts to fail.
+
+### Added
+
+ - Extends the vendor DLL config so that file paths can be ignored. Typical test file paths have been added.
+
+### Changed
+
+ - Optimizes the preinstall script.
+ - The hot development node servers only start after a successful client bundle build.
+ - Refactors the development server so that it auto restarts for ANY config changes.
+ - Updates dependencies.
+
 ## [10.0.1] - 2016-12-08
 
 ### Fixed
 
-Fixes default configuration - production builds are now optimised by default.
+ - Fixes default configuration - production builds are now optimised by default.
 
 ### Changed
 
-Updated to latest code-split-component (alpha-4).
+ - Updated to latest code-split-component (alpha-4).
 
 ## [10.0.0] - 2016-12-08
 
@@ -30,12 +49,12 @@ Some of the highlights below:
  - No more "universalMiddleware" bundle - this has been merged into the server source as a "reactApplication" middleware.
  - Centralised application configuration via the "./config" folder.
  - Environment variables have been dramatically simplified in way.  They are no longer used at build time, but rather at run time, giving you a greater degree of flexibility.  We have adjusted the way that we use the `dotenv` library to give you a greater degree of flexibility when defining configuration for multiple environments.  See the updated readme and comments within the source.
-  - Fully functional offline capabilities! We finally cracked the service worker configuration to do this in a dependable manner that will respect any changes to future builds of your application - automatically pulling the updated content.
-  - The webpack configuration has been generalised so that you can easily add new "node" bundles as and when needed.  It's a common requirement for larger scale projects to add a seperate "api" server for example.  This is now trivial to do, check the `./config/private/project.js` configuration file for more information.
-  - Our node bundle transpilation has been optimised by using `babel-preset-env` which ensures that we only transpile the missing features for our target node version.
-  - The entire project (including the tools) has been configured to use the exact same level of javascript syntax (i.e ES2017), using Babel to help us wherever needed. No more folder context switching!
-  - Huuuuge clean up of source and documentation.
-  - Tons of bug fixes.
+ - Fully functional offline capabilities! We finally cracked the service worker configuration to do this in a dependable manner that will respect any changes to future builds of your application - automatically pulling the updated content.
+ - The webpack configuration has been generalised so that you can easily add new "node" bundles as and when needed.  It's a common requirement for larger scale projects to add a seperate "api" server for example.  This is now trivial to do, check the `./config/private/project.js` configuration file for more information.
+ - Our node bundle transpilation has been optimised by using `babel-preset-env` which ensures that we only transpile the missing features for our target node version.
+ - The entire project (including the tools) has been configured to use the exact same level of javascript syntax (i.e ES2017), using Babel to help us wherever needed. No more folder context switching!
+ - Huuuuge clean up of source and documentation.
+ - Tons of bug fixes.
 
 I am sorry if this a pain to update to from your existing projects, but I genuinely feel that future updates to this project will be far less dramatic. In a way this feels like a "1.0.0" release, with all the previous ones being beta releases.
 
@@ -61,27 +80,24 @@ Closes #159
 
 ### Added
 
-You can disable the development vendor DLL feature via an environment variable. See the .env_example
-
-You can set libraries to be ignored by the vendor DLL. See the .env_example
+ - You can disable the development vendor DLL feature via an environment variable. See the .env_example
+ - You can set libraries to be ignored by the vendor DLL. See the .env_example
 
 ### Fixed
 
-Issue with HappyPack configuration.  The threadloop configuration causes strange breaking behaviour on our development server. Thanks to @strues for this.  Closes #160
+ - Issue with HappyPack configuration.  The threadloop configuration causes strange breaking behaviour on our development server. Thanks to @strues for this.  Closes #160
 
 ## [8.4.0] - 2016-11-02
 
 ## Changed
 
-Cleans up existing commands, moving many of them into tools/scripts.
-
-Major improvements to the `npm run flow:remove` command.  It now removes _everything_ flow related from the project.  I mean everything.  Tread carefully. :)
+ - Cleans up existing commands, moving many of them into tools/scripts.
+ - Major improvements to the `npm run flow:remove` command.  It now removes _everything_ flow related from the project.  I mean everything.  Tread carefully. :)
 
 ## Added
 
-An .editorconfig configuration. See http://editorconfig.org/
-
-A webpack bundle analyze command.
+ - An .editorconfig configuration. See http://editorconfig.org/
+ - A webpack bundle analyze command.
 
 ## [8.3.0] - 2016-11-01
 
