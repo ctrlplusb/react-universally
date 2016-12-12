@@ -52,9 +52,9 @@ class ListenerManager {
             level: 'info',
             message: 'Closed listener.',
           });
-        });
 
-        resolve();
+          resolve();
+        });
       } else {
         resolve();
       }

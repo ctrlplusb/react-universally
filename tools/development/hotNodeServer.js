@@ -8,6 +8,7 @@ import { createNotification } from '../utils';
 class HotNodeServer {
   listenerManager: ?ListenerManager;
   watcher: any;
+  disposing: bool;
 
   constructor(name: string, compiler : Object) {
     this.listenerManager = null;
@@ -28,6 +29,10 @@ class HotNodeServer {
     );
 
     const startServer = () => {
+      if (this.disposing) {
+        return;
+      }
+
       try {
         // The server bundle  will automatically start the web server just by
         // requiring it. It returns the http listener too.
@@ -75,7 +80,7 @@ class HotNodeServer {
 
       // Shut down any existing running listener if necessary.
       if (this.listenerManager) {
-        this.listenerManager.dispose(true).then(startServer);
+        this.listenerManager.dispose().then(startServer);
       } else {
         startServer();
       }
@@ -86,12 +91,18 @@ class HotNodeServer {
   }
 
   dispose() {
-    const stopWatcher = () => new Promise(resolve => this.watcher.close(resolve));
+    this.disposing = true;
+
+    const stopWatcher = () => new Promise((resolve) => {
+      this.watcher.close(resolve);
+    });
 
     return Promise.all([
       this.watcher ? stopWatcher() : Promise.resolve(),
       this.listenerManager ? this.listenerManager.dispose() : Promise.resolve(),
-    ]);
+    ]).then(() => {
+      this.disposing = false;
+    });
   }
 }
 
