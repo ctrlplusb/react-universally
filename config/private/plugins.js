@@ -1,3 +1,5 @@
+/* @flow */
+
 // Project Plugins
 //
 // These plugin definitions provide you with advanced hooks into customising

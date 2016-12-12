@@ -18,7 +18,7 @@
     "flow": "babel-node tools/scripts/flow",
     "flow:defs": "flow-typed install -f 0.36 --overwrite",
     "flow:report": "flow-coverage-report -i 'src/**/*.js' -t html -t json -t text",
-    "flow:remove": "babel-node tools/scripts/removeTypes && rimraf tools/scripts/removeTypes.js"
+    "flow:remove": "babel-node tools/scripts/removeFlow && rimraf tools/scripts/removeFlow.js"
   },
   "repository": {
     "type": "git",

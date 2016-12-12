@@ -1,3 +1,5 @@
+/* @flow */
+
 // Base configuration for our html page. We use react-helmet supported syntax
 // for the values.
 // @see https://github.com/nfl/react-helmet

@@ -47,16 +47,15 @@ srcPaths
   .forEach((file) => {
     console.log(`Removing types from "${file}`);
     const input = fs.readFileSync(file, 'utf8');
-    const output =
-      // Remove flow annotations
-      flowRemoveTypes(input)
+    const withoutFlow = flowRemoveTypes(input).toString();
+    const cleanedUp = withoutFlow
       // Remove the empty flow tags.
       .replace(/\/\*\s+\*\/\n/g, '')
       // Remove any blank lines at top of file.
       .replace(/^\n+/, '')
       // Remove any multiple blank lines in files.
       .replace(/\n\n+/g, '\n\n');
-    fs.writeFileSync(file, output);
+    fs.writeFileSync(file, cleanedUp);
   });
 
 Promise
