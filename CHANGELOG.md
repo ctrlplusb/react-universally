@@ -9,6 +9,18 @@ I'll map them as follows:
   - Minor: New features or changes to the build tools.
   - Patch: Small(ish) fixes/restructuring that I expect will take minimal effort to merge in.
 
+## [10.1.1] - 2016-12-12
+
+## Changed
+
+ - Updates dependencies.
+ - Updates flow.
+
+## Fixed
+
+ - Fixes flow issues.
+ - Fixes analyze script.
+
 ## [10.1.0] - 2016-12-12
 
 ### Fixed
