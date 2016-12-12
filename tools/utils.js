@@ -116,6 +116,5 @@ export function log(options : NotificationOptions) {
 }
 
 export function exec(command : string) {
-  // $FlowFixMe
   execSync(command, { stdio: 'inherit', cwd: appRootDir.get() });
 }

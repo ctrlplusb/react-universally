@@ -10,7 +10,7 @@ import webpack from 'webpack';
 import fs from 'fs';
 import { resolve as pathResolve } from 'path';
 import appRootDir from 'app-root-dir';
-import clientConfigFactory from '../webpack/client.config';
+import clientConfigFactory from '../webpack/client.config.babel';
 import { exec } from '../utils';
 import projConfig from '../../config/private/project';
 

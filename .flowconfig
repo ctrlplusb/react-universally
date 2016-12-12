@@ -32,4 +32,4 @@ tools/flow/typeExtensions/
 module.name_mapper='^\(.*\)\.\(css\|eot\|gif\|ico\|jpg\|jpeg\|less\|otf\|mp3\|mp4\|ogg\|png\|sass\|scss\|sss\|svg\|swf\|ttf\|webp\|woff\|woff2\)$' -> '<PROJECT_ROOT>/tools/flow/stubs/WebpackAsset.js.flow'
 
 [version]
-0.36.0
+0.37.0
