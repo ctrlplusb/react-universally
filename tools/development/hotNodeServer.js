@@ -9,18 +9,70 @@ class HotNodeServer {
   watcher: any;
   disposing: bool;
   server: ?Object;
+  serverCompiling: bool;
+  clientCompiling: bool;
 
-  constructor(name: string, compiler : Object) {
-    let firstMessageOutput = false;
-
+  constructor(name: string, compiler : Object, clientCompiler : Object) {
     const compiledEntryFile = path.resolve(
       appRootDir.get(),
       compiler.options.output.path,
       `${Object.keys(compiler.options.entry)[0]}.js`,
     );
 
+    const startServer = () => {
+      if (this.server) {
+        this.server.kill();
+        this.server = null;
+      }
+
+      const newServer = spawn('node', [compiledEntryFile]);
+
+      log({
+        title: 'server',
+        level: 'info',
+        message: 'Server running with latest changes.',
+        notify: true,
+      });
+
+      newServer.stdout.on('data', data => console.log(data.toString().trim()));
+      newServer.stderr.on('data', (data) => {
+        log({
+          title: 'server',
+          level: 'error',
+          message: 'Error in server execution, check the console for more info.',
+        });
+        console.error(data.toString().trim());
+      });
+      this.server = newServer;
+    };
+
+    // We want our node server bundles to only start after a successful client
+    // build.  This avoids any issues with node server bundles depending on
+    // client bundle assets.
+    const waitForClientThenStartServer = () => {
+      if (this.serverCompiling) {
+        // A new server bundle is building, break this loop.
+        return;
+      }
+      if (this.clientCompiling) {
+        setTimeout(waitForClientThenStartServer, 50);
+      } else {
+        startServer();
+      }
+    };
+
+    clientCompiler.plugin('compile', () => {
+      this.clientCompiling = false;
+    });
+
+    clientCompiler.plugin('done', (stats) => {
+      if (!stats.hasErrors()) {
+        this.clientCompiling = false;
+      }
+    });
+
     compiler.plugin('compile', () => {
-      firstMessageOutput = false;
+      this.serverCompiling = true;
       log({
         title: name,
         level: 'info',
@@ -28,18 +80,14 @@ class HotNodeServer {
       });
     });
 
-
     compiler.plugin('done', (stats) => {
+      this.serverCompiling = false;
+
       if (this.disposing) {
         return;
       }
 
       try {
-        if (this.server) {
-          this.server.kill();
-          this.server = null;
-        }
-
         if (stats.hasErrors()) {
           log({
             title: name,
@@ -51,32 +99,7 @@ class HotNodeServer {
           return;
         }
 
-        const newServer = spawn('node', [compiledEntryFile]);
-
-        log({
-          title: 'server',
-          level: 'info',
-          message: 'Server running with latest changes. Check the console for more info.',
-          notify: true,
-        });
-
-        newServer.stdout.on('data', (data) => {
-          const message = data.toString().trim();
-          log({
-            title: 'server',
-            level: 'info',
-            message,
-          });
-        });
-        newServer.stderr.on('data', (data) => {
-          const message = data.toString().trim();
-          log({
-            title: 'server',
-            level: 'error',
-            message,
-          });
-        });
-        this.server = newServer;
+        waitForClientThenStartServer();
       } catch (err) {
         log({
           title: name,
@@ -84,7 +107,7 @@ class HotNodeServer {
           message: 'Failed to start, please check the console for more information.',
           notify: true,
         });
-        console.log(err);
+        console.error(err);
       }
     });
 

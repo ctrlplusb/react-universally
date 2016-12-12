@@ -19,7 +19,7 @@ const vendorDLLsFailed = (err) => {
     notify: true,
   });
   if (err) {
-    console.log(err);
+    console.error(err);
   }
 };
 
@@ -84,21 +84,24 @@ class HotDevelopment {
           : true,
       )
       // Then start the client development server.
-      .then(() => new Promise((resolve) => {
-        const { createCompiler } = clientBundle;
-        const compiler = createCompiler();
-        compiler.plugin('done', (stats) => {
-          if (!stats.hasErrors()) {
-            resolve();
-          }
-        });
-        this.hotClientServer = new HotClientServer(compiler);
-      }), vendorDLLsFailed)
+      .then(
+        () => new Promise((resolve) => {
+          const { createCompiler } = clientBundle;
+          const compiler = createCompiler();
+          compiler.plugin('done', (stats) => {
+            if (!stats.hasErrors()) {
+              resolve(compiler);
+            }
+          });
+          this.hotClientServer = new HotClientServer(compiler);
+        }),
+        vendorDLLsFailed,
+      )
       // Then start the node development server(s).
-      .then(() => {
+      .then((clientCompiler) => {
         this.hotNodeServers = nodeBundles
           .map(({ name, createCompiler }) =>
-            new HotNodeServer(name, createCompiler()),
+            new HotNodeServer(name, createCompiler(), clientCompiler),
           );
       });
   }

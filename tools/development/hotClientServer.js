@@ -58,7 +58,7 @@ class HotClientServer {
           message: 'Build failed, please check the console for more information.',
           notify: true,
         });
-        console.log(stats.toString());
+        console.error(stats.toString());
       } else {
         log({
           title: 'client',
