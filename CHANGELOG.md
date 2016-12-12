@@ -9,6 +9,16 @@ I'll map them as follows:
   - Minor: New features or changes to the build tools.
   - Patch: Small(ish) fixes/restructuring that I expect will take minimal effort to merge in.
 
+## [10.0.1] - 2016-12-08
+
+### Fixed
+
+Fixes default configuration - production builds are now optimised by default.
+
+### Changed
+
+Updated to latest code-split-component (alpha-4).
+
 ## [10.0.0] - 2016-12-08
 
 HUGE update!  This is the result of a culmination of work and input by @strues @enten @carsonperrotti @bkniffler.
