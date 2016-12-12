@@ -7,6 +7,13 @@
 // for the project.
 
 var exec = require('child_process').exec;
+var existsSync = require('fs').existsSync;
+var pathResolve = require('path').resolve;
+
+if (existsSync(pathResolve(__dirname, '../../node_modules'))){
+  // An install has already occurred.
+  return;
+}
 
 // Inspired by "create-react-app". Thanks @gaearon :)
 function checkNodeVersion() {
