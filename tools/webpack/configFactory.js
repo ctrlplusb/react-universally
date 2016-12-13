@@ -62,6 +62,10 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
   }
 
   const config = {
+    performance: {
+      // Enable webpack's performance hints for production builds.
+      hints: isProd,
+    },
 
     target: isClient
       // Only our client bundle will target the web as a runtime.
