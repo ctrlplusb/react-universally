@@ -62,7 +62,7 @@ class HotNodeServer {
     };
 
     clientCompiler.plugin('compile', () => {
-      this.clientCompiling = false;
+      this.clientCompiling = true;
     });
 
     clientCompiler.plugin('done', (stats) => {

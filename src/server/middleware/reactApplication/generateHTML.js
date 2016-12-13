@@ -33,7 +33,7 @@ function scriptTags(jsFilePaths : Array<string>) {
 }
 
 type Args = {
-  app?: string,
+  reactAppString?: string,
   initialState?: Object,
   nonce: string,
   helmet?: Head,
@@ -41,7 +41,7 @@ type Args = {
 };
 
 export default function generateHTML(args: Args) {
-  const { app, initialState, nonce, helmet, codeSplitState } = args;
+  const { reactAppString, initialState, nonce, helmet, codeSplitState } = args;
 
   // The chunks that we need to fetch the assets (js/css) for and then include
   // said assets as script/style tags within our html.
@@ -82,7 +82,7 @@ export default function generateHTML(args: Args) {
         ${helmet ? helmet.style.toString() : ''}
       </head>
       <body>
-        <div id='app'>${app || ''}</div>
+        <div id='app'>${reactAppString || ''}</div>
         ${
           // Bind the initial application state based on the server render
           // so the client can register the correct initial state for the view.

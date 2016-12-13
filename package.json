@@ -1,6 +1,6 @@
 {
   "name": "react-universally",
-  "version": "10.1.1",
+  "version": "10.2.0",
   "description": "A starter kit giving you the minimum requirements for a modern universal react application.",
   "main": "build/server/index.js",
   "engines": {
@@ -127,7 +127,7 @@
     "rimraf": "2.5.4",
     "semver": "5.3.0",
     "style-loader": "0.13.1",
-    "webpack": "2.1.0-beta.27",
+    "webpack": "2.1.0-beta.28",
     "webpack-bundle-analyzer": "2.1.1",
     "webpack-dev-middleware": "1.8.4",
     "webpack-hot-middleware": "2.13.2",

@@ -1,4 +1,4 @@
-### Feature Repository
+### Feature Branch
 
 Note: This is a feature branch of `react-universally`. Please see [`FEATURE.md`](./FEATURE.md) for more information on this branch.
 
@@ -15,11 +15,11 @@ Note: This is a feature branch of `react-universally`. Please see [`FEATURE.md`]
  - [About](https://github.com/ctrlplusb/react-universally#about)
  - [Features](https://github.com/ctrlplusb/react-universally#features)
  - [Overview](https://github.com/ctrlplusb/react-universally#overview)
+ - [Feature Branches](https://github.com/ctrlplusb/react-universally#feature-branches)
  - [Project Configuration](https://github.com/ctrlplusb/react-universally#project-configuration)
  - [Environment Configuration](https://github.com/ctrlplusb/react-universally#environment-configuration)
  - [Express Server Security](https://github.com/ctrlplusb/react-universally#express-server-security)
  - [Offline Ready](https://github.com/ctrlplusb/react-universally#offline-ready)
- - [Extensions](https://github.com/ctrlplusb/react-universally#extensions)
  - [Project Structure](https://github.com/ctrlplusb/react-universally#project-structure)
  - [Project Dependencies](https://github.com/ctrlplusb/react-universally#project-dependencies)
  - [Deploy your very own Server Side Rendering React App in 4 easy steps](https://github.com/ctrlplusb/react-universally#deploy-your-very-own-server-side-rendering-react-app-in-4-easy-steps)
@@ -29,6 +29,8 @@ Note: This is a feature branch of `react-universally`. Please see [`FEATURE.md`]
 ## About
 
 This starter kit contains all the build tooling and configuration you need to kick off your next universal React project, whilst containing a minimal "project" set up allowing you to make your own architecture decisions (Redux/MobX etc).
+
+However, we now include a set of "feature branches", each implementing a technology on top of the clean master branch.  This provides you with an example on how to integrate said technologies, or use the branches to merge in a configuration that meets your requirements.  See the [`Feature Branches`](https://github.com/ctrlplusb/react-universally#feature-branches) section below.
 
 ## Features
 
@@ -68,6 +70,20 @@ server.  `tools/webpack/configFactory.js` is used to generate the respective Web
 We use babel across the entire project, which allows us to use the same level of javascript (e.g. es2015/2016/2017) without having to worry which level of the language within each separate slice of the project.  
 
 Note: Given that we are bundling our server code I have included the `source-map-support` module to ensure that we still get nice stack traces when executing our code.
+
+## Feature Branches
+
+Below are a list of extensions to this repository, in the form of branches.  Each of them has been tailored to add an individual technology.  It is possible to merge multiple branches together in order to create a technology mix that suits your project's needs.  We'll detail this workflow after the repository list.
+
+ - [`apollo`](https://github.com/ctrlplusb/react-universally/tree/feature/apollo) - Adds the Apollo Stack (i.e. Graphql).
+ - [`glamor`](https://github.com/ctrlplusb/react-universally/tree/feature/glamor) - Adds the Glamor CSS-in-JS library.
+ - [`jest`](https://github.com/ctrlplusb/react-universally/tree/feature/jest) - Adds the Jest testing framework.
+ - [`koa2`](https://github.com/ctrlplusb/react-universally/tree/feature/koa2) - Replaces Express with Koa2.
+ - [`redux`](https://github.com/ctrlplusb/react-universally/tree/feature/redux) - Adds Redux with simple custom data prefetching technique that works for the server and client.
+ - [`styled-components`](https://github.com/ctrlplusb/react-universally/tree/feature/styled-components) - Adds the Styled Components CSS-in-JS library.
+ - [`styletron`](https://github.com/ctrlplusb/react-universally/tree/feature/styletron) - Adds the Styletron CSS-in-JS library.
+
+If you would like to add a new feature branch log an issue describing your chosen technology and we can come up with a plan together. :)
 
 ## Project Configuration
 
@@ -120,137 +136,6 @@ You may find CSPs annoying at first, but it is a great habit to build. The CSP c
 ## Offline Ready
 
 We make use of the [`offline-plugin`](https://github.com/NekR/offline-plugin), providing you with a Service Worker configuration that supports offline rendering of your application.
-
-## Extensions
-
-Below are a list of extensions to this repository, in the form of repositories.  Each of them has been tailored to add an individual technology.  It is possible to clone and merge multiple repositories together to create a technology mix that suits your project.  We'll detail this workflow after the repository list.
-
-### Feature Repositories (in alphabetical order)
-
- - [`apollo`](https://github.com/ctrlplusb/react-universally-apollo) - Adds the Apollo Stack (i.e. Graphql).
- - [`glamor`](https://github.com/lucianlature/react-universally-glamor) - Adds the Glamor CSS-in-JS library.
- - [`jest`](https://github.com/ctrlplusb/react-universally-jest) - Adds the Jest testing framework.
- - [`koa2`](https://github.com/lucianlature/react-universally-koa2) - Replaces Express with Koa2.
- - [`redux`](https://github.com/ctrlplusb/react-universally-redux) - Adds Redux with simple custom data prefetching technique that works for the server and client.
- - [`styled-components`](https://github.com/lucianlature/react-universally-styled-components) - Adds the Styled Components CSS-in-JS library.
- - [`styletron`](https://github.com/ctrlplusb/react-universally-styletron) - Adds the Styletron CSS-in-JS library.
-
-Feel free to create your own, simply look at the existing repositories to get a sense of structure (you need to create a `FEATURE.md` file and link to it from the top of the `README.md`). Please PR the link to yours for me to add it. :)
-
-### Merging Multiple Features
-
-Below is an example workflow in selecting multiple repositories and then merging them together.  One recommendation for the merging process: if you use `yarn` then I would recommend that you throw away the `yarn.lock` file after each merge and then rebuild a new one using the `yarn` command.
-
-Ok, so say we wanted `apollo` as our state system, along with `jest` for testing, and then `styletron` for styles.  Do the following:
-
-```bash
-# Clone the `react-universally` repository
-git clone react-universally my-project
-cd my-project
-
-# Rename the "origin" remote
-git remote rename origin upstream/master
-
-# Add your project's git repository as the new "origin" remote
-git remote add origin https://github.com/ctrlpusb/my-project
-
-# Push the current code to it, which used with the "- u" flag also
-# binds the master branch to our new "origin" remote.
-git push -u origin master
-
-# Now we add each of the other features we want...
-
-# -----------------
-# First "apollo"
-
-# Add the "apollo" repo as a remote
-git remote add upstream/apollo https://github.com/ctrlplusb/react-universally-apollo
-
-# Fetch the latest from it
-git fetch upstream/apollo
-
-# Merge into your project
-git merge upstream/apollo/master
-
-# Deal with the conflicts, rebuild yarn.lock, commit and push.
-
-# -----------------
-# Now "jest"
-
-# Add the "jest" repo as a remote
-git remote add upstream/jest https://github.com/ctrlplusb/react-universally-jest
-
-# Fetch the latest from it
-git fetch upstream/jest
-
-# Merge into your project
-git merge upstream/jest/master
-
-# Deal with the conflicts, rebuild yarn.lock, commit and push.
-
-# -----------------
-# Now "styletron"
-
-# Add the "styletron" repo as a remote
-git remote add upstream/styletron https://github.com/ctrlplusb/react-universally-styletron
-
-# Fetch the latest from it
-git fetch upstream/styletron
-
-# Merge into your project
-git merge upstream/styletron/master
-
-# Deal with the conflicts, rebuild yarn.lock, commit and push.
-
-# -----------------
-
-# Then any time you want updates it is a matter of repeating the above two
-# steps. For example:
-git fetch upstream/apollo
-git merge upstream/apollo/master
-
-# Deal with the conflicts, rebuild yarn.lock, commit and push.
-
-```
-
-### Creating and maintaining a Feature repository
-
-Identify the technology you would like to include, for example `mobx`, then do something similar to:
-
-```bash
-# Clone the `react-universally` repository
-git clone react-universally react-universally-mobx
-cd react-universally-mobx
-
-# Rename the "origin" remote
-git remote rename origin upstream
-
-# Add the feature repository as the new "origin" remote
-git remote add origin https://github.com/my-github-username/react-universally-mobx
-
-# Push the current code to it, which used with the "- u" flag also
-# binds the master branch to our new "origin" remote.
-git push -u origin master
-
-# Then...
-#  - Set up mobx.
-#  - Add a FEATURE.md file to the root that describes the feature repository features.
-#  - Amend the README.md to link to your FEATURE.md file (look at existing repos for example).
-#  - Commit and push your changes.
-#  - Send me a PR linking to your feature repository.
-
-# Please try do your best to keep the repo up to date with this repo.
-# Here is how:
-
-# Get the latest changes...
-git fetch upstream
-
-# Merge them into your project
-git merge upstream/master
-
-# Deal with the conflicts, rebuild yarn.lock, commit and push.
-```
-
 
 ## Project Structure
 
