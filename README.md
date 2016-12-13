@@ -138,25 +138,38 @@ Below is an example workflow in selecting multiple repositories and then merging
 Ok, so say we wanted `apollo` as our state system, along with `jest` for testing, and then `styletron` for styles.  Do the following:
 
 ```bash
-# Select your "primary" repository (generally a "state" category I think)
-git clone react-universally-apollo my-project
+# Clone the `react-universally` repository
+git clone react-universally my-project
 cd my-project
 
-# Rename the "origin"
-git remote rename origin upstream/apollo
+# Rename the "origin" remote
+git remote rename origin upstream/master
 
-# Add your project's git repository as the "origin" remote
+# Add your project's git repository as the new "origin" remote
 git remote add origin https://github.com/ctrlpusb/my-project
 
 # Push the current code to it, which used with the "- u" flag also
 # binds the master branch to our new "origin" remote.
 git push -u origin master
 
-# Now we add each of the other feature branches we want as a
-# remote....
+# Now we add each of the other features we want...
 
 # -----------------
-# First "jest"
+# First "apollo"
+
+# Add the "apollo" repo as a remote
+git remote add upstream/apollo https://github.com/ctrlplusb/react-universally-apollo
+
+# Fetch the latest from it
+git fetch upstream/apollo
+
+# Merge into your project
+git merge upstream/apollo/master
+
+# Deal with the conflicts, rebuild yarn.lock, commit and push.
+
+# -----------------
+# Now "jest"
 
 # Add the "jest" repo as a remote
 git remote add upstream/jest https://github.com/ctrlplusb/react-universally-jest
