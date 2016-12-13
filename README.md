@@ -117,12 +117,83 @@ We make use of the [`offline-plugin`](https://github.com/NekR/offline-plugin), p
 
 ## Extensions
 
-We welcome extended versions in the form of repositories.  Please PR the link to yours for me to add it.
+Below are a list of extensions to this repository, in the form of repositories.  Each of them has been tailored to add an individual technology.  It is possible to clone and merge multiple repositories together to create a technology mix that suits your project.  We'll detail this workflow after the repository list.
 
- - [`react-universally-redux`](https://github.com/ctrlplusb/react-universally-redux) - Adds Redux with simple custom data prefetching technique that works for the server and client.
- - [`react-universally-apollo`](https://github.com/ctrlplusb/react-universally-apollo) - Adds the Apollo Stack (i.e. Graphql).
- - [`react-universally-jest`](https://github.com/ctrlplusb/react-universally-jest) - Adds the Jest testing framework.
- - [`react-universally-styletron`](https://github.com/ctrlplusb/react-universally-styletron) - Adds the Styletron CSS-in-JS library.
+### Feature Repositories (in alphabetical order)
+
+ - [`apollo`](https://github.com/ctrlplusb/react-universally-apollo) - Adds the Apollo Stack (i.e. Graphql).
+ - [`glamor`](https://github.com/lucianlature/react-universally-glamor) - Adds the Glamor CSS-in-JS library.
+ - [`jest`](https://github.com/ctrlplusb/react-universally-jest) - Adds the Jest testing framework.
+ - [`koa2`](https://github.com/lucianlature/react-universally-koa2) - Replaces Express with Koa2.
+ - [`redux`](https://github.com/ctrlplusb/react-universally-redux) - Adds Redux with simple custom data prefetching technique that works for the server and client.
+ - [`styled-components`](https://github.com/lucianlature/react-universally-styled-components) - Adds the Styled Components CSS-in-JS library.
+ - [`styletron`](https://github.com/ctrlplusb/react-universally-styletron) - Adds the Styletron CSS-in-JS library.
+
+ Feel free to create your own, simply look at the existing repositories to get a sense of structure (you need to create a `FEATURE.md` file and link to it from the top of the `README.md`). Please PR the link to yours for me to add it. :)
+
+### Merging Multiple Features
+
+Below is an example workflow in selecting multiple repositories and then merging them together.  One recommendation for the merging process: if you use `yarn` then I would recommend that you throw away the `yarn.lock` file after each merge and then rebuild a new one using the `yarn` command.
+
+Ok, so say we wanted `apollo` as our state system, along with `jest` for testing, and then `styletron` for styles.  Do the following:
+
+```bash
+# Select your "primary" repository (generally a "state" category I think)
+git clone react-universally-apollo my-project
+cd my-project
+
+# Rename the "origin"
+git remote rename origin upstream/apollo
+
+# Add your project's git repository as the "origin" remote
+git remote add origin https://github.com/ctrlpusb/my-project
+
+# Push the current code to it, which used with the "- u" flag also
+# binds the master branch to our new "origin" remote.
+git push -u origin master
+
+# Now we add each of the other feature branches we want as a
+# remote....
+
+# -----------------
+# First "jest"
+
+# Add the "jest" repo as a remote
+git remote add upstream/jest https://github.com/ctrlplusb/react-universally-jest
+
+# Fetch the latest from it
+git fetch upstream/jest
+
+# Merge into your project
+git merge upstream/jest/master
+
+# Deal with the conflicts, rebuild yarn.lock, commit and push.
+
+# -----------------
+# Now "styletron"
+
+# Add the "styletron" repo as a remote
+git remote add upstream/styletron https://github.com/ctrlplusb/react-universally-styletron
+
+# Fetch the latest from it
+git fetch upstream/styletron
+
+# Merge into your project
+git merge upstream/styletron/master
+
+# Deal with the conflicts, rebuild yarn.lock, commit and push.
+
+# -----------------
+
+# Then any time you want updates it is a matter of repeating the above two
+# steps. For example:
+git fetch upstream/apollo
+git merge upstream/apollo/master
+
+# Deal with the conflicts, rebuild yarn.lock, commit and push.
+
+```
+
 
 ## Project Structure
 
