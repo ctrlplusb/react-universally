@@ -121,6 +121,7 @@ We make use of the [`offline-plugin`](https://github.com/NekR/offline-plugin), p
 We welcome extended versions in the form of repositories.  Please PR the link to yours for me to add it.
 
  - [`react-universally-redux`](https://github.com/ctrlplusb/react-universally-redux) - Adds Redux with simple custom data prefetching technique that works for the server and client.
+ - [`react-universally-apollo`](https://github.com/ctrlplusb/react-universally-apollo) - Adds the Apollo Stack (i.e. Graphql).
 
 ## Project Structure
 
