@@ -14,7 +14,6 @@
  - [Express Server Security](https://github.com/ctrlplusb/react-universally#express-server-security)
  - [Offline Ready](https://github.com/ctrlplusb/react-universally#offline-ready)
  - [Extensions](https://github.com/ctrlplusb/react-universally#extensions)
- - [3rd Party Extensions](https://github.com/ctrlplusb/react-universally#3rd-party-extensions)
  - [Project Structure](https://github.com/ctrlplusb/react-universally#project-structure)
  - [Project Dependencies](https://github.com/ctrlplusb/react-universally#project-dependencies)
  - [Deploy your very own Server Side Rendering React App in 4 easy steps](https://github.com/ctrlplusb/react-universally#deploy-your-very-own-server-side-rendering-react-app-in-4-easy-steps)
