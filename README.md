@@ -118,9 +118,9 @@ We make use of the [`offline-plugin`](https://github.com/NekR/offline-plugin), p
 
 ## Extensions
 
-We provide extensions to this project within branches. The stable branches are detailed below:
+We welcome extended versions in the form of repositories.  Please PR the link to yours for me to add it.
 
-__COMING SOON__
+ - [`react-universally-redux`](https://github.com/ctrlplusb/react-universally-redux) - Adds Redux with simple custom data prefetching technique that works for the server and client.
 
 ## Project Structure
 
