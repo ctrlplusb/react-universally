@@ -7,7 +7,7 @@ import { ServerRouter, createServerRenderContext } from 'react-router';
 import { CodeSplitProvider, createRenderContext } from 'code-split-component';
 import Helmet from 'react-helmet';
 import generateHTML from './generateHTML';
-import App from '../../../shared/components/App';
+import DemoApp from '../../../shared/components/DemoApp';
 import envConfig from '../../../../config/private/environment';
 
 /**
@@ -46,11 +46,11 @@ function reactApplicationMiddleware(request: $Request, response: $Response) {
   // to query which chunks/modules were used during the render process.
   const codeSplitContext = createRenderContext();
 
-  // Create our application and render it into a string.
-  const app = renderToString(
+  // Create our React application and render it into a string.
+  const reactAppString = renderToString(
     <CodeSplitProvider context={codeSplitContext}>
       <ServerRouter location={request.url} context={reactRouterContext}>
-        <App />
+        <DemoApp />
       </ServerRouter>
     </CodeSplitProvider>,
   );
@@ -58,7 +58,7 @@ function reactApplicationMiddleware(request: $Request, response: $Response) {
   // Generate the html response.
   const html = generateHTML({
     // Provide the full app react element.
-    app,
+    reactAppString,
     // Nonce which allows us to safely declare inline scripts.
     nonce,
     // Running this gets all the helmet properties (e.g. headers/scripts/title etc)

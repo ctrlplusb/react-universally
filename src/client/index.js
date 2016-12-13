@@ -6,7 +6,7 @@ import { render } from 'react-dom';
 import { BrowserRouter } from 'react-router';
 import { CodeSplitProvider, rehydrateState } from 'code-split-component';
 import ReactHotLoader from './components/ReactHotLoader';
-import App from '../shared/components/App';
+import DemoApp from '../shared/components/DemoApp';
 
 // Get the DOM Element that will host our React application.
 const container = document.querySelector('#app');
@@ -41,13 +41,13 @@ if (process.env.NODE_ENV === 'development' && module.hot) {
   module.hot.accept('./index.js');
   // Any changes to our App will cause a hotload re-render.
   module.hot.accept(
-    '../shared/components/App',
-    () => renderApp(require('../shared/components/App').default),
+    '../shared/components/DemoApp',
+    () => renderApp(require('../shared/components/DemoApp').default),
   );
 }
 
 // Execute the first render of our app.
-renderApp(App);
+renderApp(DemoApp);
 
 // This registers our service worker for asset caching and offline support.
 // Keep this as the last item, just in case the code execution failed (thanks
