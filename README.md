@@ -129,7 +129,7 @@ Below are a list of extensions to this repository, in the form of repositories. 
  - [`styled-components`](https://github.com/lucianlature/react-universally-styled-components) - Adds the Styled Components CSS-in-JS library.
  - [`styletron`](https://github.com/ctrlplusb/react-universally-styletron) - Adds the Styletron CSS-in-JS library.
 
- Feel free to create your own, simply look at the existing repositories to get a sense of structure (you need to create a `FEATURE.md` file and link to it from the top of the `README.md`). Please PR the link to yours for me to add it. :)
+Feel free to create your own, simply look at the existing repositories to get a sense of structure (you need to create a `FEATURE.md` file and link to it from the top of the `README.md`). Please PR the link to yours for me to add it. :)
 
 ### Merging Multiple Features
 
