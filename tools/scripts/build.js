@@ -21,5 +21,5 @@ Object.keys(projConfig.bundles)
   const compiler = webpack(
     webpackConfigFactory({ target: bundleName, mode: 'production' }),
   );
-  compiler.run(() => console.log(`"${bundleName}" bundle built.`));
+  compiler.run((err, stats) => console.log(stats.toString({ colors: true })));
 });
