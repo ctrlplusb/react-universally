@@ -207,6 +207,44 @@ git merge upstream/apollo/master
 
 ```
 
+### Creating and maintaining a Feature repository
+
+Identify the technology you would like to include, then do something similar to:
+
+```bash
+# Clone the `react-universally` repository
+git clone react-universally react-universally-mobx
+cd my-project
+
+# Rename the "origin" remote
+git remote rename origin upstream
+
+# Add the feature repository as the new "origin" remote
+git remote add origin https://github.com/my-github-username/react-universally-mobx
+
+# Push the current code to it, which used with the "- u" flag also
+# binds the master branch to our new "origin" remote.
+git push -u origin master
+
+# Then...
+#  - Set up mobx.
+#  - Add a FEATURE.md file to the root that describes the feature repository features.
+#  - Amend the README.md to link to your FEATURE.md file (look at existing repos for example).
+#  - Commit and push your changes.
+#  - Send me a PR linking to your feature repository.
+
+# Please try do your best to keep the repo up to date with this repo.
+# Here is how:
+
+# Get the latest changes...
+git fetch upstream
+
+# Merge them into your project
+git merge upstream/master
+
+# Deal with the conflicts, rebuild yarn.lock, commit and push.
+```
+
 
 ## Project Structure
 
