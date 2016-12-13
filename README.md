@@ -122,6 +122,7 @@ We welcome extended versions in the form of repositories.  Please PR the link to
  - [`react-universally-redux`](https://github.com/ctrlplusb/react-universally-redux) - Adds Redux with simple custom data prefetching technique that works for the server and client.
  - [`react-universally-apollo`](https://github.com/ctrlplusb/react-universally-apollo) - Adds the Apollo Stack (i.e. Graphql).
  - [`react-universally-jest`](https://github.com/ctrlplusb/react-universally-jest) - Adds the Jest testing framework.
+ - [`react-universally-styletron`](https://github.com/ctrlplusb/react-universally-styletron) - Adds the Styletron CSS-in-JS library.
 
 ## Project Structure
 
