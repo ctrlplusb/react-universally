@@ -69,8 +69,6 @@ Note: Given that we are bundling our server code I have included the `source-map
 
 Below are a list of extensions to this repository, in the form of branches.  Each of them has been tailored to add an individual technology.  It is possible to merge multiple branches together in order to create a technology mix that suits your project's needs.  We'll detail this workflow after the repository list.
 
-### Features
-
  - [`apollo`](https://github.com/ctrlplusb/react-universally/tree/feature/apollo) - Adds the Apollo Stack (i.e. Graphql).
  - [`glamor`](https://github.com/ctrlplusb/react-universally/tree/feature/glamor) - Adds the Glamor CSS-in-JS library.
  - [`jest`](https://github.com/ctrlplusb/react-universally/tree/feature/jest) - Adds the Jest testing framework.
