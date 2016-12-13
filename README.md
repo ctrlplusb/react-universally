@@ -209,12 +209,12 @@ git merge upstream/apollo/master
 
 ### Creating and maintaining a Feature repository
 
-Identify the technology you would like to include, then do something similar to:
+Identify the technology you would like to include, for example `mobx`, then do something similar to:
 
 ```bash
 # Clone the `react-universally` repository
 git clone react-universally react-universally-mobx
-cd my-project
+cd react-universally-mobx
 
 # Rename the "origin" remote
 git remote rename origin upstream
