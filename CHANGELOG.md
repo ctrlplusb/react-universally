@@ -9,6 +9,24 @@ I'll map them as follows:
   - Minor: New features or changes to the build tools.
   - Patch: Small(ish) fixes/restructuring that I expect will take minimal effort to merge in.
 
+## [10.2.0] - 2016-12-13
+
+## Changed
+
+ - Changes the build script to output webpack stats.
+ - Changes webpack performance hints to only execute for production builds.
+ - Renames 'App' component to 'DemoApp'.
+ - Adds new webpack beta release.
+
+## Fixed
+
+ - Fixes bug in development server.
+ - Updates contributors list.
+
+## Added
+
+ - Adds .history to git ignores.
+
 ## [10.1.1] - 2016-12-12
 
 ## Changed
