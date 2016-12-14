@@ -511,12 +511,6 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
           ),
         ),
 
-        // JSON
-        {
-          test: /\.json$/,
-          loader: 'json-loader',
-        },
-
         // ASSETS (Images/Fonts/etc)
         // This is bound to our server/client bundles as we only expect to be
         // serving the client bundle as a Single Page Application through the
