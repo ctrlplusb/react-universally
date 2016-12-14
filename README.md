@@ -79,6 +79,69 @@ Below are a list of extensions to this repository, in the form of branches.  Eac
 
 If you would like to add a new feature branch log an issue describing your chosen technology and we can come up with a plan together. :)
 
+### An example workflow
+
+Ok, so how do you go about creating a repo that uses a mix mash of these feature branches? Well, say you wanted a combo of `apollo` and `styletron`, you could do the following:
+
+> _NOTE:_ Merging the yarn.lock file is messy in my opinion. I rather select "merge all" from "theirs" or "ours" and then after the merge I delete the yarn.lock file and run the `yarn` command to rebuild it properly.
+
+```bash
+# First clone this repo
+git clone https://github.com/ctrlplusb/react-universally my-project
+
+# Go into your project
+cd my-project
+
+# Now rename the "origin" git remote to "upstream"
+git remote rename origin upstream
+
+# I would then recommend creating a hosted repository for your
+# project.
+
+# Then add your newly created repository as the new "origin"
+git remote add origin https://github.com/my-github-username/my-project
+
+# Then push the master branch. This will also bind it to new
+# "origin" remote.
+git push -u origin master
+
+# Ok, so now you need to choose and merge each feature branch.
+
+# -------------------------------------------------------------
+# First up, apollo:
+
+# First fetch the latest changes from the upstream
+git fetch upstream
+
+# Then merge the apollo branch into your project
+git merge upstream/feature/apollo
+
+# Deal with the merge conflicts, delete the yarn.lock file and
+# rebuild it, then commit and push.
+
+# -------------------------------------------------------------
+# Next, styletron:
+
+# First fetch the latest changes from the upstream
+git fetch upstream
+
+# Then merge the styletron branch into your project
+git merge upstream/feature/styletron
+
+# Deal with the merge conflicts, delete the yarn.lock file and
+# rebuild it, then commit and push.
+
+# --------------------------------------------------------------
+
+# You now have an apollo SSR app with styletron powered styles!
+
+# Any time you want to pull changes from one of the branches
+# simply repeat:
+git fetch upstream
+git merge upstream/feature/FEATURENAME
+# deal with conflicts, rebuild yarn.lock, commit, push
+```
+
 ## Project Configuration
 
 We have centralised the configuration of the project to be contained within the `./config` folder.  The files within this folder can be described as follows:
@@ -295,12 +358,13 @@ cd my-project
 git remote rename origin upstream
 
 # I would then recommend creating a hosted repository for your
-# project (e.g. on github, or a free private on bitbucket)
-# Then add your newly created repository as the "origin"
-# remote like so: (for example, you need to put in the proper url)
-git remote add origin ssh://git@bitbucket.org/Kimel1/my-project.git
+# project.
 
-# Then push the master branch content to the new "origin" remote
+# Then add your newly created repository as the new "origin"
+git remote add origin https://github.com/my-github-username/my-project
+
+# Then push the master branch. This will also bind it to new
+# "origin" remote.
 git push -u origin master
 
 # You can now code/commit/push to origin as normal.
@@ -313,11 +377,6 @@ git fetch upstream
 # Then merge them into your project
 git merge upstream/master
 
-# You will have to deal with merge commits most likely
-# I would get comfortable with a good merge tool. I use
-# Atom Editor and they have a cool package called
-# merge-conflicts which does the job okay.
-# After you have completed the merge you can commit
-# and continue
-git commit
+# Deal with the merge conflicts, delete the yarn.lock file and
+# rebuild it, then commit and push.
 ```
