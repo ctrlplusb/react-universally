@@ -111,6 +111,7 @@ export default function generateHTML(args: Args) {
           // we need to inject the path to the vendor dll bundle below.
           // @see /tools/development/ensureVendorDLLExists.js
           process.env.NODE_ENV === 'development'
+            && projConfig.bundles.client.devVendorDLL.enabled
             ? scriptTag(`${projConfig.bundles.client.webPath}${projConfig.bundles.client.devVendorDLL.name}.js`)
             : ''
         }
