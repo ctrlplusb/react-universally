@@ -21,5 +21,11 @@ Object.keys(projConfig.bundles)
   const compiler = webpack(
     webpackConfigFactory({ target: bundleName, mode: 'production' }),
   );
-  compiler.run((err, stats) => console.log(stats.toString({ colors: true })));
+  compiler.run((err, stats) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    console.log(stats.toString({ colors: true }));
+  });
 });
