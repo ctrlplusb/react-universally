@@ -11,6 +11,9 @@
 // absolute paths should be resolved during runtime by our build tools/server.
 
 export default {
+  // Disable server side rendering?
+  disableSSR: false,
+
   // Base name of the optional environment configuration file.
   envFileName: '.env',
 

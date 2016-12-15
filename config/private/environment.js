@@ -70,7 +70,7 @@ function getIntEnvVar(name : string, defaultVal : number) {
     : defaultVal;
 }
 
-function getBoolVar(name : string, defaultVal : boolean) {
+function getBoolVar(name : string, defaultVal : boolean) { // eslint-disable-line no-unused-vars
   return process.env[name]
     ? process.env[name] === 'true'
     : defaultVal;
@@ -85,10 +85,6 @@ export default {
   host: getStringEnvVar('SERVER_HOST', 'localhost'),
   // The port on which the server should run.
   port: getIntEnvVar('SERVER_PORT', 1337),
-  // Enable SSR rendering of the React application?
-  // It can be useful to disable this in development in order to debug complex
-  // issues with your React components.
-  ssrEnabled: getBoolVar('SSR_ENABLED', true),
   // The port on which the client bundle development server should run.
   clientDevServerPort: getIntEnvVar('CLIENT_DEVSERVER_PORT', 7331),
 };
