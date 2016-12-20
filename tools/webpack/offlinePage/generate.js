@@ -9,13 +9,9 @@
 // by the reactApplication middleware.
 // @see src/server/middleware/reactApplication/generateHTML.js
 
-import serialize from 'serialize-javascript';
-import htmlPageConfig from '../../../config/public/htmlPage';
-import sharedConfig from '../../../config/private/shared';
-import { CLIENT_CONFIG_IDENTIFIER } from '../../../src/shared/constants';
+import { get, clientConfigScript } from '../../../config';
 
 const htmlAttributes = attrs => Object.keys(attrs)
-  // $FlowFixMe
   .map(attrName => `${attrName}="${attrs[attrName]}"`)
   .join(' ');
 
@@ -36,15 +32,11 @@ const scriptTag = url => `<script type="text/javascript" src="${url}"></script>`
 export default function generate(templateParams) { // eslint-disable-line no-unused-vars
   return `
     <!DOCTYPE html>
-    <html ${htmlAttributes(htmlPageConfig.htmlAttributes)}>
+    <html ${htmlAttributes(get('htmlPage', 'htmlAttributes'))}>
       <head>
-        ${
-          htmlPageConfig.defaultTitle
-            ? `<title>${htmlPageConfig.defaultTitle}</title>`
-            : ''
-        }
-        ${metaTags(htmlPageConfig.meta)}
-        ${linkTags(htmlPageConfig.links)}
+        <title>${get('htmlPage', 'defaultTitle')}</title>
+        ${metaTags(get('htmlPage', 'meta'))}
+        ${linkTags(get('htmlPage', 'links'))}
       </head>
       <body>
         <div id='app'></div>
@@ -52,18 +44,18 @@ export default function generate(templateParams) { // eslint-disable-line no-unu
           ${
             // Binds our shared configuration object to the window object so
             // that our browser executing app can gain access to these values.
-            `window.${CLIENT_CONFIG_IDENTIFIER}=${serialize(sharedConfig)}`
+            clientConfigScript()
           }
         </script>
         ${
           // Enable the polyfill io script?
           // This can't be configured within a react-helmet component as we
           // may need the polyfill's before our client bundle gets parsed.
-          htmlPageConfig.polyfillIO.enabled
-            ? scriptTag(htmlPageConfig.polyfillIO.url)
+          get('polyfillIO', 'enabled')
+            ? scriptTag(get('polyfillIO', 'url'))
             : ''
         }
-        ${scriptTags(htmlPageConfig.scripts)}
+        ${scriptTags(get('htmlPage', 'scripts'))}
       </body>
     </html>`;
 }

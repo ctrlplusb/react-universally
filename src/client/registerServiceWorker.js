@@ -6,13 +6,12 @@
 //
 // We will only be doing this for production builds.
 
-import getSharedConfig from '../shared/getSharedConfig';
-
+import { get } from '../../config';
 
 if (process.env.NODE_ENV === 'production') {
   // We check the shared config, ensuring that the service worker has been
   // enabled.
-  if (getSharedConfig('serviceWorker', 'enabled')) {
+  if (get('serviceWorker', 'enabled')) {
     const OfflinePluginRuntime = require('offline-plugin/runtime');
 
     // Install the offline plugin, which instantiates our service worker and app

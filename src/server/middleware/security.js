@@ -4,8 +4,7 @@ import uuid from 'uuid';
 import hpp from 'hpp';
 import helmet from 'helmet';
 import type { Middleware, $Request, $Response, NextFunction } from 'express';
-import projConfig from '../../../config/private/project';
-import envConfig from '../../../config/private/environment';
+import { get } from '../../../config';
 
 const cspConfig = {
   directives: {
@@ -47,12 +46,12 @@ const cspConfig = {
 };
 
 // Add any additional CSP from the static config.
-Object.keys(projConfig.cspExtensions).forEach((key) => {
+Object.keys(get('cspExtensions')).forEach((key) => {
   if (cspConfig.directives[key]) {
     cspConfig.directives[key] = cspConfig.directives[key]
-      .concat(projConfig.cspExtensions[key]);
+      .concat(get('cspExtensions', key));
   } else {
-    cspConfig.directives[key] = projConfig.cspExtensions[key];
+    cspConfig.directives[key] = get('cspExtensions', key);
   }
 });
 
@@ -61,7 +60,7 @@ if (process.env.NODE_ENV === 'development') {
   // is used to host our client bundle to our csp config.
   Object.keys(cspConfig.directives).forEach((directive) => {
     cspConfig.directives[directive].push(
-      `${envConfig.host}:${envConfig.clientDevServerPort}`,
+      `${get('host')}:${get('clientDevServerPort')}`,
     );
   });
 }

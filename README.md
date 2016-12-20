@@ -145,16 +145,13 @@ git merge upstream/feature/FEATURENAME
 
 ## Project Configuration
 
-We have centralised the configuration of the project to be contained within the `./config` folder.  The files within this folder can be described as follows:
+We have centralised the configuration of the project to be contained within the `./config` folder, specifically all the configuration values are contained within `./config/values.js`.
 
- - `private` - all configuration in here is considered "private"; i.e. don't bundle with the client.
-    - `environment.js` - parses and provides the environment specific values which will be used at runtime.  See the "Environment configuration" section below for more information.
-    - `plugins.js` - provides useful plugin points into the internals of the project toolchain allowing you to easily manage/extend the Babel and Webpack configurations.
-    - `project.js` - global project configuration options, with the capability to easily define new additional "node" target bundles (for e.g. an "apiServer").
- - `public` - all configuration in here is safe to use anywhere; i.e. including client.
-   - `htmlPage.js` - provides a centralised configuration for the html pages used by the server rendering process and the service worker (for offline support).
+A special note on using these configuration values across your project: You will most certainly come to a point where you need to use a configuration value within a component/module that would be executed within the browser (i.e. via the client bundle).  However, you of course would not like to accidentally import and include all of your configuration values within the client bundle  (imagine your database login details floating about).
 
-In addition to having an easy "go to" location for configuration we hope that this centralised strategy will allow you to easily pull and merge any updates from the starter kit origin without having to pick apart configuration customisations you may have had to scatter throughout the tools folder.
+To allow for safe consumption of the configuration values we have provided two features:
+  - Firstly, you need to explicitly set up rules within the `./config/values.js` file stating which of the configuration paths should be considered safe to be included in the client bundle.
+  - Secondly, we provide a `get` function which you should use to access configuration values anywhere within your code.  This function abstracts away all of the security and access boilerplate for you.
 
 ### Easily add an "API" bundle
 
@@ -178,6 +175,8 @@ We generally recommend that you don't persist any environment configuration valu
 
 As stated before, the application has been configured to accept a mix-match of sources for the environment variables. i.e. you can provide some/all of the environment variables via the `.env` file, and others via the cli/host (e.g. `FOO=bar npm run build`). This gives you greater flexibility and grants you the opportunity to control the provision of sensitive values (e.g. db connection string).  Please do note that "env" file values will take preference over any values provided by the host/CLI.
 
+> Note: It is recommended that you bind your environment configuration values to the global `./config/values.js`. See the existing items within as an example.
+
 ## Express Server Security
 
 We make use of the `helmet` and `hpp` middleware libraries to provide a fairly advanced security configuration for our express server, attempting to follow best practices. If you are unfamiliar with CSPs then I highly recommend that you do some reading on the subject:
@@ -200,12 +199,6 @@ We make use of the [`offline-plugin`](https://github.com/NekR/offline-plugin), p
 ```
 /
 |- config // Centralised project configuration.
-|  |- public // insensitive information. i.e. safe for bundling in client.
-|     |- htmlPage     // Customise meta tags for the online/offline html pages.
-|  |- private  // Sensitive configuration. i.e. don't expose publicly.
-|     |- project      // Project configuration.
-|     |- environment  // Environment variable parsing/support.
-|     |- plugins      // Plugin points for tool internals.
 |
 |- build // The target output dir for our build commands.
 |  |- client // The built client module.

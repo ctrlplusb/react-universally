@@ -6,16 +6,16 @@ import webpack from 'webpack';
 import appRootDir from 'app-root-dir';
 import { resolve as pathResolve } from 'path';
 import webpackConfigFactory from '../webpack/configFactory';
-import projConfig from '../../config/private/project';
 import { exec } from '../utils';
+import { get } from '../../config';
 
 // First clear the build output dir.
-exec(`rimraf ${pathResolve(appRootDir.get(), projConfig.buildOutputPath)}`);
+exec(`rimraf ${pathResolve(appRootDir.get(), get('buildOutputPath'))}`);
 
 // Get our "fixed" bundle names
-Object.keys(projConfig.bundles)
+Object.keys(get('bundles'))
 // And the "additional" bundle names
-.concat(Object.keys(projConfig.additionalNodeBundles))
+.concat(Object.keys(get('additionalNodeBundles')))
 // And then build them all.
 .forEach((bundleName) => {
   const compiler = webpack(
