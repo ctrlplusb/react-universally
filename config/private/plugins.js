@@ -34,6 +34,10 @@ export default {
         presets: [
           // JSX
           'react',
+          // Stage 3 javascript syntax.
+          // "Candidate: complete spec and initial browser implementations."
+          // Add anything lower than stage 3 at your own risk. :)
+          'stage-3',
           // For our client bundles we transpile all the latest ratified
           // ES201X code into ES5, safe for browsers.  We exclude module
           // transilation as webpack takes care of this for us, doing
@@ -61,13 +65,6 @@ export default {
           mode === 'development'
             ? 'react-hot-loader/babel'
             : null,
-          // We are adding the experimental "object rest spread" syntax as
-          // it is super useful.  There is a caveat with the plugin that
-          // requires us to include the destructuring plugin too.
-          'transform-object-rest-spread',
-          'transform-es2015-destructuring',
-          // The class properties plugin is really useful for react components.
-          'transform-class-properties',
           // This decorates our components with  __self prop to JSX elements,
           // which React will use to generate some runtime warnings.
           mode === 'development'
