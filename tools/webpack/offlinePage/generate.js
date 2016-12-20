@@ -11,7 +11,7 @@
 
 import serialize from 'serialize-javascript';
 import htmlPageConfig from '../../../config/public/htmlPage';
-import clientConfig from '../../../config/private/client';
+import sharedConfig from '../../../config/private/shared';
 import { CLIENT_CONFIG_IDENTIFIER } from '../../../src/shared/constants';
 
 const htmlAttributes = attrs => Object.keys(attrs)
@@ -50,10 +50,9 @@ export default function generate(templateParams) { // eslint-disable-line no-unu
         <div id='app'></div>
         <script type="text/javascript">
           ${
-            // Binds our client configuration object to the window object so
-            // that our client executing app can safely gain access to configuration
-            // values.
-            `window.${CLIENT_CONFIG_IDENTIFIER}=${serialize(clientConfig)}`
+            // Binds our shared configuration object to the window object so
+            // that our browser executing app can gain access to these values.
+            `window.${CLIENT_CONFIG_IDENTIFIER}=${serialize(sharedConfig)}`
           }
         </script>
         ${

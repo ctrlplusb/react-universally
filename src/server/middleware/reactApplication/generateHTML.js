@@ -86,9 +86,8 @@ export default function generateHTML(args: Args) {
       <body>
         <div id='app'>${reactAppString || ''}</div>
         ${
-          // Binds our client configuration object to the window object so
-          // that our client executing app can safely gain access to configuration
-          // values.
+          // Binds our shared configuration object to the window object so
+          // that our browser executing app can gain access to these values.
           inlineScript(`window.${CLIENT_CONFIG_IDENTIFIER}=${serialize(sharedConfig)};`)
         }
         ${

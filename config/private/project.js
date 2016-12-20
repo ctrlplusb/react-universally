@@ -133,7 +133,7 @@ export default {
       srcPaths: [
         './src/client',
         './src/shared',
-        './config/public',
+        './config',
       ],
 
       // Where does the client bundle output live?
@@ -181,8 +181,7 @@ export default {
       srcPaths: [
         './src/server',
         './src/shared',
-        './config/private',
-        './config/public',
+        './config',
       ],
 
       // Where does the server bundle output live?
