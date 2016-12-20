@@ -15,6 +15,8 @@ import { STATE_IDENTIFIER } from 'code-split-component';
 import getAssetsForClientChunks from './getAssetsForClientChunks';
 import projConfig from '../../../../config/private/project';
 import htmlPageConfig from '../../../../config/public/htmlPage';
+import sharedConfig from '../../../../config/private/shared';
+import { CLIENT_CONFIG_IDENTIFIER } from '../../../shared/constants';
 
 function styleTags(styles : Array<string>) {
   return styles
@@ -83,6 +85,12 @@ export default function generateHTML(args: Args) {
       </head>
       <body>
         <div id='app'>${reactAppString || ''}</div>
+        ${
+          // Binds our client configuration object to the window object so
+          // that our client executing app can safely gain access to configuration
+          // values.
+          inlineScript(`window.${CLIENT_CONFIG_IDENTIFIER}=${serialize(sharedConfig)};`)
+        }
         ${
           // Bind the initial application state based on the server render
           // so the client can register the correct initial state for the view.

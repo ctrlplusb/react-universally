@@ -100,6 +100,8 @@ export default {
   // It includes the "client" bundle assets, as well as the public folder assets,
   // and it is served by the "server" bundle.
   serviceWorker: {
+    // Enabled?
+    enabled: true,
     // Service worker name
     fileName: 'sw.js',
     // Paths to the public assets which should be included within our

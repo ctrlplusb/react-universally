@@ -9,7 +9,10 @@
 // by the reactApplication middleware.
 // @see src/server/middleware/reactApplication/generateHTML.js
 
+import serialize from 'serialize-javascript';
 import htmlPageConfig from '../../../config/public/htmlPage';
+import clientConfig from '../../../config/private/client';
+import { CLIENT_CONFIG_IDENTIFIER } from '../../../src/shared/constants';
 
 const htmlAttributes = attrs => Object.keys(attrs)
   // $FlowFixMe
@@ -45,6 +48,14 @@ export default function generate(templateParams) { // eslint-disable-line no-unu
       </head>
       <body>
         <div id='app'></div>
+        <script type="text/javascript">
+          ${
+            // Binds our client configuration object to the window object so
+            // that our client executing app can safely gain access to configuration
+            // values.
+            `window.${CLIENT_CONFIG_IDENTIFIER}=${serialize(clientConfig)}`
+          }
+        </script>
         ${
           // Enable the polyfill io script?
           // This can't be configured within a react-helmet component as we

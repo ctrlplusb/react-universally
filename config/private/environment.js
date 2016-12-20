@@ -87,4 +87,7 @@ export default {
   port: getIntEnvVar('SERVER_PORT', 1337),
   // The port on which the client bundle development server should run.
   clientDevServerPort: getIntEnvVar('CLIENT_DEVSERVER_PORT', 7331),
+  // This is an example environment variable which is consumed within the
+  // './client.js' config.  See there for more details.
+  welcomeMessage: getStringEnvVar('WELCOME_MSG', 'Hello world!'),
 };
