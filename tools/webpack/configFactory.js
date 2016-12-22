@@ -59,11 +59,6 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
   }
 
   const webpackConfig = {
-    performance: {
-      // Enable webpack's performance hints for production builds.
-      hints: isProd,
-    },
-
     target: isClient
       // Only our client bundle will target the web as a runtime.
       ? 'web'
@@ -111,6 +106,19 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
       'source-map',
       // Produces no source map.
       'hidden-source-map',
+    ),
+
+    // Performance budget feature.
+    // This enables checking of the output bundle size, which will result in
+    // warnings/errors if the bundle sizes are too large.
+    // We only want this enabled for our production client.  Please
+    // see the webpack docs on how you can configure this to your own needs:
+    // https://webpack.js.org/configuration/performance/
+    performance: ifProdClient(
+      // Enable webpack's performance hints for production client builds.
+      { hints: 'warning' },
+      // Else we have to set a value of "false" if we don't want the feature.
+      false,
     ),
 
     // Define our entry chunks for our bundle.
