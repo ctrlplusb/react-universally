@@ -6,19 +6,19 @@
 
 ## TOC
 
- - [About](https://github.com/ctrlplusb/react-universally#about)
- - [Features](https://github.com/ctrlplusb/react-universally#features)
- - [Overview](https://github.com/ctrlplusb/react-universally#overview)
- - [Feature Branches](https://github.com/ctrlplusb/react-universally#feature-branches)
- - [Project Configuration](https://github.com/ctrlplusb/react-universally#project-configuration)
- - [Environment Configuration](https://github.com/ctrlplusb/react-universally#environment-configuration)
- - [Express Server Security](https://github.com/ctrlplusb/react-universally#express-server-security)
- - [Offline Ready](https://github.com/ctrlplusb/react-universally#offline-ready)
- - [Project Structure](https://github.com/ctrlplusb/react-universally#project-structure)
- - [Project Dependencies](https://github.com/ctrlplusb/react-universally#project-dependencies)
- - [Deploy your very own Server Side Rendering React App in 4 easy steps](https://github.com/ctrlplusb/react-universally#deploy-your-very-own-server-side-rendering-react-app-in-4-easy-steps)
- - [npm script commands](https://github.com/ctrlplusb/react-universally#npm-script-commands)
- - [FAQs](https://github.com/ctrlplusb/react-universally#faqs)
+ - [About](#about)
+ - [Features](#features)
+ - [Overview](#overview)
+ - [Feature Branches](#feature-branches)
+ - [Project Configuration](#project-configuration)
+ - [Environment Configuration](#environment-configuration)
+ - [Express Server Security](#express-server-security)
+ - [Offline Ready](#offline-ready)
+ - [Project Structure](#project-structure)
+ - [Project Dependencies](#project-dependencies)
+ - [Deploy your very own Server Side Rendering React App in 4 easy steps](#deploy-your-very-own-server-side-rendering-react-app-in-4-easy-steps)
+ - [npm script commands](#npm-script-commands)
+ - [FAQs](#faqs)
 
 ## About
 

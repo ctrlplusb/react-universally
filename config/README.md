@@ -4,12 +4,24 @@ This folder contains our centralised application configuration.
 
 Just about everything that should be reasonably configurable will be contained within here.  It even contains plugin function definitions that allow you to extend/modify the Babel and Webpack configurations.
 
+## TOC
+
+ - [Goals](#goals)
+ - [Background](#background)
+ - [Managing Configuration](#managing-configuration)
+   - [Defining the configuration values safe for client bundles](#defining-the-configuration-values-safe-for-client-bundles)
+ - [Reading Configuration](#reading-configuration)
+   - [In the "server" or "tools" source](#in-the-server-or-tools-source)
+   - [In the "client" or "shared" folders](#in-the-client-or-shared-folders)
+
+## Goals
+
 The goals of our application configuration are:
 
-  - __Easy to use__
-  - __Centralised__
-  - __Secure__
-  - __Allows for configuration to be provided at build and execution time__
+  - Easy to use
+  - Centralised
+  - Secure
+  - Allows for configuration to be provided at build and execution time
 
 ## Background
 
@@ -25,7 +37,7 @@ So now we had two problems to deal with:
 
 ### Problem 1: Guarding import of the config object into client bundles.
 
-Because we now state that our application configuration for client bundles should be a filtered object that is bound to the "window.__CLIENT_CONFIG__" within the HTTP response this problem became quite trivial to solve.  Within our `./config` file we simply put a guarded check that uses the `process.env.IS_CLIENT` flag that is provided by the Webpack `DefinePlugin`.  This boolean flag indicates whether Webpack is bundling a "client" bundle or not.  So if this flag is `true` we throw an error stating that this is a dangerous move.  This is a build time error.
+Because we now state that our application configuration for client bundles should be a filtered object that is bound to the `window.__CLIENT_CONFIG__` within the HTTP response this problem became quite trivial to solve.  Within our `./config` file we simply put a guarded check that uses the `process.env.IS_CLIENT` flag that is provided by the Webpack `DefinePlugin`.  This boolean flag indicates whether Webpack is bundling a "client" bundle or not.  So if this flag is `true` we throw an error stating that this is a dangerous move.  This is a build time error.
 
 ### Problem 2: Abstracting access to either `window.__CLIENT_CONFIG__` or `./config`
 
@@ -43,21 +55,19 @@ You must use this helper function any time you need to access configuration with
 
 This does all the abstraction required, and will make sure that "problem 1" detailed above isn't hit either.
 
-## Details
-
-Okay, we hope that the background and overview above has given you a bigger insight into why our configuration is structured as it is.  Below we will go through some of the details.
-
-### Providing/Managing configuration
+## Managing Configuration
 
 ALL configuration should be added/managed to the `./config/index.js` file.  We even recommend that you attach environment read variables as properties to this configuration file in order to provide a familiar read API throughout your source.
 
-### Managing the configuration for client bundles (`window.__CLIENT_CONFIG__`)
+### Defining the configuration values safe for client bundles
 
 Within the bottom of the `./config/index.js` you will see that a `clientConfig` value gets exported.  This configuration value is created by providing a set of rules/filters that detail which of the configuration values you deem safe/required for inclusion in your client bundles.  Please go to this section of the configuration file for more detail on how this filtering mechanism works.
 
-This `clientConfig` export is then serialised and attached to the `window.__CLIENT_CONFIG__` by the `reactApplication` middleware.
+This `clientConfig` export will be serialised and attached to the `window.__CLIENT_CONFIG__` by the `reactApplication` middleware within the HTML response it returns.
 
-### "server"/"tools" - Reading Configuration Values
+## Reading Configuration
+
+### In the "server" or "tools" source
 
 Within the server or build tools it is safe to just import and use the configuration file directly.
 
@@ -73,7 +83,7 @@ If you are using `flow` you will get helpful assertions and type checking agains
 
 As stated in the background section above you must not import and use the config file in this manner within your "shared" source, however, don't worry about it as you will get a build time error if you accidentally did so.  The error will also include details on the proper API that you should use for the "shared" source.
 
-### "client"/"shared" - Reading Configuration Values
+### In the "client" or "shared" folders
 
 You can't import the `./config` file in the "client" or "shared" source as this will cause build failures.  The configuration object will be bound to `window.__CLIENT_CONFIG__` as detailed in the background section above.  Therefore to access the configuration within these cases we recommend the use of our provided helper located in `./src/shared/utils/config`.
 
