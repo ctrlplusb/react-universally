@@ -1216,9 +1216,9 @@ code-point-at@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/code-point-at/-/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"
 
-code-split-component@2.0.0-alpha.4:
-  version "2.0.0-alpha.4"
-  resolved "https://registry.yarnpkg.com/code-split-component/-/code-split-component-2.0.0-alpha.4.tgz#6e1b538abdefeec3a9ec91ca4d68593b1a0cee8d"
+code-split-component@2.0.0-alpha.5:
+  version "2.0.0-alpha.5"
+  resolved "https://registry.yarnpkg.com/code-split-component/-/code-split-component-2.0.0-alpha.5.tgz#8a2d0a670fc9d023b8d786cd084e09d85349f9dc"
   dependencies:
     invariant "^2.2.1"
     md5 "^2.2.1"
@@ -4527,7 +4527,13 @@ source-list-map@^0.1.4, source-list-map@~0.1.0:
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/source-list-map/-/source-list-map-0.1.7.tgz#d4b5ce2a46535c72c7e8527c71a77d250618172e"
 
-source-map-support@0.4.6, source-map-support@^0.4.2:
+source-map-support@0.4.7:
+  version "0.4.7"
+  resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.4.7.tgz#7a7988e0e66241c778c78dd179199bb6bcd35bd6"
+  dependencies:
+    source-map "^0.5.3"
+
+source-map-support@^0.4.2:
   version "0.4.6"
   resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.4.6.tgz#32552aa64b458392a85eab3b0b5ee61527167aeb"
   dependencies:
