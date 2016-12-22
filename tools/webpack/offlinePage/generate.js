@@ -42,7 +42,7 @@ export default function generate(templateParams) {
       </head>
       <body>
         <div id='app'></div>
-        <script type="text/javascript">
+        <script type="text/javascript" nonce="NONCE_TARGET">
           ${
             // Binds the client configuration object to the window object so
             // that we can safely expose some configuration values to the

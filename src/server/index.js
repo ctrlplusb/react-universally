@@ -13,6 +13,7 @@ import reactApplication from './middleware/reactApplication';
 import security from './middleware/security';
 import clientBundle from './middleware/clientBundle';
 import serviceWorker from './middleware/serviceWorker';
+import offlinePage from './middleware/offlinePage';
 import errorHandlers from './middleware/errorHandlers';
 import config from '../../config';
 
@@ -35,6 +36,10 @@ app.use(compression());
 // application for it to work correctly.
 if (process.env.NODE_ENV === 'production') {
   app.get(`/${config.serviceWorker.fileName}`, serviceWorker);
+  app.get(
+    `${config.bundles.client.webPath}${config.serviceWorker.offlinePageFileName}`,
+    offlinePage,
+  );
 }
 
 // Configure serving of our client bundle.
