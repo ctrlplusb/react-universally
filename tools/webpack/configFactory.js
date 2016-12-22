@@ -42,6 +42,7 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
   // Preconfigure some ifElse helper instnaces. See the util docs for more
   // information on how this util works.
   const ifDev = ifElse(isDev);
+  const ifProd = ifElse(isProd);
   const ifNode = ifElse(isNode);
   const ifClient = ifElse(isClient);
   const ifDevClient = ifElse(isDev && isClient);
@@ -190,12 +191,11 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
     plugins: removeEmpty([
       // Required support for code-split-component, which provides us with our
       // code splitting functionality.
-      new CodeSplitPlugin({
-        // The code-split-component doesn't work nicely with hot module reloading,
-        // which we use in our development builds, so we will disable it (which
-        // ensures synchronously behaviour on the CodeSplit instances).
-        disabled: isDev,
-      }),
+      //
+      // The code-split-component doesn't work nicely with React Hot Loader,
+      // which we use in our development builds, so we will disable it (which
+      // causes synchronous loading behaviour for the CodeSplit instances).
+      ifProd(() => new CodeSplitPlugin()),
 
       // We use this so that our generated [chunkhash]'s are only different if
       // the content for our respective chunks have changed.  This optimises

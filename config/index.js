@@ -357,21 +357,21 @@ const config = {
           // would have had to do ourselves to get code splitting w/SSR
           // support working.
           // @see https://github.com/ctrlplusb/code-split-component
-          [
-            'code-split-component/babel',
-            {
-              // The code-split-component doesn't work nicely with hot
-              // module reloading, which we use in our development builds,
-              // so we will disable it (which ensures synchronously
-              // behaviour on the CodeSplit instances).
-              disabled: mode === 'development',
-              // For our server bundle we will set the mode as being 'server'
-              // which will ensure that our code split components can be
-              // resolved synchronously, being much more helpful for
-              // pre-rendering.
-              mode: target,
-            },
-          ],
+          //
+          // We only include it in production as this library does not support
+          // React Hot Loader, which we use in development.
+          mode === 'production' && (target === 'server' || target === 'client')
+            ? [
+              'code-split-component/babel',
+              {
+                // For our server bundle we will set the mode as being 'server'
+                // which will ensure that our code split components can be
+                // resolved synchronously, being much more helpful for
+                // pre-rendering.
+                mode: target,
+              },
+            ]
+            : null,
         ].filter(x => x != null),
       };
     },
