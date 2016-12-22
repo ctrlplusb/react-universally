@@ -25,7 +25,14 @@ function createVendorDLL(bundleName : string, bundleConfig : Object) {
   // We calculate a hash of the package.json's dependencies, which we can use
   // to determine if dependencies have changed since the last time we built
   // the vendor dll.
-  const currentDependenciesHash = md5(JSON.stringify(devDLLDependencies));
+  const currentDependenciesHash = md5(JSON.stringify(
+    devDLLDependencies.map(dep =>
+      // We do this to include any possible version numbers we may have for
+      // a dependency. If these change then our hash should too, which will
+      // result in a new dev dll build.
+      [dep, pkg.dependencies[dep], pkg.devDependencies[dep]],
+    ),
+  ));
 
   const vendorDLLHashFilePath = pathResolve(
     appRootDir.get(),
