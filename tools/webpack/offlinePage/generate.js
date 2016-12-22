@@ -9,7 +9,7 @@
 // by the reactApplication middleware.
 // @see src/server/middleware/reactApplication/generateHTML.js
 
-import { get, clientConfigScript } from '../../../config';
+import serialize from 'serialize-javascript';
 
 const htmlAttributes = attrs => Object.keys(attrs)
   .map(attrName => `${attrName}="${attrs[attrName]}"`)
@@ -28,34 +28,36 @@ const scriptTags = scripts =>
 
 const scriptTag = url => `<script type="text/javascript" src="${url}"></script>`;
 
-// $FlowFixMe - for some reason flow type syntax is failing here.
-export default function generate(templateParams) { // eslint-disable-line no-unused-vars
+// $FlowFixMe - flow annotations don't work here :(
+export default function generate(templateParams) {
+  const { config, clientConfig } = templateParams.htmlWebpackPlugin.options.custom;
+
   return `
     <!DOCTYPE html>
-    <html ${htmlAttributes(get('htmlPage', 'htmlAttributes'))}>
+    <html ${htmlAttributes(config.htmlPage.htmlAttributes)}>
       <head>
-        <title>${get('htmlPage', 'defaultTitle')}</title>
-        ${metaTags(get('htmlPage', 'meta'))}
-        ${linkTags(get('htmlPage', 'links'))}
+        <title>${config.htmlPage.defaultTitle}</title>
+        ${metaTags(config.htmlPage.meta)}
+        ${linkTags(config.htmlPage.links)}
       </head>
       <body>
         <div id='app'></div>
         <script type="text/javascript">
           ${
-            // Binds our shared configuration object to the window object so
+            // Binds our client configuration object to the window object so
             // that our browser executing app can gain access to these values.
-            clientConfigScript()
+            `window.__CLIENT_CONFIG__=${serialize(clientConfig)};`
           }
         </script>
         ${
           // Enable the polyfill io script?
           // This can't be configured within a react-helmet component as we
           // may need the polyfill's before our client bundle gets parsed.
-          get('polyfillIO', 'enabled')
-            ? scriptTag(get('polyfillIO', 'url'))
+          config.polyfillIO.enabled
+            ? scriptTag(config.polyfillIO.url)
             : ''
         }
-        ${scriptTags(get('htmlPage', 'scripts'))}
+        ${scriptTags(config.htmlPage.scripts)}
       </body>
     </html>`;
 }

@@ -13,7 +13,7 @@ import type { Head } from 'react-helmet';
 import serialize from 'serialize-javascript';
 import { STATE_IDENTIFIER } from 'code-split-component';
 import getAssetsForClientChunks from './getAssetsForClientChunks';
-import { get, clientConfigScript } from '../../../../config';
+import config, { clientConfig } from '../../../../config';
 
 function styleTags(styles : Array<string>) {
   return styles
@@ -85,13 +85,13 @@ export default function generateHTML(args: Args) {
         ${
           // Binds the client configuration object to the window object so
           // that our browser executing app can gain access to these values.
-          clientConfigScript(nonce)
+          inlineScript(`window.__CLIENT_CONFIG__=${serialize(clientConfig)}`)
         }
         ${
           // Bind the initial application state based on the server render
           // so the client can register the correct initial state for the view.
           initialState
-            ? inlineScript(`window.APP_STATE=${serialize(initialState)};`)
+            ? inlineScript(`window.__APP_STATE__=${serialize(initialState)};`)
             : ''
         }
         ${
@@ -105,8 +105,8 @@ export default function generateHTML(args: Args) {
           // Enable the polyfill io script?
           // This can't be configured within a react-helmet component as we
           // may need the polyfill's before our client bundle gets parsed.
-          get('polyfillIO', 'enabled')
-            ? scriptTag(get('polyfillIO', 'url'))
+          config.polyfillIO.enabled
+            ? scriptTag(config.polyfillIO.url)
             : ''
         }
         ${
@@ -115,8 +115,8 @@ export default function generateHTML(args: Args) {
           // we need to inject the path to the vendor dll bundle below.
           // @see /tools/development/ensureVendorDLLExists.js
           process.env.NODE_ENV === 'development'
-            && get('bundles', 'client', 'devVendorDLL', 'enabled')
-            ? scriptTag(`${get('bundles', 'client', 'webPath')}${get('bundles', 'client', 'devVendorDLL', 'name')}.js`)
+            && config.bundles.client.devVendorDLL.enabled
+            ? scriptTag(`${config.bundles.client.webPath}${config.bundles.client.devVendorDLL.name}.js`)
             : ''
         }
         ${scriptTags(assetsForRender.js)}

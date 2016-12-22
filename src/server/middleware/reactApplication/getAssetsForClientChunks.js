@@ -5,12 +5,12 @@
 import fs from 'fs';
 import { resolve as pathResolve } from 'path';
 import appRootDir from 'app-root-dir';
-import { get } from '../../../../config';
+import config from '../../../../config';
 
 const assetsFilePath = pathResolve(
   appRootDir.get(),
-  get('bundles', 'client', 'outputPath'),
-  `./${get('bundleAssetsFileName')}`,
+  config.bundles.client.outputPath,
+  `./${config.bundleAssetsFileName}`,
 );
 
 if (!fs.existsSync(assetsFilePath)) {

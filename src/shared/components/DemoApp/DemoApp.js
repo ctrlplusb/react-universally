@@ -8,7 +8,7 @@ import 'normalize.css/normalize.css';
 import './globals.css';
 import Error404 from './Error404';
 import Header from './Header';
-import { get } from '../../../../config';
+import { safeConfigGet } from '../../utils/config';
 
 function DemoApp() {
   return (
@@ -18,12 +18,12 @@ function DemoApp() {
         @see https://github.com/nfl/react-helmet
       */}
       <Helmet
-        htmlAttributes={get('htmlPage', 'htmlAttributes')}
-        titleTemplate={get('htmlPage', 'titleTemplate')}
-        defaultTitle={get('htmlPage', 'defaultTitle')}
-        meta={get('htmlPage', 'meta')}
-        link={get('htmlPage', 'links')}
-        script={get('htmlPage', 'scripts')}
+        htmlAttributes={safeConfigGet(['htmlPage', 'htmlAttributes'])}
+        titleTemplate={safeConfigGet(['htmlPage', 'titleTemplate'])}
+        defaultTitle={safeConfigGet(['htmlPage', 'defaultTitle'])}
+        meta={safeConfigGet(['htmlPage', 'meta'])}
+        link={safeConfigGet(['htmlPage', 'links'])}
+        script={safeConfigGet(['htmlPage', 'scripts'])}
       />
 
       <Header />
