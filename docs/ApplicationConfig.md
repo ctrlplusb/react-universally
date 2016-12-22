@@ -10,9 +10,12 @@ Just about everything that should be reasonably configurable will be contained w
  - [Background](#background)
  - [Managing Configuration](#managing-configuration)
    - [Defining the configuration values safe for client bundles](#defining-the-configuration-values-safe-for-client-bundles)
+ - [Environment Values](#environment-values)
  - [Reading Configuration](#reading-configuration)
    - [In the "server" or "tools" source](#in-the-server-or-tools-source)
    - [In the "client" or "shared" folders](#in-the-client-or-shared-folders)
+ - [Config Highlights](#config-highlights)
+   - [Easily add an "API" bundle](#easily-add-an-api-bundle)
 
 ## Goals
 
@@ -65,6 +68,26 @@ Within the bottom of the `./config/index.js` you will see that a `clientConfig` 
 
 This `clientConfig` export will be serialised and attached to the `window.__CLIENT_CONFIG__` by the `reactApplication` middleware within the HTML response it returns.
 
+## Environment Values
+
+Environment specific values are support via host system environment variables (e.g. `FOO=bar npm run start`) and/or by providing an "env" file.  
+
+"env" files is an optional feature that is supported by the [`dotenv`](https://github.com/motdotla/dotenv) module. This module allows you to define files containing key/value pairs representing your required environment variables (e.g. `PORT=1337`). To use this feature create an `.env` file within the root of the project (we have provided an example file called `.env_example`, which contains all the environment variables this project currently relies on).
+
+> Note: The `.env` file has been ignored from the git repository in anticipation that it will most likely be used to house development specific configuration.
+
+We generally recommend that you don't persist any "env" files within the repository, and instead rely on your target host environments and/or deployment servers to provide the necessary values per environment.  
+
+If you do however have the requirement to create and persist "env" files for multiple target environments, the system does support it. To do so create a ".env" file that is postfix'ed with the environment you are targeting. For e.g. `.env.development` or `.env.staging` or `.env.production`.
+
+Then when you run your code with the `NODE_ENV=target` set it will load the appropriate "env.target" file.
+
+ > Note: if an environment specific configuration file exists, it will be used over the more generic `.env` file.
+
+As stated before, the application has been configured to accept a mix-match of sources for the environment variables. i.e. you can provide some/all of the environment variables via the `.env` file, and others via the cli/host (e.g. `FOO=bar npm run build`). This gives you greater flexibility and grants you the opportunity to control the provision of sensitive values (e.g. db connection string).  Please do note that "env" file values will take preference over any values provided by the host/CLI.
+
+> Note: It is recommended that you bind your environment configuration values to the global `./config/values.js`. See the existing items within as an example.
+
 ## Reading Configuration
 
 ### In the "server" or "tools" source
@@ -116,3 +139,15 @@ console.log(safeConfigGet(['serviceWorker', 'enabled']));
 You don't have `flow` to help you in these cases as you are providing a array of strings and not access the config object directly, so typos can be a common issue.  In addition to this you may not have exposed the target configuration value via the client config filter rules that are contained at the bottom of the `./config` file.
 
 To help you with these cases the `safeConfigGet` will throw helpful error messages indicating the problem and recommending solutions to them.
+
+## Config Highlights
+
+Below are some interesting aspects of the configuration file to be aware of.
+
+### Easily add an "API" bundle
+
+A fairly common requirement for a project that scales is to create additional servers bundles, e.g. an API server.
+
+Instead of requiring you to hack the Webpack configuration we have have provided a section within the centralised project configuration that allows you to easily declare additional bundles.  You simply need to provide the source, entry, and output paths - we take care of the rest.  
+
+_IMPORTANT:_ One further requirement for this feature is that within your new server bundle you export the created http listener.  This exported listener will be used by the development server so that it can automatically restart your server any time the source files for it change.
