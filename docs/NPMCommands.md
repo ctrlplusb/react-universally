@@ -1,10 +1,10 @@
- - [Feature Branches](/FeaturesBranches.md)
- - [Application Configuration](/ApplicationConfig.md)
- - [Security](/Security.md)
- - [Project Structure](/ProjectStructure.md)
- - [Deploy your very own Server Side Rendering React App in 4 easy steps](/DeployToNow.md)
- - __[npm script commands](/NPMCommands.md)__
- - [FAQ](/FAQ.md)
+ - [Feature Branches](/docs/FeaturesBranches.md)
+ - [Application Configuration](/docs/ApplicationConfig.md)
+ - [Security](/docs/Security.md)
+ - [Project Structure](/docs/ProjectStructure.md)
+ - [Deploy your very own Server Side Rendering React App in 4 easy steps](/docs/DeployToNow.md)
+ - __[npm script commands](/docs/NPMCommands.md)__
+ - [FAQ](/docs/FAQ.md)
 
 # NPM Commands
 
