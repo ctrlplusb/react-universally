@@ -1,14 +1,15 @@
 /* @flow */
 
-// Project configuration.
+// Application Configuration.
+//
+// Please see the README.md in the config folder for more information.
 //
 // Note: all file/folder paths should be relative to the project root. The
 // absolute paths should be resolved during runtime by our build tools/server.
 
 import { getStringEnvVar, getIntEnvVar } from './internals/environmentVars';
-import type { BuildOptions } from '../tools/types';
 import filterObject from './internals/filterObject';
-import clientConfigFilter from './clientConfigFilter';
+import type { BuildOptions } from '../tools/types';
 
 // This protects us from accidentally including this configuration in our
 // client bundle. That would be a big NO NO to do. :)
@@ -406,8 +407,53 @@ const config = {
   },
 };
 
-// Create the filtered client configuration object.
-export const clientConfig = filterObject(config, clientConfigFilter);
+// Export the client configuration object.
+export const clientConfig = filterObject(
+  // We will filter our full application configuration object...
+  config,
+  // using the rules below in order to create our filtered client configuration
+  // object.
+  //
+  // This object will be bound to the window.__CLIENT_CONFIG__
+  // property which is where client code should be referencing it from.
+  // As we generally have shared code between our node/browser code we have
+  // created a helper function in "./src/shared/utils/config" that you can used
+  // to request config values from.  It will make sure that either the
+  // application config file is used (i.e. this file), or the
+  // window.__CLIENT_CONFIG__ is used.  This avoids boilerplate throughout your
+  // shared code.  We recommend using this helper anytime you need a config
+  // value within either the "client" or "shared" folder (i.e. any folders
+  // that contain code which will end up in the browser).
+  //
+  // This is a filter that will be applied to our configuration in order to
+  // determine which of our configuration values will be provided to the client
+  // bundle.
+  //
+  // For security reasons you wouldn't want to make all of the configuration values
+  // accessible by client bundles as these values would essentially be getting
+  // transported over the wire to user's browsers.  There are however cases
+  // where you may want to expose one or two of the values within a client bundle.
+  //
+  // This filter object must match the shape of the configuration object, however
+  // you need not specify every property that is defined within the configuration
+  // object.  Simply define the properties you would like to be included in the
+  // client config, supplying a truthy value to them in order to ensure they
+  // get included in the client bundle.
+  {
+    // This is here as an example showing that you can expose environment
+    // variables too.
+    welcomeMessage: true,
+    // We only need to expose the enabled flag of the service worker.
+    serviceWorker: {
+      enabled: true,
+    },
+    // We need to expose all the polyfill.io settings.
+    polyfillIO: true,
+    // We need to expose all the htmlPage settings.
+    htmlPage: true,
+    additionalNodeBundles: true,
+  },
+);
 
 // Export the main config as the default export.
 export default config;

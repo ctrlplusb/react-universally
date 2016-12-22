@@ -44,8 +44,9 @@ export default function generate(templateParams) {
         <div id='app'></div>
         <script type="text/javascript">
           ${
-            // Binds our client configuration object to the window object so
-            // that our browser executing app can gain access to these values.
+            // Binds the client configuration object to the window object so
+            // that we can safely expose some configuration values to the
+            // client bundle that gets executed in the browser.
             `window.__CLIENT_CONFIG__=${serialize(clientConfig)};`
           }
         </script>

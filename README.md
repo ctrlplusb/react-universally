@@ -145,13 +145,7 @@ git merge upstream/feature/FEATURENAME
 
 ## Project Configuration
 
-We have centralised the configuration of the project to be contained within the `./config` folder, specifically all the configuration values are contained within `./config/values.js`.
-
-A special note on using these configuration values across your project: You will most certainly come to a point where you need to use a configuration value within a component/module that would be executed within the browser (i.e. via the client bundle).  However, you of course would not like to accidentally import and include all of your configuration values within the client bundle  (imagine your database login details floating about).
-
-To allow for safe consumption of the configuration values we have provided two features:
-  - Firstly, you need to explicitly set up rules within the `./config/values.js` file stating which of the configuration paths should be considered safe to be included in the client bundle.
-  - Secondly, we provide a `get` function which you should use to access configuration values anywhere within your code.  This function abstracts away all of the security and access boilerplate for you.
+We have centralised the configuration of the project to be contained within the `./config` folder.  Within this folder is a detailed [`README.md`](/config/README.md) that describes how application configuration is used within the project.  We ___highly___ recommend that you familiarise yourself with this.
 
 ### Easily add an "API" bundle
 
