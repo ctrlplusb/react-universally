@@ -34,7 +34,8 @@ app.use(compression());
 // more information.
 // Note: the service worker needs to be served from the http root of your
 // application for it to work correctly.
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'production'
+  && config.serviceWorker.enabled) {
   app.get(`/${config.serviceWorker.fileName}`, serviceWorker);
   app.get(
     `${config.bundles.client.webPath}${config.serviceWorker.offlinePageFileName}`,
