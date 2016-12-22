@@ -216,20 +216,13 @@ const config = {
       // Configuration settings for the development vendor DLL.  This will be created
       // by our development server and provides an improved dev experience
       // by decreasing the number of modules that webpack needs to process
-      // for every rebuild of our client bundle.
+      // for every rebuild of our client bundle.  It by default uses the
+      // dependencies configured in package.json however you can customise
+      // which of these dependencies are excluded, whilst also being able to
+      // specify the inclusion of additional modules below.
       devVendorDLL: {
         // Enabled?
         enabled: true,
-
-        // Any source files that match the following regular expressions will
-        // not be considered when trying to find out which modules are used
-        // for the client bundle.
-        // Typically you want to exclude test files as they may contain
-        // modules which are node specific.
-        srcFileIgnores: [
-          /.*\.test\.js$/ig,
-          /.*-test\.js$/i,
-        ],
 
         // It is also possible that some modules require specific
         // webpack loaders in order to be processed (e.g. CSS/SASS etc).
@@ -238,6 +231,35 @@ const config = {
         // Add the respective modules to the ignores list below to ensure
         // that they don't get bundled into the vendor DLL.
         ignores: ['normalize.css/normalize.css'],
+
+        // Which libaries should be excluded when interpreting the package.json
+        // dependencies?
+        //
+        // You should exclude dependencies meant for a server/node process and
+        // you should also exclude modules that may contain files requiring a
+        // webpack loader to parse them (e.g. CSS/SASS etc).
+        exclude: [
+          // Requires webpack loaders:
+          'normalize.css',
+
+          // Only used by node/server:
+          'app-root-dir',
+          'colors',
+          'compression',
+          'dotenv',
+          'express',
+          'helmet',
+          'hpp',
+          'offline-plugin',
+          'serialize-javascript',
+          'source-map-support',
+          'uuid',
+          'user-home',
+        ],
+
+        // Specify any additional dependencies that you would like to
+        // explicitly include.
+        include: [],
 
         // The name of the vendor DLL.
         name: '__dev_vendor_dll__',
