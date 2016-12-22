@@ -59,7 +59,7 @@
     "compression": "1.6.2",
     "dotenv": "2.0.0",
     "express": "4.14.0",
-    "helmet": "3.1.0",
+    "helmet": "3.2.0",
     "hpp": "0.2.1",
     "normalize.css": "5.0.0",
     "offline-plugin": "4.5.3",
