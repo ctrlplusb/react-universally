@@ -1,3 +1,11 @@
+ - [Feature Branches](/FeaturesBranches.md)
+ - [Application Configuration](/ApplicationConfig.md)
+ - [Security](/Security.md)
+ - __[Project Structure](/ProjectStructure.md)__
+ - [Deploy your very own Server Side Rendering React App in 4 easy steps](/DeployToNow.md)
+ - [npm script commands](/NPMCommands.md)
+ - [FAQ](/FAQ.md)
+
 # Project Structure
 
 Below are some of the critical folders of the project along with a comment describing them.

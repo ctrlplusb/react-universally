@@ -54,5 +54,5 @@ Note: Given that we are bundling our server code I have included the `source-map
  - [Security](/docs/Security.md)
  - [Project Structure](/docs/ProjectStructure.md)
  - [Deploy your very own Server Side Rendering React App in 4 easy steps](/docs/DeployToNow.md)
- - [npm script commands](#npm-script-commands)
+ - [npm script commands](/docs/NPMCommands.md)
  - [FAQ](/docs/FAQ.md)

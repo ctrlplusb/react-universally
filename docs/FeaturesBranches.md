@@ -1,3 +1,11 @@
+ - __[Feature Branches](/FeaturesBranches.md)__
+ - [Application Configuration](/ApplicationConfig.md)
+ - [Security](/Security.md)
+ - [Project Structure](/ProjectStructure.md)
+ - [Deploy your very own Server Side Rendering React App in 4 easy steps](/DeployToNow.md)
+ - [npm script commands](/NPMCommands.md)
+ - [FAQ](/FAQ.md)
+
 # Feature Branches
 
 Below are a list of extensions to this repository, in the form of branches.  Each of them has been tailored to add an individual technology.  It is possible to merge multiple branches together in order to create a technology mix that suits your project's needs.  We'll detail this workflow after the repository list.
