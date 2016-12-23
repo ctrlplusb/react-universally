@@ -8,12 +8,7 @@
 {
   "presets": [
     ["env", { "targets": { "node": true } }],
+    "stage-3",
     "react"
-  ],
-  "plugins": [
-    "transform-object-rest-spread",
-    "transform-es2015-destructuring",
-    "transform-class-properties",
-    "transform-flow-strip-types"
   ]
 }

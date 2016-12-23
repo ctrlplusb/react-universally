@@ -5,8 +5,8 @@
 import { resolve as pathResolve } from 'path';
 import appRootDir from 'app-root-dir';
 import { exec } from '../utils';
-import projConfig from '../../config/private/project';
+import config from '../../config';
 
-const cmd = `$(npm bin)/rimraf ${pathResolve(appRootDir.get(), projConfig.buildOutputPath)}`;
+const cmd = `$(npm bin)/rimraf ${pathResolve(appRootDir.get(), config.buildOutputPath)}`;
 
 exec(cmd);

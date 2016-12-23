@@ -75,7 +75,7 @@ class HotClientServer {
 
     return this.listenerManager
       ? this.listenerManager.dispose()
-      : Promise.resolve([]);
+      : Promise.resolve();
   }
 }
 

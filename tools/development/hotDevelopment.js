@@ -1,3 +1,5 @@
+/* @flow */
+
 import { resolve as pathResolve } from 'path';
 import webpack from 'webpack';
 import appRootDir from 'app-root-dir';
@@ -6,7 +8,7 @@ import HotNodeServer from './hotNodeServer';
 import HotClientServer from './hotClientServer';
 import createVendorDLL from './createVendorDLL';
 import webpackConfigFactory from '../webpack/configFactory';
-import projConfig from '../../config/private/project';
+import config from '../../config';
 
 const usesDevVendorDLL = bundleConfig =>
   bundleConfig.devVendorDLL != null && bundleConfig.devVendorDLL.enabled;
@@ -69,18 +71,18 @@ class HotDevelopment {
     this.hotClientServer = null;
     this.hotNodeServers = [];
 
-    const clientBundle = initializeBundle('client', projConfig.bundles.client);
+    const clientBundle = initializeBundle('client', config.bundles.client);
 
-    const nodeBundles = [initializeBundle('server', projConfig.bundles.server)]
-      .concat(Object.keys(projConfig.additionalNodeBundles).map(name =>
-        initializeBundle(name, projConfig.additionalNodeBundles[name]),
+    const nodeBundles = [initializeBundle('server', config.bundles.server)]
+      .concat(Object.keys(config.additionalNodeBundles).map(name =>
+        initializeBundle(name, config.additionalNodeBundles[name]),
       ));
 
     Promise
       // First ensure the client dev vendor DLLs is created if needed.
       .resolve(
-        usesDevVendorDLL(projConfig.bundles.client)
-          ? createVendorDLL('client', projConfig.bundles.client)
+        usesDevVendorDLL(config.bundles.client)
+          ? createVendorDLL('client', config.bundles.client)
           : true,
       )
       // Then start the client development server.
@@ -101,6 +103,7 @@ class HotDevelopment {
       .then((clientCompiler) => {
         this.hotNodeServers = nodeBundles
           .map(({ name, createCompiler }) =>
+            // $FlowFixMe
             new HotNodeServer(name, createCompiler(), clientCompiler),
           );
       });
@@ -108,7 +111,7 @@ class HotDevelopment {
 
   dispose() {
     const safeDisposer = server =>
-      (server ? server.dispose() : Promise.resolve([]));
+      (server ? server.dispose() : Promise.resolve());
 
     // First the hot client server.
     return safeDisposer(this.hotClientServer)

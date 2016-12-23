@@ -12,11 +12,8 @@ import appRootDir from 'app-root-dir';
 import WebpackMd5Hash from 'webpack-md5-hash';
 import CodeSplitPlugin from 'code-split-component/webpack';
 import { removeEmpty, ifElse, merge, happyPackPlugin } from '../utils';
-import projConfig from '../../config/private/project';
-import envConfig from '../../config/private/environment';
-import htmlPageConfig from '../../config/public/htmlPage';
-import plugins from '../../config/private/plugins';
 import type { BuildOptions } from '../types';
+import config, { clientConfig } from '../../config';
 
 /**
  * This function is responsible for creating the webpack configuration for
@@ -45,6 +42,7 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
   // Preconfigure some ifElse helper instnaces. See the util docs for more
   // information on how this util works.
   const ifDev = ifElse(isDev);
+  const ifProd = ifElse(isProd);
   const ifNode = ifElse(isNode);
   const ifClient = ifElse(isClient);
   const ifDevClient = ifElse(isDev && isClient);
@@ -53,20 +51,15 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
   // Resolve the bundle configuration.
   const bundleConfig = isServer || isClient
     // This is either our "server" or "client" bundle.
-    ? projConfig.bundles[target]
+    ? config.bundles[target]
     // Otherwise it must be an additional node bundle.
-    : projConfig.additionalNodeBundles[target];
+    : config.additionalNodeBundles[target];
 
   if (!bundleConfig) {
     throw new Error('No bundle configuration exists for target:', target);
   }
 
-  const config = {
-    performance: {
-      // Enable webpack's performance hints for production builds.
-      hints: isProd,
-    },
-
+  const webpackConfig = {
     target: isClient
       // Only our client bundle will target the web as a runtime.
       ? 'web'
@@ -93,7 +86,7 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
           // loaders, e.g. CSS or SASS.
           // For these cases please make sure that the file extensions are
           // registered within the following configuration setting.
-          { whitelist: projConfig.nodeBundlesIncludeNodeModuleFileTypes },
+          { whitelist: config.nodeBundlesIncludeNodeModuleFileTypes },
         ),
       ),
     ]),
@@ -108,12 +101,25 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
         || isDev
         // Allow for the following flag to force source maps even for production
         // builds.
-        || projConfig.includeSourceMapsForProductionBuilds,
+        || config.includeSourceMapsForProductionBuilds,
       )(
       // Produces an external source map (lives next to bundle output files).
       'source-map',
       // Produces no source map.
       'hidden-source-map',
+    ),
+
+    // Performance budget feature.
+    // This enables checking of the output bundle size, which will result in
+    // warnings/errors if the bundle sizes are too large.
+    // We only want this enabled for our production client.  Please
+    // see the webpack docs on how you can configure this to your own needs:
+    // https://webpack.js.org/configuration/performance/
+    performance: ifProdClient(
+      // Enable webpack's performance hints for production client builds.
+      { hints: 'warning' },
+      // Else we have to set a value of "false" if we don't want the feature.
+      false,
     ),
 
     // Define our entry chunks for our bundle.
@@ -128,7 +134,7 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
         // Required to support hot reloading of our client.
         ifDevClient('react-hot-loader/patch'),
         // Required to support hot reloading of our client.
-        ifDevClient(() => `webpack-hot-middleware/client?reload=true&path=http://${envConfig.host}:${envConfig.clientDevServerPort}/__webpack_hmr`),
+        ifDevClient(() => `webpack-hot-middleware/client?reload=true&path=http://${config.host}:${config.clientDevServerPort}/__webpack_hmr`),
         // We are using polyfill.io instead of the very heavy babel-polyfill.
         // Therefore we need to add the regenerator-runtime as the babel-polyfill
         // included this, which polyfill.io doesn't include.
@@ -170,7 +176,7 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
         publicPath: ifDev(
           // As we run a seperate development server for our client and server
           // bundles we need to use an absolute http path for the public path.
-          `http://${envConfig.host}:${envConfig.clientDevServerPort}${projConfig.bundles.client.webPath}`,
+          `http://${config.host}:${config.clientDevServerPort}${config.bundles.client.webPath}`,
           // Otherwise we expect our bundled client to be served from this path.
           bundleConfig.webPath,
         ),
@@ -179,18 +185,17 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
 
     resolve: {
       // These extensions are tried when resolving a file.
-      extensions: projConfig.bundleSrcTypes.map(ext => `.${ext}`),
+      extensions: config.bundleSrcTypes.map(ext => `.${ext}`),
     },
 
     plugins: removeEmpty([
       // Required support for code-split-component, which provides us with our
       // code splitting functionality.
-      new CodeSplitPlugin({
-        // The code-split-component doesn't work nicely with hot module reloading,
-        // which we use in our development builds, so we will disable it (which
-        // ensures synchronously behaviour on the CodeSplit instances).
-        disabled: isDev,
-      }),
+      //
+      // The code-split-component doesn't work nicely with React Hot Loader,
+      // which we use in our development builds, so we will disable it (which
+      // causes synchronous loading behaviour for the CodeSplit instances).
+      ifProd(() => new CodeSplitPlugin()),
 
       // We use this so that our generated [chunkhash]'s are only different if
       // the content for our respective chunks have changed.  This optimises
@@ -238,7 +243,7 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
       // our client bundle.
       ifClient(() =>
         new AssetsPlugin({
-          filename: projConfig.bundleAssetsFileName,
+          filename: config.bundleAssetsFileName,
           path: path.resolve(appRootDir.get(), bundleConfig.outputPath),
         }),
       ),
@@ -254,16 +259,16 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
       // configuration to ensure that the output is minimized/optimized.
       ifProdClient(
         () => new webpack.LoaderOptionsPlugin({
-          minimize: projConfig.optimizeProductionBuilds,
+          minimize: config.optimizeProductionBuilds,
         }),
       ),
 
       // For our production client we need to make sure we pass the required
       // configuration to ensure that the output is minimized/optimized.
       ifProdClient(
-        ifElse(projConfig.optimizeProductionBuilds)(
+        ifElse(config.optimizeProductionBuilds)(
           () => new webpack.optimize.UglifyJsPlugin({
-            sourceMap: projConfig.includeSourceMapsForProductionBuilds,
+            sourceMap: config.includeSourceMapsForProductionBuilds,
             compress: {
               screw_ie8: true,
               warnings: false,
@@ -308,7 +313,7 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
         // We will use babel to do all our JS processing.
         loaders: [{
           path: 'babel-loader',
-          query: plugins.bundles.babelConfig(buildOptions),
+          query: config.plugins.babelConfig(buildOptions),
         }],
       }),
 
@@ -336,25 +341,34 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
       // can be used by our service worker (see the OfflinePlugin below) in
       // order support offline rendering of our application.
       ifProdClient(
-        new HtmlWebpackPlugin({
-          filename: projConfig.serviceWorker.offlinePageFileName,
-          template: path.resolve(
-            appRootDir.get(), projConfig.serviceWorker.offlinePageTemplate,
-          ),
-          minify: {
-            removeComments: true,
-            collapseWhitespace: true,
-            removeRedundantAttributes: true,
-            useShortDoctype: true,
-            removeEmptyAttributes: true,
-            removeStyleLinkTypeAttributes: true,
-            keepClosingSlash: true,
-            minifyJS: true,
-            minifyCSS: true,
-            minifyURLs: true,
-          },
-          inject: true,
-        }),
+        // We will only create the service worker required page if enabled in config.
+        ifElse(config.serviceWorker.enabled)(
+          () => new HtmlWebpackPlugin({
+            filename: config.serviceWorker.offlinePageFileName,
+            template: path.resolve(
+              appRootDir.get(), config.serviceWorker.offlinePageTemplate,
+            ),
+            minify: {
+              removeComments: true,
+              collapseWhitespace: true,
+              removeRedundantAttributes: true,
+              useShortDoctype: true,
+              removeEmptyAttributes: true,
+              removeStyleLinkTypeAttributes: true,
+              keepClosingSlash: true,
+              minifyJS: true,
+              minifyCSS: true,
+              minifyURLs: true,
+            },
+            inject: true,
+            // We pass our config objects as values as they will be needed
+            // by the template.
+            custom: {
+              config,
+              clientConfig,
+            },
+          }),
+        ),
       ),
 
       // Service Worker - generation.
@@ -384,77 +398,80 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
       // Any time our static files or generated bundle files change the user's
       // cache will be updated.
       ifProdClient(
-        () => new OfflinePlugin({
-          // Setting this value lets the plugin know where our generated client
-          // assets will be served from.
-          // e.g. /client/
-          publicPath: bundleConfig.webPath,
-          // When using the publicPath we need to disable the "relativePaths"
-          // feature of this plugin.
-          relativePaths: false,
-          // Our offline support will be done via a service worker.
-          // Read more on them here:
-          // http://bit.ly/2f8q7Td
-          ServiceWorker: {
-            // The name of the service worker script that will get generated.
-            output: projConfig.serviceWorker.fileName,
-            // Enable events so that we can register updates.
-            events: true,
-            // By default the service worker will be ouput and served from the
-            // publicPath setting above in the root config of the OfflinePlugin.
-            // This means that it would be served from /client/sw.js
-            // We do not want this! Service workers have to be served from the
-            // root of our application in order for them to work correctly.
-            // Therefore we override the publicPath here. The sw.js will still
-            // live in at the /build/client/sw.js output location therefore in
-            // our server configuration we need to make sure that any requests
-            // to /sw.js will serve the /build/client/sw.js file.
-            publicPath: `/${projConfig.serviceWorker.fileName}`,
-            // When the user is offline then this html page will be used at
-            // the base that loads all our cached client scripts.  This page
-            // is generated by the HtmlWebpackPlugin above, which takes care
-            // of injecting all of our client scripts into the body.
-            // Please see the HtmlWebpackPlugin configuration above for more
-            // information on this page.
-            navigateFallbackURL: `${bundleConfig.webPath}${projConfig.serviceWorker.offlinePageFileName}`,
-          },
-          // According to the Mozilla docs, AppCache is considered deprecated.
-          // @see https://mzl.la/1pOZ5wF
-          // It does however have much wider support compared to the newer
-          // Service Worker specification, so you could consider enabling it
-          // if you needed.
-          AppCache: false,
-          // Which external files should be included with the service worker?
-          externals:
-            // Add the polyfill io script as an external if it is enabled.
-            (
-              htmlPageConfig.polyfillIO.enabled
-                ? [htmlPageConfig.polyfillIO.url]
-                : []
-            )
-            // Add any included public folder assets.
-            .concat(
-              projConfig.serviceWorker.includePublicAssets.reduce((acc, cur) => {
-                const publicAssetPathGlob = path.resolve(
-                  appRootDir.get(), projConfig.publicAssetsPath, cur,
-                );
-                const publicFileWebPaths = acc.concat(
-                  // First get all the matching public folder assets.
-                  globSync(publicAssetPathGlob)
-                  // Then map them to relative paths against the public folder.
-                  // We need to do this as we need the "web" paths for each one.
-                  .map(publicFile => path.relative(
-                    path.resolve(appRootDir.get(), projConfig.publicAssetsPath),
-                    publicFile,
-                  ))
-                  // Add the leading "/" indicating the file is being hosted
-                  // off the root of the application.
-                  .map(relativePath => `/${relativePath}`),
-                );
-                return publicFileWebPaths;
-              }, []),
-            ),
-        }),
+        // We will only include the service worker if enabled in config.
+        ifElse(config.serviceWorker.enabled)(
+          () => new OfflinePlugin({
+            // Setting this value lets the plugin know where our generated client
+            // assets will be served from.
+            // e.g. /client/
+            publicPath: bundleConfig.webPath,
+            // When using the publicPath we need to disable the "relativePaths"
+            // feature of this plugin.
+            relativePaths: false,
+            // Our offline support will be done via a service worker.
+            // Read more on them here:
+            // http://bit.ly/2f8q7Td
+            ServiceWorker: {
+              // The name of the service worker script that will get generated.
+              output: config.serviceWorker.fileName,
+              // Enable events so that we can register updates.
+              events: true,
+              // By default the service worker will be ouput and served from the
+              // publicPath setting above in the root config of the OfflinePlugin.
+              // This means that it would be served from /client/sw.js
+              // We do not want this! Service workers have to be served from the
+              // root of our application in order for them to work correctly.
+              // Therefore we override the publicPath here. The sw.js will still
+              // live in at the /build/client/sw.js output location therefore in
+              // our server configuration we need to make sure that any requests
+              // to /sw.js will serve the /build/client/sw.js file.
+              publicPath: `/${config.serviceWorker.fileName}`,
+              // When the user is offline then this html page will be used at
+              // the base that loads all our cached client scripts.  This page
+              // is generated by the HtmlWebpackPlugin above, which takes care
+              // of injecting all of our client scripts into the body.
+              // Please see the HtmlWebpackPlugin configuration above for more
+              // information on this page.
+              navigateFallbackURL: `${bundleConfig.webPath}${config.serviceWorker.offlinePageFileName}`,
+            },
+            // According to the Mozilla docs, AppCache is considered deprecated.
+            // @see https://mzl.la/1pOZ5wF
+            // It does however have much wider support compared to the newer
+            // Service Worker specification, so you could consider enabling it
+            // if you needed.
+            AppCache: false,
+            // Which external files should be included with the service worker?
+            externals:
+              // Add the polyfill io script as an external if it is enabled.
+              (
+                config.polyfillIO.enabled
+                  ? [config.polyfillIO.url]
+                  : []
+              )
+              // Add any included public folder assets.
+              .concat(
+                config.serviceWorker.includePublicAssets.reduce((acc, cur) => {
+                  const publicAssetPathGlob = path.resolve(
+                    appRootDir.get(), config.publicAssetsPath, cur,
+                  );
+                  const publicFileWebPaths = acc.concat(
+                    // First get all the matching public folder assets.
+                    globSync(publicAssetPathGlob)
+                    // Then map them to relative paths against the public folder.
+                    // We need to do this as we need the "web" paths for each one.
+                    .map(publicFile => path.relative(
+                      path.resolve(appRootDir.get(), config.publicAssetsPath),
+                      publicFile,
+                    ))
+                    // Add the leading "/" indicating the file is being hosted
+                    // off the root of the application.
+                    .map(relativePath => `/${relativePath}`),
+                  );
+                  return publicFileWebPaths;
+                }, []),
+              ),
+          }),
+        ),
       ),
     ]),
     module: {
@@ -511,18 +528,12 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
           ),
         ),
 
-        // JSON
-        {
-          test: /\.json$/,
-          loader: 'json-loader',
-        },
-
         // ASSETS (Images/Fonts/etc)
         // This is bound to our server/client bundles as we only expect to be
         // serving the client bundle as a Single Page Application through the
         // server.
         ifElse(isClient || isServer)(() => ({
-          test: new RegExp(`\\.(${projConfig.bundleAssetTypes.join('|')})$`, 'i'),
+          test: new RegExp(`\\.(${config.bundleAssetTypes.join('|')})$`, 'i'),
           loader: 'file-loader',
           query: {
             // What is the web path that the client bundle will be served from?
@@ -532,9 +543,9 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
             publicPath: isDev
               // When running in dev mode the client bundle runs on a
               // seperate port so we need to put an absolute path here.
-              ? `http://${envConfig.host}:${envConfig.clientDevServerPort}${projConfig.bundles.client.webPath}`
+              ? `http://${config.host}:${config.clientDevServerPort}${config.bundles.client.webPath}`
               // Otherwise we just use the configured web path for the client.
-              : projConfig.bundles.client.webPath,
+              : config.bundles.client.webPath,
             // We only emit files when building a web bundle, for the server
             // bundle we only care about the file loader being able to create
             // the correct asset URLs.
@@ -546,5 +557,5 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
   };
 
   // Apply the configuration middleware.
-  return plugins.bundles.webpackConfig(config, buildOptions);
+  return config.plugins.webpackConfig(webpackConfig, buildOptions);
 }
