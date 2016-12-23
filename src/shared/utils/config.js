@@ -15,7 +15,7 @@ function resolveConfigForExecutionEnv() {
   }
 
   // NOTE: By using the "process.env.IS_NODE" flag here this block of code
-  // will be removed when "process.env.ISNODE === true".
+  // will be removed when "process.env.IS_NODE === true".
   // If no "IS_NODE" env var is undefined we can assume that we are running outside
   // of a webpack run, and will therefore return the config file.
   if (typeof process.env.IS_NODE === 'undefined' || process.env.IS_NODE) {
