@@ -111,9 +111,9 @@
     "semver": "5.3.0",
     "style-loader": "0.13.1",
     "webpack": "2.2.0-rc.1",
-    "webpack-bundle-analyzer": "2.2.0",
+    "webpack-bundle-analyzer": "2.2.1",
     "webpack-dev-middleware": "1.9.0",
-    "webpack-hot-middleware": "2.13.2",
+    "webpack-hot-middleware": "2.14.0",
     "webpack-md5-hash": "0.0.5",
     "webpack-node-externals": "1.5.4"
   }
