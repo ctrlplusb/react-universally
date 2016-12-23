@@ -42,8 +42,6 @@ Redux/MobX, data persistence, test frameworks, and all the other bells and whist
 
 ## Getting started
 
-Here is all you need to do to get started:
-
 ```bash
 git clone https://github.com/ctrlplusb/react-universally my-project
 cd my-project
