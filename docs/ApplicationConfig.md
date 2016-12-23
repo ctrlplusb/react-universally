@@ -7,7 +7,7 @@
 
 # Application configuration
 
-This folder contains our centralised application configuration.  
+The application configuration has been centralised to live within the `/config/index.js` file.
 
 Just about everything that should be reasonably configurable will be contained within here.  It even contains plugin function definitions that allow you to extend/modify the Babel and Webpack configurations.
 
