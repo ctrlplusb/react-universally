@@ -5,108 +5,86 @@ import { resolve as pathResolve } from 'path';
 import appRootDir from 'app-root-dir';
 import md5 from 'md5';
 import fs from 'fs';
-import { sync as globSync } from 'glob';
-import matchRequire from 'match-require';
-import { log } from '../utils';
+import config from '../../config';
+import { log, unique, without } from '../utils';
 
 function createVendorDLL(bundleName : string, bundleConfig : Object) {
+  const dllConfig = config.bundles.client.devVendorDLL;
+
   // $FlowFixMe
-  const packageJSON = require(pathResolve(appRootDir.get(), './package.json'));
+  const pkg = require(pathResolve(appRootDir.get(), './package.json'));
+
+  const calculateDependencies = () => {
+    const dependencies = Object.keys(pkg.dependencies);
+    const includeDependencies = unique(dependencies.concat(dllConfig.include));
+    return without(includeDependencies, dllConfig.exclude);
+  };
+
+  const devDLLDependencies = calculateDependencies().sort();
 
   // We calculate a hash of the package.json's dependencies, which we can use
   // to determine if dependencies have changed since the last time we built
   // the vendor dll.
-  const currentDependenciesHash = md5(JSON.stringify(packageJSON.dependencies));
+  const currentDependenciesHash = md5(JSON.stringify(
+    devDLLDependencies.map(dep =>
+      // We do this to include any possible version numbers we may have for
+      // a dependency. If these change then our hash should too, which will
+      // result in a new dev dll build.
+      [dep, pkg.dependencies[dep], pkg.devDependencies[dep]],
+    ),
+  ));
 
   const vendorDLLHashFilePath = pathResolve(
     appRootDir.get(),
     bundleConfig.outputPath,
-    `${bundleConfig.devVendorDLL.name}_hash`,
+    `${dllConfig.name}_hash`,
   );
 
-  function webpackConfigFactory(modules) {
+  function webpackConfigFactory() {
     return {
       // We only use this for development, so lets always include source maps.
       devtool: 'inline-source-map',
-      entry: { [bundleConfig.devVendorDLL.name]: modules },
+      entry: {
+        [dllConfig.name]: devDLLDependencies,
+      },
       output: {
         path: pathResolve(appRootDir.get(), bundleConfig.outputPath),
-        filename: `${bundleConfig.devVendorDLL.name}.js`,
-        library: bundleConfig.devVendorDLL.name,
+        filename: `${dllConfig.name}.js`,
+        library: dllConfig.name,
       },
       plugins: [
         new webpack.DllPlugin({
           path: pathResolve(
             appRootDir.get(),
             bundleConfig.outputPath,
-            `./${bundleConfig.devVendorDLL.name}.json`,
+            `./${dllConfig.name}.json`,
           ),
-          name: bundleConfig.devVendorDLL.name,
+          name: dllConfig.name,
         }),
       ],
     };
   }
 
-  function extractModulesFromSrcFiles(fileCollections) {
-    const ignoreModules = bundleConfig.devVendorDLL.ignores || [];
-
-    const modules = fileCollections.reduce((acc, fileCollection) => {
-      fileCollection.forEach((srcFile) => {
-        const fileContents = fs.readFileSync(srcFile, 'utf8');
-        matchRequire.findAll(fileContents).forEach(match => acc.add(match));
-      });
-      return acc;
-    }, new Set());
-
-    return [...modules]
-      // Remove any modules that have been configured to be ignored.
-      .filter(module => ignoreModules.findIndex(x => x === module) === -1)
-      // We only want to include absolute imports, no relative required modules.
-      .filter(module => !matchRequire.isRelativeModule(module));
-  }
-
   function buildVendorDLL() {
     return new Promise((resolve, reject) => {
-      // Get all the src files.
-      Promise.all(
-        bundleConfig.srcPaths.map(srcPath =>
-          Promise.resolve(
-            ['js', 'jsx']
-              .reduce((acc, ext) =>
-                acc.concat(globSync(`${pathResolve(appRootDir.get(), srcPath)}/**/*.${ext}`)),
-                [],
-              )
-              .filter(srcFilePath =>
-                bundleConfig.devVendorDLL.srcFileIgnores.findIndex(
-                  srcFileRegex => srcFileRegex.test(srcFilePath),
-                ) === -1,
-              ),
-          ),
-        ),
-      )
-      // then extract the modules
-      .then(extractModulesFromSrcFiles)
-      // then create the vendor dll.
-      .then((modules) => {
-        log({
-          title: 'vendorDLL',
-          level: 'info',
-          message: 'Vendor DLL build complete. Modules list:',
-        });
-        console.log(modules);
+      log({
+        title: 'vendorDLL',
+        level: 'info',
+        message: 'Vendor DLL build complete. Modules list:',
+      });
+      console.log(devDLLDependencies);
 
-        const webpackConfig = webpackConfigFactory(modules);
-        const vendorDLLCompiler = webpack(webpackConfig);
-        vendorDLLCompiler.run((err) => {
-          if (err) {
-            reject(err);
-            return;
-          }
+      const webpackConfig = webpackConfigFactory();
+      const vendorDLLCompiler = webpack(webpackConfig);
+      vendorDLLCompiler.run((err) => {
+        if (err) {
+          reject(err);
+          return;
+        }
           // Update the dependency hash
-          fs.writeFileSync(vendorDLLHashFilePath, currentDependenciesHash);
+        fs.writeFileSync(vendorDLLHashFilePath, currentDependenciesHash);
 
-          resolve();
-        });
+        resolve();
       });
     });
   }

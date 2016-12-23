@@ -13,8 +13,7 @@ import type { Head } from 'react-helmet';
 import serialize from 'serialize-javascript';
 import { STATE_IDENTIFIER } from 'code-split-component';
 import getAssetsForClientChunks from './getAssetsForClientChunks';
-import projConfig from '../../../../config/private/project';
-import htmlPageConfig from '../../../../config/public/htmlPage';
+import config, { clientConfig } from '../../../../config';
 
 function styleTags(styles : Array<string>) {
   return styles
@@ -84,10 +83,16 @@ export default function generateHTML(args: Args) {
       <body>
         <div id='app'>${reactAppString || ''}</div>
         ${
+          // Binds the client configuration object to the window object so
+          // that we can safely expose some configuration values to the
+          // client bundle that gets executed in the browser.
+          inlineScript(`window.__CLIENT_CONFIG__=${serialize(clientConfig)}`)
+        }
+        ${
           // Bind the initial application state based on the server render
           // so the client can register the correct initial state for the view.
           initialState
-            ? inlineScript(`window.APP_STATE=${serialize(initialState)};`)
+            ? inlineScript(`window.__APP_STATE__=${serialize(initialState)};`)
             : ''
         }
         ${
@@ -101,8 +106,8 @@ export default function generateHTML(args: Args) {
           // Enable the polyfill io script?
           // This can't be configured within a react-helmet component as we
           // may need the polyfill's before our client bundle gets parsed.
-          htmlPageConfig.polyfillIO.enabled
-            ? scriptTag(htmlPageConfig.polyfillIO.url)
+          config.polyfillIO.enabled
+            ? scriptTag(config.polyfillIO.url)
             : ''
         }
         ${
@@ -111,7 +116,8 @@ export default function generateHTML(args: Args) {
           // we need to inject the path to the vendor dll bundle below.
           // @see /tools/development/ensureVendorDLLExists.js
           process.env.NODE_ENV === 'development'
-            ? scriptTag(`${projConfig.bundles.client.webPath}${projConfig.bundles.client.devVendorDLL.name}.js`)
+            && config.bundles.client.devVendorDLL.enabled
+            ? scriptTag(`${config.bundles.client.webPath}${config.bundles.client.devVendorDLL.name}.js`)
             : ''
         }
         ${scriptTags(assetsForRender.js)}

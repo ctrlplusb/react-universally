@@ -4,7 +4,7 @@
 import { resolve as pathResolve } from 'path';
 import appRootDir from 'app-root-dir';
 import type { $Request, $Response, NextFunction } from 'express';
-import projConfig from '../../../config/private/project';
+import config from '../../../config';
 
 // Middleware to server our service worker.
 function serviceWorkerMiddleware(
@@ -12,8 +12,8 @@ function serviceWorkerMiddleware(
   res.sendFile(
     pathResolve(
       appRootDir.get(),
-      projConfig.bundles.client.outputPath,
-      projConfig.serviceWorker.fileName,
+      config.bundles.client.outputPath,
+      config.serviceWorker.fileName,
     ),
   );
 }

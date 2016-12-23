@@ -1,21 +1,5 @@
 /* @flow */
 
-// Environment project configuration
-//
-// This represents the configuration settings that typically change between
-// each hosting environment.  You can pass the settings via host environment
-// variables (e.g. `SERVER_PORT=1234 npm run start`) or by creating an
-// environment configuration file (supported by the `dotenv` library).
-// @see https://github.com/motdotla/dotenv
-//
-// The environment configuration file is optional. We will check for the
-// existence of an environemnt configuration file in a priority ordered manner
-// across the file system.  Please see the envFileResolutionOrder variable
-// below for details on this.
-//
-// This gives us a nice degree of flexibility in deciding where we would
-// like our environment variables to be loaded from.
-
 import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
@@ -23,11 +7,10 @@ import appRootDir from 'app-root-dir';
 import userHome from 'user-home';
 import colors from 'colors/safe';
 import pkg from '../../package.json';
-import staticConfig from './project';
 
 function registerEnvFile() {
   const envName = process.env.NODE_ENV || 'development';
-  const envFile = staticConfig.envFileName;
+  const envFile = '.env';
 
   // This is the order in which we will try to resolve an environment configuration
   // file.
@@ -60,35 +43,22 @@ function registerEnvFile() {
   }
 }
 
-function getStringEnvVar(name : string, defaultVal : string) {
+// Ensure that we first register any environment variables from an existing
+// env file.
+registerEnvFile();
+
+export function getStringEnvVar(name : string, defaultVal : string) {
   return process.env[name] || defaultVal;
 }
 
-function getIntEnvVar(name : string, defaultVal : number) {
+export function getIntEnvVar(name : string, defaultVal : number) {
   return process.env[name]
     ? parseInt(process.env[name], 10)
     : defaultVal;
 }
 
-function getBoolVar(name : string, defaultVal : boolean) {
+export function getBoolVar(name : string, defaultVal : boolean) {
   return process.env[name]
     ? process.env[name] === 'true'
     : defaultVal;
 }
-
-// Ensure that we first register any environment variables from an existing
-// env file.
-registerEnvFile();
-
-export default {
-  // The host on which the server should run.
-  host: getStringEnvVar('SERVER_HOST', 'localhost'),
-  // The port on which the server should run.
-  port: getIntEnvVar('SERVER_PORT', 1337),
-  // Enable SSR rendering of the React application?
-  // It can be useful to disable this in development in order to debug complex
-  // issues with your React components.
-  ssrEnabled: getBoolVar('SSR_ENABLED', true),
-  // The port on which the client bundle development server should run.
-  clientDevServerPort: getIntEnvVar('CLIENT_DEVSERVER_PORT', 7331),
-};

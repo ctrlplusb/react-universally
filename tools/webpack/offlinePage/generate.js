@@ -9,10 +9,9 @@
 // by the reactApplication middleware.
 // @see src/server/middleware/reactApplication/generateHTML.js
 
-import htmlPageConfig from '../../../config/public/htmlPage';
+import serialize from 'serialize-javascript';
 
 const htmlAttributes = attrs => Object.keys(attrs)
-  // $FlowFixMe
   .map(attrName => `${attrName}="${attrs[attrName]}"`)
   .join(' ');
 
@@ -29,31 +28,37 @@ const scriptTags = scripts =>
 
 const scriptTag = url => `<script type="text/javascript" src="${url}"></script>`;
 
-// $FlowFixMe - for some reason flow type syntax is failing here.
-export default function generate(templateParams) { // eslint-disable-line no-unused-vars
+// $FlowFixMe - flow annotations don't work here :(
+export default function generate(templateParams) {
+  const { config, clientConfig } = templateParams.htmlWebpackPlugin.options.custom;
+
   return `
     <!DOCTYPE html>
-    <html ${htmlAttributes(htmlPageConfig.htmlAttributes)}>
+    <html ${htmlAttributes(config.htmlPage.htmlAttributes)}>
       <head>
-        ${
-          htmlPageConfig.defaultTitle
-            ? `<title>${htmlPageConfig.defaultTitle}</title>`
-            : ''
-        }
-        ${metaTags(htmlPageConfig.meta)}
-        ${linkTags(htmlPageConfig.links)}
+        <title>${config.htmlPage.defaultTitle}</title>
+        ${metaTags(config.htmlPage.meta)}
+        ${linkTags(config.htmlPage.links)}
       </head>
       <body>
         <div id='app'></div>
+        <script type="text/javascript" nonce="NONCE_TARGET">
+          ${
+            // Binds the client configuration object to the window object so
+            // that we can safely expose some configuration values to the
+            // client bundle that gets executed in the browser.
+            `window.__CLIENT_CONFIG__=${serialize(clientConfig)};`
+          }
+        </script>
         ${
           // Enable the polyfill io script?
           // This can't be configured within a react-helmet component as we
           // may need the polyfill's before our client bundle gets parsed.
-          htmlPageConfig.polyfillIO.enabled
-            ? scriptTag(htmlPageConfig.polyfillIO.url)
+          config.polyfillIO.enabled
+            ? scriptTag(config.polyfillIO.url)
             : ''
         }
-        ${scriptTags(htmlPageConfig.scripts)}
+        ${scriptTags(config.htmlPage.scripts)}
       </body>
     </html>`;
 }

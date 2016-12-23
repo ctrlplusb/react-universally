@@ -23,12 +23,17 @@ class HotNodeServer {
       if (this.server) {
         this.server.kill();
         this.server = null;
+        log({
+          title: name,
+          level: 'info',
+          message: 'Restarting server...',
+        });
       }
 
       const newServer = spawn('node', [compiledEntryFile]);
 
       log({
-        title: 'server',
+        title: name,
         level: 'info',
         message: 'Server running with latest changes.',
         notify: true,
@@ -37,7 +42,7 @@ class HotNodeServer {
       newServer.stdout.on('data', data => console.log(data.toString().trim()));
       newServer.stderr.on('data', (data) => {
         log({
-          title: 'server',
+          title: name,
           level: 'error',
           message: 'Error in server execution, check the console for more info.',
         });
@@ -122,7 +127,7 @@ class HotNodeServer {
       this.watcher.close(resolve);
     });
 
-    return stopWatcher.then(() => this.server && this.server.kill());
+    return stopWatcher.then(() => { if (this.server) this.server.kill(); });
   }
 }
 
