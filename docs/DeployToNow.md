@@ -1,9 +1,8 @@
- - [Feature Branches](/docs/FeaturesBranches.md)
+ - [Project Overview](/docs/ProjectOverview.md)
  - [Application Configuration](/docs/ApplicationConfig.md)
- - [Security](/docs/Security.md)
- - [Project Structure](/docs/ProjectStructure.md)
- - __[Deploy your very own Server Side Rendering React App in 4 easy steps](/docs/DeployToNow.md)__
  - [npm script commands](/docs/NPMCommands.md)
+ - [Feature Branches](/docs/FeaturesBranches.md)
+ - __[Deploy your very own Server Side Rendering React App in 4 easy steps](/docs/DeployToNow.md)__
  - [FAQ](/docs/FAQ.md)
 
 # Deploy your very own "React, Universally" App in 4 easy steps

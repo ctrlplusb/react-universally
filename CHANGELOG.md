@@ -6,8 +6,31 @@ NOTE: This isn't a traditional library style project for which semantic versioni
 
 I'll map them as follows:
   - Major: Large application structure / technology changes. E.g. moving from react-router v2 to v4.
-  - Minor: New features or changes to the build tools.
+  - Minor: New features or changes to the build tools. Could contain some things that are traditionally know as breaking changes, however, I believe the upgrade path to minor.
   - Patch: Small(ish) fixes/restructuring that I expect will take minimal effort to merge in.
+
+## [11.0.0] - 2016-12-23
+
+## Breaking
+
+ - Huge refactor and simplification of the application configuration.  All the values are managed in a single location, with a new API introduced to help read config values in shared/client code. See the docs and code comments for more info.
+ - Migrates babel configuration to stage-3 and higher only.
+
+## Changes
+
+ - Updates helmet.
+ - Reworks the DLL-Plugin so that it uses the project's package.json dependencies with the ability to explicitly include/exclude dependencies via the config. (@strues)
+ - Breaks down and restructures the README.md into docs folder.
+ - Updates dependencies.
+ - Updates to webpack 2 rc and fixes performance config.
+ - Allows the service worker to be configurable.
+ - Removes unneeded json-loader as it is by default enabled within webpack v2.
+
+## Fixed
+
+ - Minor fixes to the notifications in hot node servers.
+ - Adds check for project config dev dll enable/disable flag when rendering the dev dll script.
+ - Adds check for fatal webpack run error in production build script.
 
 ## [10.2.0] - 2016-12-13
 
