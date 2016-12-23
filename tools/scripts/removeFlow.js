@@ -3,7 +3,6 @@
 import { sync as globSync } from 'glob';
 import path from 'path';
 import appRootDir from 'app-root-dir';
-// $FlowFixMe
 import flowRemoveTypes from 'flow-remove-types';
 import fs from 'fs';
 import rimraf from 'rimraf';
