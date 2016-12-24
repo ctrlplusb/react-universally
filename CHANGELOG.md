@@ -9,6 +9,17 @@ I'll map them as follows:
   - Minor: New features or changes to the build tools. Could contain some things that are traditionally know as breaking changes, however, I believe the upgrade path to minor.
   - Patch: Small(ish) fixes/restructuring that I expect will take minimal effort to merge in.
 
+## [11.0.1] - 2016-12-24
+
+## Fixed
+
+ - Fixes filterObject incorrect check on prop existence.
+ - Removes unneeded flow fix-me comment.
+
+## Changed
+
+ - Changes the uuid call to use the explicit type call.
+
 ## [11.0.0] - 2016-12-23
 
 ## Breaking

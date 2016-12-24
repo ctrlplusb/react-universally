@@ -58,3 +58,4 @@ Go make some changes to the `Home` component to see the tooling in action.
  - [Feature Branches](/docs/FeaturesBranches.md)
  - [Deploy your very own Server Side Rendering React App in 4 easy steps](/docs/DeployToNow.md)
  - [FAQ](/docs/FAQ.md)
+ - [Changelog](/CHANGELOG.md)
