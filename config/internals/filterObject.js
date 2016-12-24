@@ -10,8 +10,8 @@ function filterObjectLoop(obj : Object, filters : Object, basePropPath = '') : O
       }
       acc[key] = filterObjectLoop(obj[key], filters[key], propPath); // eslint-disable-line no-param-reassign,max-len
     } else if (filters[key]) {
-      if (!obj[key]) {
-        throw new Error(`Object filters set an "allow" on path "${propPath}", however this path was not found on the source object.`);
+      if (typeof obj[key] === 'undefined') {
+        throw new Error(`Filter set an "allow" on path "${propPath}", however, this path was not found on the source object.`);
       }
       acc[key] = obj[key]; // eslint-disable-line no-param-reassign
     }

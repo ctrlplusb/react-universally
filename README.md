@@ -48,8 +48,6 @@ Redux/MobX, data persistence, test frameworks, and all the other bells and whist
 
 ## Getting started
 
-Here is all you need to do to get started:
-
 ```bash
 git clone https://github.com/ctrlplusb/react-universally my-project
 cd my-project
@@ -66,3 +64,4 @@ Go make some changes to the `Home` component to see the tooling in action.
  - [Feature Branches](/docs/FeaturesBranches.md)
  - [Deploy your very own Server Side Rendering React App in 4 easy steps](/docs/DeployToNow.md)
  - [FAQ](/docs/FAQ.md)
+ - [Changelog](/CHANGELOG.md)
