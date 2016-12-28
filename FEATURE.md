@@ -9,3 +9,7 @@ It provides you with a base configuration of the `jest` test framework.
 ### `npm run test`
 
 Executes the tests.
+
+### `npm run coverage`
+
+Executes the tests, producing a coverage report.

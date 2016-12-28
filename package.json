@@ -19,7 +19,8 @@
     "flow:defs": "flow-typed install --overwrite",
     "flow:report": "flow-coverage-report -i 'src/**/*.js' -t html -t json -t text",
     "flow:remove": "babel-node tools/scripts/removeFlow && rimraf tools/scripts/removeFlow.js",
-    "test": "jest"
+    "test": "jest",
+    "coverage": "jest --coverage",
   },
   "repository": {
     "type": "git",
@@ -54,6 +55,9 @@
   },
   "homepage": "https://github.com/ctrlplusb/react-universally#readme",
   "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}"
+    ],
     "snapshotSerializers": [
       "<rootDir>/node_modules/enzyme-to-json/serializer"
     ],
@@ -86,9 +90,11 @@
     "babel-cli": "6.18.0",
     "babel-core": "6.21.0",
     "babel-eslint": "7.1.1",
+    "babel-jest": "18.0.0",
     "babel-loader": "6.2.10",
     "babel-plugin-transform-react-jsx-self": "6.11.0",
     "babel-plugin-transform-react-jsx-source": "6.9.0",
+    "babel-polyfill": "6.20.0",
     "babel-preset-env": "1.1.4",
     "babel-preset-latest": "6.16.0",
     "babel-preset-react": "6.16.0",
@@ -113,12 +119,10 @@
     "glob": "7.1.1",
     "happypack": "3.0.1",
     "html-webpack-plugin": "2.24.1",
-    "jest-cli": "18.0.0",
-    "json-loader": "0.5.4",
-    "match-require": "2.0.0",
+    "jest": "18.0.0",
     "md5": "2.2.1",
     "node-notifier": "4.6.1",
-    "react-addons-test-utils": "^15.3.2",
+    "react-addons-test-utils": "15.4.1",
     "react-hot-loader": "3.0.0-beta.6",
     "regenerator-runtime": "0.10.1",
     "rimraf": "2.5.4",
