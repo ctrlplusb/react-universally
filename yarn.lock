@@ -1885,9 +1885,9 @@ eslint-module-utils@^2.0.0:
     debug "2.2.0"
     pkg-dir "^1.0.0"
 
-eslint-plugin-flowtype@2.29.1:
-  version "2.29.1"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-flowtype/-/eslint-plugin-flowtype-2.29.1.tgz#74cc5603ff0baff6e224482bbd17406b0980f6c3"
+eslint-plugin-flowtype@2.29.2:
+  version "2.29.2"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-flowtype/-/eslint-plugin-flowtype-2.29.2.tgz#91b4fde0400c4c37ca4440b43bdbc95fc405bea9"
   dependencies:
     lodash "^4.15.0"
 
@@ -2441,9 +2441,9 @@ gzip-size@^3.0.0:
   dependencies:
     duplexer "^0.1.1"
 
-happypack@3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/happypack/-/happypack-3.0.1.tgz#ba7f81fbd576a3c250a4f475b0164b70b73fd7aa"
+happypack@3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/happypack/-/happypack-3.0.2.tgz#795f9abb082f44bab24f4bff616d339c9fd57162"
   dependencies:
     async "1.5.0"
     json-stringify-safe "5.0.1"
@@ -4514,9 +4514,9 @@ source-list-map@^0.1.4, source-list-map@~0.1.0:
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/source-list-map/-/source-list-map-0.1.7.tgz#d4b5ce2a46535c72c7e8527c71a77d250618172e"
 
-source-map-support@0.4.7, source-map-support@^0.4.2:
-  version "0.4.7"
-  resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.4.7.tgz#7a7988e0e66241c778c78dd179199bb6bcd35bd6"
+source-map-support@0.4.8, source-map-support@^0.4.2:
+  version "0.4.8"
+  resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.4.8.tgz#4871918d8a3af07289182e974e32844327b2e98b"
   dependencies:
     source-map "^0.5.3"
 
