@@ -1,5 +1,7 @@
+/* @flow */
 /* eslint-disable no-undef */
 /* eslint-disable import/no-extraneous-dependencies */
+
 import React from 'react';
 import { shallow } from 'enzyme';
 import Error404 from './Error404';
