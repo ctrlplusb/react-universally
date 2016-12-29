@@ -1,5 +1,3 @@
-/* @flow */
-
 import { resolve as pathResolve } from 'path';
 import webpack from 'webpack';
 import appRootDir from 'app-root-dir';
@@ -64,8 +62,7 @@ const initializeBundle = (name, bundleConfig) => {
 };
 
 class HotDevelopment {
-  hotNodeServers: Array<HotNodeServer>;
-  hotClientServer: ?HotClientServer;
+
 
   constructor() {
     this.hotClientServer = null;

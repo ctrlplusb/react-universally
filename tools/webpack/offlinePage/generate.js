@@ -1,5 +1,3 @@
-/* @flow */
-
 // This is used by the HtmlWebpackPlugin to generate an html page that we will
 // use as a fallback for our service worker when the user is offline.  It will
 // embed all the required asset paths needed to bootstrap the application

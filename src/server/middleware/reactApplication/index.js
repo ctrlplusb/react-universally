@@ -1,6 +1,4 @@
-/* @flow */
 
-import type { $Request, $Response, Middleware } from 'express';
 import React from 'react';
 import { renderToString } from 'react-dom/server';
 import { ServerRouter, createServerRenderContext } from 'react-router';
@@ -14,7 +12,7 @@ import config from '../../../../config';
  * An express middleware that is capabable of service our React application,
  * supporting server side rendering of the application.
  */
-function reactApplicationMiddleware(request: $Request, response: $Response) {
+function reactApplicationMiddleware(request, response) {
   // We should have had a nonce provided to us.  See the server/index.js for
   // more information on what this is.
   if (typeof response.locals.nonce !== 'string') {
@@ -94,4 +92,4 @@ function reactApplicationMiddleware(request: $Request, response: $Response) {
     .send(html);
 }
 
-export default (reactApplicationMiddleware : Middleware);
+export default (reactApplicationMiddleware);

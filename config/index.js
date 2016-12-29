@@ -1,5 +1,3 @@
-/* @flow */
-
 // Application Configuration.
 //
 // Please see the /docs/ApplicationConfig.md documentation for more info.
@@ -9,7 +7,7 @@
 
 import { getStringEnvVar, getIntEnvVar } from './internals/environmentVars';
 import filterObject from './internals/filterObject';
-import type { BuildOptions } from '../tools/types';
+
 
 // This protects us from accidentally including this configuration in our
 // client bundle. That would be a big NO NO to do. :)
@@ -320,7 +318,7 @@ const config = {
     //
     // Please use the provided values and then ensure that you return the
     // appropriate values for the given target and mode.
-    babelConfig: (buildOptions : BuildOptions) => {
+    babelConfig: (buildOptions) => {
       const { target, mode } = buildOptions;
 
       return {
@@ -407,7 +405,7 @@ const config = {
     // This function will be called once for each for your bundles.  It will be
     // provided the current webpack config, as well as the buildOptions which
     // detail which bundle and mode is being targetted for the current function run.
-    webpackConfig: (webpackConfig: Object, buildOptions : BuildOptions) => {
+    webpackConfig: (webpackConfig, buildOptions) => {
       const { target, mode } = buildOptions; // eslint-disable-line no-unused-vars
 
       // Example:

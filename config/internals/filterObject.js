@@ -1,6 +1,4 @@
-/* @flow */
-
-function filterObjectLoop(obj : Object, filters : Object, basePropPath = '') : Object {
+function filterObjectLoop(obj, filters, basePropPath = '') {
   return Object.keys(filters).reduce((acc, key) => {
     const propPath = basePropPath !== '' ? `${basePropPath}.${key}` : key;
 
@@ -46,6 +44,6 @@ function filterObjectLoop(obj : Object, filters : Object, basePropPath = '') : O
 //     foo: { bar: 'bar' },
 //     poop: { plop: 'splash' }
 //   },
-export default function filterObject(obj : Object, filters : Object) : Object {
+export default function filterObject(obj, filters) {
   return filterObjectLoop(obj, filters);
 }

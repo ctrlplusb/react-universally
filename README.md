@@ -8,8 +8,6 @@
 
 This starter kit contains all the build tooling and configuration you need to kick off your next universal React project, whilst containing a minimal "project" set up allowing you to make your own architecture decisions (Redux/MobX etc).
 
-> However, we now include a set of "feature branches", each implementing a technology on top of the clean master branch.  This provides you with an example on how to integrate said technologies, or use the branches to merge in a configuration that meets your requirements.  See the [`Feature Branches`](/docs/FeaturesBranches.md) documentation for more.
-
 ## Features
 
   - 👀 `react` as the view.
@@ -29,16 +27,13 @@ This starter kit contains all the build tooling and configuration you need to ki
   - 🍃 Tree-shaking, courtesy of Webpack.
   - 👮 Security on the `express` server using `helmet` and `hpp`.
   - 🏜 Asset bundling support. e.g. images/fonts.
-  - ✔️ Type checking via Flow, a beautiful and unobtrusive type framework.
-
-      __NOTE:__ Flow is a completely optional feature.  The flow type annotations get ripped out of the source by the Webpack build step. You have no obligation to use flow within your code and can happily code without applying it to any new code.  I do highly recommend you try it out though. :)
-
-      If you don't really don't want to use flow then you can run `npm run flow:remove`. This will make it as though flow never existed within the project.
   - 🎛 Preconfigured to support development and optimised production builds.
   - 👼 Airbnb's ESlint configuration.
   - ❤️ Preconfigured to deploy to `now` with a single command.
 
-Redux/MobX, data persistence, test frameworks, and all the other bells and whistles have been explicitly excluded from this boilerplate.  It's up to you to decide what technologies you would like to add to your own implementation based upon your own needs, this boilerplate simply serves as a clean base upon which to do so.
+Redux/MobX, data persistence, modern styling frameworks and all the other bells and whistles have been explicitly excluded from this starter kit.  It's up to you to decide what technologies you would like to add to your own implementation based upon your own needs.
+
+> However, we now include a set of "feature branches", each implementing a technology on top of the clean master branch.  This provides you with an example on how to integrate said technologies, or use the branches to merge in a configuration that meets your requirements.  See the [`Feature Branches`](/docs/FeaturesBranches.md) documentation for more.
 
 ## Getting started
 

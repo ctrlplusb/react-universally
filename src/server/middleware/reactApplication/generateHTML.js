@@ -1,5 +1,3 @@
-/* @flow */
-
 // This module is responsible for generating the HTML page response for
 // the react application middleware.
 //
@@ -9,13 +7,12 @@
 // HTML page.
 // @see ./tools/webpack/offlinePage/generate.js
 
-import type { Head } from 'react-helmet';
 import serialize from 'serialize-javascript';
 import { STATE_IDENTIFIER } from 'code-split-component';
 import getAssetsForClientChunks from './getAssetsForClientChunks';
 import config, { clientConfig } from '../../../../config';
 
-function styleTags(styles : Array<string>) {
+function styleTags(styles) {
   return styles
     .map(style =>
       `<link href="${style}" media="screen, projection" rel="stylesheet" type="text/css" />`,
@@ -23,23 +20,16 @@ function styleTags(styles : Array<string>) {
     .join('\n');
 }
 
-function scriptTag(jsFilePath: string) {
+function scriptTag(jsFilePath) {
   return `<script type="text/javascript" src="${jsFilePath}"></script>`;
 }
 
-function scriptTags(jsFilePaths : Array<string>) {
+function scriptTags(jsFilePaths) {
   return jsFilePaths.map(scriptTag).join('\n');
 }
 
-type Args = {
-  reactAppString?: string,
-  initialState?: Object,
-  nonce: string,
-  helmet?: Head,
-  codeSplitState?: { chunks: Array<string>, modules: Array<string> },
-};
 
-export default function generateHTML(args: Args) {
+export default function generateHTML(args) {
   const { reactAppString, initialState, nonce, helmet, codeSplitState } = args;
 
   // The chunks that we need to fetch the assets (js/css) for and then include

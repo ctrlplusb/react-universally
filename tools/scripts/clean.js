@@ -1,5 +1,3 @@
-/* @flow */
-
 // This script removes any exisitng build output.
 
 import { resolve as pathResolve } from 'path';

@@ -1,4 +1,3 @@
-/* @flow */
 /* eslint-disable no-console */
 /* eslint-disable import/global-require */
 /* eslint-disable import/prefer-default-export */
@@ -68,7 +67,7 @@ function resolveConfigForExecutionEnv() {
  * an error will be thrown indicating that a respective configuration value
  * could not be found at the given path.
  */
-export function safeConfigGet(path : Array<string>) : any {
+export function safeConfigGet(path) {
   if (path.length === 0) {
     throw new Error('You must provide the path to the configuration value you would like to consume.');
   }

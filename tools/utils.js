@@ -1,24 +1,13 @@
-/* @flow */
-
 import HappyPack from 'happypack';
 import notifier from 'node-notifier';
 import colors from 'colors/safe';
 import { execSync } from 'child_process';
 import appRootDir from 'app-root-dir';
 
-type HappyPackLoaderConfig = {
-  path: string,
-  query?: Object,
-};
-
-type HappyPackConfig = {
-  name: string,
-  loaders: Array<string|HappyPackLoaderConfig>,
-};
 
 // Generates a HappyPack plugin.
 // @see https://github.com/amireh/happypack/
-export function happyPackPlugin({ name, loaders } : HappyPackConfig) {
+export function happyPackPlugin({ name, loaders }) {
   return new HappyPack({
     id: name,
     verbose: false,
@@ -28,12 +17,12 @@ export function happyPackPlugin({ name, loaders } : HappyPackConfig) {
 }
 
 // Returns the unique items within the given array.
-export function unique(array : Array<any>) {
+export function unique(array) {
   return Array.from(new Set(array));
 }
 
 // Removes the empty items from the given array.
-export function removeEmpty(x : Array<any>) : Array<any> {
+export function removeEmpty(x) {
   return x.filter(y => y != null);
 }
 
@@ -63,9 +52,9 @@ export function removeEmpty(x : Array<any>) : Array<any> {
 // then this function will only be interpretted after the ifElse has run. This
 // can be handy for values that require some complex initialization process.
 // e.g. ifDev(() => 'lazy', 'not lazy');
-export function ifElse(condition : boolean) {
+export function ifElse(condition) {
   // TODO: Allow the then/or to accept a function for lazy value resolving.
-  return function ifElseResolver<X, Y>(then : X, or : Y) : X|Y {
+  return function ifElseResolver(then, or) {
     const execIfFuc = x => (typeof x === 'function' ? x() : x);
     return condition ? execIfFuc(then) : (or);
   };
@@ -73,8 +62,8 @@ export function ifElse(condition : boolean) {
 
 // Merges a set of objects together.
 // NOTE: This performs a deep merge.
-export function merge(...args : Array<?Object>) {
-  const filtered : Array<Object> = removeEmpty(args);
+export function merge(...args) {
+  const filtered = removeEmpty(args);
   if (filtered.length < 1) {
     return {};
   }
@@ -93,14 +82,8 @@ export function merge(...args : Array<?Object>) {
   }, {});
 }
 
-type NotificationOptions = {
-  title: string,
-  message: string,
-  notify?: boolean,
-  level?: 'info'|'warn'|'error'
-};
 
-export function log(options : NotificationOptions) {
+export function log(options) {
   const title = `${options.title.toUpperCase()}`;
 
   if (options.notify) {
@@ -121,11 +104,11 @@ export function log(options : NotificationOptions) {
   }
 }
 
-export function exec(command : string) {
+export function exec(command) {
   execSync(command, { stdio: 'inherit', cwd: appRootDir.get() });
 }
 
 // Removes the "remove" array items from the "source" array.
-export function without(source : Array<string>, remove : Array<string>) {
+export function without(source, remove) {
   return source.filter(module => remove.findIndex(x => x === module) === -1);
 }

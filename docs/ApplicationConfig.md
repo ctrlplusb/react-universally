@@ -109,8 +109,6 @@ import config from '../../config';
 app.listen(config.port, () => console.log('Server started.'));
 ```
 
-If you are using `flow` you will get helpful assertions and type checking against your use of the config values.  You'll also get autocomplete on the config values if you are using an IDE/plugin that supports flow (for Atom editor I recommend [`flow-ide`](https://github.com/steelbrain/flow-ide)).
-
 As stated in the background section above you must not import and use the config file in this manner within your "shared" source, however, don't worry about it as you will get a build time error if you accidentally did so.  The error will also include details on the proper API that you should use for the "shared" source.
 
 ### In the "client" or "shared" folders
@@ -143,9 +141,7 @@ import { safeConfigGet } from '../shared/utils/config';
 console.log(safeConfigGet(['serviceWorker', 'enabled']));
 ```
 
-You don't have `flow` to help you in these cases as you are providing a array of strings and not access the config object directly, so typos can be a common issue.  In addition to this you may not have exposed the target configuration value via the client config filter rules that are contained at the bottom of the `./config` file.
-
-To help you with these cases the `safeConfigGet` will throw helpful error messages indicating the problem and recommending solutions to them.
+The `safeConfigGet` is also configured to throw helpful error messages when trying to request configuration values that either do not exist or have not been exposed to the client bundles.
 
 ## Config Highlights
 

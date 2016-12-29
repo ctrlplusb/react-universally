@@ -14,11 +14,7 @@
     "analyze": "babel-node tools/scripts/analyze",
     "start": "node build/server",
     "deploy": "babel-node tools/scripts/deploy",
-    "lint": "eslint src",
-    "flow": "babel-node tools/scripts/flow",
-    "flow:defs": "flow-typed install --overwrite",
-    "flow:report": "flow-coverage-report -i 'src/**/*.js' -t html -t json -t text",
-    "flow:remove": "babel-node tools/scripts/removeFlow && rimraf tools/scripts/removeFlow.js"
+    "lint": "eslint src"
   },
   "repository": {
     "type": "git",
@@ -94,10 +90,6 @@
     "eslint-plugin-react": "6.8.0",
     "extract-text-webpack-plugin": "2.0.0-beta.4",
     "file-loader": "0.9.0",
-    "flow-bin": "0.37.4",
-    "flow-coverage-report": "0.2.0",
-    "flow-remove-types": "1.1.2",
-    "flow-typed": "2.0.0",
     "glob": "7.1.1",
     "happypack": "3.0.2",
     "html-webpack-plugin": "2.24.1",

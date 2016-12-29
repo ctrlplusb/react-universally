@@ -1,5 +1,3 @@
-/* @flow */
-
 // This script builds a production output of all of our bundles.
 
 import webpack from 'webpack';

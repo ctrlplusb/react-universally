@@ -1,5 +1,3 @@
-/* @flow */
-
 import path from 'path';
 import { sync as globSync } from 'glob';
 import webpack from 'webpack';
@@ -12,7 +10,7 @@ import appRootDir from 'app-root-dir';
 import WebpackMd5Hash from 'webpack-md5-hash';
 import CodeSplitPlugin from 'code-split-component/webpack';
 import { removeEmpty, ifElse, merge, happyPackPlugin } from '../utils';
-import type { BuildOptions } from '../types';
+
 import config, { clientConfig } from '../../config';
 
 /**
@@ -29,7 +27,7 @@ import config, { clientConfig } from '../../config';
  * need for you to create multiple web bundles.  Therefore we are avoiding this
  * level of abstraction to keep the config factory as simple as possible.
  */
-export default function webpackConfigFactory(buildOptions: BuildOptions) {
+export default function webpackConfigFactory(buildOptions) {
   const { target, mode } = buildOptions;
   console.log(`==> Creating webpack config for "${target}" in "${mode}" mode`);
 

@@ -1,14 +1,13 @@
-/* @flow */
 /* eslint-disable no-unused-vars */
 
 import { resolve as pathResolve } from 'path';
 import appRootDir from 'app-root-dir';
-import type { $Request, $Response, NextFunction } from 'express';
+
 import config from '../../../config';
 
 // Middleware to server our service worker.
 function serviceWorkerMiddleware(
-  req: $Request, res: $Response, next: NextFunction) {
+  req, res, next) {
   res.sendFile(
     pathResolve(
       appRootDir.get(),
