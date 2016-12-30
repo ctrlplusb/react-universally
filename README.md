@@ -1,3 +1,9 @@
+### Feature Branch
+
+Note: This is a feature branch of `react-universally`. Please see [`FEATURE.md`](./FEATURE.md) for more information on this branch.
+
+---
+
 <p align='center'>
   <h1 align='center'>React, Universally</h1>
   <p align='center'><img width='150' src='https://raw.githubusercontent.com/ctrlplusb/assets/master/logos/react-universally.png' /></p>
@@ -13,6 +19,7 @@ This starter kit contains all the build tooling and configuration you need to ki
   - 👀 `react` as the view.
   - 🔀 `react-router` v4 as the router.
   - 🚄 `express` server.
+  - 🎭 `jest` as the test framework.
   - 🖌 Very basic CSS support - it's up to you to extend it with CSS Modules etc.
   - ✂️ Code splitting - easily define code split points in your source using `code-split-component`.
   - 🌍 Server Side Rendering.

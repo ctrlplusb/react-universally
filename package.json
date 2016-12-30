@@ -14,7 +14,9 @@
     "analyze": "babel-node tools/scripts/analyze",
     "start": "node build/server",
     "deploy": "babel-node tools/scripts/deploy",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "test": "jest",
+    "coverage": "jest --coverage"
   },
   "repository": {
     "type": "git",
@@ -48,6 +50,17 @@
     "url": "https://github.com/ctrlplusb/react-universally/issues"
   },
   "homepage": "https://github.com/ctrlplusb/react-universally#readme",
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}"
+    ],
+    "snapshotSerializers": [
+      "<rootDir>/node_modules/enzyme-to-json/serializer"
+    ],
+    "testPathIgnorePatterns": [
+      "<rootDir>/(build|tools|node_modules|flow-typed|public)/"
+    ]
+  },
   "dependencies": {
     "app-root-dir": "1.0.2",
     "code-split-component": "2.0.0-alpha.5",
@@ -72,9 +85,11 @@
     "babel-cli": "6.18.0",
     "babel-core": "6.21.0",
     "babel-eslint": "7.1.1",
+    "babel-jest": "18.0.0",
     "babel-loader": "6.2.10",
     "babel-plugin-transform-react-jsx-self": "6.11.0",
     "babel-plugin-transform-react-jsx-source": "6.9.0",
+    "babel-polyfill": "6.20.0",
     "babel-preset-env": "1.1.4",
     "babel-preset-latest": "6.16.0",
     "babel-preset-react": "6.16.0",
@@ -82,6 +97,8 @@
     "babel-template": "6.16.0",
     "chokidar": "1.6.1",
     "css-loader": "0.26.1",
+    "enzyme": "2.7.0",
+    "enzyme-to-json": "1.4.5",
     "eslint": "3.12.2",
     "eslint-config-airbnb": "13.0.0",
     "eslint-plugin-flowtype": "2.29.2",
@@ -93,8 +110,10 @@
     "glob": "7.1.1",
     "happypack": "3.0.2",
     "html-webpack-plugin": "2.24.1",
+    "jest": "18.0.0",
     "md5": "2.2.1",
     "node-notifier": "4.6.1",
+    "react-addons-test-utils": "15.4.1",
     "react-hot-loader": "3.0.0-beta.6",
     "regenerator-runtime": "0.10.1",
     "rimraf": "2.5.4",

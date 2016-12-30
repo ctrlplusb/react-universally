@@ -1,0 +1,18 @@
+exports[`<About /> renders 1`] = `
+<div
+  style={
+    Object {
+      "textAlign": "center",
+    }
+  }>
+  <HelmetWrapper
+    title="About" />
+  Produced with ❤️ by  
+  <a
+    href="https://twitter.com/controlplusb"
+    rel="noopener noreferrer"
+    target="_blank">
+    Sean Matheson
+  </a>
+</div>
+`;
