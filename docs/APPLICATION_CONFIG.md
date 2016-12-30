@@ -1,8 +1,8 @@
- - [Project Overview](/docs/ProjectOverview.md)
- - __[Application Configuration](/docs/ApplicationConfig.md)__
- - [npm script commands](/docs/NPMCommands.md)
- - [Feature Branches](/docs/FeaturesBranches.md)
- - [Deploy your very own Server Side Rendering React App in 4 easy steps](/docs/DeployToNow.md)
+ - [Project Overview](/docs/PROJECT_OVERVIEW.md)
+ - __[Application Configuration](/docs/APPLICATION_CONFIG.md)__
+ - [Package Script Commands](/docs/PKG_SCRIPTS.md)
+ - [Feature Branches](/docs/FEATURE_BRANCHES.md)
+ - [Deploy your very own Server Side Rendering React App in 4 easy steps](/docs/DEPLOY_TO_NOW.md)
  - [FAQ](/docs/FAQ.md)
 
 # Application configuration
@@ -39,7 +39,7 @@ Below are some of the problems that we faced, and how we ended up with our curre
 
 As this is a universal application you are mostly creating code that is shared between your "client" and "server" bundles. The "client" is sent across the wire to be executed in user's browsers therefore you have to be extra careful in what you include in the bundle.  Webpack by default bundles all code together if it is imported within your source. Therefore if you were to import the application configuration within a module that will be included in the "client" bundle, the entire application configuration would be included with your "client" bundle. This is extremely risky as the configuration exposes the internal structure of your application and may contain sensitive data such as database connection strings.
 
-One possible solution to the above would be to use Webpack's `DefinePlugin` in order to statically inject/replace only the required configuration values into our client bundle.  However,  this solution fails to address our desire to be able to expose execution time provided values (e.g. `FOO=bar npm run start`) to our client bundle. These environment variables can only be interpreted at runtime, therefore we decided on a strategy of making the server be responsible for attaching a configuration object to `window.__CLIENT_CONFIG__` within the HTML response.  This would then allow us to ensure that environment variables could be properly exposed.  This works well, however, it introduces a new problem:  As most of our code is in the "shared" folder you are forced to put in boilerplate code that will read the application configuration from either the `window.__CLIENT_CONFIG__` or the "config" file depending on which bundle is being built (i.e. "client" or "server").  This isn't a trivial process and is easy to get wrong.
+One possible solution to the above would be to use Webpack's `DefinePlugin` in order to statically inject/replace only the required configuration values into our client bundle.  However,  this solution fails to address our desire to be able to expose execution time provided values (e.g. `FOO=bar yarn run start`) to our client bundle. These environment variables can only be interpreted at runtime, therefore we decided on a strategy of making the server be responsible for attaching a configuration object to `window.__CLIENT_CONFIG__` within the HTML response.  This would then allow us to ensure that environment variables could be properly exposed.  This works well, however, it introduces a new problem:  As most of our code is in the "shared" folder you are forced to put in boilerplate code that will read the application configuration from either the `window.__CLIENT_CONFIG__` or the "config" file depending on which bundle is being built (i.e. "client" or "server").  This isn't a trivial process and is easy to get wrong.
 
 So now we had two problems to deal with:
   1. Prevent the accidental import of the configuration object into client bundles.
@@ -77,7 +77,7 @@ This `clientConfig` export will be serialised and attached to the `window.__CLIE
 
 ## Environment Values
 
-Environment specific values are support via host system environment variables (e.g. `FOO=bar npm run start`) and/or by providing an "env" file.  
+Environment specific values are support via host system environment variables (e.g. `FOO=bar yarn run start`) and/or by providing an "env" file.  
 
 "env" files is an optional feature that is supported by the [`dotenv`](https://github.com/motdotla/dotenv) module. This module allows you to define files containing key/value pairs representing your required environment variables (e.g. `PORT=1337`). To use this feature create an `.env` file within the root of the project (we have provided an example file called `.env_example`, which contains all the environment variables this project currently relies on).
 
@@ -91,7 +91,7 @@ Then when you run your code with the `NODE_ENV=target` set it will load the appr
 
  > Note: if an environment specific configuration file exists, it will be used over the more generic `.env` file.
 
-As stated before, the application has been configured to accept a mix-match of sources for the environment variables. i.e. you can provide some/all of the environment variables via the `.env` file, and others via the cli/host (e.g. `FOO=bar npm run build`). This gives you greater flexibility and grants you the opportunity to control the provision of sensitive values (e.g. db connection string).  Please do note that "env" file values will take preference over any values provided by the host/CLI.
+As stated before, the application has been configured to accept a mix-match of sources for the environment variables. i.e. you can provide some/all of the environment variables via the `.env` file, and others via the cli/host (e.g. `FOO=bar yarn run build`). This gives you greater flexibility and grants you the opportunity to control the provision of sensitive values (e.g. db connection string).  Please do note that "env" file values will take preference over any values provided by the host/CLI.
 
 > Note: It is recommended that you bind your environment configuration values to the global `./config/values.js`. See the existing items within as an example.
 

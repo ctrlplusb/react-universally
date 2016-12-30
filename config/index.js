@@ -1,6 +1,6 @@
 // Application Configuration.
 //
-// Please see the /docs/ApplicationConfig.md documentation for more info.
+// Please see the /docs/APPLICATION_CONFIG.md documentation for more info.
 //
 // Note: all file/folder paths should be relative to the project root. The
 // absolute paths should be resolved during runtime by our build tools/server.

@@ -1,8 +1,8 @@
- - [Project Overview](/docs/ProjectOverview.md)
- - [Application Configuration](/docs/ApplicationConfig.md)
- - [npm script commands](/docs/NPMCommands.md)
- - [Feature Branches](/docs/FeaturesBranches.md)
- - __[Deploy your very own Server Side Rendering React App in 4 easy steps](/docs/DeployToNow.md)__
+ - [Project Overview](/docs/PROJECT_OVERVIEW.md)
+ - [Application Configuration](/docs/APPLICATION_CONFIG.md)
+ - [Package Script Commands](/docs/PKG_SCRIPTS.md)
+ - [Feature Branches](/docs/FEATURE_BRANCHES.md)
+ - __[Deploy your very own Server Side Rendering React App in 4 easy steps](/docs/DEPLOY_TO_NOW.md)__
  - [FAQ](/docs/FAQ.md)
 
 # Deploy your very own "React, Universally" App in 4 easy steps
@@ -21,6 +21,6 @@ __Step 3: Install the awesome [`now`](https://zeit.co/now) CLI__
 
 __Step 4: Deploy to "now"__
 
-    npm run deploy
+    yarn run deploy
 
 That's it.  Your clipboard will contain the address of the deployed app. Open your browser, paste, go.  These guys are seriously awesome hosts. [Check them out.](https://zeit.co/now)

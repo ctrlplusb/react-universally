@@ -1,8 +1,8 @@
- - __[Project Overview](/docs/ProjectOverview.md)__
- - [Application Configuration](/docs/ApplicationConfig.md)
- - [npm script commands](/docs/NPMCommands.md)
- - [Feature Branches](/docs/FeaturesBranches.md)
- - [Deploy your very own Server Side Rendering React App in 4 easy steps](/docs/DeployToNow.md)
+ - __[Project Overview](/docs/PROJECT_OVERVIEW.md)__
+ - [Application Configuration](/docs/APPLICATION_CONFIG.md)
+ - [Package Script Commands](/docs/PKG_SCRIPTS.md)
+ - [Feature Branches](/docs/FEATURE_BRANCHES.md)
+ - [Deploy your very own Server Side Rendering React App in 4 easy steps](/docs/DEPLOY_TO_NOW.md)
  - [FAQ](/docs/FAQ.md)
 
 # Project Overview

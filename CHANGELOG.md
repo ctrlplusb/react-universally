@@ -156,7 +156,7 @@ Closes #159
 ## Changed
 
  - Cleans up existing commands, moving many of them into tools/scripts.
- - Major improvements to the `npm run flow:remove` command.  It now removes _everything_ flow related from the project.  I mean everything.  Tread carefully. :)
+ - Major improvements to the `yarn run flow:remove` command.  It now removes _everything_ flow related from the project.  I mean everything.  Tread carefully. :)
 
 ## Added
 
