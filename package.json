@@ -110,7 +110,7 @@
     "glob": "7.1.1",
     "happypack": "3.0.2",
     "html-webpack-plugin": "2.24.1",
-    "jest": "18.0.0",
+    "jest": "18.1.0",
     "md5": "2.2.1",
     "node-notifier": "4.6.1",
     "react-addons-test-utils": "15.4.1",
