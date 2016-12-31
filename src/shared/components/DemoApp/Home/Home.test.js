@@ -1,5 +1,3 @@
-/* @flow */
-/* eslint-disable no-undef */
 /* eslint-disable import/no-extraneous-dependencies */
 
 import React from 'react';
