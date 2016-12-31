@@ -5,8 +5,6 @@ import ListenerManager from './listenerManager';
 import { log } from '../utils';
 
 class HotClientServer {
-
-
   constructor(compiler) {
     const app = express();
 

@@ -3,7 +3,6 @@
 import { readFile } from 'fs';
 import { resolve as pathResolve } from 'path';
 import appRootDir from 'app-root-dir';
-
 import config from '../../../config';
 
 /**
@@ -11,8 +10,7 @@ import config from '../../../config';
  * inline scripts get the correct nonce value injected into them.  Otherwise
  * we can't provide client config values to the offline page.
  */
-export default function offlinePageMiddleware(
-  req, res, next) {
+export default function offlinePageMiddleware(req, res, next) {
   // We should have had a nonce provided to us.  See the server/index.js for
   // more information on what this is.
   if (typeof res.locals.nonce !== 'string') {

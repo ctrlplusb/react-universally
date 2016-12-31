@@ -1,7 +1,6 @@
 /* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
 
-
 const errorHandlersMiddleware = [
   // Handle 404 errors.
   // Note: the react application middleware hands 404 paths, but it is good to
@@ -15,8 +14,7 @@ const errorHandlersMiddleware = [
   // Typically you want to return a "500" response status.
   // Note: You must provide specify all 4 parameters on this callback function
   // even if they aren't used, otherwise it won't be used.
-  function unhandledErrorMiddleware(
-    err, req, res, next) {
+  function unhandledErrorMiddleware(err, req, res, next) {
     if (err) {
       console.log(err);
       console.log(err.stack);
@@ -25,4 +23,4 @@ const errorHandlersMiddleware = [
   },
 ];
 
-export default (errorHandlersMiddleware);
+export default errorHandlersMiddleware;

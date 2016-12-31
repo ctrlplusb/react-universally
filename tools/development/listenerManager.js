@@ -1,8 +1,6 @@
 const { log } = require('../utils');
 
 class ListenerManager {
-
-
   constructor(listener, name) {
     this.name = name || 'listener';
     this.lastConnectionKey = 0;
