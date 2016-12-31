@@ -16,7 +16,7 @@
     "deploy": "babel-node tools/scripts/deploy",
     "lint": "eslint src",
     "test": "jest",
-    "coverage": "jest --coverage"
+    "test:coverage": "jest --coverage"
   },
   "repository": {
     "type": "git",

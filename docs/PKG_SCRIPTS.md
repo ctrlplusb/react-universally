@@ -34,3 +34,11 @@ Executes `eslint` (using the Airbnb config) against the src folder. Alternativel
 ## `yarn run analyze`
 
 Creates an 'webpack-bundle-analyze' session against the production build of the client bundle.  This is super handy for figuring out just exactly what dependencies are being included within your bundle.  Try clicking around, it's an awesome tool.
+
+## `yarn run test`
+
+Runs the `jest` tests.
+
+## `yarn run test:coverage`
+
+Runs the `jest` tests and generates a coverage report. I recommend you look at [codecov.io](https://codecov.io) to host your coverage reports.
