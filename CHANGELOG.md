@@ -9,6 +9,27 @@ I'll map them as follows:
   - Minor: New features or changes to the build tools. Could contain some things that are traditionally know as breaking changes, however, I believe the upgrade path to minor.
   - Patch: Small(ish) fixes/restructuring that I expect will take minimal effort to merge in.
 
+# [12.0.0] - 2016-12-31
+
+### BREAKING
+
+ - Removed `flow` - it is now in a feature branch.
+ - Simplified the Vendor DLL config.  It uses a single "includes" prop only now.
+ - Moves the source-maps-support into the Webpack config factory, activating it automatically for all node bundles. Thanks @enten :)
+
+### Changed
+
+ - Updates depenendencies.
+ - Removes unnecessary dependency match-require.
+
+### Added
+
+ - Adds `jest` as our test framework (we will be removing the jest feature branch).
+
+### Fixed
+
+ - Prevents the Vendor DLL from being cached by the browser.
+
 ## [11.0.1] - 2016-12-24
 
 ## Fixed
@@ -16,18 +37,18 @@ I'll map them as follows:
  - Fixes filterObject incorrect check on prop existence.
  - Removes unneeded flow fix-me comment.
 
-## Changed
+### Changed
 
  - Changes the uuid call to use the explicit type call.
 
 ## [11.0.0] - 2016-12-23
 
-## Breaking
+### BREAKING
 
  - Huge refactor and simplification of the application configuration.  All the values are managed in a single location, with a new API introduced to help read config values in shared/client code. See the docs and code comments for more info.
  - Migrates babel configuration to stage-3 and higher only.
 
-## Changes
+### Changes
 
  - Updates helmet.
  - Reworks the DLL-Plugin so that it uses the project's package.json dependencies with the ability to explicitly include/exclude dependencies via the config. (@strues)
@@ -37,7 +58,7 @@ I'll map them as follows:
  - Allows the service worker to be configurable.
  - Removes unneeded json-loader as it is by default enabled within webpack v2.
 
-## Fixed
+### Fixed
 
  - Minor fixes to the notifications in hot node servers.
  - Adds check for project config dev dll enable/disable flag when rendering the dev dll script.
@@ -45,30 +66,30 @@ I'll map them as follows:
 
 ## [10.2.0] - 2016-12-13
 
-## Changed
+### Changed
 
  - Changes the build script to output webpack stats.
  - Changes webpack performance hints to only execute for production builds.
  - Renames 'App' component to 'DemoApp'.
  - Adds new webpack beta release.
 
-## Fixed
+### Fixed
 
  - Fixes bug in development server.
  - Updates contributors list.
 
-## Added
+### Added
 
  - Adds .history to git ignores.
 
 ## [10.1.1] - 2016-12-12
 
-## Changed
+### Changed
 
  - Updates dependencies.
  - Updates flow.
 
-## Fixed
+### Fixed
 
  - Fixes flow issues.
  - Fixes analyze script.
