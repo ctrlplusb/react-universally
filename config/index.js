@@ -87,15 +87,16 @@ const config = {
   // Extended configuration for the Content Security Policy (CSP)
   // @see src/server/middleware/security for more info.
   cspExtensions: {
+    childSrc: [],
+    connectSrc: [],
     defaultSrc: [],
+    fontSrc: [],
+    imgSrc: [],
+    mediaSrc: [],
+    manifestSrc: [],
+    objectSrc: [],
     scriptSrc: [],
     styleSrc: [],
-    imgSrc: [],
-    connectSrc: [],
-    fontSrc: [],
-    objectSrc: [],
-    mediaSrc: [],
-    childSrc: [],
   },
 
   // node_modules are not included in any bundles that target "node" as a runtime
