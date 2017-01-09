@@ -9,7 +9,7 @@ I'll map them as follows:
   - Minor: New features or changes to the build tools. Could contain some things that are traditionally know as breaking changes, however, I believe the upgrade path to minor.
   - Patch: Small(ish) fixes/restructuring that I expect will take minimal effort to merge in.
 
-# [12.0.0] - 2016-12-31
+# [12.0.0] - 2017-01-09
 
 ### BREAKING
 
