@@ -761,9 +761,9 @@ babel-polyfill@6.20.0, babel-polyfill@^6.16.0:
     core-js "^2.4.0"
     regenerator-runtime "^0.10.0"
 
-babel-preset-env@1.1.6:
-  version "1.1.6"
-  resolved "https://registry.yarnpkg.com/babel-preset-env/-/babel-preset-env-1.1.6.tgz#83ce1402088e661cb5799e680d20c5a432b2873b"
+babel-preset-env@1.1.7:
+  version "1.1.7"
+  resolved "https://registry.yarnpkg.com/babel-preset-env/-/babel-preset-env-1.1.7.tgz#4ca8dd905056039c6788a0174bfac7b7bad89fbf"
   dependencies:
     babel-plugin-check-es2015-constants "^6.3.13"
     babel-plugin-syntax-trailing-function-commas "^6.13.0"
