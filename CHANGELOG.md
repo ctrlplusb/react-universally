@@ -16,15 +16,20 @@ I'll map them as follows:
  - Removed `flow` - it is now in a feature branch.
  - Simplified the Vendor DLL config.  It uses a single "includes" prop only now.
  - Moves the source-maps-support into the Webpack config factory, activating it automatically for all node bundles. Thanks @enten :)
+ - Moves the 'standard' babel config into the Webpack configFactory and instead lets the project config able to modify it via the plugin point.
 
 ### Changed
 
- - Updates depenendencies.
+ - Updates dependencies.
  - Removes unnecessary dependency match-require.
+ - Changes the eslint-disable-line instances to eslint-disable-next-line.
 
 ### Added
 
  - Adds `jest` as our test framework (we will be removing the jest feature branch).
+ - Adds contributors to the About page.
+ - Addings cross-env powered NODE_ENV setting on the build/start commands. This is purely for demonstration purposes, and can be removed/adjusted based on your own needs. closes #298
+ - Adds 'manifest-src' to the CSP (closes #299).
 
 ### Fixed
 
