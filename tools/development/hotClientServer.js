@@ -16,7 +16,8 @@ class HotClientServer {
       );
     }
 
-    const [_, host, port] = httpPathRegex.exec(httpPath); // eslint-disable-line no-unused-vars
+    // eslint-disable-next-line no-unused-vars
+    const [_, host, port] = httpPathRegex.exec(httpPath);
 
     this.webpackDevMiddleware = createWebpackMiddleware(compiler, {
       quiet: true,
