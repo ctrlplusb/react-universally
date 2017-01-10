@@ -45,7 +45,16 @@ yarn
 yarn run development
 ```
 
-Go make some changes to the `Home` component to see the tooling in action.
+Or, if you aren't using [`yarn`](https://yarnpkg.com/):
+
+```bash
+git clone https://github.com/ctrlplusb/react-universally my-project
+cd my-project
+npm install
+npm run development
+```
+
+Now go make some changes to the `Home` component to see the tooling in action.
 
 ## Docs
 
@@ -53,6 +62,6 @@ Go make some changes to the `Home` component to see the tooling in action.
  - [Application Configuration](/docs/APPLICATION_CONFIG.md)
  - [Package Script Commands](/docs/PKG_SCRIPTS.md)
  - [Feature Branches](/docs/FEATURE_BRANCHES.md)
- - [Deploy your very own Server Side Rendering React App in 4 easy steps](/docs/DEPLOY_TO_NOW.md)
+ - [Deploy your very own Server Side Rendering React App in 5 easy steps](/docs/DEPLOY_TO_NOW.md)
  - [FAQ](/docs/FAQ.md)
  - [Changelog](/CHANGELOG.md)

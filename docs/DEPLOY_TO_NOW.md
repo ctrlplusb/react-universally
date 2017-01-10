@@ -2,7 +2,7 @@
  - [Application Configuration](/docs/APPLICATION_CONFIG.md)
  - [Package Script Commands](/docs/PKG_SCRIPTS.md)
  - [Feature Branches](/docs/FEATURE_BRANCHES.md)
- - __[Deploy your very own Server Side Rendering React App in 4 easy steps](/docs/DEPLOY_TO_NOW.md)__
+ - __[Deploy your very own Server Side Rendering React App in 5 easy steps](/docs/DEPLOY_TO_NOW.md)__
  - [FAQ](/docs/FAQ.md)
 
 # Deploy your very own "React, Universally" App in 4 easy steps
@@ -15,11 +15,19 @@ __Step 2: `cd` into the cloned directory__
 
     cd react-universally
 
-__Step 3: Install the awesome [`now`](https://zeit.co/now) CLI__
+__Step 3: Install the project's dependencies__
+
+    yarn
+
+Or, if you aren't using [`yarn`](https://yarnpkg.com/):
+
+    npm install
+
+__Step 4: Install the awesome [`now`](https://zeit.co/now) CLI globally__
 
     npm install -g now
 
-__Step 4: Deploy to "now"__
+__Step 5: Deploy to "now"__
 
     yarn run deploy
 

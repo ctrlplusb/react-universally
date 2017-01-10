@@ -2,7 +2,7 @@
  - __[Application Configuration](/docs/APPLICATION_CONFIG.md)__
  - [Package Script Commands](/docs/PKG_SCRIPTS.md)
  - [Feature Branches](/docs/FEATURE_BRANCHES.md)
- - [Deploy your very own Server Side Rendering React App in 4 easy steps](/docs/DEPLOY_TO_NOW.md)
+ - [Deploy your very own Server Side Rendering React App in 5 easy steps](/docs/DEPLOY_TO_NOW.md)
  - [FAQ](/docs/FAQ.md)
 
 # Application configuration
