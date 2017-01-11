@@ -16,6 +16,7 @@ Below are a list of extensions to this repository, in the form of branches.  Eac
  - [`koa2`](https://github.com/ctrlplusb/react-universally/tree/feature/koa2) - Replaces Express with Koa2.
  - [`jest`](https://github.com/ctrlplusb/react-universally/tree/feature/jest) - Adds the Jest testing framework.
  - [`mobx`](https://github.com/andreyluiz/react-universally/tree/feature/mobx) - Adds MobX as a state management library.
+ - [`preact`](https://github.com/andreyluiz/react-universally/tree/feature/preact) - Replaces React with Preact via `preact-compat` a React polyfill that uses Preact under the hood. Smaller, faster.
  - [`postcss-sass`](https://github.com/ctrlplusb/react-universally/tree/feature/postcss-sass) - Adds PostCSS and SASS.
  - [`redux-opinionated`](https://github.com/ctrlplusb/react-universally/tree/feature/redux-opinionated) - Adds an opinionated Redux implementation, using `redux-thunk` and `react-jobs` to support data loading across the client/server.  It also merges in the `flow` feature branch.
  - [`styled-components`](https://github.com/ctrlplusb/react-universally/tree/feature/styled-components) - Adds the Styled Components CSS-in-JS library.
