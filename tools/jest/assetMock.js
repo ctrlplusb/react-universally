@@ -1,1 +1,1 @@
-module.exports = "/asset/mock";
+module.exports = '/asset/mock';
