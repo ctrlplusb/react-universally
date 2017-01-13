@@ -193,6 +193,12 @@ export default function webpackConfigFactory(buildOptions) {
     resolve: {
       // These extensions are tried when resolving a file.
       extensions: config.bundleSrcTypes.map(ext => `.${ext}`),
+
+      // This is required for the modernizr-loader
+      // @see https://github.com/peerigon/modernizr-loader
+      alias: {
+        modernizr$: path.resolve(appRootDir.get(), './.modernizrrc'),
+      },
     },
 
     plugins: removeEmpty([
@@ -628,6 +634,19 @@ export default function webpackConfigFactory(buildOptions) {
             emitFile: isClient,
           },
         })),
+
+        // MODERNIZR
+        // This allows you to do feature detection.
+        // @see https://modernizr.com/docs
+        // @see https://github.com/peerigon/modernizr-loader
+        ifClient({
+          test: /\.modernizrrc.js$/,
+          loader: 'modernizr-loader',
+        }),
+        ifClient({
+          test: /\.modernizrrc(\.json)?$/,
+          loader: 'modernizr-loader!json-loader',
+        }),
       ]),
     },
   };
