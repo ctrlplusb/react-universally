@@ -10,7 +10,7 @@
 Below are a list of extensions to this repository, in the form of branches.  Each of them has been tailored to add an individual technology.  It is possible to merge multiple branches together in order to create a technology mix that suits your project's needs.  We'll detail this workflow after the repository list.
 
  - [`apollo`](https://github.com/ctrlplusb/react-universally/tree/feature/apollo) - Adds the Apollo Stack (i.e. Graphql).
- - [`flow`](https://github.com/andreyluiz/react-universally/tree/feature/flow) - Adds static type checking using Flow.
+ - [`flow`](https://github.com/ctrlplusb/react-universally/tree/feature/flow) - Adds static type checking using Flow.
  - [`found`](https://github.com/andreyluiz/react-universally/tree/feature/found) - Adds the Found router in replacement to react-router.
  - [`glamor`](https://github.com/ctrlplusb/react-universally/tree/feature/glamor) - Adds the Glamor CSS-in-JS library.
  - [`koa2`](https://github.com/ctrlplusb/react-universally/tree/feature/koa2) - Replaces Express with Koa2.
