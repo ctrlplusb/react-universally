@@ -58,10 +58,10 @@ Now go make some changes to the `Home` component to see the tooling in action.
 
 ## Docs
 
- - [Project Overview](/docs/PROJECT_OVERVIEW.md)
- - [Application Configuration](/docs/APPLICATION_CONFIG.md)
- - [Package Script Commands](/docs/PKG_SCRIPTS.md)
- - [Feature Branches](/docs/FEATURE_BRANCHES.md)
- - [Deploy your very own Server Side Rendering React App in 5 easy steps](/docs/DEPLOY_TO_NOW.md)
- - [FAQ](/docs/FAQ.md)
+ - [Project Overview](/internal/docs/PROJECT_OVERVIEW.md)
+ - [Application Configuration](/internal/docs/APPLICATION_CONFIG.md)
+ - [Package Script Commands](/internal/docs/PKG_SCRIPTS.md)
+ - [Feature Branches](/internal/docs/FEATURE_BRANCHES.md)
+ - [Deploy your very own Server Side Rendering React App in 5 easy steps](/internal/docs/DEPLOY_TO_NOW.md)
+ - [FAQ](/internal/docs/FAQ.md)
  - [Changelog](/CHANGELOG.md)

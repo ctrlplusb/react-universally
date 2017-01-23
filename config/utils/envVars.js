@@ -1,7 +1,9 @@
 /**
  * Helper for resolving environment specific configuration.
  *
- * TODO: Detailed documentation.
+ * It resolves .env files that are supported by the `dotenv` library.
+ *
+ * Please read the application configuration docs for more info.
  */
 
 import appRootDir from 'app-root-dir';
@@ -12,14 +14,10 @@ import path from 'path';
 import userHome from 'user-home';
 
 import pkg from '../../package.json';
+import onlyIf from '../../shared/utils/logic/onlyIf';
+import removeNil from '../../shared/utils/arrays/removeNil';
 
 // PRIVATES
-
-// :: (Boolean, () => Element) -> ?Any
-const onlyIf = (a, b) => (a ? b() : null);
-
-// :: (Boolean)
-const removeEmpty = a => a.filter(x => x != null);
 
 function registerEnvFile() {
   const CONF_ENV = process.env.CONF_ENV;
@@ -27,7 +25,7 @@ function registerEnvFile() {
 
   // This is the order in which we will try to resolve an environment configuration
   // file.
-  const envFileResolutionOrder = removeEmpty([
+  const envFileResolutionOrder = removeNil([
     // Is there an environment config file at the app root for our target
     // environment name?
     // e.g. /projects/react-universally/.env.development

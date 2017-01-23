@@ -7,14 +7,14 @@
     "node": ">=6"
   },
   "scripts": {
-    "analyze": "cross-env NODE_ENV=production babel-node tools/scripts/analyze",
-    "build:dev": "cross-env NODE_ENV=development babel-node tools/scripts/build",
-    "build": "cross-env NODE_ENV=production babel-node tools/scripts/build",
-    "clean": "babel-node tools/scripts/clean",
-    "deploy": "babel-node tools/scripts/deploy",
-    "development": "babel-node tools/development",
+    "analyze": "cross-env NODE_ENV=production babel-node internal/scripts/analyze",
+    "build:dev": "cross-env NODE_ENV=development babel-node internal/scripts/build",
+    "build": "cross-env NODE_ENV=production babel-node internal/scripts/build",
+    "clean": "babel-node internal/scripts/clean",
+    "deploy": "babel-node internal/scripts/deploy",
+    "development": "babel-node internal/development",
     "lint": "eslint src config tools",
-    "preinstall": "node tools/scripts/preinstall",
+    "preinstall": "node internal/scripts/preinstall",
     "start": "node build/server",
     "test:coverage": "jest --coverage",
     "test": "jest"
@@ -60,14 +60,14 @@
       "<rootDir>/node_modules/enzyme-to-json/serializer"
     ],
     "testPathIgnorePatterns": [
-      "<rootDir>/(build|tools|node_modules|flow-typed|public)/"
+      "<rootDir>/(build|internal|node_modules|flow-typed|public)/"
     ]
   },
   "dependencies": {
     "app-root-dir": "1.0.2",
     "colors": "1.1.2",
     "compression": "1.6.2",
-    "cross-env": "^3.1.4",
+    "cross-env": "3.1.4",
     "dotenv": "4.0.0",
     "express": "4.14.0",
     "helmet": "3.4.0",
