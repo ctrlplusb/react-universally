@@ -24,15 +24,19 @@ const cspConfig = {
     scriptSrc: [
       // Allow scripts hosted from our application.
       "'self'",
-      // Allow scripts from cdn.polyfill.io so that we can import the polyfill.
-      'cdn.polyfill.io',
+      // Allow scripts from https://cdn.polyfill.io so that we can import the polyfill.
+      'https://cdn.polyfill.io',
       // Note: We will execution of any inline scripts that have the following
       // nonce identifier attached to them.
       // This is useful for guarding your application whilst allowing an inline
       // script to do data store rehydration (redux/mobx/apollo) for example.
       // @see https://helmetjs.github.io/docs/csp/
-      // $FlowFixMe
       (req, res) => `'nonce-${res.locals.nonce}'`,
+      // This is a know workaround for browsers that don't support nonces.
+      // It will be ignored by browsers that do support nonces as they will
+      // recognise that we have also provided a nonce configuration and 
+      // use the stricter rule.
+      "'unsafe-inline'",
     ],
     styleSrc: [
       "'self'",
