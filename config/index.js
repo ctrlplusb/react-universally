@@ -4,7 +4,7 @@
  * absolute paths should be resolved during runtime by our build tools/server.
  */
 
-import * as envVars from './internals/envVars';
+import * as envVars from './utils/envVars';
 
 // This protects us from accidentally including this configuration in our
 // client bundle. That would be a big NO NO to do. :)
