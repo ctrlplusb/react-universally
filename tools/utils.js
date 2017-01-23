@@ -4,7 +4,6 @@ import colors from 'colors/safe';
 import { execSync } from 'child_process';
 import appRootDir from 'app-root-dir';
 
-
 // Generates a HappyPack plugin.
 // @see https://github.com/amireh/happypack/
 export function happyPackPlugin({ name, loaders }) {
