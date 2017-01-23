@@ -3,7 +3,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { BrowserRouter } from 'react-router';
-import { CodeSplitProvider, rehydrateState } from 'code-split-component';
+import { withAsyncComponents } from 'react-async-component';
 
 import './polyfills';
 
@@ -14,28 +14,29 @@ import DemoApp from '../shared/components/DemoApp';
 const container = document.querySelector('#app');
 
 function renderApp(TheApp) {
-  // We use the code-split-component library to provide us with code splitting
-  // within our application.  This library supports server rendered applications,
-  // but for server rendered applications it requires that we rehydrate any
-  // code split modules that may have been rendered for a request.  We use
-  // the provided helper and then pass the result to the CodeSplitProvider
-  // instance which takes care of the rest for us.  This is really important
-  // to do as it will ensure that our React checksum for the client will match
-  // the content returned by the server.
-  // @see https://github.com/ctrlplusb/code-split-component
-  rehydrateState().then(codeSplitState =>
-    render(
-      <ReactHotLoader>
-        <CodeSplitProvider state={codeSplitState}>
-          <BrowserRouter>
-            <TheApp />
-          </BrowserRouter>
-        </CodeSplitProvider>
-      </ReactHotLoader>,
-      container,
-    ),
+  const app = (
+    <ReactHotLoader>
+      <BrowserRouter>
+        <TheApp />
+      </BrowserRouter>
+    </ReactHotLoader>
+  );
+
+  // We use the react-async-component in order to support super easy code splitting
+  // within our application.  It's important to use this helper
+  // @see https://github.com/ctrlplusb/react-async-component
+  withAsyncComponents(app).then(({ appWithAsyncComponents }) =>
+    render(appWithAsyncComponents, container),
   );
 }
+
+// Execute the first render of our app.
+renderApp(DemoApp);
+
+// This registers our service worker for asset caching and offline support.
+// Keep this as the last item, just in case the code execution failed (thanks
+// to react-boilerplate for that tip.)
+require('./registerServiceWorker');
 
 // The following is needed so that we can support hot reloading our application.
 if (process.env.NODE_ENV === 'development' && module.hot) {
@@ -47,11 +48,3 @@ if (process.env.NODE_ENV === 'development' && module.hot) {
     () => renderApp(require('../shared/components/DemoApp').default),
   );
 }
-
-// Execute the first render of our app.
-renderApp(DemoApp);
-
-// This registers our service worker for asset caching and offline support.
-// Keep this as the last item, just in case the code execution failed (thanks
-// to react-boilerplate for that tip.)
-require('./registerServiceWorker');

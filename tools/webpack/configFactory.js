@@ -1,4 +1,5 @@
 import path from 'path';
+import fs from 'fs';
 import { sync as globSync } from 'glob';
 import webpack from 'webpack';
 import OfflinePlugin from 'offline-plugin';
@@ -8,9 +9,8 @@ import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import appRootDir from 'app-root-dir';
 import WebpackMd5Hash from 'webpack-md5-hash';
-import CodeSplitPlugin from 'code-split-component/webpack';
 import { removeEmpty, ifElse, merge, happyPackPlugin } from '../utils';
-import config, { clientConfig } from '../../config';
+import config from '../../config';
 
 /**
  * This function is responsible for creating the webpack configuration for
@@ -27,14 +27,17 @@ import config, { clientConfig } from '../../config';
  * level of abstraction to keep the config factory as simple as possible.
  */
 export default function webpackConfigFactory(buildOptions) {
-  const { target, mode } = buildOptions;
-  console.log(`==> Creating webpack config for "${target}" in "${mode}" mode`);
+  const { target } = buildOptions;
 
-  const isDev = mode === 'development';
-  const isProd = mode === 'production';
+  const NODE_ENV = process.env.NODE_ENV || 'development';
+
+  const isDev = NODE_ENV === 'development';
+  // Any environment but 'development' will be considered a production based build.
+  const isProd = !isDev;
   const isClient = target === 'client';
   const isServer = target === 'server';
-  const isNode = !isClient; // Any bundle but the client bundle must target node.
+  // Any bundle but the client bundle must target node.
+  const isNode = !isClient;
 
   // Preconfigure some ifElse helper instnaces. See the util docs for more
   // information on how this util works.
@@ -44,6 +47,8 @@ export default function webpackConfigFactory(buildOptions) {
   const ifClient = ifElse(isClient);
   const ifDevClient = ifElse(isDev && isClient);
   const ifProdClient = ifElse(isProd && isClient);
+
+  console.log(`==> Creating "${target}" webpack config in "${isDev ? 'development' : 'production'}" mode`);
 
   // Resolve the bundle configuration.
   const bundleConfig = isServer || isClient
@@ -87,7 +92,7 @@ export default function webpackConfigFactory(buildOptions) {
               // We always want the source-map-support excluded.
               ['source-map-support/register'].concat(
                 // Then exclude any items specified in the config.
-                config.nodeBundlesIncludeNodeModuleFileTypes || [],
+                config.nodeExternalsFileTypeWhitelist || [],
               ),
           },
         ),
@@ -134,10 +139,6 @@ export default function webpackConfigFactory(buildOptions) {
       // This makes importing of the output module as simple as:
       //   import server from './build/server';
       index: removeEmpty([
-        // This grants us source map support, which combined with our webpack
-        // source maps will give us nice stack traces for our node executed
-        // bundles.
-        ifNode('source-map-support/register'),
         // Required to support hot reloading of our client.
         ifDevClient('react-hot-loader/patch'),
         // Required to support hot reloading of our client.
@@ -202,13 +203,16 @@ export default function webpackConfigFactory(buildOptions) {
     },
 
     plugins: removeEmpty([
-      // Required support for code-split-component, which provides us with our
-      // code splitting functionality.
-      //
-      // The code-split-component doesn't work nicely with React Hot Loader,
-      // which we use in our development builds, so we will disable it (which
-      // causes synchronous loading behaviour for the CodeSplit instances).
-      ifProd(() => new CodeSplitPlugin()),
+      // This grants us source map support, which combined with our webpack
+      // source maps will give us nice stack traces for our node executed
+      // bundles.
+      // We use the BannerPlugin to make sure all of our chunks will get the
+      // source maps support installed.
+      ifNode(() => new webpack.BannerPlugin({
+        banner: 'require("source-map-support").install();',
+        raw: true,
+        entryOnly: false,
+      })),
 
       // We use this so that our generated [chunkhash]'s are only different if
       // the content for our respective chunks have changed.  This optimises
@@ -239,8 +243,13 @@ export default function webpackConfigFactory(buildOptions) {
       // expose a database connection string within your client bundle src!
       new webpack.DefinePlugin({
         // Adding the NODE_ENV key is especially important as React relies
-        // on it to optimize production builds.
-        'process.env.NODE_ENV': JSON.stringify(mode),
+        // on it to optimize production builds. We have to force this value
+        // to be either 'development' or 'production'.
+        // If you would like to use an environment specific environment file
+        // when you execute your application then please use the "CONF_ENV"
+        // environment variable.
+        // e.g. `CONF_ENV=staging yarn run start`
+        'process.env.NODE_ENV': JSON.stringify(isDev ? 'development' : 'production'),
         // Is this the "client" bundle?
         'process.env.IS_CLIENT': JSON.stringify(isClient),
         // Is this the "server" bundle?
@@ -263,7 +272,7 @@ export default function webpackConfigFactory(buildOptions) {
 
       // We don't want webpack errors to occur during development as it will
       // kill our dev servers.
-      ifDev(() => new webpack.NoErrorsPlugin()),
+      ifDev(() => new webpack.NoEmitOnErrorsPlugin()),
 
       // We need this plugin to enable hot reloading of our client.
       ifDevClient(() => new webpack.HotModuleReplacementPlugin()),
@@ -372,26 +381,17 @@ export default function webpackConfigFactory(buildOptions) {
                 // Adding this will give us the path to our components in the
                 // react dev tools.
                 ifDev('transform-react-jsx-source'),
-                // The following plugin supports the code-split-component
-                // instances, taking care of all the heavy boilerplate that we
-                // would have had to do ourselves to get code splitting w/SSR
-                // support working.
-                // @see https://github.com/ctrlplusb/code-split-component
-                //
-                // We only include it in production as this library does not support
-                // React Hot Loader, which we use in development.
-                ifElse(isProd && (isServer || isClient))(
-                  [
-                    'code-split-component/babel',
-                    {
-                      // For our server bundle we will set the mode as being 'server'
-                      // which will ensure that our code split components can be
-                      // resolved synchronously, being much more helpful for
-                      // pre-rendering.
-                      mode: target,
-                    },
-                  ],
-                ),
+                // Replaces the React.createElement function with one that is
+                // more optimized for production.
+                // NOTE: Symbol needs to be polyfilled. Ensure this feature
+                // is enabled in the polyfill.io configuration.
+                ifProd('transform-react-inline-elements'),
+                // Hoists element creation to the top level for subtrees that
+                // are fully static, which reduces call to React.createElement
+                // and the resulting allocations. More importantly, it tells
+                // React that the subtree hasn’t changed so React can completely
+                // skip it when reconciling.
+                ifProd('transform-react-constant-elements'),
               ].filter(x => x != null),
             },
             buildOptions,
@@ -422,35 +422,31 @@ export default function webpackConfigFactory(buildOptions) {
       // We use the HtmlWebpackPlugin to produce an "offline" html page that
       // can be used by our service worker (see the OfflinePlugin below) in
       // order support offline rendering of our application.
-      ifProdClient(
-        // We will only create the service worker required page if enabled in config.
-        ifElse(config.serviceWorker.enabled)(
-          () => new HtmlWebpackPlugin({
-            filename: config.serviceWorker.offlinePageFileName,
-            template: path.resolve(
-              appRootDir.get(), config.serviceWorker.offlinePageTemplate,
-            ),
-            minify: {
-              removeComments: true,
-              collapseWhitespace: true,
-              removeRedundantAttributes: true,
-              useShortDoctype: true,
-              removeEmptyAttributes: true,
-              removeStyleLinkTypeAttributes: true,
-              keepClosingSlash: true,
-              minifyJS: true,
-              minifyCSS: true,
-              minifyURLs: true,
-            },
-            inject: true,
-            // We pass our config objects as values as they will be needed
-            // by the template.
-            custom: {
-              config,
-              clientConfig,
-            },
-          }),
-        ),
+      // We will only create the service worker required page if enabled in
+      // config and if we are building the production version of client.
+      ifElse(isProd && isClient && config.serviceWorker.enabled)(
+        () => new HtmlWebpackPlugin({
+          filename: config.serviceWorker.offlinePageFileName,
+          template: `babel-loader!${config.serviceWorker.offlinePageTemplate}`,
+          production: true,
+          minify: {
+            removeComments: true,
+            collapseWhitespace: true,
+            removeRedundantAttributes: true,
+            useShortDoctype: true,
+            removeEmptyAttributes: true,
+            removeStyleLinkTypeAttributes: true,
+            keepClosingSlash: true,
+            minifyJS: true,
+            minifyCSS: true,
+            minifyURLs: true,
+          },
+          inject: true,
+          // We pass our config as it will be needed by the template.
+          custom: {
+            config,
+          },
+        }),
       ),
 
       // Service Worker - generation.
@@ -479,82 +475,85 @@ export default function webpackConfigFactory(buildOptions) {
       //
       // Any time our static files or generated bundle files change the user's
       // cache will be updated.
-      ifProdClient(
-        // We will only include the service worker if enabled in config.
-        ifElse(config.serviceWorker.enabled)(
-          () => new OfflinePlugin({
-            // Setting this value lets the plugin know where our generated client
-            // assets will be served from.
-            // e.g. /client/
-            publicPath: bundleConfig.webPath,
-            // When using the publicPath we need to disable the "relativePaths"
-            // feature of this plugin.
-            relativePaths: false,
-            // Our offline support will be done via a service worker.
-            // Read more on them here:
-            // http://bit.ly/2f8q7Td
-            ServiceWorker: {
-              // The name of the service worker script that will get generated.
-              output: config.serviceWorker.fileName,
-              // Enable events so that we can register updates.
-              events: true,
-              // By default the service worker will be ouput and served from the
-              // publicPath setting above in the root config of the OfflinePlugin.
-              // This means that it would be served from /client/sw.js
-              // We do not want this! Service workers have to be served from the
-              // root of our application in order for them to work correctly.
-              // Therefore we override the publicPath here. The sw.js will still
-              // live in at the /build/client/sw.js output location therefore in
-              // our server configuration we need to make sure that any requests
-              // to /sw.js will serve the /build/client/sw.js file.
-              publicPath: `/${config.serviceWorker.fileName}`,
-              // When the user is offline then this html page will be used at
-              // the base that loads all our cached client scripts.  This page
-              // is generated by the HtmlWebpackPlugin above, which takes care
-              // of injecting all of our client scripts into the body.
-              // Please see the HtmlWebpackPlugin configuration above for more
-              // information on this page.
-              navigateFallbackURL: `${bundleConfig.webPath}${config.serviceWorker.offlinePageFileName}`,
-            },
-            // According to the Mozilla docs, AppCache is considered deprecated.
-            // @see https://mzl.la/1pOZ5wF
-            // It does however have much wider support compared to the newer
-            // Service Worker specification, so you could consider enabling it
-            // if you needed.
-            AppCache: false,
-            // Which external files should be included with the service worker?
-            externals:
-              // Add the polyfill io script as an external if it is enabled.
-              (
-                config.polyfillIO.enabled
-                  ? [config.polyfillIO.url]
-                  : []
-              )
-              // Add any included public folder assets.
-              .concat(
-                config.serviceWorker.includePublicAssets.reduce((acc, cur) => {
-                  const publicAssetPathGlob = path.resolve(
-                    appRootDir.get(), config.publicAssetsPath, cur,
-                  );
-                  const publicFileWebPaths = acc.concat(
-                    // First get all the matching public folder assets.
-                    globSync(publicAssetPathGlob)
-                    // Then map them to relative paths against the public folder.
-                    // We need to do this as we need the "web" paths for each one.
-                    .map(publicFile => path.relative(
-                      path.resolve(appRootDir.get(), config.publicAssetsPath),
-                      publicFile,
-                    ))
-                    // Add the leading "/" indicating the file is being hosted
-                    // off the root of the application.
-                    .map(relativePath => `/${relativePath}`),
-                  );
-                  return publicFileWebPaths;
-                }, []),
-              ),
-          }),
-        ),
+      // ifProdClient(
+      // We will only include the service worker if enabled in config.
+      ifElse(isProd && isClient && config.serviceWorker.enabled)(
+        () => new OfflinePlugin({
+          // Setting this value lets the plugin know where our generated client
+          // assets will be served from.
+          // e.g. /client/
+          publicPath: bundleConfig.webPath,
+          // When using the publicPath we need to disable the "relativePaths"
+          // feature of this plugin.
+          relativePaths: false,
+          // Our offline support will be done via a service worker.
+          // Read more on them here:
+          // http://bit.ly/2f8q7Td
+          ServiceWorker: {
+            // The name of the service worker script that will get generated.
+            output: config.serviceWorker.fileName,
+            // Enable events so that we can register updates.
+            events: true,
+            // By default the service worker will be ouput and served from the
+            // publicPath setting above in the root config of the OfflinePlugin.
+            // This means that it would be served from /client/sw.js
+            // We do not want this! Service workers have to be served from the
+            // root of our application in order for them to work correctly.
+            // Therefore we override the publicPath here. The sw.js will still
+            // live in at the /build/client/sw.js output location therefore in
+            // our server configuration we need to make sure that any requests
+            // to /sw.js will serve the /build/client/sw.js file.
+            publicPath: `/${config.serviceWorker.fileName}`,
+            // When the user is offline then this html page will be used at
+            // the base that loads all our cached client scripts.  This page
+            // is generated by the HtmlWebpackPlugin above, which takes care
+            // of injecting all of our client scripts into the body.
+            // Please see the HtmlWebpackPlugin configuration above for more
+            // information on this page.
+            navigateFallbackURL: `${bundleConfig.webPath}${config.serviceWorker.offlinePageFileName}`,
+          },
+          // According to the Mozilla docs, AppCache is considered deprecated.
+          // @see https://mzl.la/1pOZ5wF
+          // It does however have much wider support compared to the newer
+          // Service Worker specification, so you could consider enabling it
+          // if you needed.
+          AppCache: false,
+          // Which external files should be included with the service worker?
+          externals:
+            // Add the polyfill io script as an external if it is enabled.
+            (
+              config.polyfillIO.enabled
+                ? [config.polyfillIO.url]
+                : []
+            )
+            // Add any included public folder assets.
+            .concat(
+              config.serviceWorker.includePublicAssets.reduce((acc, cur) => {
+                const publicAssetPathGlob = path.resolve(
+                  appRootDir.get(), config.publicAssetsPath, cur,
+                );
+                const publicFileWebPaths = acc.concat(
+                  // First get all the matching public folder assets.
+                  globSync(publicAssetPathGlob)
+                  // Only process files
+                  .filter(x => fs.lstatSync(x).isFile())
+                  // Then map them to relative paths against the public folder.
+                  // We need to do this as we need the "web" paths for each one.
+                  .map(publicFile => path.relative(
+                    path.resolve(appRootDir.get(), config.publicAssetsPath),
+                    publicFile,
+                  ))
+                  .map(x => console.log('PATH', x) || x)
+                  // Add the leading "/" indicating the file is being hosted
+                  // off the root of the application.
+                  .map(relativePath => `/${relativePath}`),
+                );
+                return publicFileWebPaths;
+              }, []),
+            ),
+        }),
       ),
+      // ),
     ]),
     module: {
       rules: removeEmpty([

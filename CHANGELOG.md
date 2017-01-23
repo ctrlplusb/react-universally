@@ -9,6 +9,38 @@ I'll map them as follows:
   - Minor: New features or changes to the build tools. Could contain some things that are traditionally know as breaking changes, however, I believe the upgrade path to minor.
   - Patch: Small(ish) fixes/restructuring that I expect will take minimal effort to merge in.
 
+# [13.0.0] - 2017-01-23
+
+### BREAKING
+
+ - Renamed environment variables:
+   - `SERVER_PORT` to `PORT`
+   - `SERVER_HOST` to `HOST`
+   - `CLIENT_DEVSERVER_PORT` to `CLIENT_DEV_PORT`
+ - Replaces `code-split-component` with `react-async-component`
+ - Renames the `nodeBundlesIncludeNodeModuleFileTypes` config property to `nodeExternalsFileTypeWhitelist`
+ - Refactors the server and serviceworker offline page generation. We now use a set of React components (`ServerHTML` and `HTML`) to manage our HTML in a uniform fashion.
+ - Refactors how we resolve environment specific configuration values. `NODE_ENV` is reserved for specifying a `development` or `production` build now. Use `CONF_ENV` to specify a target environment if you would like to resolve an environment specific .env file.
+ - Refactors the client configuration filter rule to be contained within the main configuration and moves the configuration object creation into the server middleware.
+ - Renames the `safeGetConfig` to `config`, and made it a default export.
+ - Removes the `cross-env` library.
+
+### Changed
+
+ - All server/client/shared code all use the shared config helper.
+ - Updated dependencies, including to the latest Webpack official 2 release.
+
+### Added
+
+ - New babel plugins to optimise React production build performance.
+ - Adds new icon sets.
+
+### Fixed
+
+ - Chrome favicon request issue.
+ - Cleans up the package scripts.
+ - Service worker would fail if a subfolder was added to the public folder.
+
 # [12.0.0] - 2017-01-09
 
 ### BREAKING

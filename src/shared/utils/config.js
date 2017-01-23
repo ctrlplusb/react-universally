@@ -44,7 +44,7 @@ function resolveConfigForExecutionEnv() {
  *
  * i.e.
  *  - For the browser the config values are available at window.__CLIENT_CONFIG__
- *  - For a node process they are within the "./config" root project folder.
+ *  - For a node process they are within the "<root>/config".
  *
  * To request a configuration value you must provide the repective path. For
  * example, f you had the following configuration structure:
@@ -56,32 +56,36 @@ function resolveConfigForExecutionEnv() {
  *   }
  *
  * You could use this function to access "bar" like so:
- *   import { safeConfigGet } from '../config';
- *   const value = safeConfigGet(['foo', 'bar']);
+ *   import config from '../config';
+ *   const value = config(['foo', 'bar']);
  *
  * And you could access "bob" like so:
- *   import { safeConfigGet } from '../config';
- *   const value = safeConfigGet(['bob']);
+ *   import config from '../config';
+ *   const value = config(['bob']);
  *
  * If any part of the path isn't available as a configuration key/value then
  * an error will be thrown indicating that a respective configuration value
  * could not be found at the given path.
  */
-export function safeConfigGet(path) {
-  if (path.length === 0) {
+export default function config(path) {
+  const parts = typeof path === 'string'
+    ? path.split('.')
+    : path;
+
+  if (parts.length === 0) {
     throw new Error('You must provide the path to the configuration value you would like to consume.');
   }
   let result = resolveConfigForExecutionEnv();
-  for (let i = 0; i < path.length; i += 1) {
+  for (let i = 0; i < parts.length; i += 1) {
     if (result === undefined) {
-      const errorMessage = `Failed to resolve configuration value at "${path.join('.')}".`;
+      const errorMessage = `Failed to resolve configuration value at "${parts.join('.')}".`;
       // This "if" block gets stripped away by webpack for production builds.
       if (process.env.NODE_ENV === 'development' && process.env.IS_CLIENT) {
         throw new Error(`${errorMessage} We have noticed that you are trying to access this configuration value from the client bundle (i.e. browser) though.  For configuration values to be exposed to the client bundle you must ensure that the path is added to the client configuration filter file, which is located at "config/clientConfigFilter.js".`);
       }
       throw new Error(errorMessage);
     }
-    result = result[path[i]];
+    result = result[parts[i]];
   }
   return result;
 }

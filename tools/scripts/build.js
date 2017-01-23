@@ -17,7 +17,7 @@ Object.keys(config.bundles)
 // And then build them all.
 .forEach((bundleName) => {
   const compiler = webpack(
-    webpackConfigFactory({ target: bundleName, mode: 'production' }),
+    webpackConfigFactory({ target: bundleName }),
   );
   compiler.run((err, stats) => {
     if (err) {

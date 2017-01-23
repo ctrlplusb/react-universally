@@ -1,12 +1,16 @@
 import React from 'react';
 import { Match, Miss } from 'react-router';
 import Helmet from 'react-helmet';
-import { CodeSplit } from 'code-split-component';
 import 'normalize.css/normalize.css';
+
 import './globals.css';
+
+import config from '../../utils/config';
+
+import AsyncHome from './AsyncHome';
+import AsyncAbout from './AsyncAbout';
 import Error404 from './Error404';
 import Header from './Header';
-import { safeConfigGet } from '../../utils/config';
 
 function DemoApp() {
   return (
@@ -16,35 +20,18 @@ function DemoApp() {
         @see https://github.com/nfl/react-helmet
       */}
       <Helmet
-        htmlAttributes={safeConfigGet(['htmlPage', 'htmlAttributes'])}
-        titleTemplate={safeConfigGet(['htmlPage', 'titleTemplate'])}
-        defaultTitle={safeConfigGet(['htmlPage', 'defaultTitle'])}
-        meta={safeConfigGet(['htmlPage', 'meta'])}
-        link={safeConfigGet(['htmlPage', 'links'])}
-        script={safeConfigGet(['htmlPage', 'scripts'])}
+        htmlAttributes={config('htmlPage.htmlAttributes')}
+        titleTemplate={config('htmlPage.titleTemplate')}
+        defaultTitle={config('htmlPage.defaultTitle')}
+        meta={config('htmlPage.meta')}
+        link={config('htmlPage.links')}
+        script={config('htmlPage.scripts')}
       />
 
       <Header />
 
-      <Match
-        exactly
-        pattern="/"
-        render={routerProps =>
-          <CodeSplit chunkName="home" modules={{ Home: require('./Home') }}>
-            { ({ Home }) => Home && <Home {...routerProps} /> }
-          </CodeSplit>
-        }
-      />
-
-      <Match
-        pattern="/about"
-        render={routerProps =>
-          <CodeSplit chunkName="about" modules={{ About: require('./About') }}>
-            { ({ About }) => About && <About {...routerProps} /> }
-          </CodeSplit>
-        }
-      />
-
+      <Match exactly pattern="/" component={AsyncHome} />
+      <Match pattern="/about" component={AsyncAbout} />
       <Miss component={Error404} />
     </div>
   );

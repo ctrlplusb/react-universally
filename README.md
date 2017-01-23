@@ -15,7 +15,7 @@ This starter kit contains all the build tooling and configuration you need to ki
   - 🚄 `express` server.
   - 🎭 `jest` as the test framework.
   - 🖌 Very basic CSS support - it's up to you to extend it with CSS Modules etc.
-  - ✂️ Code splitting - easily define code split points in your source using `code-split-component`.
+  - ✂️ Code splitting - easily define code split points in your source using `react-async-component`.
   - 🌍 Server Side Rendering.
   - 😎 Progressive Web Application ready, with offline support, via a Service Worker.
   - 🐘 Long term browser caching of assets with automated cache invalidation.
