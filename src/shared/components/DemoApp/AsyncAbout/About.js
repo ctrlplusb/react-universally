@@ -8,6 +8,7 @@ const contributors = [
   { name: 'Carson Perrotti', twitter: 'carsonp' },
   { name: 'Christian Glombek', twitter: 'LorbusChris' },
   { name: 'Christoph Werner', twitter: 'code_punkt' },
+  { name: 'Dion Dirza', twitter: 'diondirzaa' },
   // TODO: Get David's twitter handle.
   // { name: 'David Edmondson', twitter: '' },
   // TODO: Get Evgeny's twitter handle.
