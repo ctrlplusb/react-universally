@@ -532,7 +532,7 @@ export default function webpackConfigFactory(buildOptions) {
                   );
                   const publicFileWebPaths = acc.concat(
                     // First get all the matching public folder assets.
-                    globSync(publicAssetPathGlob)
+                    globSync(publicAssetPathGlob, { nodir: true })
                     // Then map them to relative paths against the public folder.
                     // We need to do this as we need the "web" paths for each one.
                     .map(publicFile => path.relative(
