@@ -21,7 +21,7 @@ This starter kit contains all the build tooling and configuration you need to ki
   - 🐘 Long term browser caching of assets with automated cache invalidation.
   - 📦 All source is bundled using Webpack v2.
   - 🚀 Full ES2017+ support - use the exact same JS syntax across the entire project (src/tools/config). No more folder context switching! We also only use syntax that is stage-3 or later in the TC39 process.
-  - 🔧 Centralised application configuration with helpers to avoid boilerplate in your code.
+  - 🔧 Centralised application configuration with helpers to avoid boilerplate in your code. Also has support for environment specific configuration files.
   - 🔥 Extreme live development - hot reloading of ALL changes to client/server source, with auto development server restarts when your application configuration changes.  All this with a high level of error tolerance and verbose logging to the console.
   - ⛑ SEO friendly - `react-helmet` provides control of the page title/meta/styles/scripts from within your components.
   - 🤖 Optimised Webpack builds via HappyPack and an auto generated Vendor DLL for smooth development experiences.
