@@ -1,5 +1,4 @@
 import path from 'path';
-import fs from 'fs';
 import { sync as globSync } from 'glob';
 import webpack from 'webpack';
 import OfflinePlugin from 'offline-plugin';
@@ -475,7 +474,7 @@ export default function webpackConfigFactory(buildOptions) {
       //
       // Any time our static files or generated bundle files change the user's
       // cache will be updated.
-      // ifProdClient(
+      //
       // We will only include the service worker if enabled in config.
       ifElse(isProd && isClient && config.serviceWorker.enabled)(
         () => new OfflinePlugin({
@@ -533,10 +532,8 @@ export default function webpackConfigFactory(buildOptions) {
                   appRootDir.get(), config.publicAssetsPath, cur,
                 );
                 const publicFileWebPaths = acc.concat(
-                  // First get all the matching public folder assets.
-                  globSync(publicAssetPathGlob)
-                  // Only process files
-                  .filter(x => fs.lstatSync(x).isFile())
+                  // First get all the matching public folder files.
+                  globSync(publicAssetPathGlob, { nodir: true })
                   // Then map them to relative paths against the public folder.
                   // We need to do this as we need the "web" paths for each one.
                   .map(publicFile => path.relative(

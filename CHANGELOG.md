@@ -22,8 +22,10 @@ I'll map them as follows:
  - Refactors the server and serviceworker offline page generation. We now use a set of React components (`ServerHTML` and `HTML`) to manage our HTML in a uniform fashion.
  - Refactors how we resolve environment specific configuration values. `NODE_ENV` is reserved for specifying a `development` or `production` build now. Use `CONF_ENV` to specify a target environment if you would like to resolve an environment specific .env file.
  - Refactors the client configuration filter rule to be contained within the main configuration and moves the configuration object creation into the server middleware.
+ - Refactors the config file in various ways.  Cleaning up, restructuring, etc.
  - Renames the `safeGetConfig` to `config`, and made it a default export.
  - Removes the `cross-env` library.
+ - Renames the `environmentVars` file and helpers.
 
 ### Changed
 
