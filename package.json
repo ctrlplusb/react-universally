@@ -65,7 +65,6 @@
   },
   "dependencies": {
     "app-root-dir": "1.0.2",
-    "code-split-component": "2.0.0-alpha.5",
     "colors": "1.1.2",
     "compression": "1.6.2",
     "cross-env": "^3.1.4",
