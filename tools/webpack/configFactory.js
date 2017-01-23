@@ -540,7 +540,6 @@ export default function webpackConfigFactory(buildOptions) {
                     path.resolve(appRootDir.get(), config.publicAssetsPath),
                     publicFile,
                   ))
-                  .map(x => console.log('PATH', x) || x)
                   // Add the leading "/" indicating the file is being hosted
                   // off the root of the application.
                   .map(relativePath => `/${relativePath}`),

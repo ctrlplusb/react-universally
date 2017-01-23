@@ -8,7 +8,7 @@ import webpack from 'webpack';
 import fs from 'fs';
 import { resolve as pathResolve } from 'path';
 import appRootDir from 'app-root-dir';
-import clientConfigFactory from '../webpack/client.config.babel';
+import webpackConfigFactory from '../webpack/configFactory';
 import { exec } from '../utils';
 import config from '../../config';
 
@@ -16,7 +16,7 @@ const anaylzeFilePath = pathResolve(
   appRootDir.get(), config.bundles.client.outputPath, '__analyze__.json',
 );
 
-const clientCompiler = webpack(clientConfigFactory());
+const clientCompiler = webpack(webpackConfigFactory({ target: 'client' }));
 
 clientCompiler.run((err, stats) => {
   if (err) {
