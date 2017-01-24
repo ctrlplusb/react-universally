@@ -10,6 +10,7 @@ import appRootDir from 'app-root-dir';
 import WebpackMd5Hash from 'webpack-md5-hash';
 import { removeEmpty, ifElse, merge, happyPackPlugin } from '../utils';
 import getConfig from '../../config/get';
+import ClientConfigScript from '../../config/ClientConfigScript';
 
 /**
  * This function is responsible for creating the webpack configuration for
@@ -441,9 +442,11 @@ export default function webpackConfigFactory(buildOptions) {
             minifyURLs: true,
           },
           inject: true,
-          // We pass our getConfig as it will be needed by the template.
+          // We pass our getConfig and client config script compoent as it will
+          // be needed by the offline template.
           custom: {
             getConfig,
+            ClientConfigScript,
           },
         }),
       ),

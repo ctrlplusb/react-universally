@@ -9,13 +9,13 @@
 import React, { Children, PropTypes } from 'react';
 import serialize from 'serialize-javascript';
 
-import getSerializedClientConfig from '../../../config/getSerializedClientConfig';
 import getConfig from '../../../config/get';
 import onlyIf from '../../../shared/utils/logic/onlyIf';
 import removeNil from '../../../shared/utils/arrays/removeNil';
 import getClientBundleEntryAssets from './getClientBundleEntryAssets';
 
 import HTML from '../../../shared/components/HTML';
+import ClientConfigScript from '../../../config/ClientConfigScript';
 
 
 // PRIVATES
@@ -75,7 +75,7 @@ function ServerHTML(props) {
     // Binds the client configuration object to the window object so
     // that we can safely expose some configuration values to the
     // client bundle that gets executed in the browser.
-    inlineScript(`window.__CLIENT_CONFIG__=${getSerializedClientConfig()}`),
+    <ClientConfigScript nonce={nonce} />,
     // Bind our async components state so the client knows which ones
     // to initialise so that the checksum matches the server response.
     onlyIf(

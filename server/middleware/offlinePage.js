@@ -29,7 +29,7 @@ export default function offlinePageMiddleware(req, res, next) {
         res.status(500).send('Error returning offline page.');
         return;
       }
-      const withNonce = data.replace('NONCE_TARGET', nonce);
+      const withNonce = data.replace('NONCE_PLACEHOLDER', nonce);
       res.send(withNonce);
     },
   );
