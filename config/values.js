@@ -16,7 +16,7 @@ import * as envVars from './utils/envVars';
 
 const values = {
   // The configuration values that should be exposed to our client bundle.
-  // This value gets passed through the /shared/utils/objects/filterObject
+  // This value gets passed through the /shared/utils/objects/filterWithRules
   // util to create a filter object that can be serialised and included
   // with our client bundle.
   clientConfigFilter: {

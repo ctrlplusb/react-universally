@@ -8,7 +8,10 @@ import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import appRootDir from 'app-root-dir';
 import WebpackMd5Hash from 'webpack-md5-hash';
-import { removeEmpty, ifElse, merge, happyPackPlugin } from '../utils';
+import { happyPackPlugin } from '../utils';
+import { removeNil } from '../../shared/utils/arrays';
+import { mergeDeep } from '../../shared/utils/objects';
+import { ifElse } from '../../shared/utils/logic';
 import getConfig from '../../config/get';
 import ClientConfigScript from '../../config/ClientConfigScript';
 
@@ -81,7 +84,7 @@ export default function webpackConfigFactory(buildOptions) {
     // native node module system.
     // Therefore we use the `webpack-node-externals` library to help us generate
     // an  externals config that will ignore all node_modules.
-    externals: removeEmpty([
+    externals: removeNil([
       ifNode(
         () => nodeExternals(
           // Some of our node_modules may contain files that depend on webpack
@@ -138,7 +141,7 @@ export default function webpackConfigFactory(buildOptions) {
       //   ./build/server/index.js
       // This makes importing of the output module as simple as:
       //   import server from './build/server';
-      index: removeEmpty([
+      index: removeNil([
         // Required to support hot reloading of our client.
         ifDevClient('react-hot-loader/patch'),
         // Required to support hot reloading of our client.
@@ -153,7 +156,7 @@ export default function webpackConfigFactory(buildOptions) {
     },
 
     // Bundle output configuration.
-    output: merge(
+    output: mergeDeep(
       {
         // The dir in which our bundle should be output.
         path: path.resolve(appRootDir.get(), bundleConfig.outputPath),
@@ -202,7 +205,7 @@ export default function webpackConfigFactory(buildOptions) {
       },
     },
 
-    plugins: removeEmpty([
+    plugins: removeNil([
       // This grants us source map support, which combined with our webpack
       // source maps will give us nice stack traces for our node executed
       // bundles.
@@ -434,7 +437,7 @@ export default function webpackConfigFactory(buildOptions) {
             collapseWhitespace: true,
             removeRedundantAttributes: true,
             useShortDoctype: true,
-            removeEmptyAttributes: true,
+            removeNilAttributes: true,
             removeStyleLinkTypeAttributes: true,
             keepClosingSlash: true,
             minifyJS: true,
@@ -555,7 +558,7 @@ export default function webpackConfigFactory(buildOptions) {
       // ),
     ]),
     module: {
-      rules: removeEmpty([
+      rules: removeNil([
         // JAVASCRIPT
         {
           test: /\.jsx?$/,
@@ -564,7 +567,7 @@ export default function webpackConfigFactory(buildOptions) {
           // See the respective plugin within the plugins section for full
           // details on what loader is being implemented.
           loader: 'happypack/loader?id=happypack-javascript',
-          include: removeEmpty([
+          include: removeNil([
             ...bundleConfig.srcPaths.map(srcPath =>
               path.resolve(appRootDir.get(), srcPath),
             ),
@@ -577,7 +580,7 @@ export default function webpackConfigFactory(buildOptions) {
         // serving the client bundle as a Single Page Application through the
         // server.
         ifElse(isClient || isServer)(
-          merge(
+          mergeDeep(
             {
               test: /\.css$/,
             },

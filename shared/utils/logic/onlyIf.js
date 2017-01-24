@@ -1,4 +1,7 @@
-// :: (Boolean, () => Element) -> ?Any
+// :: (Boolean, X|() => X) -> ?X
 export default function onlyIf(a, b) {
-  return a ? b() : null;
+  // eslint-disable-next-line no-nested-ternary
+  return a
+    ? (typeof b === 'function' ? b() : b)
+    : null;
 }
