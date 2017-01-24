@@ -333,7 +333,7 @@ const values = {
 // This protects us from accidentally including this configuration in our
 // client bundle. That would be a big NO NO to do. :)
 if (process.env.IS_CLIENT) {
-  throw new Error("You shouldn't be importing the `<projectroot>/config` directly into code that will be included in your 'client' bundle as the configuration object will then get included in your client bundle. Not a safe move! Instead, use the `config` helper function located at `<projectroot>/shared/utils/config`.");
+  throw new Error("You shouldn't be importing the `<projectroot>/config` directly into code that will be included in your 'client' bundle as the configuration object will then get included in your client bundle. Not a safe move! Instead, use the `getConfig` helper function located at `<projectroot>/config/get`.");
 }
 
 export default values;

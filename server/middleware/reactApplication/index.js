@@ -82,7 +82,7 @@ function reactApplicationMiddleware(request, response) {
           // Otherwise everything is all good and we send a 200 OK status.
           : 200,
       )
-      .send(html);
+      .send(`<!DOCTYPE html>${html}`);
   });
 }
 
