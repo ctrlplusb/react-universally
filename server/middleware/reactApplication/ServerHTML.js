@@ -9,7 +9,7 @@
 import React, { Children, PropTypes } from 'react';
 import serialize from 'serialize-javascript';
 
-import getConfig from '../../../config/get';
+import getConfig from '../../../config/getConfig';
 import onlyIf from '../../../shared/utils/logic/onlyIf';
 import removeNil from '../../../shared/utils/arrays/removeNil';
 import getClientBundleEntryAssets from './getClientBundleEntryAssets';

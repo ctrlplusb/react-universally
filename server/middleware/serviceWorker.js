@@ -2,7 +2,7 @@
 
 import { resolve as pathResolve } from 'path';
 import appRootDir from 'app-root-dir';
-import getConfig from '../../config/get';
+import getConfig from '../../config/getConfig';
 
 // Middleware to server our service worker.
 function serviceWorkerMiddleware(req, res, next) {

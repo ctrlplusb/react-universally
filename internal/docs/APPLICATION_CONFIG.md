@@ -9,7 +9,7 @@
 
 The application configuration has been centralised to live within the `<projectroot>/config` folder.
 
-You read configuration values using the `<projectroot>/config/get.js` helper, and you edit the configuration values in the `<projectroot>/config/values.js` file.
+You read configuration values using the `<projectroot>/config/getConfig.js` helper, and you edit the configuration values in the `<projectroot>/config/values.js` file.
 
 > ___NOTE:___ You __MUST NOT__ import the `values.js` configuration into your source code. Rather use the `get.js` helper. Please read all of the below for the context and reasoning on this.
 
@@ -29,10 +29,10 @@ As this is a universal application you are mostly creating code that is shared b
 
 One possible solution to the above would be to use Webpack's `DefinePlugin` in order to statically inject/replace only the required configuration values into our client bundle.  However,  this solution fails to address our desire to be able to expose execution time provided values (e.g. `FOO=bar npm run start`) to our client bundle. These environment variables can only be interpreted at runtime, therefore we decided on a strategy of making the server be responsible for attaching a configuration object to `window.__CLIENT_CONFIG__` within the HTML response.  This would then allow us to ensure that environment variables can be properly exposed.  This works well, however, it introduces a new problem, we want a unified API to read configuration values without having to figure out if the code is in a browser/server context.
 
-For this we created a helper function called `getConfig`.  It is located in `<projectroot>/config/get`.  You can use it like so:
+For this we created a helper function called `getConfig`.  It is located in `<projectroot>/config/getConfig`.  You can use it like so:
 
 ```js
-import getConfig from '../config/get';
+import getConfig from '../config/getConfig';
 
 export function MyComponent() {
   return <h1>{getConfig('welcomeMessage')}</h1>;

@@ -3,7 +3,7 @@ import { resolve as pathResolve } from 'path';
 import appRootDir from 'app-root-dir';
 import md5 from 'md5';
 import fs from 'fs';
-import getConfig from '../../config/get';
+import getConfig from '../../config/getConfig';
 import { log } from '../utils';
 
 function createVendorDLL(bundleName, bundleConfig) {

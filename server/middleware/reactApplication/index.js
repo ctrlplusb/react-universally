@@ -5,7 +5,7 @@ import { ServerRouter, createServerRenderContext } from 'react-router';
 import { withAsyncComponents } from 'react-async-component';
 import Helmet from 'react-helmet';
 
-import getConfig from '../../../config/get';
+import getConfig from '../../../config/getConfig';
 import DemoApp from '../../../shared/components/DemoApp';
 
 import ServerHTML from './ServerHTML';

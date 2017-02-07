@@ -17,7 +17,7 @@ function renderApp(TheApp) {
   const app = (
     <ReactHotLoader>
       <BrowserRouter>
-        <TheApp />
+        {routerProps => <TheApp {...routerProps} />}
       </BrowserRouter>
     </ReactHotLoader>
   );

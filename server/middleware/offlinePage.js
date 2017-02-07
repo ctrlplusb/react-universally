@@ -3,7 +3,7 @@
 import { readFile } from 'fs';
 import { resolve as pathResolve } from 'path';
 import appRootDir from 'app-root-dir';
-import getConfig from '../../config/get';
+import getConfig from '../../config/getConfig';
 
 /**
  * We need a middleware to intercept calls to our offline page to ensure that

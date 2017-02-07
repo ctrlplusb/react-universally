@@ -12,7 +12,7 @@ import { happyPackPlugin } from '../utils';
 import { removeNil } from '../../shared/utils/arrays';
 import { mergeDeep } from '../../shared/utils/objects';
 import { ifElse } from '../../shared/utils/logic';
-import getConfig from '../../config/get';
+import getConfig from '../../config/getConfig';
 import ClientConfigScript from '../../config/ClientConfigScript';
 
 /**
@@ -224,42 +224,49 @@ export default function webpackConfigFactory(buildOptions) {
       // even though 1 or 2 may have only changed.
       ifClient(() => new WebpackMd5Hash()),
 
-      // The DefinePlugin is used by webpack to substitute any patterns that it
-      // finds within the code with the respective value assigned below.
+      // The DefinePlugin is used by webpack to substitute any code
+      // that matches the property keys of the object you provide it below with
+      // the given value that has been assigned to each respective property.
       //
       // For example you may have the following in your code:
-      //   if (process.env.NODE_ENV === 'development') {
+      //   if (process.env.IS_CLIENT === true) {
       //     console.log('Foo');
       //   }
       //
-      // If we assign the NODE_ENV variable in the DefinePlugin below a value
-      // of 'production' webpack will replace your code with the following:
-      //   if ('production' === 'development') {
+      // If the IS_CLIENT was assigned a value of `false`,the DefinePlugin would
+      // result in the above code being converted to:
+      //   if (false === true) {
       //     console.log('Foo');
       //   }
       //
-      // This is very useful as we are compiling/bundling our code and we would
-      // like our environment variables to persist within the code.
+      // When your bundle is built using the UglifyJsPlugin unreachable code
+      // blocks like the one that is created in the above would be removed
+      // from the resulting bundle.
       //
-      // At the same time please be careful with what environment variables you
-      // use in each respective bundle.  For example, don't accidentally
-      // expose a database connection string within your client bundle src!
-      new webpack.DefinePlugin({
+      // This is helpful for extreme cases where you want to ensure that code
+      // is only included/executed on specific targets, or for doing debugging.
+      new webpack.DefinePlugin(mergeDeep(
+        {
+          // Is this the "client" bundle?
+          'process.env.IS_CLIENT': JSON.stringify(isClient),
+          // Is this the "server" bundle?
+          'process.env.IS_SERVER': JSON.stringify(isServer),
+          // Is this a node bundle?
+          'process.env.IS_NODE': JSON.stringify(isNode),
+          // Should we disable Server Side Rendering?
+          'process.env.DISABLE_SSR': JSON.stringify(getConfig('disableSSR')),
+        },
         // Adding the NODE_ENV key is especially important as React relies
         // on it to optimize production builds. We have to force this value
         // to be either 'development' or 'production'.
-        // If you would like to use an environment specific environment file
-        // when you execute your application then please use the "CONF_ENV"
-        // environment variable.
-        // e.g. `CONF_ENV=staging yarn run start`
-        'process.env.NODE_ENV': JSON.stringify(isDev ? 'development' : 'production'),
-        // Is this the "client" bundle?
-        'process.env.IS_CLIENT': JSON.stringify(isClient),
-        // Is this the "server" bundle?
-        'process.env.IS_SERVER': JSON.stringify(isServer),
-        // Is this a node bundle?
-        'process.env.IS_NODE': JSON.stringify(isNode),
-      }),
+        // WE ONLY WANT "process.env.NODE_ENV" TO BE INLINED FOR OUR CLIENT
+        // BUNDLES. THE SERVER BUNDLE(S) SHOULD ALWAYS INTERPRET THE VALUE FROM
+        // THE ACTUAL ENVIRONMENT TO PROVIDE YOU WITH EXECUTION TIME CONFIGURATION
+        // CAPABILITIES.
+        ifClient({
+          'process.env.NODE_ENV': JSON.stringify(isDev ? 'development' : 'production'),
+        }),
+      )),
 
       // Generates a JSON file containing a map of all the output files for
       // our webpack bundle.  A necessisty for our server rendering process

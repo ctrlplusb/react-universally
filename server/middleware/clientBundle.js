@@ -1,7 +1,7 @@
 import express from 'express';
 import { resolve as pathResolve } from 'path';
 import appRootDir from 'app-root-dir';
-import getConfig from '../../config/get';
+import getConfig from '../../config/getConfig';
 
 // Middleware to server our client bundle.
 export default express.static(

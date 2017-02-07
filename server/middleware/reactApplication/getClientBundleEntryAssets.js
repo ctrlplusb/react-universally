@@ -5,7 +5,7 @@
 import fs from 'fs';
 import { resolve as pathResolve } from 'path';
 import appRootDir from 'app-root-dir';
-import getConfig from '../../../config/get';
+import getConfig from '../../../config/getConfig';
 
 let resultCache;
 

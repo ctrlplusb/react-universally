@@ -1,6 +1,6 @@
 import React from 'react';
 import Helmet from 'react-helmet';
-import getConfig from '../../../../config/get';
+import getConfig from '../../../../config/getConfig';
 
 function Home() {
   return (

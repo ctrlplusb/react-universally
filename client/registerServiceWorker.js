@@ -6,7 +6,7 @@
 //
 // We will only be doing this for production builds.
 
-import getConfig from '../config/get';
+import getConfig from '../config/getConfig';
 
 if (process.env.NODE_ENV !== 'development') {
   // We check the shared config, ensuring that the service worker has been

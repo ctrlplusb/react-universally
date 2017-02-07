@@ -10,7 +10,7 @@ import clientBundle from './middleware/clientBundle';
 import serviceWorker from './middleware/serviceWorker';
 import offlinePage from './middleware/offlinePage';
 import errorHandlers from './middleware/errorHandlers';
-import getConfig from '../config/get';
+import getConfig from '../config/getConfig';
 
 // Create our express based server.
 const app = express();

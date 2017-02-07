@@ -1,7 +1,7 @@
 import uuid from 'uuid';
 import hpp from 'hpp';
 import helmet from 'helmet';
-import getConfig from '../../config/get';
+import getConfig from '../../config/getConfig';
 
 const cspConfig = {
   directives: {
