@@ -1,5 +1,5 @@
  - __[Project Overview](/internal/docs/PROJECT_OVERVIEW.md)__
- - [Application Configuration](/internal/docs/APPLICATION_CONFIG.md)
+ - [Project Configuration](/internal/docs/PROJECT_CONFIG.md)
  - [Package Script Commands](/internal/docs/PKG_SCRIPTS.md)
  - [Feature Branches](/internal/docs/FEATURE_BRANCHES.md)
  - [Deploy your very own Server Side Rendering React App in 5 easy steps](/internal/docs/DEPLOY_TO_NOW.md)
@@ -24,7 +24,7 @@ This starter uses Webpack 2 to produce bundles for both the client and the serve
 
 ## Transpiled by Babel
 
-It also uses babel across the entire project, which allows us to use the same level of javascript (e.g. es2015/2016/2017) without having to worry which level of the language within each separate slice of the project.  We have decided to only support syntax that is stage-3 or up in the TC39 process, anything lower is considered too much of a risk to include by default, so it is up to you if you would like to extend your Babel configuration.
+It also uses babel across the entire project, which allows us to use the same level of javascript (e.g. es2015/2016/2017) without having to worry which level of the language is supported within each of the project's modules.  We have decided to only support syntax that is stage-3 or up in the TC39 process, anything lower is considered too much of a risk to include by default, so it is up to you if you would like to extend your Babel configuration to include more "experimental" features.
 
 ## Security
 
@@ -47,7 +47,7 @@ Below are some of the critical folders of the project along with a comment descr
 /
 |- config // Centralised project configuration.
 |  |- values.js  // Configuration values
-|  |- get.js  // Unified Configuration Reader API
+|  |- index.js  // Unified Configuration Reader API
 |
 |- build // The target output dir for our build commands.
 |  |- client // The built client module.

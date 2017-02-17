@@ -13,18 +13,24 @@ I'll map them as follows:
 
 ### BREAKING
 
+ - Big folder structure refactor, moving items from src/* into the root of the project.
+ - Removes the CONF_ENV variable and instead relies on NODE_ENV for runtime env specification on executing server.
+ - Upgrades to `react-router` v4 beta.
+ - Replaces `code-split-component` with `react-async-component`
+ - Removed `react-hot-loader` as it doesn't play nicely with `react-async-component`, but we still have webpack's default hot module reloading.
+ - Complete restructure of the DefinePlugin special flags, they have been prefixed with "BUILD_FLAG_" to make them more obvious when used in the code. This also helps us distinguish these build-time values from other runtime provided process.env values.
+ - We no longer rely on NODE_ENV to include an optimized version of React/ReactDOM - this caused confusion with booting an application to target a specific NODE_ENV like "staging" or whatever. Now we use webpack's alias feature to resolve React/ReactDOM imports to the correct optimized version of React.
+ - Removes cross-env and refactors the script commands.  You can assign NODE_ENV as and when you need now (for example, to target a .env.production environment configuration file).
  - Renamed environment variables:
    - `SERVER_PORT` to `PORT`
    - `SERVER_HOST` to `HOST`
    - `CLIENT_DEVSERVER_PORT` to `CLIENT_DEV_PORT`
- - Replaces `code-split-component` with `react-async-component`
  - Renames the `nodeBundlesIncludeNodeModuleFileTypes` config property to `nodeExternalsFileTypeWhitelist`
  - Refactors the server and serviceworker offline page generation. We now use a set of React components (`ServerHTML` and `HTML`) to manage our HTML in a uniform fashion.
  - Refactors how we resolve environment specific configuration values. `NODE_ENV` is reserved for specifying a `development` or `production` build now. Use `CONF_ENV` to specify a target environment if you would like to resolve an environment specific .env file.
+ - All config reads are now done through the centralised `config/index.js` helper.
  - Refactors the client configuration filter rule to be contained within the main configuration and moves the configuration object creation into the server middleware.
- - Refactors the config file in various ways.  Cleaning up, restructuring, etc.
- - Renames the `safeGetConfig` to `config`, and made it a default export.
- - Removes the `cross-env` library.
+ - Refactors the config folder in various ways.  Cleaning up, restructuring, etc.
  - Renames the `environmentVars` file and helpers.
 
 ### Changed

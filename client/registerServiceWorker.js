@@ -1,17 +1,19 @@
-// We use the offline-plugin to generate a service worker.  See the webpack
-// config for more details.
-//
-// We need to ensure that the runtime is installed so that the generated
-// service worker is executed.
-//
-// We will only be doing this for production builds.
+/**
+ * We use the offline-plugin to generate a service worker.  See the webpack
+ * config for more details.
+ *
+ * We need to ensure that the runtime is installed so that the generated
+ * service worker is executed.
+ *
+ * NOTE: We only enable the service worker for non-development environments.
+ */
 
-import getConfig from '../config/getConfig';
+import config from '../config';
 
-if (process.env.NODE_ENV !== 'development') {
+if (!process.env.BUILD_FLAG_IS_DEV) {
   // We check the shared config, ensuring that the service worker has been
   // enabled.
-  if (getConfig('serviceWorker.enabled')) {
+  if (config('serviceWorker.enabled')) {
     const OfflinePluginRuntime = require('offline-plugin/runtime');
 
     // Install the offline plugin, which instantiates our service worker and app

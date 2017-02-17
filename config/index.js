@@ -2,33 +2,39 @@
  * Unified Configuration Reader
  *
  * This helper function allows you to use the same API in accessing configuration
- * values no matter where the code is being executed from (browser/node).
+ * values no matter where the code is being executed (i.e. browser/node).
  *
  * e.g.
- *   import getConfig from '../config';
- *   console.log(getConfig('welcomeMessage'));
+ *   import config from '../config';
+ *   config('welcomeMessage'); // => "Hello World!"
  */
 
 /* eslint-disable no-console */
 /* eslint-disable import/global-require */
-/* eslint-disable import/prefer-default-export */
 /* eslint-disable no-underscore-dangle */
 
-// This resolves the correct configuration source based on the execution
-// environment.  For node we use the standard config file, however, for browsers
-// we need to access the configuration object that would have been bound to
-// the "window" by our "reactApplication" middleware.
+// PRIVATES
+
 let configCache;
-function resolveConfigForExecutionEnv() {
+
+/**
+ * This resolves the correct configuration source based on the execution
+ * environment.  For node we use the standard config file, however, for browsers
+ * we need to access the configuration object that would have been bound to
+ * the "window" by our "reactApplication" middleware.
+ *
+ * @return {Object} The executing environment configuration object.
+ */
+function resolveConfigForBrowserOrServer() {
   if (configCache) {
     return configCache;
   }
 
-  // NOTE: By using the "process.env.IS_NODE" flag here this block of code
-  // will be removed when "process.env.IS_NODE === true".
-  // If no "IS_NODE" env var is undefined we can assume that we are running outside
+  // NOTE: By using the "process.env.BUILD_FLAG_IS_NODE" flag here this block of code
+  // will be removed when "process.env.BUILD_FLAG_IS_NODE === true".
+  // If no "BUILD_FLAG_IS_NODE" env var is undefined we can assume that we are running outside
   // of a webpack run, and will therefore return the config file.
-  if (typeof process.env.IS_NODE === 'undefined' || process.env.IS_NODE) {
+  if (typeof process.env.BUILD_FLAG_IS_NODE === 'undefined' || process.env.BUILD_FLAG_IS_NODE) {
     // i.e. running in our server/node process.
     configCache = require('./values').default;
     return configCache;
@@ -47,6 +53,8 @@ function resolveConfigForExecutionEnv() {
 
   return configCache;
 }
+
+// EXPORT
 
 /**
  * This function wraps up the boilerplate needed to access the correct
@@ -68,11 +76,11 @@ function resolveConfigForExecutionEnv() {
  *
  * You could use this function to access "bar" like so:
  *   import config from '../config';
- *   const value = config(['foo', 'bar']);
+ *   const value = config('foo.bar');
  *
  * And you could access "bob" like so:
  *   import config from '../config';
- *   const value = config(['bob']);
+ *   const value = config('bob');
  *
  * If any part of the path isn't available as a configuration key/value then
  * an error will be thrown indicating that a respective configuration value
@@ -86,13 +94,13 @@ export default function configGet(path) {
   if (parts.length === 0) {
     throw new Error('You must provide the path to the configuration value you would like to consume.');
   }
-  let result = resolveConfigForExecutionEnv();
+  let result = resolveConfigForBrowserOrServer();
   for (let i = 0; i < parts.length; i += 1) {
     if (result === undefined) {
       const errorMessage = `Failed to resolve configuration value at "${parts.join('.')}".`;
       // This "if" block gets stripped away by webpack for production builds.
-      if (process.env.NODE_ENV === 'development' && process.env.IS_CLIENT) {
-        throw new Error(`${errorMessage} We have noticed that you are trying to access this configuration value from the client bundle (i.e. browser) though.  For configuration values to be exposed to the client bundle you must ensure that the path is added to the client configuration filter file, which is located at "config/clientConfigFilter.js".`);
+      if (process.env.BUILD_FLAG_IS_DEV && process.env.BUILD_FLAG_IS_CLIENT) {
+        throw new Error(`${errorMessage} We have noticed that you are trying to access this configuration value from the client bundle (i.e. code that will be executed in a browser). For configuration values to be exposed to the client bundle you must ensure that the path is added to the client configuration filter in the project configuration values file.`);
       }
       throw new Error(errorMessage);
     }

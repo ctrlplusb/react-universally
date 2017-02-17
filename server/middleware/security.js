@@ -1,7 +1,7 @@
 import uuid from 'uuid';
 import hpp from 'hpp';
 import helmet from 'helmet';
-import getConfig from '../../config/getConfig';
+import config from '../../config';
 
 const cspConfig = {
   directives: {
@@ -24,8 +24,6 @@ const cspConfig = {
     scriptSrc: [
       // Allow scripts hosted from our application.
       "'self'",
-      // Allow scripts from https://cdn.polyfill.io so that we can import the polyfill.
-      'https://cdn.polyfill.io',
       // Note: We will execution of any inline scripts that have the following
       // nonce identifier attached to them.
       // This is useful for guarding your application whilst allowing an inline
@@ -48,7 +46,7 @@ const cspConfig = {
 };
 
 // Add any additional CSP from the static config.
-const cspExtensions = getConfig('cspExtensions');
+const cspExtensions = config('cspExtensions');
 Object.keys(cspExtensions).forEach((key) => {
   if (cspConfig.directives[key]) {
     cspConfig.directives[key] = cspConfig.directives[key]
@@ -58,12 +56,12 @@ Object.keys(cspExtensions).forEach((key) => {
   }
 });
 
-if (process.env.NODE_ENV === 'development') {
+if (process.env.BUILD_FLAG_IS_DEV) {
   // When in development mode we need to add our secondary express server that
   // is used to host our client bundle to our csp config.
   Object.keys(cspConfig.directives).forEach((directive) => {
     cspConfig.directives[directive].push(
-      `${getConfig('host')}:${getConfig('clientDevServerPort')}`,
+      `${config('host')}:${config('clientDevServerPort')}`,
     );
   });
 }

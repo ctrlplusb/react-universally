@@ -1,13 +1,14 @@
 import React from 'react';
 import Helmet from 'react-helmet';
-import getConfig from '../../../../config/getConfig';
+
+import config from '../../../../config';
 
 function Home() {
   return (
     <article>
       <Helmet title="Home" />
 
-      <h2>{getConfig('welcomeMessage')}</h2>
+      <h2>{config('welcomeMessage')}</h2>
 
       <p>
         This starter kit contains all the build tooling and configuration you

@@ -6,7 +6,7 @@ import HotNodeServer from './hotNodeServer';
 import HotClientServer from './hotClientServer';
 import createVendorDLL from './createVendorDLL';
 import webpackConfigFactory from '../webpack/configFactory';
-import getConfig from '../../config/getConfig';
+import config from '../../config';
 
 const usesDevVendorDLL = bundleConfig =>
   bundleConfig.devVendorDLL != null && bundleConfig.devVendorDLL.enabled;
@@ -58,28 +58,27 @@ const initializeBundle = (name, bundleConfig) => {
       throw err;
     }
   };
+
   return { name, bundleConfig, createCompiler };
 };
 
 class HotDevelopment {
-
-
   constructor() {
     this.hotClientServer = null;
     this.hotNodeServers = [];
 
-    const clientBundle = initializeBundle('client', getConfig('bundles.client'));
+    const clientBundle = initializeBundle('client', config('bundles.client'));
 
-    const nodeBundles = [initializeBundle('server', getConfig('bundles.server'))]
-      .concat(Object.keys(getConfig('additionalNodeBundles')).map(name =>
-        initializeBundle(name, getConfig('additionalNodeBundles')[name]),
+    const nodeBundles = [initializeBundle('server', config('bundles.server'))]
+      .concat(Object.keys(config('additionalNodeBundles')).map(name =>
+        initializeBundle(name, config('additionalNodeBundles')[name]),
       ));
 
     Promise
       // First ensure the client dev vendor DLLs is created if needed.
       .resolve(
-        usesDevVendorDLL(getConfig('bundles.client'))
-          ? createVendorDLL('client', getConfig('bundles.client'))
+        usesDevVendorDLL(config('bundles.client'))
+          ? createVendorDLL('client', config('bundles.client'))
           : true,
       )
       // Then start the client development server.
@@ -107,8 +106,11 @@ class HotDevelopment {
   }
 
   dispose() {
-    const safeDisposer = server =>
-      (server ? server.dispose() : Promise.resolve());
+    const safeDisposer = server => (
+      server
+        ? server.dispose()
+        : Promise.resolve()
+    );
 
     // First the hot client server.
     return safeDisposer(this.hotClientServer)

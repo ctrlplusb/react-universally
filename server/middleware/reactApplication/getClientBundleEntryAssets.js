@@ -5,7 +5,7 @@
 import fs from 'fs';
 import { resolve as pathResolve } from 'path';
 import appRootDir from 'app-root-dir';
-import getConfig from '../../../config/getConfig';
+import config from '../../../config';
 
 let resultCache;
 
@@ -26,14 +26,14 @@ export default function getClientBundleEntryAssets() {
   // Return the assets json cache if it exists.
   // In development mode we always read the assets json file from disk to avoid
   // any cases where an older version gets cached.
-  if (process.env.NODE_ENV !== 'development' && resultCache) {
+  if (!process.env.BUILD_FLAG_IS_DEV && resultCache) {
     return resultCache;
   }
 
   const assetsFilePath = pathResolve(
     appRootDir.get(),
-    getConfig('bundles.client.outputPath'),
-    `./${getConfig('bundleAssetsFileName')}`,
+    config('bundles.client.outputPath'),
+    `./${config('bundleAssetsFileName')}`,
   );
 
   if (!fs.existsSync(assetsFilePath)) {

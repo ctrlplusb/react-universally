@@ -9,14 +9,13 @@
 import React, { Children, PropTypes } from 'react';
 import serialize from 'serialize-javascript';
 
-import getConfig from '../../../config/getConfig';
+import config from '../../../config';
 import onlyIf from '../../../shared/utils/logic/onlyIf';
 import removeNil from '../../../shared/utils/arrays/removeNil';
 import getClientBundleEntryAssets from './getClientBundleEntryAssets';
 
+import ClientConfig from '../../../config/components/ClientConfig';
 import HTML from '../../../shared/components/HTML';
-import ClientConfigScript from '../../../config/ClientConfigScript';
-
 
 // PRIVATES
 
@@ -46,10 +45,10 @@ function scriptTag(jsFilePath) {
 
 function ServerHTML(props) {
   const {
-    reactAppString,
-    nonce,
-    helmet,
     asyncComponents,
+    helmet,
+    nonce,
+    reactAppString,
   } = props;
 
   // Creates an inline script definition that is protected by the nonce.
@@ -75,9 +74,10 @@ function ServerHTML(props) {
     // Binds the client configuration object to the window object so
     // that we can safely expose some configuration values to the
     // client bundle that gets executed in the browser.
-    <ClientConfigScript nonce={nonce} />,
+    <ClientConfig nonce={nonce} />,
     // Bind our async components state so the client knows which ones
     // to initialise so that the checksum matches the server response.
+    // @see https://github.com/ctrlplusb/react-async-component
     onlyIf(
       asyncComponents,
       () => inlineScript(
@@ -88,18 +88,17 @@ function ServerHTML(props) {
     // This can't be configured within a react-helmet component as we
     // may need the polyfill's before our client JS gets parsed.
     onlyIf(
-      getConfig('polyfillIO.enabled'),
-      () => scriptTag(getConfig('polyfillIO.url')),
+      config('polyfillIO.enabled'),
+      () => scriptTag(config('polyfillIO.url')),
     ),
     // When we are in development mode our development server will
     // generate a vendor DLL in order to dramatically reduce our
     // compilation times.  Therefore we need to inject the path to the
     // vendor dll bundle below.
     onlyIf(
-      process.env.NODE_ENV === 'development'
-        && getConfig('bundles.client.devVendorDLL.enabled'),
+      process.env.BUILD_FLAG_IS_DEV && config('bundles.client.devVendorDLL.enabled'),
       () => scriptTag(
-        `${getConfig('bundles.client.webPath')}${getConfig('bundles.client.devVendorDLL.name')}.js?t=${Date.now()}`,
+        `${config('bundles.client.webPath')}${config('bundles.client.devVendorDLL.name')}.js?t=${Date.now()}`,
       ),
     ),
     onlyIf(
@@ -114,8 +113,8 @@ function ServerHTML(props) {
 
   return (
     <HTML
-      title={getConfig('htmlPage.defaultTitle')}
-      description={getConfig('htmlPage.description')}
+      title={config('htmlPage.defaultTitle')}
+      description={config('htmlPage.description')}
       appBodyString={reactAppString}
       headerElements={
         headerElements.map((x, idx) => <KeyedComponent key={idx}>{x}</KeyedComponent>)
@@ -128,14 +127,14 @@ function ServerHTML(props) {
 }
 
 ServerHTML.propTypes = {
-  reactAppString: PropTypes.string,
-  nonce: PropTypes.string,
-  // eslint-disable-next-line react/forbid-prop-types
-  helmet: PropTypes.object,
   asyncComponents: PropTypes.shape({
     state: PropTypes.object.isRequired,
     STATE_IDENTIFIER: PropTypes.string.isRequired,
   }),
+  // eslint-disable-next-line react/forbid-prop-types
+  helmet: PropTypes.object,
+  nonce: PropTypes.string,
+  reactAppString: PropTypes.string,
 };
 
 // EXPORT

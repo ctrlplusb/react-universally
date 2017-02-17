@@ -41,3 +41,6 @@ flow-coverage/
 
 # Happypack
 .happypack
+
+# OSX Files
+.DS_Store

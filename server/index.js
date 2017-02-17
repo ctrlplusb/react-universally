@@ -10,7 +10,7 @@ import clientBundle from './middleware/clientBundle';
 import serviceWorker from './middleware/serviceWorker';
 import offlinePage from './middleware/offlinePage';
 import errorHandlers from './middleware/errorHandlers';
-import getConfig from '../config/getConfig';
+import config from '../config';
 
 // Create our express based server.
 const app = express();
@@ -30,20 +30,20 @@ app.use(compression());
 // application for it to work correctly.
 // We only want the service worker registered for production builds and if
 // the config enables it.
-if (process.env.NODE_ENV !== 'development' && getConfig('serviceWorker.enabled')) {
-  app.get(`/${getConfig('serviceWorker.fileName')}`, serviceWorker);
+if (!process.env.BUILD_FLAG_IS_DEV && config('serviceWorker.enabled')) {
+  app.get(`/${config('serviceWorker.fileName')}`, serviceWorker);
   app.get(
-    `${getConfig('bundles.client.webPath')}${getConfig('serviceWorker.offlinePageFileName')}`,
+    `${config('bundles.client.webPath')}${config('serviceWorker.offlinePageFileName')}`,
     offlinePage,
   );
 }
 
 // Configure serving of our client bundle.
-app.use(getConfig('bundles.client.webPath'), clientBundle);
+app.use(config('bundles.client.webPath'), clientBundle);
 
 // Configure static serving of our "public" root http path static files.
 // Note: these will be served off the root (i.e. '/') of our application.
-app.use(express.static(pathResolve(appRootDir.get(), getConfig('publicAssetsPath'))));
+app.use(express.static(pathResolve(appRootDir.get(), config('publicAssetsPath'))));
 
 // The React application middleware.
 app.get('*', reactApplication);
@@ -52,8 +52,8 @@ app.get('*', reactApplication);
 app.use(...errorHandlers);
 
 // Create an http listener for our express app.
-const listener = app.listen(getConfig('port'), getConfig('host'), () =>
-  console.log(`Server listening on port ${getConfig('port')}`),
+const listener = app.listen(config('port'), config('host'), () =>
+  console.log(`Server listening on port ${config('port')}`),
 );
 
 // We export the listener as it will be handy for our development hot reloader,

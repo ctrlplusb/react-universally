@@ -3,11 +3,11 @@ import { resolve as pathResolve } from 'path';
 import appRootDir from 'app-root-dir';
 import md5 from 'md5';
 import fs from 'fs';
-import getConfig from '../../config/getConfig';
+import config from '../../config';
 import { log } from '../utils';
 
 function createVendorDLL(bundleName, bundleConfig) {
-  const dllConfig = getConfig('bundles.client.devVendorDLL');
+  const dllConfig = config('bundles.client.devVendorDLL');
 
   // $FlowFixMe
   const pkg = require(pathResolve(appRootDir.get(), './package.json'));

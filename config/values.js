@@ -1,18 +1,11 @@
 /**
- * Application Configuration Values.
+ * Project Configuration.
  *
- * DO NOT IMPORT THIS INTO YOUR CODE! RATHER USE THE `get` HELPER FUNCTION
- * THAT SITS NEXT TO THIS FILE.
- *
- * e.g.
- *   import getConfig from '../config';
- *   console.log(getConfig('welcomeMessage'));
- *
- * Note: all file/folder paths should be relative to the project root. The
+ * NOTE: All file/folder paths should be relative to the project root. The
  * absolute paths should be resolved during runtime by our build internal/server.
  */
 
-import * as envVars from './utils/envVars';
+import * as EnvVars from './utils/envVars';
 
 const values = {
   // The configuration values that should be exposed to our client bundle.
@@ -34,17 +27,18 @@ const values = {
   },
 
   // The host on which the server should run.
-  host: envVars.string('HOST', 'localhost'),
+  host: EnvVars.string('HOST', 'localhost'),
 
   // The port on which the server should run.
-  port: envVars.int('PORT', 1337),
+  port: EnvVars.number('PORT', 1337),
 
   // The port on which the client bundle development server should run.
-  clientDevServerPort: envVars.int('CLIENT_DEV_PORT', 7331),
+  clientDevServerPort: EnvVars.number('CLIENT_DEV_PORT', 7331),
 
-  // This is an example environment variable which is consumed within the
-  // './client.js' config.  See there for more details.
-  welcomeMessage: envVars.string('WELCOME_MSG', 'Hello world!'),
+  // This is an example environment variable which is used within the react
+  // application to demonstrate the usage of environment variables across
+  // the client and server bundles.
+  welcomeMessage: EnvVars.string('WELCOME_MSG', 'Hello world!'),
 
   // Disable server side rendering?
   disableSSR: false,
@@ -70,7 +64,7 @@ const values = {
     url: 'https://cdn.polyfill.io/v2/polyfill.min.js?features=Symbol',
   },
 
-  // Configuration for the HTML pages (headers/titles/scripts/css/etc).
+  // Basic configuration for the HTML page that hosts our application.
   // We make use of react-helmet to consume the values below.
   // @see https://github.com/nfl/react-helmet
   htmlPage: {
@@ -79,8 +73,8 @@ const values = {
     description: 'A starter kit giving you the minimum requirements for a production ready universal react application.',
   },
 
-  // Extended configuration for the Content Security Policy (CSP)
-  // @see src/server/middleware/security for more info.
+  // Content Security Policy (CSP)
+  // @see server/middleware/security for more info.
   cspExtensions: {
     childSrc: [],
     connectSrc: [],
@@ -90,7 +84,11 @@ const values = {
     mediaSrc: [],
     manifestSrc: [],
     objectSrc: [],
-    scriptSrc: [],
+    scriptSrc: [
+      // Allow scripts from https://cdn.polyfill.io so that we can import the
+      // polyfill.
+      'https://cdn.polyfill.io',
+    ],
     styleSrc: [],
   },
 
@@ -101,15 +99,9 @@ const values = {
   // Where does our build output live?
   buildOutputPath: './build',
 
-  // Should we optimize production builds (i.e. minify etc).
-  // Sometimes you don't want this to happen to aid in debugging complex
-  // problems.  Having this configuration flag here allows you to quickly
-  // toggle the feature.
-  optimizeProductionBuilds: true,
-
-  // Do you want to included source maps (will be served as seperate files)
-  // for production builds?
-  includeSourceMapsForProductionBuilds: false,
+  // Do you want to included source maps for optimised builds of the client
+  // bundle?
+  includeSourceMapsForOptimisedClientBundle: false,
 
   // These extensions are tried when resolving src files for our bundles..
   bundleSrcTypes: ['js', 'jsx', 'json'],
@@ -170,10 +162,6 @@ const values = {
       // assets.
       './**/*',
     ],
-    // Path to the template used by HtmlWebpackPlugin to generate an offline
-    // page that will be used by the service worker to render our application
-    // offline.
-    offlinePageTemplate: './internal/webpack/offlinePageTemplate.js',
     // Offline page file name.
     offlinePageFileName: 'offline.html',
   },
@@ -221,7 +209,7 @@ const values = {
           'react',
           'react-dom',
           'react-helmet',
-          'react-router',
+          'react-router-dom',
         ],
 
         // The name of the vendor DLL.
@@ -332,8 +320,8 @@ const values = {
 
 // This protects us from accidentally including this configuration in our
 // client bundle. That would be a big NO NO to do. :)
-if (process.env.IS_CLIENT) {
-  throw new Error("You shouldn't be importing the `<projectroot>/config` directly into code that will be included in your 'client' bundle as the configuration object will then get included in your client bundle. Not a safe move! Instead, use the `getConfig` helper function located at `<projectroot>/config/get`.");
+if (process.env.BUILD_FLAG_IS_CLIENT) {
+  throw new Error("You shouldn't be importing the `<projectroot>/config/values.js` directly into code that will be included in your 'client' bundle as the configuration object will be sent to user's browsers. This could be a security risk! Instead, use the `config` helper function located at `<projectroot>/config/index.js`.");
 }
 
 export default values;

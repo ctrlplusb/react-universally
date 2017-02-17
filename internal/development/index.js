@@ -11,6 +11,7 @@ const watcher = chokidar.watch([
   pathResolve(appRootDir.get(), 'internal'),
   pathResolve(appRootDir.get(), 'config'),
 ]);
+
 watcher.on('ready', () => {
   watcher.on('change', () => {
     log({
