@@ -34,19 +34,62 @@
     "webpack"
   ],
   "contributors": [
-    "Alin Porumb",
-    "Benjamin Kniffler <bkniffler@me.com>",
-    "Carson Perrotti <carsonperrotti@gmail.com>",
-    "Christian Glombek <christian.glombek@rwth-aachen.de>",
-    "Christoph Werner",
-    "David Edmondson",
-    "Dion Dirza",
-    "Evgeny Boxer",
-    "Joe Kohlmann <kohlmannj@mac.com>",
-    "Lucian Lature <lucian.lature@gmail.com>",
-    "Steven Enten <steven@enten.fr>",
-    "Sean Matheson <sean@ctrlplusb.com>",
-    "Steven Truesdell <steven@strues.io>"
+    {
+      "name": "Alin Porumb",
+      "url": "https://github.com/alinporumb"
+    },
+    {
+      "name": "Benjamin Kniffler",
+      "url": "https://github.com/bkniffler"
+    },
+    {
+      "name": "Carson Perrotti",
+      "url": "https://github.com/carsonperrotti"
+    },
+    {
+      "name": "Christian Glombek",
+      "url": "https://github.com/LorbusChris"
+    },
+    {
+      "name": "Christoph Werner",
+      "url": "https://github.com/codepunkt"
+    },
+    {
+      "name": "David Edmondson",
+      "url": "https://github.com/threehams"
+    },
+    {
+      "name": "Dion Dirza",
+      "url": "https://github.com/diondirza"
+    },
+    {
+      "name": "Evgeny Boxer",
+      "url": "https://github.com/evgenyboxer"
+    },
+    {
+      "name": "Joe Kohlmann",
+      "url": "https://github.com/kohlmannj"
+    },
+    {
+      "name": "Lucian Lature",
+      "url": "https://github.com/lucianlature"
+    },
+    {
+      "name": "Steven Enten",
+      "url": "https://github.com/enten"
+    },
+    {
+      "name": "Sean Matheson",
+      "url": "https://github.com/ctrlplusb"
+    },
+    {
+      "name": "Steven Truesdell",
+      "url": "https://github.com/strues"
+    },
+    {
+      "name": "Tom (datoml)",
+      "url": "https://github.com/datoml"
+    }
   ],
   "license": "MIT",
   "bugs": {

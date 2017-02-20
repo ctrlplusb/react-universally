@@ -1,23 +1,62 @@
 import React from 'react';
 import Helmet from 'react-helmet';
-import Contributor from './Contributor';
 
 const contributors = [
-  { name: 'Alin Porumb', twitter: 'alinporumb' },
-  { name: 'Benjamin Kniffler', twitter: 'bkniffler' },
-  { name: 'Carson Perrotti', twitter: 'carsonp' },
-  { name: 'Christian Glombek', twitter: 'LorbusChris' },
-  { name: 'Christoph Werner', twitter: 'code_punkt' },
-  { name: 'Dion Dirza', twitter: 'diondirzaa' },
-  // TODO: Get David's twitter handle.
-  // { name: 'David Edmondson', twitter: '' },
-  // TODO: Get Evgeny's twitter handle.
-  // { name: 'Evgeny Boxer', twitter: '' },
-  { name: 'Joe Kohlmann', twitter: 'jkohlmann' },
-  { name: 'Lucian Lature', twitter: 'lucianlature' },
-  { name: 'Steven Enten', twitter: 'steven_enten' },
-  { name: 'Sean Matheson', twitter: 'controlplusb' },
-  { name: 'Steven Truesdell', twitter: 'StruesCO' },
+  {
+    name: 'Alin Porumb',
+    url: 'https://github.com/alinporumb',
+  },
+  {
+    name: 'Benjamin Kniffler',
+    url: 'https://github.com/bkniffler',
+  },
+  {
+    name: 'Carson Perrotti',
+    url: 'https://github.com/carsonperrotti',
+  },
+  {
+    name: 'Christian Glombek',
+    url: 'https://github.com/LorbusChris',
+  },
+  {
+    name: 'Christoph Werner',
+    url: 'https://github.com/codepunkt',
+  },
+  {
+    name: 'David Edmondson',
+    url: 'https://github.com/threehams',
+  },
+  {
+    name: 'Dion Dirza',
+    url: 'https://github.com/diondirza',
+  },
+  {
+    name: 'Evgeny Boxer',
+    url: 'https://github.com/evgenyboxer' },
+  {
+    name: 'Joe Kohlmann',
+    url: 'https://github.com/kohlmannj',
+  },
+  {
+    name: 'Lucian Lature',
+    url: 'https://github.com/lucianlature',
+  },
+  {
+    name: 'Steven Enten',
+    url: 'https://github.com/enten',
+  },
+  {
+    name: 'Sean Matheson',
+    url: 'https://github.com/ctrlplusb',
+  },
+  {
+    name: 'Steven Truesdell',
+    url: 'https://github.com/strues',
+  },
+  {
+    name: 'Tom (datoml)',
+    url: 'https://github.com/datoml',
+  },
 ];
 
 function About() {
@@ -29,9 +68,15 @@ function About() {
 
       <ul style={{ marginTop: '1rem' }}>
         {
-          contributors.map(({ name, twitter }) =>
+          contributors.map(({ name, url }) =>
             <li key={name}>
-              <Contributor name={name} twitter={twitter} />
+              <a
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {name}
+              </a>
             </li>,
           )
         }
