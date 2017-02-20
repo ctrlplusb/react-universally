@@ -54,7 +54,7 @@ const contributors = [
     url: 'https://github.com/strues',
   },
   {
-    name: 'Tom (datoml)',
+    name: 'Tom',
     url: 'https://github.com/datoml',
   },
 ];

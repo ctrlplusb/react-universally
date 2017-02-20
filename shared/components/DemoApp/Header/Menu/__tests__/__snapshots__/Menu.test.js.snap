@@ -1,0 +1,23 @@
+exports[`<Home /> renders 1`] = `
+<ul
+  style={
+    Object {
+      "marginTop": "1rem",
+    }
+  }>
+  <li>
+    <Link
+      replace={false}
+      to="/">
+      Home
+    </Link>
+  </li>
+  <li>
+    <Link
+      replace={false}
+      to="/about">
+      About
+    </Link>
+  </li>
+</ul>
+`;

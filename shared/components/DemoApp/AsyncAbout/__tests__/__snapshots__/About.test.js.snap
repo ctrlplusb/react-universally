@@ -1,0 +1,133 @@
+exports[`<About /> renders 1`] = `
+<div
+  style={
+    Object {
+      "textAlign": "center",
+    }
+  }>
+  <HelmetWrapper
+    title="About" />
+  <p>
+    Produced with ❤️ by...
+  </p>
+  <ul
+    style={
+      Object {
+        "marginTop": "1rem",
+      }
+    }>
+    <li>
+      <a
+        href="https://github.com/alinporumb"
+        rel="noopener noreferrer"
+        target="_blank">
+        Alin Porumb
+      </a>
+    </li>
+    <li>
+      <a
+        href="https://github.com/bkniffler"
+        rel="noopener noreferrer"
+        target="_blank">
+        Benjamin Kniffler
+      </a>
+    </li>
+    <li>
+      <a
+        href="https://github.com/carsonperrotti"
+        rel="noopener noreferrer"
+        target="_blank">
+        Carson Perrotti
+      </a>
+    </li>
+    <li>
+      <a
+        href="https://github.com/LorbusChris"
+        rel="noopener noreferrer"
+        target="_blank">
+        Christian Glombek
+      </a>
+    </li>
+    <li>
+      <a
+        href="https://github.com/codepunkt"
+        rel="noopener noreferrer"
+        target="_blank">
+        Christoph Werner
+      </a>
+    </li>
+    <li>
+      <a
+        href="https://github.com/threehams"
+        rel="noopener noreferrer"
+        target="_blank">
+        David Edmondson
+      </a>
+    </li>
+    <li>
+      <a
+        href="https://github.com/diondirza"
+        rel="noopener noreferrer"
+        target="_blank">
+        Dion Dirza
+      </a>
+    </li>
+    <li>
+      <a
+        href="https://github.com/evgenyboxer"
+        rel="noopener noreferrer"
+        target="_blank">
+        Evgeny Boxer
+      </a>
+    </li>
+    <li>
+      <a
+        href="https://github.com/kohlmannj"
+        rel="noopener noreferrer"
+        target="_blank">
+        Joe Kohlmann
+      </a>
+    </li>
+    <li>
+      <a
+        href="https://github.com/lucianlature"
+        rel="noopener noreferrer"
+        target="_blank">
+        Lucian Lature
+      </a>
+    </li>
+    <li>
+      <a
+        href="https://github.com/enten"
+        rel="noopener noreferrer"
+        target="_blank">
+        Steven Enten
+      </a>
+    </li>
+    <li>
+      <a
+        href="https://github.com/ctrlplusb"
+        rel="noopener noreferrer"
+        target="_blank">
+        Sean Matheson
+      </a>
+    </li>
+    <li>
+      <a
+        href="https://github.com/strues"
+        rel="noopener noreferrer"
+        target="_blank">
+        Steven Truesdell
+      </a>
+    </li>
+    <li>
+      <a
+        href="https://github.com/datoml"
+        rel="noopener noreferrer"
+        target="_blank">
+        Tom
+      </a>
+    </li>
+  </ul>
+</div>
+`;
