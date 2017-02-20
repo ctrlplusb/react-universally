@@ -1,7 +1,14 @@
 import removeNil from '../arrays/removeNil';
 
-// Merges a set of objects together.
-// NOTE: This performs a deep merge.
+/**
+ * Deeply merges a given set of objects together.
+ *
+ * Objects to the right take priority.
+ *
+ * @param  {...Object} args - The objects to merge.
+ *
+ * @return {Object} - The merged object.
+ */
 export default function mergeDeep(...args) {
   const filtered = removeNil(args);
   if (filtered.length < 1) {

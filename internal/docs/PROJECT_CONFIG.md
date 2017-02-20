@@ -16,8 +16,6 @@ You read configuration values using the `<projectroot>/config/index.js` helper, 
  - [Background and Usage](#background-and-usage)
  - [Declaring the configuration values that are safe for client bundles](#declaring-the-configuration-values-that-are-safe-for-client-bundles)
  - [Environment Specific Values](#environment-specifc-values)
- - [Config Highlights](#config-highlights)
-   - [Easily add an "API" bundle](#easily-add-an-api-bundle)
 
 ## Background and Usage
 
@@ -76,15 +74,3 @@ NODE_ENV=staging yarn run start # This will look for a .env.staging file
 As stated before, the application has been configured to accept a mix-match of sources for the environment variables. i.e. you can provide some/all of the environment variables via a `.env` file, and others via the cli/host (e.g. `FOO=bar yarn run build`). This gives you greater flexibility and grants you the opportunity to control the provision of sensitive values (e.g. db connection string).  Please do note that "env" file values will take preference over any values provided by the host/CLI.
 
 > Note: It is recommended that you bind your environment configuration values to the global `./config/values.js`. See the existing items within as an example.
-
-## Config Highlights
-
-Below are some interesting aspects of the configuration file to be aware of.
-
-### Easily add an "API" bundle
-
-A fairly common requirement for a project that scales is to create additional servers bundles, e.g. an API server.
-
-Instead of requiring you to hack the Webpack configuration we have have provided a section within the centralised project configuration that allows you to easily declare additional bundles.  You simply need to provide the source, entry, and output paths - we take care of the rest.  
-
-_IMPORTANT:_ One further requirement for this feature is that within your new server bundle you export the created http listener.  This exported listener will be used by the development server so that it can automatically restart your server any time the source files for it change.

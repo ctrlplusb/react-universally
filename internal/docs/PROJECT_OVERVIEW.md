@@ -24,7 +24,9 @@ This starter uses Webpack 2 to produce bundles for both the client and the serve
 
 ## Transpiled by Babel
 
-It also uses babel across the entire project, which allows us to use the same level of javascript (e.g. es2015/2016/2017) without having to worry which level of the language is supported within each of the project's modules.  We have decided to only support syntax that is stage-3 or up in the TC39 process, anything lower is considered too much of a risk to include by default, so it is up to you if you would like to extend your Babel configuration to include more "experimental" features.
+We use babel across the entire project, which allows us to use the same level of javascript (e.g. es2015/2016/2017) without having to worry which level of the language is supported within each of the project's modules.  We have decided to only support syntax that is stage-3 or up in the TC39 process, anything lower is considered too much of a risk to include by default, so it is up to you if you would like to extend your Babel configuration to include more "experimental" features.
+
+We additionally make use of the `babel-preset-env` preset so that we only transpile the syntax that is not supported by target node platforms.
 
 ## Security
 
