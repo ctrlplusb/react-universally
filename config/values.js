@@ -61,7 +61,7 @@ const values = {
     // Reference https://qa.polyfill.io/v2/docs/features for a full list
     // of features. We need to register Symbol as this is required by the
     // "transform-react-inline-elements" Babel plugin.
-    url: 'https://cdn.polyfill.io/v2/polyfill.min.js?features=Symbol',
+    url: 'https://cdn.polyfill.io/v2/polyfill.min.js?features=default,Symbol',
   },
 
   // Basic configuration for the HTML page that hosts our application.
