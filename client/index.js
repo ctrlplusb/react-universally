@@ -12,6 +12,9 @@ import DemoApp from '../shared/components/DemoApp';
 // Get the DOM Element that will host our React application.
 const container = document.querySelector('#app');
 
+// Does the user's browser support the HTML5 history API?
+const supportsHistory = 'pushState' in window.history;
+
 /**
  * Renders the given React Application component.
  */
@@ -19,7 +22,9 @@ function renderApp(TheApp) {
   // Firstly, define our full application component, wrapping the given
   // component app with a browser based version of react router.
   const app = (
-    <BrowserRouter>
+    // If the user's browser doesn't support the HTML5 history API then we
+    // will force full page refreshes on each page change.
+    <BrowserRouter forceRefresh={!supportsHistory}>
       <TheApp />
     </BrowserRouter>
   );
