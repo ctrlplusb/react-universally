@@ -471,8 +471,8 @@ export default function webpackConfigFactory(buildOptions) {
             // plugins section too.
             ifOptimizeClient(() => ({
               loader: ExtractTextPlugin.extract({
-                fallbackLoader: 'style-loader',
-                loader: ['css-loader'],
+                fallback: 'style-loader',
+                use: ['css-loader'],
               }),
             })),
             // When targetting the server we use the "/locals" version of the
