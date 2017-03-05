@@ -10,7 +10,7 @@ import React, { Children, PropTypes } from 'react';
 import serialize from 'serialize-javascript';
 
 import config from '../../../config';
-import onlyIf from '../../../shared/utils/logic/onlyIf';
+import ifElse from '../../../shared/utils/logic/ifElse';
 import removeNil from '../../../shared/utils/arrays/removeNil';
 import getClientBundleEntryAssets from './getClientBundleEntryAssets';
 
@@ -61,13 +61,12 @@ function ServerHTML(props) {
   );
 
   const headerElements = removeNil([
-    ...onlyIf(helmet, () => helmet.meta.toComponent()),
-    ...onlyIf(helmet, () => helmet.link.toComponent()),
-    onlyIf(
-      clientEntryAssets && clientEntryAssets.css,
+    ...ifElse(helmet)(() => helmet.meta.toComponent(), []),
+    ...ifElse(helmet)(() => helmet.link.toComponent(), []),
+    ifElse(clientEntryAssets && clientEntryAssets.css)(
       () => stylesheetTag(clientEntryAssets.css),
     ),
-    ...onlyIf(helmet, () => helmet.style.toComponent()),
+    ...ifElse(helmet)(() => helmet.style.toComponent(), []),
   ]);
 
   const bodyElements = removeNil([
@@ -78,8 +77,7 @@ function ServerHTML(props) {
     // Bind our async components state so the client knows which ones
     // to initialise so that the checksum matches the server response.
     // @see https://github.com/ctrlplusb/react-async-component
-    onlyIf(
-      asyncComponents,
+    ifElse(asyncComponents)(
       () => inlineScript(
         `window.${asyncComponents.STATE_IDENTIFIER}=${serialize(asyncComponents.state)};`,
       ),
@@ -87,27 +85,24 @@ function ServerHTML(props) {
     // Enable the polyfill io script?
     // This can't be configured within a react-helmet component as we
     // may need the polyfill's before our client JS gets parsed.
-    onlyIf(
-      config('polyfillIO.enabled'),
+    ifElse(config('polyfillIO.enabled'))(
       () => scriptTag(config('polyfillIO.url')),
     ),
     // When we are in development mode our development server will
     // generate a vendor DLL in order to dramatically reduce our
     // compilation times.  Therefore we need to inject the path to the
     // vendor dll bundle below.
-    onlyIf(
-      process.env.BUILD_FLAG_IS_DEV && config('bundles.client.devVendorDLL.enabled'),
+    ifElse(process.env.BUILD_FLAG_IS_DEV && config('bundles.client.devVendorDLL.enabled'))(
       () => scriptTag(
         `${config('bundles.client.webPath')}${config('bundles.client.devVendorDLL.name')}.js?t=${Date.now()}`,
       ),
     ),
-    onlyIf(
-      clientEntryAssets && clientEntryAssets.js,
+    ifElse(clientEntryAssets && clientEntryAssets.js)(
       () => scriptTag(clientEntryAssets.js),
     ),
-    ...onlyIf(
-      helmet,
+    ...ifElse(helmet)(
       () => helmet.script.toComponent(),
+      [],
     ),
   ]);
 

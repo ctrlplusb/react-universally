@@ -41,7 +41,7 @@ const values = {
   welcomeMessage: EnvVars.string('WELCOME_MSG', 'Hello world!'),
 
   // Disable server side rendering?
-  disableSSR: false,
+  disableSSR: true,
 
   // How long should we set the browser cache for the served assets?
   // Don't worry, we add hashes to the files, so if they change the new files
