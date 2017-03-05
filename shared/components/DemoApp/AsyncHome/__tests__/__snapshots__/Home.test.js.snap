@@ -1,7 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
 exports[`<Home /> renders 1`] = `
 <article>
   <HelmetWrapper
-    title="Home" />
+    title="Home"
+  />
   <h2>
     Hello world!
   </h2>
