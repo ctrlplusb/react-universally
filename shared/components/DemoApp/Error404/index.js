@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 
 class Error404 extends Component {
   componentWillMount() {
-    const { staticContext } = this.context.router;
+    const { staticContext } = this.context.history;
     if (staticContext) {
       staticContext.missed = true;
     }
@@ -16,7 +16,7 @@ class Error404 extends Component {
 }
 
 Error404.contextTypes = {
-  router: PropTypes.shape({
+  history: PropTypes.shape({
     staticContext: PropTypes.object,
   }).isRequired,
 };
