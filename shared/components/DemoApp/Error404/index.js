@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 
 class Error404 extends Component {
   componentWillMount() {
-    const { staticContext } = this.context.history;
+    const { staticContext } = this.props;
     if (staticContext) {
       staticContext.missed = true;
     }
@@ -15,10 +15,9 @@ class Error404 extends Component {
   }
 }
 
-Error404.contextTypes = {
-  history: PropTypes.shape({
-    staticContext: PropTypes.object,
-  }).isRequired,
+Error404.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
+  staticContext: PropTypes.object.isRequired,
 };
 
 export default Error404;
