@@ -110,7 +110,7 @@ export default function withServiceWorker(webpackConfig, bundleConfig) {
         // Add the polyfill io script as an external if it is enabled.
         (
           config('polyfillIO.enabled')
-            ? [config('polyfillIO.url')]
+            ? [`https://cdn.polyfill.io/v2/polyfill.min.js?features=${config('polyfillIO.features').join(',')}`]
             : []
         )
         // Add any included public folder assets.

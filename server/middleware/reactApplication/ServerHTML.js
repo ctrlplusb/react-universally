@@ -86,7 +86,7 @@ function ServerHTML(props) {
     // This can't be configured within a react-helmet component as we
     // may need the polyfill's before our client JS gets parsed.
     ifElse(config('polyfillIO.enabled'))(
-      () => scriptTag(config('polyfillIO.url')),
+      () => scriptTag(`https://cdn.polyfill.io/v2/polyfill.min.js?features=${config('polyfillIO.features').join(',')}`),
     ),
     // When we are in development mode our development server will
     // generate a vendor DLL in order to dramatically reduce our
