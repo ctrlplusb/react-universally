@@ -7,11 +7,9 @@ import Error404 from '../index';
 
 describe('<Error404 />', () => {
   test('renders', () => {
-    const routerContext = {
-      staticContext: {},
-    };
-    const wrapper = shallow(<Error404 />, { context: { router: routerContext } });
+    const staticContext = {};
+    const wrapper = shallow(<Error404 staticContext={staticContext} />);
     expect(wrapper).toMatchSnapshot();
-    expect(routerContext.staticContext.missed).toBeTruthy();
+    expect(staticContext.missed).toBeTruthy();
   });
 });
