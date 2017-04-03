@@ -349,18 +349,11 @@ export default function webpackConfigFactory(buildOptions) {
                 // ES201X code into ES5, safe for browsers.  We exclude module
                 // transilation as webpack takes care of this for us, doing
                 // tree shaking in the process.
-                ifClient(['latest', { es2015: { modules: false } }]),
-                // For a node bundle we use the awesome babel-preset-env which
-                // acts like babel-preset-latest in that it supports the latest
-                // ratified ES201X syntax, however, it will only transpile what
-                // is necessary for a target environment.  We have configured it
-                // to target our current node version.  This is cool because
-                // recent node versions have extensive support for ES201X syntax.
-                // Also, we have disabled modules transpilation as webpack will
-                // take care of that for us ensuring tree shaking takes place.
-                // NOTE: Make sure you use the same node version for development
-                // and production.
-                ifNode(['env', { targets: { node: true }, modules: false }]),
+                ifClient(['env', { es2015: { modules: false } }]),
+                // For a node bundle we use the specific target against
+                // babel-preset-env so that only the unsupported features of
+                // our target node version gets transpiled.
+                ifNode(['env', { targets: { node: true } }]),
               ].filter(x => x != null),
 
               plugins: [
