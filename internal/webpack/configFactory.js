@@ -212,14 +212,13 @@ export default function webpackConfigFactory(buildOptions) {
       // even though 1 or 2 may have only changed.
       ifClient(() => new WebpackMd5Hash()),
 
-      // These are special flags that you can use in your code in order to
+      // These are process.env flags that you can use in your code in order to
       // have advanced control over what is included/excluded in your bundles.
       // For example you may only want certain parts of your code to be
       // included/ran under certain conditions.
       //
-      // The DefinePlugin is used by webpack to substitute any code
-      // that matches the property keys of the object you provide it below with
-      // the given value that has been assigned to each respective property.
+      // Any process.env.X values that are matched will be code substituted for
+      // the associated values below.
       //
       // For example you may have the following in your code:
       //   if (process.env.BUILD_FLAG_IS_CLIENT === true) {
@@ -238,14 +237,6 @@ export default function webpackConfigFactory(buildOptions) {
       // final output. This is helpful for extreme cases where you want to
       // ensure that code is only included/executed on specific targets, or for
       // doing debugging.
-      //
-      // NOTE: You may be used to having to do NODE_ENV = production here to
-      // get optimized React/ReactDOM builds. Almost every blog and example
-      // will tell you to do this.  I have decided against this model as it
-      // often confused me when I was passing custom NODE_ENV values
-      // such as "staging" / "test" to my scripts.  Therefore to avoid any
-      // confusion we instead use the webpack alias feature to target the
-      // pre-optimised dist versions of React/ReactDOM when required.
       new webpack.EnvironmentPlugin({
         // It is really important to use NODE_ENV=production in order to use
         // optimised versions of some node_modules, such as React.
