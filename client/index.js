@@ -4,7 +4,7 @@ import React from 'react';
 import { render } from 'react-dom';
 import BrowserRouter from 'react-router-dom/BrowserRouter';
 import asyncBootstrapper from 'react-async-bootstrapper';
-import { AsyncComponentProvider, createAsyncContext } from 'react-async-component';
+import { AsyncComponentProvider } from 'react-async-component';
 
 import './polyfills';
 

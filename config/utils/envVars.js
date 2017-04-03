@@ -18,19 +18,20 @@ import removeNil from '../../shared/utils/arrays/removeNil';
 // PRIVATES
 
 function registerEnvFile() {
-  const NODE_ENV = process.env.NODE_ENV;
+  const DEPLOYMENT = process.env.DEPLOYMENT;
   const envFile = '.env';
 
   // This is the order in which we will try to resolve an environment configuration
   // file.
   const envFileResolutionOrder = removeNil([
+    // Is there an environment config file at the app root?
+    // This always takes preference.
+    // e.g. /projects/react-universally/.env
+    path.resolve(appRootDir.get(), envFile),
     // Is there an environment config file at the app root for our target
     // environment name?
     // e.g. /projects/react-universally/.env.staging
-    ifElse(NODE_ENV)(path.resolve(appRootDir.get(), `${envFile}.${NODE_ENV}`)),
-    // Is there an environment config file at the app root?
-    // e.g. /projects/react-universally/.env
-    path.resolve(appRootDir.get(), envFile),
+    ifElse(DEPLOYMENT)(path.resolve(appRootDir.get(), `${envFile}.${DEPLOYMENT}`)),
   ]);
 
   // Find the first env file path match.

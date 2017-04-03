@@ -62,12 +62,14 @@ We generally recommend that you don't persist any "env" files within the reposit
 
 If you do however have the requirement to create and persist "env" files for multiple target environments, the system does support it. To do so create a ".env" file that is postfix'ed with the environment you are targeting. For e.g. `.env.development` or `.env.staging` or `.env.production`.
 
-Then when you run your code with the `NODE_ENV=target` set it will load the appropriate "env.target" file.
+In order to target a specific environment configuration file you have to provide a matching `DEPLOYMENT` environment variable. For example:
 
 ```bash
 yarn run build
-NODE_ENV=staging yarn run start # This will look for a .env.staging file
+DEPLOYMENT=staging yarn run start # This will look for a .env.staging file
 ```
+
+ > Note: you may be used to using NODE_ENV to distinguish between environment configuration, however, when using the React ecosystem it is highly recommended that you set NODE_ENV=production any time you want an optimised version of React (and other libs).  Given this requirement, we instead defer to the use of a "DEPLOYMENT" variable. See [here](https://github.com/facebook/react/issues/6582) for more info on this.
 
  > Note: if an environment specific configuration file exists, it will be used over the more generic `.env` file.
 

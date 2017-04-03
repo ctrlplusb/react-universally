@@ -29,8 +29,8 @@ import config from '../../config';
 export default function webpackConfigFactory(buildOptions) {
   const { target, optimize = false } = buildOptions;
 
-  const isOptimize = optimize;
-  const isDev = !isOptimize;
+  const isProd = optimize;
+  const isDev = !isProd;
   const isClient = target === 'client';
   const isServer = target === 'server';
   const isNode = !isClient;
@@ -38,13 +38,13 @@ export default function webpackConfigFactory(buildOptions) {
   // Preconfigure some ifElse helper instnaces. See the util docs for more
   // information on how this util works.
   const ifDev = ifElse(isDev);
-  const ifOptimize = ifElse(isOptimize);
+  const ifProd = ifElse(isProd);
   const ifNode = ifElse(isNode);
   const ifClient = ifElse(isClient);
   const ifDevClient = ifElse(isDev && isClient);
-  const ifOptimizeClient = ifElse(isOptimize && isClient);
+  const ifProdClient = ifElse(isProd && isClient);
 
-  console.log(`==> Creating ${isOptimize ? 'an optimised' : 'a development'} bundle configuration for the "${target}"`);
+  console.log(`==> Creating ${isProd ? 'an optimised' : 'a development'} bundle configuration for the "${target}"`);
 
   const bundleConfig = isServer || isClient
     // This is either our "server" or "client" bundle.
@@ -82,7 +82,7 @@ export default function webpackConfigFactory(buildOptions) {
       // The dir in which our bundle should be output.
       path: path.resolve(appRootDir.get(), bundleConfig.outputPath),
       // The filename format for our bundle's entries.
-      filename: ifOptimizeClient(
+      filename: ifProdClient(
         // For our production client bundles we include a hash in the filename.
         // That way we won't hit any browser caching issues when our bundle
         // output changes.
@@ -148,7 +148,7 @@ export default function webpackConfigFactory(buildOptions) {
     // We only want this enabled for our production client.  Please
     // see the webpack docs on how you can configure this to your own needs:
     // https://webpack.js.org/configuration/performance/
-    performance: ifOptimizeClient(
+    performance: ifProdClient(
       // Enable webpack's performance hints for production client builds.
       { hints: 'warning' },
       // Else we have to set a value of "false" if we don't want the feature.
@@ -161,24 +161,9 @@ export default function webpackConfigFactory(buildOptions) {
 
       // This is required for the modernizr-loader
       // @see https://github.com/peerigon/modernizr-loader
-      alias: mergeDeep(
-        {
-          modernizr$: path.resolve(appRootDir.get(), './.modernizrrc'),
-        },
-        // For our optimised builds we will alias to the optimised versions
-        // of React and ReactDOM.
-        ifOptimize({
-          react$: path.resolve(
-            appRootDir.get(), './node_modules/react/dist/react.min.js',
-          ),
-          'react-dom$': path.resolve(
-            appRootDir.get(), './node_modules/react-dom/dist/react-dom.min.js',
-          ),
-          'react-dom/server$': path.resolve(
-            appRootDir.get(), './node_modules/react-dom/dist/react-dom-server.min.js',
-          ),
-        }),
-      ),
+      alias: {
+        modernizr$: path.resolve(appRootDir.get(), './.modernizrrc'),
+      },
     },
 
     // We don't want our node_modules to be bundled with any bundle that is
@@ -199,12 +184,6 @@ export default function webpackConfigFactory(buildOptions) {
                 // We always want the source-map-support included in
                 // our node target bundles.
                 'source-map-support/register',
-                // We want react bundled with our node bundles for the optimised
-                // builds as we are going to resolve to the optmised versions
-                // of react via the webpack alias configuration.
-                ifOptimize('react'),
-                ifOptimize('react-dom'),
-                ifOptimize('react-dom/server'),
               ])
               // And any items that have been whitelisted in the config need
               // to be included in the bundling process too.
@@ -267,15 +246,18 @@ export default function webpackConfigFactory(buildOptions) {
       // such as "staging" / "test" to my scripts.  Therefore to avoid any
       // confusion we instead use the webpack alias feature to target the
       // pre-optimised dist versions of React/ReactDOM when required.
-      new webpack.DefinePlugin({
+      new webpack.EnvironmentPlugin({
+        // It is really important to use NODE_ENV=production in order to use
+        // optimised versions of some node_modules, such as React.
+        NODE_ENV: isProd ? 'production' : 'development',
         // Is this the "client" bundle?
-        'process.env.BUILD_FLAG_IS_CLIENT': JSON.stringify(isClient),
+        BUILD_FLAG_IS_CLIENT: isClient,
         // Is this the "server" bundle?
-        'process.env.BUILD_FLAG_IS_SERVER': JSON.stringify(isServer),
+        BUILD_FLAG_IS_SERVER: isServer,
         // Is this a node bundle?
-        'process.env.BUILD_FLAG_IS_NODE': JSON.stringify(isNode),
+        BUILD_FLAG_IS_NODE: isNode,
         // Is this a development build?
-        'process.env.BUILD_FLAG_IS_DEV': JSON.stringify(isDev),
+        BUILD_FLAG_IS_DEV: isDev,
       }),
 
       // Generates a JSON file containing a map of all the output files for
@@ -299,7 +281,7 @@ export default function webpackConfigFactory(buildOptions) {
 
       // For our production client we need to make sure we pass the required
       // configuration to ensure that the output is minimized/optimized.
-      ifOptimizeClient(
+      ifProdClient(
         () => new webpack.LoaderOptionsPlugin({
           minimize: true,
         }),
@@ -307,7 +289,7 @@ export default function webpackConfigFactory(buildOptions) {
 
       // For our production client we need to make sure we pass the required
       // configuration to ensure that the output is minimized/optimized.
-      ifOptimizeClient(
+      ifProdClient(
         () => new webpack.optimize.UglifyJsPlugin({
           sourceMap: config('includeSourceMapsForOptimisedClientBundle'),
           compress: {
@@ -326,7 +308,7 @@ export default function webpackConfigFactory(buildOptions) {
 
       // For the production build of the client we need to extract the CSS into
       // CSS files.
-      ifOptimizeClient(
+      ifProdClient(
         () => new ExtractTextPlugin({
           filename: '[name]-[chunkhash].css', allChunks: true,
         }),
@@ -403,13 +385,13 @@ export default function webpackConfigFactory(buildOptions) {
                 // more optimized for production.
                 // NOTE: Symbol needs to be polyfilled. Ensure this feature
                 // is enabled in the polyfill.io configuration.
-                ifOptimize('transform-react-inline-elements'),
+                ifProd('transform-react-inline-elements'),
                 // Hoists element creation to the top level for subtrees that
                 // are fully static, which reduces call to React.createElement
                 // and the resulting allocations. More importantly, it tells
                 // React that the subtree hasn’t changed so React can completely
                 // skip it when reconciling.
-                ifOptimize('transform-react-constant-elements'),
+                ifProd('transform-react-constant-elements'),
               ].filter(x => x != null),
             },
             buildOptions,
@@ -449,7 +431,7 @@ export default function webpackConfigFactory(buildOptions) {
             ...bundleConfig.srcPaths.map(srcPath =>
               path.resolve(appRootDir.get(), srcPath),
             ),
-            ifOptimizeClient(path.resolve(appRootDir.get(), 'src/html')),
+            ifProdClient(path.resolve(appRootDir.get(), 'src/html')),
           ]),
         },
 
@@ -475,7 +457,7 @@ export default function webpackConfigFactory(buildOptions) {
             // an ExtractTextPlugin instance.
             // Note: The ExtractTextPlugin needs to be registered within the
             // plugins section too.
-            ifOptimizeClient(() => ({
+            ifProdClient(() => ({
               loader: ExtractTextPlugin.extract({
                 fallback: 'style-loader',
                 use: ['css-loader'],
@@ -530,7 +512,7 @@ export default function webpackConfigFactory(buildOptions) {
     },
   };
 
-  if (isOptimize && isClient) {
+  if (isProd && isClient) {
     webpackConfig = withServiceWorker(webpackConfig, bundleConfig);
   }
 

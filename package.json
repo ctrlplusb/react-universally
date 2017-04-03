@@ -13,10 +13,10 @@
     "build:dev": "babel-node internal/scripts/build",
     "clean": "babel-node internal/scripts/clean",
     "deploy": "babel-node internal/scripts/deploy",
-    "develop": "babel-node internal/development",
+    "develop": "DEPLOYMENT=development babel-node internal/development",
     "lint": "eslint client server shared config internal",
     "preinstall": "node internal/scripts/preinstall",
-    "start": "node build/server",
+    "start": "NODE_ENV=production node build/server",
     "test": "jest",
     "test:coverage": "jest --coverage"
   },
