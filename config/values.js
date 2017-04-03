@@ -59,11 +59,12 @@ const values = {
   polyfillIO: {
     enabled: true,
     // Reference https://qa.polyfill.io/v2/docs/features for a full list
-    // of features. We need to register Symbol as this is required by the
-    // "transform-react-inline-elements" Babel plugin.
+    // of features.
     features: [
+      // The default list.
       'default',
-      'Symbol',
+      // All es6 features.
+      'es6',
     ],
   },
 
