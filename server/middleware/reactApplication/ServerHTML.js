@@ -45,7 +45,7 @@ function scriptTag(jsFilePath) {
 
 function ServerHTML(props) {
   const {
-    asyncComponents,
+    asyncComponentsState,
     helmet,
     nonce,
     reactAppString,
@@ -77,9 +77,9 @@ function ServerHTML(props) {
     // Bind our async components state so the client knows which ones
     // to initialise so that the checksum matches the server response.
     // @see https://github.com/ctrlplusb/react-async-component
-    ifElse(asyncComponents)(
+    ifElse(asyncComponentsState)(
       () => inlineScript(
-        `window.${asyncComponents.STATE_IDENTIFIER}=${serialize(asyncComponents.state)};`,
+        `window.__ASYNC_COMPONENTS_REHYDRATE_STATE__=${serialize(asyncComponentsState)};`,
       ),
     ),
     // Enable the polyfill io script?
@@ -122,10 +122,8 @@ function ServerHTML(props) {
 }
 
 ServerHTML.propTypes = {
-  asyncComponents: PropTypes.shape({
-    state: PropTypes.object.isRequired,
-    STATE_IDENTIFIER: PropTypes.string.isRequired,
-  }),
+  // eslint-disable-next-line react/forbid-prop-types
+  asyncComponentsState: PropTypes.object,
   // eslint-disable-next-line react/forbid-prop-types
   helmet: PropTypes.object,
   nonce: PropTypes.string,

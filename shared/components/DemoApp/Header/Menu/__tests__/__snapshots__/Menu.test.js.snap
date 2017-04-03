@@ -4,7 +4,9 @@ exports[`<Home /> renders 1`] = `
 <ul
   style={
     Object {
+      "backgroundColor": "#c6c6c6",
       "marginTop": "1rem",
+      "padding": "1rem",
     }
   }
 >
@@ -14,6 +16,14 @@ exports[`<Home /> renders 1`] = `
       to="/"
     >
       Home
+    </Link>
+  </li>
+  <li>
+    <Link
+      replace={false}
+      to="/counter"
+    >
+      Counter
     </Link>
   </li>
   <li>

@@ -59,10 +59,12 @@ const contributors = [
   },
 ];
 
-function About() {
+function AsyncAboutRoute() {
   return (
     <div style={{ textAlign: 'center' }}>
-      <Helmet title="About" />
+      <Helmet>
+        <title>About</title>
+      </Helmet>
 
       <p>Produced with ❤️ by...</p>
 
@@ -85,4 +87,4 @@ function About() {
   );
 }
 
-export default About;
+export default AsyncAboutRoute;

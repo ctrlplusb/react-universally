@@ -3,7 +3,8 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { renderToString, renderToStaticMarkup } from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom';
-import { withAsyncComponents } from 'react-async-component';
+import { AsyncComponentProvider, createAsyncContext } from 'react-async-component';
+import asyncBootstrapper from 'react-async-bootstrapper';
 
 import config from '../../../config';
 
@@ -35,27 +36,34 @@ export default function reactApplicationMiddleware(request, response) {
     return;
   }
 
-  // First create a context for <StaticRouter>, which will allow us to
+  // Create a context for our AsyncComponentProvider.
+  const asyncComponentsContext = createAsyncContext();
+
+  // Create a context for <StaticRouter>, which will allow us to
   // query for the results of the render.
   const reactRouterContext = {};
 
   // Declare our React application.
   const app = (
-    <StaticRouter location={request.url} context={reactRouterContext}>
-      <DemoApp />
-    </StaticRouter>
+    <AsyncComponentProvider asyncContext={asyncComponentsContext}>
+      <StaticRouter location={request.url} context={reactRouterContext}>
+        <DemoApp />
+      </StaticRouter>
+    </AsyncComponentProvider>
   );
 
   // Pass our app into the react-async-component helper so that any async
   // components are resolved for the render.
-  withAsyncComponents(app).then(({ appWithAsyncComponents, state, STATE_IDENTIFIER }) => {
+  asyncBootstrapper(app).then(() => {
+    const appString = renderToString(app);
+
     // Generate the html response.
     const html = renderToStaticMarkup(
       <ServerHTML
-        reactAppString={renderToString(appWithAsyncComponents)}
+        reactAppString={appString}
         nonce={nonce}
         helmet={Helmet.rewind()}
-        asyncComponents={{ state, STATE_IDENTIFIER }}
+        asyncComponentsState={asyncComponentsContext.getState()}
       />,
     );
 

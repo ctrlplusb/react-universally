@@ -82,7 +82,10 @@ const values = {
     childSrc: [],
     connectSrc: [],
     defaultSrc: [],
-    fontSrc: [],
+    fontSrc: [
+      'https://fonts.googleapis.com/css',
+      'https://fonts.gstatic.com',
+    ],
     imgSrc: [],
     mediaSrc: [],
     manifestSrc: [],
@@ -92,7 +95,10 @@ const values = {
       // polyfill.
       'https://cdn.polyfill.io',
     ],
-    styleSrc: [],
+    styleSrc: [
+      'https://cdn.rawgit.com/milligram/milligram/master/dist/milligram.min.css',
+      'https://fonts.googleapis.com/css',
+    ],
   },
 
   // Path to the public assets that will be served off the root of the
@@ -208,7 +214,7 @@ const values = {
         // webpack loaders in order to be processed (e.g. CSS/SASS etc).
         // For these cases you don't want to include them in the Vendor DLL.
         include: [
-          'react-async-component',
+          // 'react-async-component',
           'react',
           'react-dom',
           'react-helmet',

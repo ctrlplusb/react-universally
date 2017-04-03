@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<About /> renders 1`] = `
+exports[`<AsyncAboutRoute /> renders 1`] = `
 <div
   style={
     Object {
@@ -9,8 +9,12 @@ exports[`<About /> renders 1`] = `
   }
 >
   <HelmetWrapper
-    title="About"
-  />
+    encodeSpecialCharacters={true}
+  >
+    <title>
+      About
+    </title>
+  </HelmetWrapper>
   <p>
     Produced with ❤️ by...
   </p>

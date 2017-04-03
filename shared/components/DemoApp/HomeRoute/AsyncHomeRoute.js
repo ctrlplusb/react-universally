@@ -3,10 +3,12 @@ import Helmet from 'react-helmet';
 
 import config from '../../../../config';
 
-function Home() {
+function AsyncHomeRoute() {
   return (
-    <article>
-      <Helmet title="Home" />
+    <div>
+      <Helmet>
+        <title>Home</title>
+      </Helmet>
 
       <h2>{config('welcomeMessage')}</h2>
 
@@ -16,8 +18,8 @@ function Home() {
         minimal project set up allowing you to make your own architecture
         decisions (Redux/Mobx etc).
       </p>
-    </article>
+    </div>
   );
 }
 
-export default Home;
+export default AsyncHomeRoute;

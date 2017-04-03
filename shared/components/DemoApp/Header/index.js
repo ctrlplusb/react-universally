@@ -8,7 +8,7 @@ function Header() {
       <Logo />
       <h1>React, Universally</h1>
       <strong>
-        A starter kit giving you the minimum requirements for a modern universal react application.
+        A starter kit for universal react applications.
       </strong>
       <Menu />
     </div>

@@ -62,12 +62,16 @@ export default function webpackConfigFactory(buildOptions) {
       // We name our entry files "index" as it makes it easier for us to
       // import bundle output files (e.g. `import server from './build/server';`)
       index: removeNil([
-        // Required to support hot reloading of our client.
-        ifDevClient(() => `webpack-hot-middleware/client?reload=true&path=http://${config('host')}:${config('clientDevServerPort')}/__webpack_hmr`),
         // We are using polyfill.io instead of the very heavy babel-polyfill.
         // Therefore we need to add the regenerator-runtime as polyfill.io
         // doesn't support this.
         ifClient('regenerator-runtime/runtime'),
+        // Extends hot reloading with the ability to hot path React Components.
+        // This should always be at the top of your entries list. Only put
+        // polyfills above it.
+        ifDevClient('react-hot-loader/patch'),
+        // Required to support hot reloading of our client.
+        ifDevClient(() => `webpack-hot-middleware/client?reload=true&path=http://${config('host')}:${config('clientDevServerPort')}/__webpack_hmr`),
         // The source entry file for the bundle.
         path.resolve(appRootDir.get(), bundleConfig.srcEntryFile),
       ]),
@@ -387,6 +391,8 @@ export default function webpackConfigFactory(buildOptions) {
               ].filter(x => x != null),
 
               plugins: [
+                // Required to support react hot loader.
+                ifDevClient('react-hot-loader/babel'),
                 // This decorates our components with  __self prop to JSX elements,
                 // which React will use to generate some runtime warnings.
                 ifDev('transform-react-jsx-self'),

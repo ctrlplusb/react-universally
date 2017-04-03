@@ -3,11 +3,11 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import Home from '../Home';
+import AsyncHomeRoute from '../AsyncHomeRoute';
 
-describe('<Home />', () => {
+describe('<AsyncHomeRoute />', () => {
   test('renders', () => {
-    const wrapper = shallow(<Home />);
+    const wrapper = shallow(<AsyncHomeRoute />);
     expect(wrapper).toMatchSnapshot();
   });
 });
