@@ -15,10 +15,28 @@
     "deploy": "babel-node internal/scripts/deploy",
     "develop": "DEPLOYMENT=development babel-node internal/development",
     "lint": "eslint client server shared config internal",
+    "precommit": "lint-staged",
     "preinstall": "node internal/scripts/preinstall",
     "start": "NODE_ENV=production node build/server",
     "test": "jest",
     "test:coverage": "jest --coverage"
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}"
+    ],
+    "snapshotSerializers": [
+      "<rootDir>/node_modules/enzyme-to-json/serializer"
+    ],
+    "testPathIgnorePatterns": [
+      "<rootDir>/(build|internal|node_modules|flow-typed|public)/"
+    ]
   },
   "repository": {
     "type": "git",
@@ -96,17 +114,6 @@
     "url": "https://github.com/ctrlplusb/react-universally/issues"
   },
   "homepage": "https://github.com/ctrlplusb/react-universally#readme",
-  "jest": {
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx}"
-    ],
-    "snapshotSerializers": [
-      "<rootDir>/node_modules/enzyme-to-json/serializer"
-    ],
-    "testPathIgnorePatterns": [
-      "<rootDir>/(build|internal|node_modules|flow-typed|public)/"
-    ]
-  },
   "dependencies": {
     "app-root-dir": "1.0.2",
     "colors": "1.1.2",
@@ -158,10 +165,15 @@
     "glob": "7.1.1",
     "happypack": "3.0.3",
     "html-webpack-plugin": "2.28.0",
+    "husky": "0.13.3",
     "jest": "19.0.2",
+    "lint-staged": "3.4.0",
     "md5": "2.2.1",
     "modernizr-loader": "1.0.1",
     "node-notifier": "5.1.2",
+    "prettier": "0.22.0",
+    "prettier-eslint": "4.4.0",
+    "prettier-eslint-cli": "3.2.0",
     "react-addons-test-utils": "15.4.2",
     "react-hot-loader": "3.0.0-beta.6",
     "regenerator-runtime": "0.10.3",

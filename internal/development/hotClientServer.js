@@ -1,8 +1,8 @@
-import express from 'express';
-import createWebpackMiddleware from 'webpack-dev-middleware';
-import createWebpackHotMiddleware from 'webpack-hot-middleware';
-import ListenerManager from './listenerManager';
-import { log } from '../utils';
+import express from "express";
+import createWebpackMiddleware from "webpack-dev-middleware";
+import createWebpackHotMiddleware from "webpack-hot-middleware";
+import ListenerManager from "./listenerManager";
+import { log } from "../utils";
 
 class HotClientServer {
   constructor(compiler) {
@@ -10,9 +10,9 @@ class HotClientServer {
 
     const httpPathRegex = /^https?:\/\/(.*):([\d]{1,5})/i;
     const httpPath = compiler.options.output.publicPath;
-    if (!httpPath.startsWith('http') && !httpPathRegex.test(httpPath)) {
+    if (!httpPath.startsWith("http") && !httpPathRegex.test(httpPath)) {
       throw new Error(
-        'You must supply an absolute public path to a development build of a web target bundle as it will be hosted on a seperate development server to any node target bundles.',
+        "You must supply an absolute public path to a development build of a web target bundle as it will be hosted on a seperate development server to any node target bundles."
       );
     }
 
@@ -23,12 +23,12 @@ class HotClientServer {
       quiet: true,
       noInfo: true,
       headers: {
-        'Access-Control-Allow-Origin': '*',
+        "Access-Control-Allow-Origin": "*"
       },
       // Ensure that the public path is taken from the compiler webpack config
       // as it will have been created as an absolute path to avoid conflicts
       // with an node servers.
-      publicPath: compiler.options.output.publicPath,
+      publicPath: compiler.options.output.publicPath
     });
 
     app.use(this.webpackDevMiddleware);
@@ -36,31 +36,31 @@ class HotClientServer {
 
     const listener = app.listen(port, host);
 
-    this.listenerManager = new ListenerManager(listener, 'client');
+    this.listenerManager = new ListenerManager(listener, "client");
 
-    compiler.plugin('compile', () => {
+    compiler.plugin("compile", () => {
       log({
-        title: 'client',
-        level: 'info',
-        message: 'Building new bundle...',
+        title: "client",
+        level: "info",
+        message: "Building new bundle..."
       });
     });
 
-    compiler.plugin('done', (stats) => {
+    compiler.plugin("done", stats => {
       if (stats.hasErrors()) {
         log({
-          title: 'client',
-          level: 'error',
-          message: 'Build failed, please check the console for more information.',
-          notify: true,
+          title: "client",
+          level: "error",
+          message: "Build failed, please check the console for more information.",
+          notify: true
         });
         console.error(stats.toString());
       } else {
         log({
-          title: 'client',
-          level: 'info',
-          message: 'Running with latest changes.',
-          notify: true,
+          title: "client",
+          level: "info",
+          message: "Running with latest changes.",
+          notify: true
         });
       }
     });
