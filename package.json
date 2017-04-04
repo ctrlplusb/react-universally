@@ -17,6 +17,7 @@
     "lint": "eslint client server shared config internal",
     "precommit": "lint-staged",
     "preinstall": "node internal/scripts/preinstall",
+    "prepush": "jest",
     "start": "NODE_ENV=production node build/server",
     "test": "jest",
     "test:coverage": "jest --coverage"
