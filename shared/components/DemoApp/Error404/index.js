@@ -17,7 +17,11 @@ class Error404 extends Component {
 
 Error404.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
-  staticContext: PropTypes.object.isRequired,
+  staticContext: PropTypes.object,
+};
+
+Error404.defaultProps = {
+  staticContext: {},
 };
 
 export default Error404;
