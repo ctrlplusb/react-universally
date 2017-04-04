@@ -1,14 +1,14 @@
-import path from "path";
-import appRootDir from "app-root-dir";
-import { spawn } from "child_process";
-import { log } from "../utils";
+import path from 'path';
+import appRootDir from 'app-root-dir';
+import { spawn } from 'child_process';
+import { log } from '../utils';
 
 class HotNodeServer {
   constructor(name, compiler, clientCompiler) {
     const compiledEntryFile = path.resolve(
       appRootDir.get(),
       compiler.options.output.path,
-      `${Object.keys(compiler.options.entry)[0]}.js`
+      `${Object.keys(compiler.options.entry)[0]}.js`,
     );
 
     const startServer = () => {
@@ -17,26 +17,26 @@ class HotNodeServer {
         this.server = null;
         log({
           title: name,
-          level: "info",
-          message: "Restarting server..."
+          level: 'info',
+          message: 'Restarting server...',
         });
       }
 
-      const newServer = spawn("node", [compiledEntryFile]);
+      const newServer = spawn('node', [compiledEntryFile]);
 
       log({
         title: name,
-        level: "info",
-        message: "Server running with latest changes.",
-        notify: true
+        level: 'info',
+        message: 'Server running with latest changes.',
+        notify: true,
       });
 
-      newServer.stdout.on("data", data => console.log(data.toString().trim()));
-      newServer.stderr.on("data", data => {
+      newServer.stdout.on('data', data => console.log(data.toString().trim()));
+      newServer.stderr.on('data', (data) => {
         log({
           title: name,
-          level: "error",
-          message: "Error in server execution, check the console for more info."
+          level: 'error',
+          message: 'Error in server execution, check the console for more info.',
         });
         console.error(data.toString().trim());
       });
@@ -58,26 +58,26 @@ class HotNodeServer {
       }
     };
 
-    clientCompiler.plugin("compile", () => {
+    clientCompiler.plugin('compile', () => {
       this.clientCompiling = true;
     });
 
-    clientCompiler.plugin("done", stats => {
+    clientCompiler.plugin('done', (stats) => {
       if (!stats.hasErrors()) {
         this.clientCompiling = false;
       }
     });
 
-    compiler.plugin("compile", () => {
+    compiler.plugin('compile', () => {
       this.serverCompiling = true;
       log({
         title: name,
-        level: "info",
-        message: "Building new bundle..."
+        level: 'info',
+        message: 'Building new bundle...',
       });
     });
 
-    compiler.plugin("done", stats => {
+    compiler.plugin('done', (stats) => {
       this.serverCompiling = false;
 
       if (this.disposing) {
@@ -88,9 +88,9 @@ class HotNodeServer {
         if (stats.hasErrors()) {
           log({
             title: name,
-            level: "error",
-            message: "Build failed, check the console for more information.",
-            notify: true
+            level: 'error',
+            message: 'Build failed, check the console for more information.',
+            notify: true,
           });
           console.log(stats.toString());
           return;
@@ -100,9 +100,9 @@ class HotNodeServer {
       } catch (err) {
         log({
           title: name,
-          level: "error",
-          message: "Failed to start, please check the console for more information.",
-          notify: true
+          level: 'error',
+          message: 'Failed to start, please check the console for more information.',
+          notify: true,
         });
         console.error(err);
       }
@@ -115,7 +115,7 @@ class HotNodeServer {
   dispose() {
     this.disposing = true;
 
-    const stopWatcher = new Promise(resolve => {
+    const stopWatcher = new Promise((resolve) => {
       this.watcher.close(resolve);
     });
 

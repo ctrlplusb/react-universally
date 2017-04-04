@@ -1,4 +1,4 @@
-import removeNil from "../arrays/removeNil";
+import removeNil from '../arrays/removeNil';
 
 /**
  * Deeply merges a given set of objects together.
@@ -19,8 +19,8 @@ export default function mergeDeep(...args) {
   }
   return filtered.reduce(
     (acc, cur) => {
-      Object.keys(cur).forEach(key => {
-        if (typeof acc[key] === "object" && typeof cur[key] === "object") {
+      Object.keys(cur).forEach((key) => {
+        if (typeof acc[key] === 'object' && typeof cur[key] === 'object') {
           // eslint-disable-next-line no-param-reassign
           acc[key] = mergeDeep(acc[key], cur[key]);
         } else {
@@ -30,6 +30,6 @@ export default function mergeDeep(...args) {
       });
       return acc;
     },
-    {}
+    {},
   );
 }

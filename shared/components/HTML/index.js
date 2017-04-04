@@ -1,6 +1,6 @@
 /* eslint-disable react/no-danger */
 
-import React, { PropTypes } from "react";
+import React, { PropTypes } from 'react';
 
 /**
  * The is the HTML shell for our React Application.
@@ -11,7 +11,7 @@ function HTML(props) {
     description,
     appBodyString,
     headerElements,
-    bodyElements
+    bodyElements,
   } = props;
 
   return (
@@ -24,10 +24,7 @@ function HTML(props) {
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="msapplication-TileColor" content="#2b2b2b" />
-        <meta
-          name="msapplication-TileImage"
-          content="/favicons/mstile-144x144.png"
-        />
+        <meta name="msapplication-TileImage" content="/favicons/mstile-144x144.png" />
         <meta name="theme-color" content="#2b2b2b" />
         {/*
           A great reference for favicons:
@@ -82,57 +79,18 @@ function HTML(props) {
           sizes="180x180"
           href="/favicons/apple-touch-icon-180x180.png"
         />
-        <link
-          rel="mask-icon"
-          href="/favicons/safari-pinned-tab.svg"
-          color="#00a9d9"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          href="/favicons/favicon-196x196.png"
-          sizes="196x196"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          href="/favicons/favicon-128.png"
-          sizes="128x128"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          href="/favicons/favicon-96x96.png"
-          sizes="96x96"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          href="/favicons/favicon-32x32.png"
-          sizes="32x32"
-        />
+        <link rel="mask-icon" href="/favicons/safari-pinned-tab.svg" color="#00a9d9" />
+        <link rel="icon" type="image/png" href="/favicons/favicon-196x196.png" sizes="196x196" />
+        <link rel="icon" type="image/png" href="/favicons/favicon-128.png" sizes="128x128" />
+        <link rel="icon" type="image/png" href="/favicons/favicon-96x96.png" sizes="96x96" />
+        <link rel="icon" type="image/png" href="/favicons/favicon-32x32.png" sizes="32x32" />
         <link rel="icon" sizes="16x16 32x32" href="/favicon.ico" />
         <meta name="msapplication-TileColor" content="#2b2b2b" />
-        <meta
-          name="msapplication-TileImage"
-          content="/favicons/mstile-144x144.png"
-        />
-        <meta
-          name="msapplication-square70x70logo"
-          content="/favicons/mstile-70x70.png"
-        />
-        <meta
-          name="msapplication-square150x150logo"
-          content="/favicons/mstile-150x150.png"
-        />
-        <meta
-          name="msapplication-wide310x150logo"
-          content="/favicons/mstile-310x150.png"
-        />
-        <meta
-          name="msapplication-square310x310logo"
-          content="/favicons/mstile-310x310.png"
-        />
+        <meta name="msapplication-TileImage" content="/favicons/mstile-144x144.png" />
+        <meta name="msapplication-square70x70logo" content="/favicons/mstile-70x70.png" />
+        <meta name="msapplication-square150x150logo" content="/favicons/mstile-150x150.png" />
+        <meta name="msapplication-wide310x150logo" content="/favicons/mstile-310x150.png" />
+        <meta name="msapplication-square310x310logo" content="/favicons/mstile-310x310.png" />
         <link rel="manifest" href="/manifest.json" />
         {headerElements}
       </head>
@@ -149,13 +107,13 @@ HTML.propTypes = {
   description: PropTypes.string.isRequired,
   appBodyString: PropTypes.string,
   headerElements: PropTypes.node,
-  bodyElements: PropTypes.node
+  bodyElements: PropTypes.node,
 };
 
 HTML.defaultProps = {
-  appBodyString: "",
+  appBodyString: '',
   headerElements: null,
-  bodyElements: null
+  bodyElements: null,
 };
 
 // EXPORT

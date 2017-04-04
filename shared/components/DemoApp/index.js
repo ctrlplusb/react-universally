@@ -1,22 +1,22 @@
-import "normalize.css/normalize.css";
+import 'normalize.css/normalize.css';
 
-import React from "react";
-import Switch from "react-router-dom/Switch";
-import Route from "react-router-dom/Route";
-import Helmet from "react-helmet";
+import React from 'react';
+import Switch from 'react-router-dom/Switch';
+import Route from 'react-router-dom/Route';
+import Helmet from 'react-helmet';
 
-import "./globals.css";
+import './globals.css';
 
-import Error404 from "./Error404";
-import Header from "./Header";
+import Error404 from './Error404';
+import Header from './Header';
 
-import AsyncHomeRoute from "./AsyncHomeRoute";
-import AsyncCounterRoute from "./AsyncCounterRoute";
-import AsyncAboutRoute from "./AsyncAboutRoute";
+import AsyncHomeRoute from './AsyncHomeRoute';
+import AsyncCounterRoute from './AsyncCounterRoute';
+import AsyncAboutRoute from './AsyncAboutRoute';
 
 function DemoApp() {
   return (
-    <div style={{ padding: "2rem" }}>
+    <div style={{ padding: '2rem' }}>
       <Helmet>
         {/*
           NOTE: This is simply for quick and easy styling on the demo. Remove
@@ -33,7 +33,7 @@ function DemoApp() {
         />
       </Helmet>
       <Header />
-      <div style={{ paddingTop: "2rem", paddingBottom: "2rem" }}>
+      <div style={{ paddingTop: '2rem', paddingBottom: '2rem' }}>
         <Switch>
           <Route exact path="/" component={AsyncHomeRoute} />
           <Route path="/counter" component={AsyncCounterRoute} />

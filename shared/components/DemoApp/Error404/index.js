@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from "react";
+import React, { Component, PropTypes } from 'react';
 
 class Error404 extends Component {
   componentWillMount() {
@@ -15,11 +15,11 @@ class Error404 extends Component {
 
 Error404.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
-  staticContext: PropTypes.object
+  staticContext: PropTypes.object,
 };
 
 Error404.defaultProps = {
-  staticContext: {}
+  staticContext: {},
 };
 
 export default Error404;

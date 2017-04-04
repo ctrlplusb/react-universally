@@ -1,7 +1,7 @@
-import uuid from "uuid";
-import hpp from "hpp";
-import helmet from "helmet";
-import config from "../../config";
+import uuid from 'uuid';
+import hpp from 'hpp';
+import helmet from 'helmet';
+import config from '../../config';
 
 const cspConfig = {
   directives: {
@@ -9,10 +9,10 @@ const cspConfig = {
     // Note: Setting this to stricter than * breaks the service worker. :(
     // I can't figure out how to get around this, so if you know of a safer
     // implementation that is kinder to service workers please let me know.
-    connectSrc: ["*"], // ["'self'", 'ws:'],
+    connectSrc: ['*'], // ["'self'", 'ws:'],
     defaultSrc: ["'self'"],
     imgSrc: [
-      "'self'"
+      "'self'",
       // If you use Base64 encoded images (i.e. inlined images), then you will
       // need the following:
       // 'data:',
@@ -34,24 +34,22 @@ const cspConfig = {
       // It will be ignored by browsers that do support nonces as they will
       // recognise that we have also provided a nonce configuration and
       // use the stricter rule.
-      "'unsafe-inline'"
+      "'unsafe-inline'",
     ],
     styleSrc: [
       "'self'",
       // Webpack generates JS that loads our CSS, so this is needed:
       "'unsafe-inline'",
-      "blob:"
-    ]
-  }
+      'blob:',
+    ],
+  },
 };
 
 // Add any additional CSP from the static config.
-const cspExtensions = config("cspExtensions");
-Object.keys(cspExtensions).forEach(key => {
+const cspExtensions = config('cspExtensions');
+Object.keys(cspExtensions).forEach((key) => {
   if (cspConfig.directives[key]) {
-    cspConfig.directives[key] = cspConfig.directives[key].concat(
-      cspExtensions[key]
-    );
+    cspConfig.directives[key] = cspConfig.directives[key].concat(cspExtensions[key]);
   } else {
     cspConfig.directives[key] = cspExtensions[key];
   }
@@ -60,10 +58,8 @@ Object.keys(cspExtensions).forEach(key => {
 if (process.env.BUILD_FLAG_IS_DEV) {
   // When in development mode we need to add our secondary express server that
   // is used to host our client bundle to our csp config.
-  Object.keys(cspConfig.directives).forEach(directive => {
-    cspConfig.directives[directive].push(
-      `${config("host")}:${config("clientDevServerPort")}`
-    );
+  Object.keys(cspConfig.directives).forEach((directive) => {
+    cspConfig.directives[directive].push(`${config('host')}:${config('clientDevServerPort')}`);
   });
 }
 
@@ -90,7 +86,7 @@ const securityMiddleware = [
 
   // Frameguard mitigates clickjacking attacks by setting the X-Frame-Options header.
   // @see https://helmetjs.github.io/docs/frameguard/
-  helmet.frameguard("deny"),
+  helmet.frameguard('deny'),
 
   // Sets the X-Download-Options to prevent Internet Explorer from executing
   // downloads in your site’s context.
@@ -123,7 +119,7 @@ const securityMiddleware = [
   // The CSP configuration is an optional item for helmet, however you should
   // not remove it without making a serious consideration that you do not
   // require the added security.
-  helmet.contentSecurityPolicy(cspConfig)
+  helmet.contentSecurityPolicy(cspConfig),
 ];
 
 export default securityMiddleware;

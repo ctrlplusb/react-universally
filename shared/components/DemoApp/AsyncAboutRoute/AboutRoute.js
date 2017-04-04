@@ -1,75 +1,75 @@
-import React from "react";
-import Helmet from "react-helmet";
+import React from 'react';
+import Helmet from 'react-helmet';
 
 const contributors = [
   {
-    name: "Alin Porumb",
-    url: "https://github.com/alinporumb"
+    name: 'Alin Porumb',
+    url: 'https://github.com/alinporumb',
   },
   {
-    name: "Benjamin Kniffler",
-    url: "https://github.com/bkniffler"
+    name: 'Benjamin Kniffler',
+    url: 'https://github.com/bkniffler',
   },
   {
-    name: "Carson Perrotti",
-    url: "https://github.com/carsonperrotti"
+    name: 'Carson Perrotti',
+    url: 'https://github.com/carsonperrotti',
   },
   {
-    name: "Christian Glombek",
-    url: "https://github.com/LorbusChris"
+    name: 'Christian Glombek',
+    url: 'https://github.com/LorbusChris',
   },
   {
-    name: "Christoph Werner",
-    url: "https://github.com/codepunkt"
+    name: 'Christoph Werner',
+    url: 'https://github.com/codepunkt',
   },
   {
-    name: "David Edmondson",
-    url: "https://github.com/threehams"
+    name: 'David Edmondson',
+    url: 'https://github.com/threehams',
   },
   {
-    name: "Dion Dirza",
-    url: "https://github.com/diondirza"
+    name: 'Dion Dirza',
+    url: 'https://github.com/diondirza',
   },
   {
-    name: "Evgeny Boxer",
-    url: "https://github.com/evgenyboxer"
+    name: 'Evgeny Boxer',
+    url: 'https://github.com/evgenyboxer',
   },
   {
-    name: "Joe Kohlmann",
-    url: "https://github.com/kohlmannj"
+    name: 'Joe Kohlmann',
+    url: 'https://github.com/kohlmannj',
   },
   {
-    name: "Lucian Lature",
-    url: "https://github.com/lucianlature"
+    name: 'Lucian Lature',
+    url: 'https://github.com/lucianlature',
   },
   {
-    name: "Steven Enten",
-    url: "https://github.com/enten"
+    name: 'Steven Enten',
+    url: 'https://github.com/enten',
   },
   {
-    name: "Sean Matheson",
-    url: "https://github.com/ctrlplusb"
+    name: 'Sean Matheson',
+    url: 'https://github.com/ctrlplusb',
   },
   {
-    name: "Steven Truesdell",
-    url: "https://github.com/strues"
+    name: 'Steven Truesdell',
+    url: 'https://github.com/strues',
   },
   {
-    name: "Tom",
-    url: "https://github.com/datoml"
-  }
+    name: 'Tom',
+    url: 'https://github.com/datoml',
+  },
 ];
 
 function AboutRoute() {
   return (
-    <div style={{ textAlign: "center" }}>
+    <div style={{ textAlign: 'center' }}>
       <Helmet>
         <title>About</title>
       </Helmet>
 
       <p>Produced with ❤️ by...</p>
 
-      <ul style={{ marginTop: "1rem" }}>
+      <ul style={{ marginTop: '1rem' }}>
         {contributors.map(({ name, url }) => (
           <li key={name}>
             <a href={url} target="_blank" rel="noopener noreferrer">
