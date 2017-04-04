@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<AsyncAboutRoute /> renders 1`] = `
+exports[`<AboutRoute /> renders 1`] = `
 <div
   style={
     Object {

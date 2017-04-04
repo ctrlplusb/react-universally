@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class AsyncCounterRoute extends Component {
+class CounterRoute extends Component {
   constructor(props) {
     super(props);
     this.incrementCounter = this.incrementCounter.bind(this);
@@ -32,4 +32,4 @@ class AsyncCounterRoute extends Component {
   }
 }
 
-export default AsyncCounterRoute;
+export default CounterRoute;

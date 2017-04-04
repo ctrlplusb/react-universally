@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<AsyncHomeRoute /> renders 1`] = `
+exports[`<HomeRoute /> renders 1`] = `
 <div>
   <HelmetWrapper
     encodeSpecialCharacters={true}

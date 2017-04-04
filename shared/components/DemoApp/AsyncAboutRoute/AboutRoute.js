@@ -59,7 +59,7 @@ const contributors = [
   },
 ];
 
-function AsyncAboutRoute() {
+function AboutRoute() {
   return (
     <div style={{ textAlign: 'center' }}>
       <Helmet>
@@ -87,4 +87,4 @@ function AsyncAboutRoute() {
   );
 }
 
-export default AsyncAboutRoute;
+export default AboutRoute;

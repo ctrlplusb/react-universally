@@ -7,11 +7,13 @@ import Helmet from 'react-helmet';
 
 import './globals.css';
 
-import HomeRoute from './HomeRoute';
-import CounterRoute from './CounterRoute';
-import AboutRoute from './AboutRoute';
 import Error404 from './Error404';
 import Header from './Header';
+
+import AsyncHomeRoute from './AsyncHomeRoute';
+import AsyncCounterRoute from './AsyncCounterRoute';
+import AsyncAboutRoute from './AsyncAboutRoute';
+
 
 function DemoApp() {
   return (
@@ -28,9 +30,9 @@ function DemoApp() {
       <Header />
       <div style={{ paddingTop: '2rem', paddingBottom: '2rem' }}>
         <Switch>
-          <Route exact path="/" component={HomeRoute} />
-          <Route path="/counter" component={CounterRoute} />
-          <Route path="/about" component={AboutRoute} />
+          <Route exact path="/" component={AsyncHomeRoute} />
+          <Route path="/counter" component={AsyncCounterRoute} />
+          <Route path="/about" component={AsyncAboutRoute} />
           <Route component={Error404} />
         </Switch>
       </div>

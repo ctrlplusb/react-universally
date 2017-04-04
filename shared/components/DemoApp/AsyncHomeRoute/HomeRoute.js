@@ -3,7 +3,7 @@ import Helmet from 'react-helmet';
 
 import config from '../../../../config';
 
-function AsyncHomeRoute() {
+function HomeRoute() {
   return (
     <div>
       <Helmet>
@@ -22,4 +22,4 @@ function AsyncHomeRoute() {
   );
 }
 
-export default AsyncHomeRoute;
+export default HomeRoute;
