@@ -227,14 +227,14 @@ export default function webpackConfigFactory(buildOptions) {
       // the associated values below.
       //
       // For example you may have the following in your code:
-      //   if (process.env.BUILD_FLAG_IS_CLIENT === true) {
+      //   if (process.env.BUILD_FLAG_IS_CLIENT === 'true') {
       //     console.log('Foo');
       //   }
       //
       // If the BUILD_FLAG_IS_CLIENT was assigned a value of `false` the above
       // code would be converted to the following by the webpack bundling
       // process:
-      //   if (false === true) {
+      //   if ('false' === 'true') {
       //     console.log('Foo');
       //   }
       //
@@ -243,18 +243,22 @@ export default function webpackConfigFactory(buildOptions) {
       // final output. This is helpful for extreme cases where you want to
       // ensure that code is only included/executed on specific targets, or for
       // doing debugging.
+      //
+      // NOTE: We are stringifying the values to keep them in line with the
+      // expected type of a typical process.env member (i.e. string).
+      // @see https://github.com/ctrlplusb/react-universally/issues/395
       new webpack.EnvironmentPlugin({
         // It is really important to use NODE_ENV=production in order to use
         // optimised versions of some node_modules, such as React.
         NODE_ENV: isProd ? 'production' : 'development',
         // Is this the "client" bundle?
-        BUILD_FLAG_IS_CLIENT: isClient,
+        BUILD_FLAG_IS_CLIENT: JSON.stringify(isClient),
         // Is this the "server" bundle?
-        BUILD_FLAG_IS_SERVER: isServer,
+        BUILD_FLAG_IS_SERVER: JSON.stringify(isServer),
         // Is this a node bundle?
-        BUILD_FLAG_IS_NODE: isNode,
+        BUILD_FLAG_IS_NODE: JSON.stringify(isNode),
         // Is this a development build?
-        BUILD_FLAG_IS_DEV: isDev,
+        BUILD_FLAG_IS_DEV: JSON.stringify(isDev),
       }),
 
       // Generates a JSON file containing a map of all the output files for

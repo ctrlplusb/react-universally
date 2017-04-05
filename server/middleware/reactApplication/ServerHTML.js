@@ -83,7 +83,9 @@ function ServerHTML(props) {
     // generate a vendor DLL in order to dramatically reduce our
     // compilation times.  Therefore we need to inject the path to the
     // vendor dll bundle below.
-    ifElse(process.env.BUILD_FLAG_IS_DEV && config('bundles.client.devVendorDLL.enabled'))(() =>
+    ifElse(
+      process.env.BUILD_FLAG_IS_DEV === 'true' && config('bundles.client.devVendorDLL.enabled'),
+    )(() =>
       scriptTag(
         `${config('bundles.client.webPath')}${config('bundles.client.devVendorDLL.name')}.js?t=${Date.now()}`,
       )),

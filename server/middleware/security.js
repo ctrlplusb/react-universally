@@ -55,7 +55,7 @@ Object.keys(cspExtensions).forEach((key) => {
   }
 });
 
-if (process.env.BUILD_FLAG_IS_DEV) {
+if (process.env.BUILD_FLAG_IS_DEV === 'true') {
   // When in development mode we need to add our secondary express server that
   // is used to host our client bundle to our csp config.
   Object.keys(cspConfig.directives).forEach((directive) => {

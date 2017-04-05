@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Helmet from 'react-helmet';
 import { renderToString, renderToStaticMarkup } from 'react-dom/server';
@@ -25,7 +24,7 @@ export default function reactApplicationMiddleware(request, response) {
   // It's possible to disable SSR, which can be useful in development mode.
   // In this case traditional client side only rendering will occur.
   if (config('disableSSR')) {
-    if (process.env.BUILD_FLAG_IS_DEV) {
+    if (process.env.BUILD_FLAG_IS_DEV === 'true') {
       // eslint-disable-next-line no-console
       console.log('==> Handling react route without SSR');
     }
@@ -78,11 +77,11 @@ export default function reactApplicationMiddleware(request, response) {
     response
       .status(
         reactRouterContext.missed
-          // If the renderResult contains a "missed" match then we set a 404 code.
-          // Our App component will handle the rendering of an Error404 view.
-          ? 404
-          // Otherwise everything is all good and we send a 200 OK status.
-          : 200,
+          ? // If the renderResult contains a "missed" match then we set a 404 code.
+            // Our App component will handle the rendering of an Error404 view.
+            404
+          : // Otherwise everything is all good and we send a 200 OK status.
+            200,
       )
       .send(`<!DOCTYPE html>${html}`);
   });

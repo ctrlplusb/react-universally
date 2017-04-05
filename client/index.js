@@ -54,14 +54,11 @@ renderApp(DemoApp);
 require('./registerServiceWorker');
 
 // The following is needed so that we can support hot reloading our application.
-if (process.env.BUILD_FLAG_IS_DEV && module.hot) {
+if (process.env.BUILD_FLAG_IS_DEV === 'true' && module.hot) {
   // Accept changes to this file for hot reloading.
   module.hot.accept('./index.js');
   // Any changes to our App will cause a hotload re-render.
-  module.hot.accept(
-    '../shared/components/DemoApp',
-    () => {
-      renderApp(require('../shared/components/DemoApp').default);
-    },
-  );
+  module.hot.accept('../shared/components/DemoApp', () => {
+    renderApp(require('../shared/components/DemoApp').default);
+  });
 }

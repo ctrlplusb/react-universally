@@ -83,10 +83,7 @@ const values = {
     childSrc: [],
     connectSrc: [],
     defaultSrc: [],
-    fontSrc: [
-      'https://fonts.googleapis.com/css',
-      'https://fonts.gstatic.com',
-    ],
+    fontSrc: ['https://fonts.googleapis.com/css', 'https://fonts.gstatic.com'],
     imgSrc: [],
     mediaSrc: [],
     manifestSrc: [],
@@ -232,11 +229,7 @@ const values = {
       srcEntryFile: './server/index.js',
 
       // Src paths.
-      srcPaths: [
-        './server',
-        './shared',
-        './config',
-      ],
+      srcPaths: ['./server', './shared', './config'],
 
       // Where does the server bundle output live?
       outputPath: './build/server',
@@ -330,8 +323,10 @@ const values = {
 
 // This protects us from accidentally including this configuration in our
 // client bundle. That would be a big NO NO to do. :)
-if (process.env.BUILD_FLAG_IS_CLIENT) {
-  throw new Error("You shouldn't be importing the `<projectroot>/config/values.js` directly into code that will be included in your 'client' bundle as the configuration object will be sent to user's browsers. This could be a security risk! Instead, use the `config` helper function located at `<projectroot>/config/index.js`.");
+if (process.env.BUILD_FLAG_IS_CLIENT === 'true') {
+  throw new Error(
+    "You shouldn't be importing the `<projectroot>/config/values.js` directly into code that will be included in your 'client' bundle as the configuration object will be sent to user's browsers. This could be a security risk! Instead, use the `config` helper function located at `<projectroot>/config/index.js`.",
+  );
 }
 
 export default values;

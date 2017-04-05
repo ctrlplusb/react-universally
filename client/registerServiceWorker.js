@@ -10,10 +10,11 @@
 
 import config from '../config';
 
-if (!process.env.BUILD_FLAG_IS_DEV) {
+if (process.env.BUILD_FLAG_IS_DEV === 'false') {
   // We check the shared config, ensuring that the service worker has been
   // enabled.
   if (config('serviceWorker.enabled')) {
+    // eslint-disable-next-line global-require
     const OfflinePluginRuntime = require('offline-plugin/runtime');
 
     // Install the offline plugin, which instantiates our service worker and app

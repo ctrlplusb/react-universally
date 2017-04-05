@@ -26,7 +26,7 @@ export default function getClientBundleEntryAssets() {
   // Return the assets json cache if it exists.
   // In development mode we always read the assets json file from disk to avoid
   // any cases where an older version gets cached.
-  if (!process.env.BUILD_FLAG_IS_DEV && resultCache) {
+  if (process.env.BUILD_FLAG_IS_DEV === 'false' && resultCache) {
     return resultCache;
   }
 
