@@ -11,14 +11,10 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import HTML from '../../../shared/components/HTML';
 
 module.exports = function generate(context) {
-  const config = context.htmlWebpackPlugin.options.custom.config;
+  // const config = context.htmlWebpackPlugin.options.custom.config;
   const ClientConfig = context.htmlWebpackPlugin.options.custom.ClientConfig;
   const html = renderToStaticMarkup(
-    <HTML
-      title={config('htmlPage.defaultTitle')}
-      description={config('htmlPage.description')}
-      bodyElements={<ClientConfig nonce="OFFLINE_PAGE_NONCE_PLACEHOLDER" />}
-    />,
+    <HTML bodyElements={<ClientConfig nonce="OFFLINE_PAGE_NONCE_PLACEHOLDER" />} />,
   );
   return `<!DOCTYPE html>${html}`;
 };
