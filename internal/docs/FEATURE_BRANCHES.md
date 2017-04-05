@@ -10,17 +10,9 @@
 Below are a list of extensions to this repository, in the form of branches.  Each of them has been tailored to add an individual technology.  It is possible to merge multiple branches together in order to create a technology mix that suits your project's needs.  We'll detail this workflow after the repository list.
 
  - [`apollo`](https://github.com/ctrlplusb/react-universally/tree/feature/apollo) - Adds the Apollo Stack (i.e. Graphql).
- - [`flow`](https://github.com/ctrlplusb/react-universally/tree/feature/flow) - Adds static type checking using Flow.
- - [`found`](https://github.com/andreyluiz/react-universally/tree/feature/found) - Adds the Found router in replacement to react-router.
- - [`glamor`](https://github.com/ctrlplusb/react-universally/tree/feature/glamor) - Adds the Glamor CSS-in-JS library.
- - [`koa2`](https://github.com/ctrlplusb/react-universally/tree/feature/koa2) - Replaces Express with Koa2.
- - [`jest`](https://github.com/ctrlplusb/react-universally/tree/feature/jest) - Adds the Jest testing framework.
  - [`mobx`](https://github.com/andreyluiz/react-universally/tree/feature/mobx) - Adds MobX as a state management library.
- - [`preact`](https://github.com/andreyluiz/react-universally/tree/feature/preact) - Replaces React with Preact via `preact-compat` a React polyfill that uses Preact under the hood. Smaller, faster.
  - [`postcss-sass`](https://github.com/ctrlplusb/react-universally/tree/feature/postcss-sass) - Adds PostCSS and SASS.
  - [`redux-opinionated`](https://github.com/ctrlplusb/react-universally/tree/feature/redux-opinionated) - Adds an opinionated Redux implementation, using `redux-thunk` and `react-jobs` to support data loading across the client/server.  It also merges in the `flow` feature branch.
- - [`styled-components`](https://github.com/ctrlplusb/react-universally/tree/feature/styled-components) - Adds the Styled Components CSS-in-JS library.
- - [`styletron`](https://github.com/ctrlplusb/react-universally/tree/feature/styletron) - Adds the Styletron CSS-in-JS library.
 
 If you would like to add a new feature branch log an issue describing your chosen technology and we can come up with a plan together. :)
 
