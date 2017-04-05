@@ -1,9 +1,3 @@
-___PUBLIC ANNOUNCEMENT 😀___
-
-v13 is going to land fairly soonish via the `next` branch.  It includes a significant amount of updates and restructuring that would make a merged upgrade from v12 painful.  If you want to stay up to date with the project you may want to consider using the `next` branch directly rather than `master`.  The last big outstanding issue for v13 is issue [#359](https://github.com/ctrlplusb/react-universally/issues/359).
-
----
-
 <p align='center'>
   <h1 align='center'>React, Universally</h1>
   <p align='center'><img width='150' src='https://raw.githubusercontent.com/ctrlplusb/assets/master/logos/react-universally.png' /></p>
