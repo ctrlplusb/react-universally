@@ -44,7 +44,7 @@ Redux/MobX, data persistence, modern styling frameworks and all the other bells 
 git clone https://github.com/ctrlplusb/react-universally my-project
 cd my-project
 yarn
-yarn run development
+yarn run develop
 ```
 
 Or, if you aren't using [`yarn`](https://yarnpkg.com/):
@@ -53,7 +53,7 @@ Or, if you aren't using [`yarn`](https://yarnpkg.com/):
 git clone https://github.com/ctrlplusb/react-universally my-project
 cd my-project
 npm install
-npm run development
+npm run develop
 ```
 
 Now go make some changes to the `Home` component to see the tooling in action.
