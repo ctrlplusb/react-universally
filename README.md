@@ -8,6 +8,8 @@
 
 This starter kit contains all the build tooling and configuration you need to kick off your next universal React project, whilst containing a minimal "project" set up allowing you to make your own architecture decisions (Redux/MobX etc).
 
+> NOTICE: Please read this important [issue](https://github.com/ctrlplusb/react-universally/issues/409) about the behaviour of this project when using `react-async-component`, which is by default bundled with it.
+
 ## Features
 
   - 👀 `react` as the view.
@@ -42,7 +44,7 @@ Redux/MobX, data persistence, modern styling frameworks and all the other bells 
 git clone https://github.com/ctrlplusb/react-universally my-project
 cd my-project
 yarn
-yarn run development
+yarn run develop
 ```
 
 Or, if you aren't using [`yarn`](https://yarnpkg.com/):
@@ -51,7 +53,7 @@ Or, if you aren't using [`yarn`](https://yarnpkg.com/):
 git clone https://github.com/ctrlplusb/react-universally my-project
 cd my-project
 npm install
-npm run development
+npm run develop
 ```
 
 Now go make some changes to the `Home` component to see the tooling in action.
