@@ -4996,15 +4996,15 @@ react-addons-test-utils@15.4.2:
     fbjs "^0.8.4"
     object-assign "^4.1.0"
 
-react-async-bootstrapper@1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/react-async-bootstrapper/-/react-async-bootstrapper-1.0.1.tgz#8a7ce80547ee274d2dd9c355329029c3f0cf1027"
+react-async-bootstrapper@1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/react-async-bootstrapper/-/react-async-bootstrapper-1.1.1.tgz#130153c064558edf5fae6500db4e2081662fa323"
   dependencies:
-    react-tree-walker "^2.0.1"
+    react-tree-walker "^2.1.1"
 
-react-async-component@1.0.0-beta.1:
-  version "1.0.0-beta.1"
-  resolved "https://registry.yarnpkg.com/react-async-component/-/react-async-component-1.0.0-beta.1.tgz#97bcfd7b354976b8cd9c7704ab21fb26eb38cda2"
+react-async-component@1.0.0-beta.2:
+  version "1.0.0-beta.2"
+  resolved "https://registry.yarnpkg.com/react-async-component/-/react-async-component-1.0.0-beta.2.tgz#5041311598b7faa80d1990e98723eb4b5b69d237"
 
 react-deep-force-update@^2.0.1:
   version "2.0.1"
@@ -5067,9 +5067,9 @@ react-side-effect@^1.1.0:
     exenv "^1.2.1"
     shallowequal "^0.2.2"
 
-react-tree-walker@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/react-tree-walker/-/react-tree-walker-2.0.1.tgz#42141f1e4564f6ab0adbdf6054b221092338cfd1"
+react-tree-walker@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/react-tree-walker/-/react-tree-walker-2.1.1.tgz#80ab80a0caa78f029fea39f42306b13b5d51bb8d"
 
 react@15.4.2:
   version "15.4.2"
