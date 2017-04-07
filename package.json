@@ -52,68 +52,6 @@
     "express",
     "webpack"
   ],
-  "contributors": [
-    {
-      "name": "Alin Porumb",
-      "url": "https://github.com/alinporumb"
-    },
-    {
-      "name": "Benjamin Kniffler",
-      "url": "https://github.com/bkniffler"
-    },
-    {
-      "name": "Birkir Rafn Guðjónsson",
-      "url": "https://github.com/birkir"
-    },
-    {
-      "name": "Carson Perrotti",
-      "url": "https://github.com/carsonperrotti"
-    },
-    {
-      "name": "Christian Glombek",
-      "url": "https://github.com/LorbusChris"
-    },
-    {
-      "name": "Christoph Werner",
-      "url": "https://github.com/codepunkt"
-    },
-    {
-      "name": "David Edmondson",
-      "url": "https://github.com/threehams"
-    },
-    {
-      "name": "Dion Dirza",
-      "url": "https://github.com/diondirza"
-    },
-    {
-      "name": "Evgeny Boxer",
-      "url": "https://github.com/evgenyboxer"
-    },
-    {
-      "name": "Joe Kohlmann",
-      "url": "https://github.com/kohlmannj"
-    },
-    {
-      "name": "Lucian Lature",
-      "url": "https://github.com/lucianlature"
-    },
-    {
-      "name": "Steven Enten",
-      "url": "https://github.com/enten"
-    },
-    {
-      "name": "Sean Matheson",
-      "url": "https://github.com/ctrlplusb"
-    },
-    {
-      "name": "Steven Truesdell",
-      "url": "https://github.com/strues"
-    },
-    {
-      "name": "Tom",
-      "url": "https://github.com/datoml"
-    }
-  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/ctrlplusb/react-universally/issues"
