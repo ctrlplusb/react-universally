@@ -11,6 +11,10 @@ const contributors = [
     url: 'https://github.com/bkniffler',
   },
   {
+    name: 'Birkir Rafn Guðjónsson',
+    url: 'https://github.com/birkir',
+  },
+  {
     name: 'Carson Perrotti',
     url: 'https://github.com/carsonperrotti',
   },

@@ -45,6 +45,15 @@ exports[`<AboutRoute /> renders 1`] = `
     </li>
     <li>
       <a
+        href="https://github.com/birkir"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        Birkir Rafn Guðjónsson
+      </a>
+    </li>
+    <li>
+      <a
         href="https://github.com/carsonperrotti"
         rel="noopener noreferrer"
         target="_blank"
