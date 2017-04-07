@@ -8,6 +8,24 @@
   "commit": true,
   "contributors": [
     {
+      "login": "aoc",
+      "name": "Andrés Calabrese",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/243161?v=3",
+      "profile": "https://github.com/aoc",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "andreyluiz",
+      "name": "Andrey Luiz",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/1965897?v=3",
+      "profile": "https://andreyluiz.github.io/",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
       "login": "alinporumb",
       "name": "Alin Porumb",
       "avatar_url": "https://avatars3.githubusercontent.com/u/3148205?v=3",
@@ -125,6 +143,24 @@
       ]
     },
     {
+      "login": "markshlick",
+      "name": "Mark Shlick",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/1624703?v=3",
+      "profile": "https://github.com/markshlick",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "rlindskog",
+      "name": "Ryan Lindskog",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/7436773?v=3",
+      "profile": "https://www.RyanLindskog.com/",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
       "login": "enten",
       "name": "Steven Enten",
       "avatar_url": "https://avatars1.githubusercontent.com/u/977713?v=3",
@@ -180,42 +216,6 @@
       "name": "Tyler Nieman",
       "avatar_url": "https://avatars0.githubusercontent.com/u/595711?v=3",
       "profile": "http://tsnieman.net/",
-      "contributions": [
-        "code"
-      ]
-    },
-    {
-      "login": "markshlick",
-      "name": "Mark Shlick",
-      "avatar_url": "https://avatars1.githubusercontent.com/u/1624703?v=3",
-      "profile": "https://github.com/markshlick",
-      "contributions": [
-        "code"
-      ]
-    },
-    {
-      "login": "aoc",
-      "name": "Andrés Calabrese",
-      "avatar_url": "https://avatars3.githubusercontent.com/u/243161?v=3",
-      "profile": "https://github.com/aoc",
-      "contributions": [
-        "code"
-      ]
-    },
-    {
-      "login": "rlindskog",
-      "name": "Ryan Lindskog",
-      "avatar_url": "https://avatars1.githubusercontent.com/u/7436773?v=3",
-      "profile": "https://www.RyanLindskog.com/",
-      "contributions": [
-        "code"
-      ]
-    },
-    {
-      "login": "andreyluiz",
-      "name": "Andrey Luiz",
-      "avatar_url": "https://avatars3.githubusercontent.com/u/1965897?v=3",
-      "profile": "https://andreyluiz.github.io/",
       "contributions": [
         "code"
       ]
