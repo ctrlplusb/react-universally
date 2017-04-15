@@ -6,7 +6,8 @@
 /* eslint-disable react/no-danger */
 /* eslint-disable react/no-array-index-key */
 
-import React, { Children, PropTypes } from 'react';
+import React, { Children } from 'react';
+import PropTypes from 'prop-types';
 import serialize from 'serialize-javascript';
 
 import config from '../../../config';

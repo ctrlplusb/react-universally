@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import serialize from 'serialize-javascript';
 import filterWithRules from '../../shared/utils/objects/filterWithRules';
 import values from '../values';
@@ -35,7 +36,7 @@ function ClientConfig({ nonce }) {
 }
 
 ClientConfig.propTypes = {
-  nonce: React.PropTypes.string.isRequired,
+  nonce: PropTypes.string.isRequired,
 };
 
 export default ClientConfig;

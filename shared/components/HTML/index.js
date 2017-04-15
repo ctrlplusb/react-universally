@@ -1,6 +1,7 @@
 /* eslint-disable react/no-danger */
 
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 /**
  * The is the HTML shell for our React Application.
