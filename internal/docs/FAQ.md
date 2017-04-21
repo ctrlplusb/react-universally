@@ -62,3 +62,9 @@ git merge upstream/master
 # Deal with the merge conflicts, delete the yarn.lock file and
 # rebuild it, then commit and push.
 ```
+
+___Q:___ __My development server starts and bundles correctly, but the JavaScript bundles don't load. What causes this to happen?__
+
+Chances are you might be running on Windows. By default the server is bound to `0.0.0.0` for compatibility with Docker and other services. Everything is functioning correctly. The server listens fine on `0.0.0.0` and the problem is only client-side. Windows doesn't like to connecting to `0.0.0.0`. Change the host value in `config/values.js` to `localhost` or `127.0.0.1`. Another option is to specify `HOST=127.0.0.1` in the develop task within your `package.json` or `.env` file.
+
+ 

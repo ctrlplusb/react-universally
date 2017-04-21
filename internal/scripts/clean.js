@@ -4,9 +4,13 @@
 
 import { resolve as pathResolve } from 'path';
 import appRootDir from 'app-root-dir';
-import { exec } from '../utils';
+import rimraf from 'rimraf';
 import config from '../../config';
 
-const cmd = `$(npm bin)/rimraf ${pathResolve(appRootDir.get(), config('buildOutputPath'))}`;
+function clean() {
+  rimraf(pathResolve(appRootDir.get(), config('buildOutputPath')), () => {
+    console.log(`Cleaned ${pathResolve(appRootDir.get(), config('buildOutputPath'))}`);
+  });
+}
 
-exec(cmd);
+clean();
