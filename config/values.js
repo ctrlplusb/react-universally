@@ -64,8 +64,7 @@ const values = {
     features: [
       // The default list.
       'default',
-      // If you want to add only es6 features.
-      // 'es6',
+      'es6',
     ],
   },
 
