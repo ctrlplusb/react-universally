@@ -1,4 +1,4 @@
-const execIfFunc = x => typeof x === 'function' ? x() : x;
+const execIfFunc = x => (typeof x === 'function' ? x() : x);
 
 /**
  * This is a higher order function that accepts a boolean condition and will
@@ -17,5 +17,5 @@ const execIfFunc = x => typeof x === 'function' ? x() : x;
  *   ifDev('foo', () => 'lazy resolved');  // => 'foo'
  */
 export default function ifElse(condition) {
-  return (then, or) => execIfFunc(condition) ? execIfFunc(then) : execIfFunc(or);
+  return (then, or) => (execIfFunc(condition) ? execIfFunc(then) : execIfFunc(or));
 }

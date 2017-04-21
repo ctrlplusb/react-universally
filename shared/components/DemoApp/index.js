@@ -104,11 +104,11 @@ function DemoApp() {
         */}
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic"
+          href="//fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic"
         />
         <link
           rel="stylesheet"
-          href="https://cdn.rawgit.com/milligram/milligram/master/dist/milligram.min.css"
+          href="//cdn.rawgit.com/milligram/milligram/master/dist/milligram.min.css"
         />
       </Helmet>
       <Header />

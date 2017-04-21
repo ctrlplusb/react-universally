@@ -106,31 +106,32 @@ export default function withServiceWorker(webpackConfig, bundleConfig) {
       // if you needed.
       AppCache: false,
       // Which external files should be included with the service worker?
-      externals:
-        // Add the polyfill io script as an external if it is enabled.
-        (
-          config('polyfillIO.enabled')
-            ? [`https://cdn.polyfill.io/v2/polyfill.min.js?features=${config('polyfillIO.features').join(',')}`]
-            : []
-        )
+      // Add the polyfill io script as an external if it is enabled.
+      externals: (config('polyfillIO.enabled')
+        ? [`${config('polyfillIO.url')}?features=${config('polyfillIO.features').join(',')}`]
+        : [])
         // Add any included public folder assets.
         .concat(
           config('serviceWorker.includePublicAssets').reduce((acc, cur) => {
             const publicAssetPathGlob = path.resolve(
-              appRootDir.get(), config('publicAssetsPath'), cur,
+              appRootDir.get(),
+              config('publicAssetsPath'),
+              cur,
             );
             const publicFileWebPaths = acc.concat(
               // First get all the matching public folder files.
               globSync(publicAssetPathGlob, { nodir: true })
-              // Then map them to relative paths against the public folder.
-              // We need to do this as we need the "web" paths for each one.
-              .map(publicFile => path.relative(
-                path.resolve(appRootDir.get(), config('publicAssetsPath')),
-                publicFile,
-              ))
-              // Add the leading "/" indicating the file is being hosted
-              // off the root of the application.
-              .map(relativePath => `/${relativePath}`),
+                // Then map them to relative paths against the public folder.
+                // We need to do this as we need the "web" paths for each one.
+                .map(publicFile =>
+                  path.relative(
+                    path.resolve(appRootDir.get(), config('publicAssetsPath')),
+                    publicFile,
+                  ),
+                )
+                // Add the leading "/" indicating the file is being hosted
+                // off the root of the application.
+                .map(relativePath => `/${relativePath}`),
             );
             return publicFileWebPaths;
           }, []),

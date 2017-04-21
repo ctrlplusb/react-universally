@@ -39,6 +39,7 @@ function resolveConfigForBrowserOrServer() {
     process.env.BUILD_FLAG_IS_NODE === 'true'
   ) {
     // i.e. running in our server/node process.
+    // eslint-disable-next-line global-require
     configCache = require('./values').default;
     return configCache;
   }

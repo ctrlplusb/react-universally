@@ -1,5 +1,6 @@
 import { asyncComponent } from 'react-async-component';
 
 export default asyncComponent({
-  resolve: () => System.import('./AboutRoute'),
+  // include home and about route in same chunk e.g main
+  resolve: () => System.import(/* webpackChunkName: "main" */ './AboutRoute'),
 });

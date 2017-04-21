@@ -58,13 +58,14 @@ const values = {
   // gets parsed.
   polyfillIO: {
     enabled: true,
+    url: '//cdn.polyfill.io/v2/polyfill.min.js',
     // Reference https://qa.polyfill.io/v2/docs/features for a full list
     // of features.
     features: [
       // The default list.
       'default',
-      // All es6 features.
-      'es6',
+      // If you want to add only es6 features.
+      // 'es6',
     ],
   },
 
@@ -83,19 +84,19 @@ const values = {
     childSrc: [],
     connectSrc: [],
     defaultSrc: [],
-    fontSrc: ['https://fonts.googleapis.com/css', 'https://fonts.gstatic.com'],
+    fontSrc: ['fonts.googleapis.com/css', 'fonts.gstatic.com'],
     imgSrc: [],
     mediaSrc: [],
     manifestSrc: [],
     objectSrc: [],
     scriptSrc: [
-      // Allow scripts from https://cdn.polyfill.io so that we can import the
+      // Allow scripts from cdn.polyfill.io so that we can import the
       // polyfill.
-      'https://cdn.polyfill.io',
+      'cdn.polyfill.io',
     ],
     styleSrc: [
-      'https://cdn.rawgit.com/milligram/milligram/master/dist/milligram.min.css',
-      'https://fonts.googleapis.com/css',
+      'cdn.rawgit.com/milligram/milligram/master/dist/milligram.min.css',
+      'fonts.googleapis.com/css',
     ],
   },
 
