@@ -193,7 +193,8 @@ export default function webpackConfigFactory(buildOptions) {
               // to be included in the bundling process too.
               .concat(config('nodeExternalsFileTypeWhitelist') || []),
           },
-        )),
+        ),
+      ),
     ]),
 
     plugins: removeNil([
@@ -315,7 +316,7 @@ export default function webpackConfigFactory(buildOptions) {
       ifProdClient(
         () =>
           new ExtractTextPlugin({
-            filename: '[name]-[chunkhash].css',
+            filename: '[name]-[contenthash].css',
             allChunks: true,
           }),
       ),
@@ -412,7 +413,8 @@ export default function webpackConfigFactory(buildOptions) {
               query: { sourceMap: true },
             },
           ],
-        })),
+        }),
+      ),
 
       // END: HAPPY PACK PLUGINS
       // -----------------------------------------------------------------------
