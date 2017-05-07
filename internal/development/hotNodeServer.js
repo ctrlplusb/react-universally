@@ -22,7 +22,7 @@ class HotNodeServer {
         });
       }
 
-      const newServer = spawn('node', [compiledEntryFile]);
+      const newServer = spawn('node', [compiledEntryFile, '--color']);
 
       log({
         title: name,
