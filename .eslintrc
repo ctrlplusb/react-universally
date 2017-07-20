@@ -7,8 +7,12 @@
     "node": true,
     "jest": true
   },
-  "ecmaFeatures": {
-    "defaultParams": true
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "defaultParams": true
+    }
   },
   "rules": {
     // A jsx extension is not required for files containing jsx
