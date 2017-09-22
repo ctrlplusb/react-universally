@@ -9,6 +9,7 @@ exports[`<AboutRoute /> renders 1`] = `
   }
 >
   <HelmetWrapper
+    defer={true}
     encodeSpecialCharacters={true}
   >
     <title>
