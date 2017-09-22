@@ -17,10 +17,6 @@ __Step 2: `cd` into the cloned directory__
 
 __Step 3: Install the project's dependencies__
 
-    yarn
-
-Or, if you aren't using [`yarn`](https://yarnpkg.com/):
-
     npm install
 
 __Step 4: Install the awesome [`now`](https://zeit.co/now) CLI globally__
@@ -28,10 +24,6 @@ __Step 4: Install the awesome [`now`](https://zeit.co/now) CLI globally__
     npm install -g now
 
 __Step 5: Deploy to "now"__
-
-    yarn run deploy
-
-Or, if you aren't using [`yarn`](https://yarnpkg.com/):
 
     npm run deploy
 

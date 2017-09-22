@@ -52,7 +52,7 @@ When a server request is being processed this filtering configuration export wil
 
 ## Environment Specific Values
 
-Environment specific values are support via host system environment variables (e.g. `FOO=bar yarn run start`) and/or by providing an "env" file.  
+Environment specific values are support via host system environment variables (e.g. `FOO=bar npm run start`) and/or by providing an "env" file.  
 
 "env" files is an optional feature that is supported by the [`dotenv`](https://github.com/motdotla/dotenv) module. This module allows you to define files containing key/value pairs representing your required environment variables (e.g. `PORT=1337`). To use this feature create an `.env` file within the root of the project (we have provided an example file called `.env_example`, which contains all the environment variables this project currently relies on).
 
@@ -65,14 +65,14 @@ If you do however have the requirement to create and persist "env" files for mul
 In order to target a specific environment configuration file you have to provide a matching `DEPLOYMENT` environment variable. For example:
 
 ```bash
-yarn run build
-DEPLOYMENT=staging yarn run start # This will look for a .env.staging file
+npm run build
+DEPLOYMENT=staging npm run start # This will look for a .env.staging file
 ```
 
  > Note: you may be used to using NODE_ENV to distinguish between environment configuration, however, when using the React ecosystem it is highly recommended that you set NODE_ENV=production any time you want an optimised version of React (and other libs).  Given this requirement, we instead defer to the use of a "DEPLOYMENT" variable. See [here](https://github.com/facebook/react/issues/6582) for more info on this.
 
  > Note: if an environment specific configuration file exists, it will be used over the more generic `.env` file.
 
-As stated before, the application has been configured to accept a mix-match of sources for the environment variables. i.e. you can provide some/all of the environment variables via a `.env` file, and others via the cli/host (e.g. `FOO=bar yarn run build`). This gives you greater flexibility and grants you the opportunity to control the provision of sensitive values (e.g. db connection string).  Please do note that "env" file values will take preference over any values provided by the host/CLI.
+As stated before, the application has been configured to accept a mix-match of sources for the environment variables. i.e. you can provide some/all of the environment variables via a `.env` file, and others via the cli/host (e.g. `FOO=bar npm run build`). This gives you greater flexibility and grants you the opportunity to control the provision of sensitive values (e.g. db connection string).  Please do note that "env" file values will take preference over any values provided by the host/CLI.
 
 > Note: It is recommended that you bind your environment configuration values to the global `./config/values.js`. See the existing items within as an example.

@@ -7,7 +7,7 @@ import Modernizr from 'modernizr';
 // load a polyfill.
 if (!Modernizr.picture) {
   console.log('Client does not support "picture", polyfilling it...');
-  // If you want to use the below do a `yarn add picturefill --exact` and then
+  // If you want to use the below do a `npm install picturefill -E -S` and then
   // uncomment the lines below:
   /*
   require('picturefill');

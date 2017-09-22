@@ -59,7 +59,7 @@ git fetch upstream
 # Then merge them into your project
 git merge upstream/master
 
-# Deal with the merge conflicts, delete the yarn.lock file and
+# Deal with the merge conflicts, delete the package-lock.json file and
 # rebuild it, then commit and push.
 ```
 

@@ -7,46 +7,46 @@
 
 # Package Scripts
 
-## `yarn run analyze:client`
+## `npm run analyze:client`
 
 Creates an 'webpack-bundle-analyze' session against the production build of the client bundle.
 
-## `yarn run analyze:server`
+## `npm run analyze:server`
 
 Creates an 'webpack-bundle-analyze' session against the production build of the server bundle.
 
-## `yarn run build`
+## `npm run build`
 
 Builds the client and server bundles, with the output being optimized.
 
-## `yarn run build:dev`
+## `npm run build:dev`
 
 Builds the client and server bundles, with the output including development related code.
 
-## `yarn run clean`
+## `npm run clean`
 
 Deletes any build output that would have originated from the other commands.
 
-## `yarn run deploy`
+## `npm run deploy`
 
 Deploys your application to [`now`](https://zeit.co/now). If you haven't heard of these guys, please check them out. They allow you to hit the ground running! I've included them within this repo as it requires almost zero configuration to allow your project to be deployed to their servers.
 
-## `yarn run develop`
+## `npm run develop`
 
 Starts a development server for both the client and server bundles.  We use `react-hot-loader` v3 to power the hot reloading of the client bundle, whilst a filesystem watch is implemented to reload the server bundle when any changes have occurred.
 
-## `yarn run lint`
+## `npm run lint`
 
 Executes `eslint` against the project. Alternatively you could look to install the `eslint-loader` and integrate it into the `webpack` bundle process.
 
-## `yarn run start`
+## `npm run start`
 
-Executes the server.  It expects you to have already built the bundles using the `yarn run build` command.
+Executes the server.  It expects you to have already built the bundles using the `npm run build` command.
 
-## `yarn run test`
+## `npm run test`
 
 Runs the `jest` tests.
 
-## `yarn run test:coverage`
+## `npm run test:coverage`
 
 Runs the `jest` tests and generates a coverage report. I recommend you look at [codecov.io](https://codecov.io) to host your coverage reports.

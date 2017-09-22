@@ -45,15 +45,6 @@ Redux/MobX, data persistence, modern styling frameworks and all the other bells 
 ```bash
 git clone https://github.com/ctrlplusb/react-universally my-project
 cd my-project
-yarn
-yarn run develop
-```
-
-Or, if you aren't using [`yarn`](https://yarnpkg.com/):
-
-```bash
-git clone https://github.com/ctrlplusb/react-universally my-project
-cd my-project
 npm install
 npm run develop
 ```
