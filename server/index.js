@@ -11,6 +11,7 @@ import serviceWorker from './middleware/serviceWorker';
 import offlinePage from './middleware/offlinePage';
 import errorHandlers from './middleware/errorHandlers';
 import config from '../config';
+import { log } from '../internal/utils';
 
 // Create our express based server.
 const app = express();
@@ -43,14 +44,44 @@ app.use(config('bundles.client.webPath'), clientBundle);
 app.use(express.static(pathResolve(appRootDir.get(), config('publicAssetsPath'))));
 
 // The React application middleware.
-app.get('*', reactApplication);
+app.get('*', (request, response) => {
+  log({
+    title: 'Request',
+    level: 'special',
+    message: `Received for "${request.url}"`,
+  });
+
+  return reactApplication(request, response);
+});
 
 // Error Handler middlewares.
 app.use(...errorHandlers);
 
 // Create an http listener for our express app.
 const listener = app.listen(config('port'), () =>
-  console.log(`Server listening on port ${config('port')}`));
+  log({
+    title: 'server',
+    level: 'special',
+    message: `✓
+
+      ${config('welcomeMessage')}
+
+      ${config('htmlPage.defaultTitle')} is ready!
+
+      with
+
+      Service Workers: ${config('serviceWorker.enabled')}
+      Polyfills: ${config('polyfillIO.enabled')} (${config('polyfillIO.features').join(', ')})
+
+      Server is now listening on Port ${config('port')}
+      You can access it in the browser at http://${config('host')}/${config('port')}
+      Press Ctrl-C to stop.
+
+
+
+    `,
+  }),
+);
 
 // We export the listener as it will be handy for our development hot reloader,
 // or for exposing a general extension layer for application customisations.

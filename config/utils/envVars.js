@@ -7,13 +7,14 @@
  */
 
 import appRootDir from 'app-root-dir';
-import colors from 'colors/safe';
 import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
 
 import ifElse from '../../shared/utils/logic/ifElse';
 import removeNil from '../../shared/utils/arrays/removeNil';
+
+import { log } from '../../internal/utils';
 
 // PRIVATES
 
@@ -40,7 +41,11 @@ function registerEnvFile() {
   // If we found an env file match the register it.
   if (envFilePath) {
     // eslint-disable-next-line no-console
-    console.log(colors.bgBlue.white(`==> Registering environment variables from: ${envFilePath}`));
+    log({
+      title: 'server',
+      level: 'special',
+      message: `Registering environment variables from: ${envFilePath}`,
+    });
     dotenv.config({ path: envFilePath });
   }
 }

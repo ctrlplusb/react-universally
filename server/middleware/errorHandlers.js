@@ -1,6 +1,16 @@
 /* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
 
+const prettyError = require('pretty-error').start();
+
+// Configure prettyError to simplify the stack trace:
+
+// skip events.js and http.js and similar core node files
+prettyError.skipNodeFiles();
+
+// skip all the trace lines about express` core and sub-modules
+prettyError.skipPackage('express');
+
 const errorHandlersMiddleware = [
   /**
    * 404 errors middleware.
@@ -21,8 +31,7 @@ const errorHandlersMiddleware = [
    */
   function unexpectedErrorMiddleware(err, req, res, next) {
     if (err) {
-      console.log(err);
-      console.log(err.stack);
+      console.log(prettyError.render(err));
     }
     res.status(500).send('Sorry, an unexpected error occurred.');
   },

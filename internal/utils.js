@@ -26,13 +26,21 @@ export function log(options) {
   }
 
   const level = options.level || 'info';
-  const msg = `==> ${title} -> ${options.message}`;
+  const msg = `${title}: ${options.message}`;
 
   switch (level) {
-    case 'warn': console.log(colors.yellow(msg)); break;
-    case 'error': console.log(colors.bgRed.white(msg)); break;
+    case 'warn':
+      console.log(colors.yellow(msg));
+      break;
+    case 'error':
+      console.log(colors.bgRed.white(msg));
+      break;
+    case 'special':
+      console.log(colors.italic.cyan(msg));
+      break;
     case 'info':
-    default: console.log(colors.green(msg));
+    default:
+      console.log(colors.green.dim(msg));
   }
 }
 
