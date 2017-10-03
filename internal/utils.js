@@ -1,3 +1,4 @@
+import os from 'os';
 import HappyPack from 'happypack';
 import notifier from 'node-notifier';
 import colors from 'colors/safe';
@@ -7,10 +8,14 @@ import appRootDir from 'app-root-dir';
 // Generates a HappyPack plugin.
 // @see https://github.com/amireh/happypack/
 export function happyPackPlugin({ name, loaders }) {
+  // eslint-disable-next-line
+  const compilerThreadPool = HappyPack.ThreadPool({
+    size: os.cpus().length,
+  });
   return new HappyPack({
     id: name,
     verbose: false,
-    threads: 4,
+    threadPool: compilerThreadPool,
     loaders,
   });
 }
