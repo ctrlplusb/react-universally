@@ -12,7 +12,7 @@ Below are a list of extensions to this repository, in the form of branches.  Eac
  - [`apollo`](https://github.com/ctrlplusb/react-universally/tree/feature/apollo) - Adds the Apollo Stack (i.e. Graphql).
  - [`mobx`](https://github.com/andreyluiz/react-universally/tree/feature/mobx) - Adds MobX as a state management library.
  - [`postcss-sass`](https://github.com/ctrlplusb/react-universally/tree/feature/postcss-sass) - Adds PostCSS and SASS.
- - [`redux-opinionated`](https://github.com/ctrlplusb/react-universally/tree/feature/redux-opinionated) - Adds an opinionated Redux implementation, using `redux-thunk` and `react-jobs` to support data loading across the client/server.  It also merges in the `flow` feature branch.
+ - [`redux-opinionated`](https://github.com/ctrlplusb/react-universally/tree/feature/redux-opinionated) - Adds an opinionated Redux implementation, using `redux-thunk` and `react-jobs` to support data loading across the client/server.
 
 If you would like to add a new feature branch log an issue describing your chosen technology and we can come up with a plan together. :)
 

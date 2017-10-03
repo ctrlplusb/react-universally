@@ -9,7 +9,7 @@
 
 Below is a general overview of the project.
 
-## TOC
+## ToC
 
  - [Bundled by Webpack](#bundled-by-webpack)
  - [Transpiled by Babel](#transpiled-by-babel)
@@ -18,7 +18,7 @@ Below is a general overview of the project.
 
 ## Bundled by Webpack
 
-This starter uses Webpack 2 to produce bundles for both the client and the server. The `internal/webpack/configFactory.js` is used to generate the respective Webpack configuration for all our bundles. The factory is heavily commented to help you understand what is going on within the Webpack configuration.
+This starter uses Webpack 3 to produce bundles for both the client and the server. The `internal/webpack/configFactory.js` is used to generate the respective Webpack configuration for all our bundles. The factory is heavily commented to help you understand what is going on within the Webpack configuration.
 
 > Note: Given that we are bundling our server code I have included the `source-map-support` module to ensure that we still get nice stack traces when executing our code.
 

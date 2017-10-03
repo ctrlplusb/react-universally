@@ -9,11 +9,11 @@
 
 ## `npm run analyze:client`
 
-Creates an 'webpack-bundle-analyze' session against the production build of the client bundle.
+Creates an `webpack-bundle-analyze` session against the production build of the client bundle.
 
 ## `npm run analyze:server`
 
-Creates an 'webpack-bundle-analyze' session against the production build of the server bundle.
+Creates an `webpack-bundle-analyze` session against the production build of the server bundle.
 
 ## `npm run build`
 
@@ -43,10 +43,10 @@ Executes `eslint` against the project. Alternatively you could look to install t
 
 Executes the server.  It expects you to have already built the bundles using the `npm run build` command.
 
-## `npm run test`
+## `npm run test`
 
 Runs the `jest` tests.
 
-## `npm run test:coverage`
+## `npm run test:coverage`
 
 Runs the `jest` tests and generates a coverage report. I recommend you look at [codecov.io](https://codecov.io) to host your coverage reports.

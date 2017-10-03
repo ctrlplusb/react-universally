@@ -24,7 +24,7 @@ This starter kit contains all the build tooling and configuration you need to ki
   - 🌍 Server Side Rendering.
   - 😎 Progressive Web Application ready, with offline support, via a Service Worker.
   - 🐘 Long term browser caching of assets with automated cache invalidation.
-  - 📦 All source is bundled using Webpack v2.
+  - 📦 All source is bundled using Webpack v3.
   - 🚀 Full ES2017+ support - use the exact same JS syntax across the entire project. No more folder context switching! We also only use syntax that is stage-3 or later in the TC39 process.
   - 🔧 Centralised application configuration with helpers to avoid boilerplate in your code. Also has support for environment specific configuration files.
   - 🔥 Extreme live development - hot reloading of ALL changes to client/server source, with auto development server restarts when your application configuration changes.  All this with a high level of error tolerance and verbose logging to the console.
@@ -60,6 +60,10 @@ Now go make some changes to the `Home` component to see the tooling in action.
  - [Feature Branches](/internal/docs/FEATURE_BRANCHES.md)
  - [Deploy your very own Server Side Rendering React App in 5 easy steps](/internal/docs/DEPLOY_TO_NOW.md)
  - [Changelog](/CHANGELOG.md)
+
+## Who's using it and where?
+
+You can see who is using it and how in [the comments here](https://github.com/ctrlplusb/react-universally/issues/437). Feel free to add to that telling us how you are using it, we'd love to hear from you.
 
 ## Contributors
 
