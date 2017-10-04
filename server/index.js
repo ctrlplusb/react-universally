@@ -74,7 +74,7 @@ const listener = app.listen(config('port'), () =>
       Polyfills: ${config('polyfillIO.enabled')} (${config('polyfillIO.features').join(', ')})
 
       Server is now listening on Port ${config('port')}
-      You can access it in the browser at http://${config('host')}/${config('port')}
+      You can access it in the browser at http://${config('host')}:${config('port')}
       Press Ctrl-C to stop.
 
 
