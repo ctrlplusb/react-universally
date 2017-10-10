@@ -161,5 +161,10 @@
   "eslintIgnore": [
     "node_modules/",
     "build/"
-  ]
+  ],
+  "prettier": {
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "all"
+  }
 }
