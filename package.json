@@ -21,7 +21,7 @@
   },
   "lint-staged": {
     "*.js": [
-      "prettier-eslint --write",
+      "prettier --write",
       "git add"
     ]
   },
@@ -118,8 +118,6 @@
     "modernizr-loader": "1.0.1",
     "node-notifier": "5.1.2",
     "prettier": "1.7.4",
-    "prettier-eslint": "8.2.0",
-    "prettier-eslint-cli": "4.4.0",
     "react-hot-loader": "3.0.0-beta.7",
     "react-test-renderer": "16.0.0",
     "regenerator-runtime": "0.11.0",
