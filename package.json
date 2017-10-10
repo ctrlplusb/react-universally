@@ -3,9 +3,6 @@
   "version": "13.0.0",
   "description": "A starter kit for universal react applications.",
   "main": "build/server/index.js",
-  "engines": {
-    "node": ">=6"
-  },
   "scripts": {
     "analyze:client": "babel-node internal/scripts/analyze --client",
     "analyze:server": "babel-node internal/scripts/analyze --server",
