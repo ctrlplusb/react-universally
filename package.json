@@ -103,6 +103,7 @@
     "enzyme-to-json": "3.1.2",
     "eslint": "4.8.0",
     "eslint-config-airbnb": "16.0.0",
+    "eslint-config-prettier": "2.6.0",
     "eslint-plugin-import": "2.7.0",
     "eslint-plugin-jsx-a11y": "6.0.2",
     "eslint-plugin-react": "7.4.0",
@@ -131,5 +132,34 @@
     "webpack-hot-middleware": "2.19.1",
     "webpack-md5-hash": "0.0.5",
     "webpack-node-externals": "1.6.0"
-  }
+  },
+  "eslintConfig": {
+    "parser": "babel-eslint",
+    "extends": [
+      "airbnb",
+      "prettier"
+    ],
+    "env": {
+      "browser": true,
+      "es6": true,
+      "node": true,
+      "jest": true
+    },
+    "parserOptions": {
+      "ecmaVersion": 6,
+      "sourceType": "module",
+      "ecmaFeatures": {
+        "defaultParams": true
+      }
+    },
+    "rules": {
+      "react/jsx-filename-extension": 0,
+      "react/sort-comp": 0,
+      "linebreak-style": 0
+    }
+  },
+  "eslintIgnore": [
+    "node_modules/",
+    "build/"
+  ]
 }
