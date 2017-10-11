@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 
 import Modernizr from 'modernizr';
-import 'raf';
+import '../../shared/polyfills';
 // This is just an illustrative example.  Here you are testing the client's
 // support for the "picture" element, and if it isn't supported then you
 // load a polyfill.
