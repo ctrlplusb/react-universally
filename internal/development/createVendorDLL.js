@@ -58,7 +58,9 @@ function createVendorDLL(bundleName, bundleConfig) {
       log({
         title: 'vendorDLL',
         level: 'info',
-        message: `Vendor DLL build complete. The following dependencies have been included:\n\t-${devDLLDependencies.join('\n\t-')}\n`,
+        message: `Vendor DLL build complete. The following dependencies have been included:\n\t-${devDLLDependencies.join(
+          '\n\t-',
+        )}\n`,
       });
 
       const webpackConfig = webpackConfigFactory();
@@ -83,9 +85,14 @@ function createVendorDLL(bundleName, bundleConfig) {
         title: 'vendorDLL',
         level: 'warn',
         message: `Generating a new "${bundleName}" Vendor DLL for boosted development performance.
-The Vendor DLL helps to speed up your development workflow by reducing Webpack build times.  It does this by seperating Vendor DLLs from your primary bundles, thereby allowing Webpack to ignore them when having to rebuild your code for changes.  We recommend that you add all your client bundle specific dependencies to the Vendor DLL configuration (within /config).`,
+
+The Vendor DLL helps to speed up your development workflow by reducing Webpack build times. It does this by seperating Vendor DLLs from your primary bundles, thereby allowing Webpack to ignore them when having to rebuild your code for changes. 
+
+We recommend that you add all your client bundle specific dependencies to the Vendor DLL configuration (within /config).`,
       });
-      buildVendorDLL().then(resolve).catch(reject);
+      buildVendorDLL()
+        .then(resolve)
+        .catch(reject);
     } else {
       // first check if the md5 hashes match
       const dependenciesHash = fs.readFileSync(vendorDLLHashFilePath, 'utf8');
@@ -97,7 +104,9 @@ The Vendor DLL helps to speed up your development workflow by reducing Webpack b
           level: 'warn',
           message: `New "${bundleName}" vendor dependencies detected. Regenerating the vendor dll...`,
         });
-        buildVendorDLL().then(resolve).catch(reject);
+        buildVendorDLL()
+          .then(resolve)
+          .catch(reject);
       } else {
         log({
           title: 'vendorDLL',

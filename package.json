@@ -59,7 +59,6 @@
   "homepage": "https://github.com/ctrlplusb/react-universally#readme",
   "dependencies": {
     "app-root-dir": "1.0.2",
-    "colors": "1.1.2",
     "compression": "1.7.1",
     "cross-env": "5.0.5",
     "dotenv": "4.0.0",
@@ -96,6 +95,7 @@
     "babel-preset-react": "6.24.1",
     "babel-preset-stage-3": "6.24.1",
     "babel-template": "6.26.0",
+    "chalk": "2.1.0",
     "chokidar": "1.7.0",
     "css-loader": "0.28.7",
     "enzyme": "3.1.0",
