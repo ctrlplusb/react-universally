@@ -1,9 +1,8 @@
- - [Project Overview](/internal/docs/PROJECT_OVERVIEW.md)
- - [Project Configuration](/internal/docs/PROJECT_CONFIG.md)
- - [Package Script Commands](/internal/docs/PKG_SCRIPTS.md)
- - [Feature Branches](/internal/docs/FEATURE_BRANCHES.md)
- - [Deploy your very own Server Side Rendering React App in 5 easy steps](/internal/docs/DEPLOY_TO_NOW.md)
- - __[FAQ](/internal/docs/FAQ.md)__
+ - [Project Overview](/docs/PROJECT_OVERVIEW.md)
+ - [Project Configuration](/docs/PROJECT_CONFIG.md)
+ - [Package Script Commands](/docs/PKG_SCRIPTS.md)
+ - [Deploy your very own Server Side Rendering React App in 5 easy steps](/docs/DEPLOY_TO_NOW.md)
+ - __[FAQ](/docs/FAQ.md)__
 
 # Frequently Asked Questions
 

@@ -38,8 +38,6 @@ This starter kit contains all the build tooling and configuration you need to ki
 
 Redux/MobX, data persistence, modern styling frameworks and all the other bells and whistles have been explicitly excluded from this starter kit.  It's up to you to decide what technologies you would like to add to your own implementation based upon your own needs.
 
-> However, we now include a set of "feature branches", each implementing a technology on top of the clean master branch.  This provides you with an example on how to integrate said technologies, or use the branches to merge in a configuration that meets your requirements.  See the [`Feature Branches`](/internal/docs/FEATURE_BRANCHES.md) documentation for more.
-
 ## Getting started
 
 ```bash
@@ -53,12 +51,11 @@ Now go make some changes to the `Home` component to see the tooling in action.
 
 ## Docs
 
- - [Project Overview](/internal/docs/PROJECT_OVERVIEW.md)
- - [Project Configuration](/internal/docs/PROJECT_CONFIG.md)
- - [Package Script Commands](/internal/docs/PKG_SCRIPTS.md)
- - [FAQ](/internal/docs/FAQ.md)
- - [Feature Branches](/internal/docs/FEATURE_BRANCHES.md)
- - [Deploy your very own Server Side Rendering React App in 5 easy steps](/internal/docs/DEPLOY_TO_NOW.md)
+ - [Project Overview](/docs/PROJECT_OVERVIEW.md)
+ - [Project Configuration](/docs/PROJECT_CONFIG.md)
+ - [Package Script Commands](/docs/PKG_SCRIPTS.md)
+ - [FAQ](/docs/FAQ.md)
+ - [Deploy your very own Server Side Rendering React App in 5 easy steps](/docs/DEPLOY_TO_NOW.md)
  - [Changelog](/CHANGELOG.md)
 
 ## Who's using it and where?
@@ -79,5 +76,3 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
 | [<img src="https://avatars1.githubusercontent.com/u/7436773?v=3" width="100px;"/><br /><sub>Ryan Lindskog</sub>](https://www.RyanLindskog.com/)<br /> | [<img src="https://avatars1.githubusercontent.com/u/977713?v=3" width="100px;"/><br /><sub>Steven Enten</sub>](http://enten.fr)<br /> | [<img src="https://avatars1.githubusercontent.com/u/12164768?v=3" width="100px;"/><br /><sub>Sean Matheson</sub>](http://www.ctrlplusb.com)<br /> | [<img src="https://avatars0.githubusercontent.com/u/6218853?v=3" width="100px;"/><br /><sub>Steven Truesdell</sub>](https://steventruesdell.com)<br /> | [<img src="https://avatars1.githubusercontent.com/u/544097?v=4" width="100px;"/><br /><sub>Stefan Mirea</sub>](https://sageproject.com)<br /> | [<img src="https://avatars2.githubusercontent.com/u/2536916?v=4" width="100px;"/><br /><sub>Sviatoslav</sub>](https://github.com/SleepWalker)<br /> | [<img src="https://avatars0.githubusercontent.com/u/10552487?v=3" width="100px;"/><br /><sub>Thomas Leitgeb</sub>](https://twitter.com/_datoml)<br /> |
 | [<img src="https://avatars0.githubusercontent.com/u/595711?v=3" width="100px;"/><br /><sub>Tyler Nieman</sub>](http://tsnieman.net/)<br /> | [<img src="https://avatars2.githubusercontent.com/u/1762868?v=4" width="100px;"/><br /><sub>Vicente de Alencar</sub>](https://github.com/vicentedealencar)<br /> | [<img src="https://avatars3.githubusercontent.com/u/3311717?v=4" width="100px;"/><br /><sub>Yaniv kalfa</sub>](https://github.com/yanivkalfa)<br /> |
 <!-- ALL-CONTRIBUTORS-LIST:END -->
-
-This project follows the [all-contributors](https://github.com/kentcdodds/all-contributors) specification. Contributions of any kind welcome!

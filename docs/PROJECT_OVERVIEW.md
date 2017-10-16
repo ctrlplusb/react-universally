@@ -1,9 +1,8 @@
- - __[Project Overview](/internal/docs/PROJECT_OVERVIEW.md)__
- - [Project Configuration](/internal/docs/PROJECT_CONFIG.md)
- - [Package Script Commands](/internal/docs/PKG_SCRIPTS.md)
- - [Feature Branches](/internal/docs/FEATURE_BRANCHES.md)
- - [Deploy your very own Server Side Rendering React App in 5 easy steps](/internal/docs/DEPLOY_TO_NOW.md)
- - [FAQ](/internal/docs/FAQ.md)
+ - __[Project Overview](/docs/PROJECT_OVERVIEW.md)__
+ - [Project Configuration](/docs/PROJECT_CONFIG.md)
+ - [Package Script Commands](/docs/PKG_SCRIPTS.md)
+ - [Deploy your very own Server Side Rendering React App in 5 easy steps](/docs/DEPLOY_TO_NOW.md)
+ - [FAQ](/docs/FAQ.md)
 
 # Project Overview
 
@@ -59,8 +58,8 @@ Below are some of the critical folders of the project along with a comment descr
 |- client // The client bundle entry and specific source.
 |- shared // The shared code between the bundles.
 |
+|- docs // Documentation
 |- internal
-|  |- docs // Documentation
 |  |- development // Development server.
 |  |- webpack
 |     |- configFactory.js  // Webpack configuration builder.
