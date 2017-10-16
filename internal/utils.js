@@ -1,9 +1,9 @@
 import os from 'os';
 import HappyPack from 'happypack';
 import notifier from 'node-notifier';
-import chalk from 'chalk';
 import { execSync } from 'child_process';
 import appRootDir from 'app-root-dir';
+import * as LoggingUtils from '../shared/utils/logging';
 
 // Generates a HappyPack plugin.
 // @see https://github.com/amireh/happypack/
@@ -30,23 +30,11 @@ export function log(options) {
     });
   }
 
-  const level = options.level || 'info';
-  const msg = `${title}: ${options.message}`;
-
-  switch (level) {
-    case 'warn':
-      console.log(chalk.yellowBright(msg));
-      break;
-    case 'error':
-      console.log(chalk.bgRed.white.bold(msg));
-      break;
-    case 'special':
-      console.log(chalk.italic.cyanBright(msg));
-      break;
-    case 'info':
-    default:
-      console.log(chalk.gray(msg));
-  }
+  LoggingUtils.log(
+    Object.assign({}, options, {
+      message: `${title}: ${options.message}`,
+    }),
+  );
 }
 
 export function exec(command) {

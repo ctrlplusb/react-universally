@@ -2,14 +2,17 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { renderToString, renderToStaticMarkup } from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom';
-import { AsyncComponentProvider, createAsyncContext } from 'react-async-component';
+import {
+  AsyncComponentProvider,
+  createAsyncContext,
+} from 'react-async-component';
 import asyncBootstrapper from 'react-async-bootstrapper';
 
 import config from '../../../config';
 
 import ServerHTML from './ServerHTML';
 import DemoApp from '../../../shared/components/DemoApp';
-import { log } from '../../../internal/utils';
+import { log } from '../../../shared/utils/logging';
 
 /**
  * React application middleware, supports server side rendering.
@@ -20,7 +23,7 @@ export default function reactApplicationMiddleware(request, response) {
   if (typeof response.locals.nonce !== 'string') {
     throw new Error('A "nonce" value has not been attached to the response');
   }
-  const nonce = response.locals.nonce;
+  const { locals: { nonce } } = response;
 
   // It's possible to disable SSR, which can be useful in development mode.
   // In this case traditional client side only rendering will occur.
@@ -28,7 +31,6 @@ export default function reactApplicationMiddleware(request, response) {
     if (process.env.BUILD_FLAG_IS_DEV === 'true') {
       // eslint-disable-next-line no-console
       log({
-        title: 'Server',
         level: 'info',
         message: `Handling react route without SSR: ${request.url}`,
       });
@@ -83,10 +85,10 @@ export default function reactApplicationMiddleware(request, response) {
       .status(
         reactRouterContext.missed
           ? // If the renderResult contains a "missed" match then we set a 404 code.
-          // Our App component will handle the rendering of an Error404 view.
-          404
+            // Our App component will handle the rendering of an Error404 view.
+            404
           : // Otherwise everything is all good and we send a 200 OK status.
-          200,
+            200,
       )
       .send(`<!DOCTYPE html>${html}`);
   });
