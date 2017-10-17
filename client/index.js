@@ -4,11 +4,11 @@ import React from 'react';
 import { hydrate } from 'react-dom';
 import BrowserRouter from 'react-router-dom/BrowserRouter';
 import asyncBootstrapper from 'react-async-bootstrapper';
+import { AppContainer as ReactHotLoader } from 'react-hot-loader';
 import { AsyncComponentProvider } from 'react-async-component';
 
 import './polyfills';
 
-import ReactHotLoader from './components/ReactHotLoader';
 import DemoApp from '../shared/components/DemoApp';
 
 // Get the DOM Element that will host our React application.
@@ -21,7 +21,8 @@ const supportsHistory = 'pushState' in window.history;
 
 // Get any rehydrateState for the async components.
 // eslint-disable-next-line no-underscore-dangle
-const asyncComponentsRehydrateState = window.__ASYNC_COMPONENTS_REHYDRATE_STATE__;
+const asyncComponentsRehydrateState =
+  window.__ASYNC_COMPONENTS_REHYDRATE_STATE__;
 
 /**
  * Renders the given React Application component.
