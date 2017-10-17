@@ -20,7 +20,6 @@ const container = document.querySelector('#app');
 const supportsHistory = 'pushState' in window.history;
 
 // Get any rehydrateState for the async components.
-// eslint-disable-next-line no-underscore-dangle
 const asyncComponentsRehydrateState =
   window.__ASYNC_COMPONENTS_REHYDRATE_STATE__;
 

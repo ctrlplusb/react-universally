@@ -152,9 +152,10 @@
       }
     },
     "rules": {
+      "linebreak-style": 0,
+      "no-underscore-dangle": 0,
       "react/jsx-filename-extension": 0,
-      "react/sort-comp": 0,
-      "linebreak-style": 0
+      "react/sort-comp": 0
     }
   },
   "eslintIgnore": [
