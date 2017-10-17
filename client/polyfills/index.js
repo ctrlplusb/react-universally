@@ -2,12 +2,13 @@
 
 import Modernizr from 'modernizr';
 import '../../shared/polyfills';
+
 // This is just an illustrative example.  Here you are testing the client's
 // support for the "picture" element, and if it isn't supported then you
 // load a polyfill.
 if (!Modernizr.picture) {
   console.log('Client does not support "picture", polyfilling it...');
-  // If you want to use the below do a `npm install picturefill -E -S` and then
+  // If you want to use the below do a `npm install picturefill` and then
   // uncomment the lines below:
   /*
   require('picturefill');

@@ -144,16 +144,10 @@
       "node": true,
       "jest": true
     },
-    "parserOptions": {
-      "ecmaVersion": 6,
-      "sourceType": "module",
-      "ecmaFeatures": {
-        "defaultParams": true
-      }
-    },
     "rules": {
       "linebreak-style": 0,
       "no-underscore-dangle": 0,
+      "prefer-destructuring": 0,
       "react/jsx-filename-extension": 0,
       "react/sort-comp": 0
     }

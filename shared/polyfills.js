@@ -4,4 +4,5 @@
  */
 import { polyfill as rafPolyfill } from 'raf';
 
+// We need the requestAnimationFrame polyfill to support features of React >=16
 rafPolyfill();
