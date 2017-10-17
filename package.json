@@ -13,7 +13,6 @@
     "develop": "cross-env DEPLOYMENT=development babel-node internal/development",
     "lint": "eslint client server shared config internal",
     "precommit": "lint-staged",
-    "preinstall": "node internal/scripts/preinstall",
     "prepush": "jest",
     "start": "cross-env NODE_ENV=production node build/server",
     "test": "jest",
