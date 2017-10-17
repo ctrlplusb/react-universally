@@ -17,7 +17,14 @@ exports[`<AboutRoute /> renders 1`] = `
     </title>
   </HelmetWrapper>
   <p>
-    Produced with ❤️
+    Produced with
+     
+    <span
+      aria-label="heart"
+      role="img"
+    >
+      ❤️
+    </span>
   </p>
   <p>
     View our contributors list on our
