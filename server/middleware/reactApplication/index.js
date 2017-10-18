@@ -1,6 +1,10 @@
 import React from 'react';
 import Helmet from 'react-helmet';
-import { renderToString, renderToStaticMarkup } from 'react-dom/server';
+import {
+  renderToString,
+  renderToStaticMarkup,
+  renderToNodeStream,
+} from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom';
 import {
   AsyncComponentProvider,
@@ -64,7 +68,7 @@ export default function reactApplicationMiddleware(request, response) {
     const appString = renderToString(app);
 
     // Generate the html response.
-    const html = renderToStaticMarkup(
+    const html = renderToNodeStream(
       <ServerHTML
         reactAppString={appString}
         nonce={nonce}
@@ -73,23 +77,30 @@ export default function reactApplicationMiddleware(request, response) {
       />,
     );
 
-    // Check if the router context contains a redirect, if so we need to set
-    // the specific status and redirect header and end the response.
-    if (reactRouterContext.url) {
-      response.status(302).setHeader('Location', reactRouterContext.url);
-      response.end();
-      return;
+    switch (reactRouterContext.status) {
+      case 301:
+      case 302:
+        // Check if the router context contains a redirect, if so we need to set
+        // the specific status and redirect header and end the response.
+        response.status(reactRouterContext.status);
+        response.location(reactRouterContext.url);
+        response.end();
+        break;
+      case 404:
+        // If the renderResult contains a "missed" match then we set a 404 code.
+        // Our App component will handle the rendering of an Error404 view.
+        response.status(reactRouterContext.status);
+        response.type('html');
+        response.write('<!doctype html>');
+        html.pipe(response);
+        break;
+      default:
+        // Otherwise everything is all good and we send a 200 OK status.
+        response.status(200);
+        response.type('html');
+        response.setHeader('Cache-Control', 'no-cache');
+        response.write('<!doctype html>');
+        html.pipe(response);
     }
-
-    response
-      .status(
-        reactRouterContext.missed
-          ? // If the renderResult contains a "missed" match then we set a 404 code.
-            // Our App component will handle the rendering of an Error404 view.
-            404
-          : // Otherwise everything is all good and we send a 200 OK status.
-            200,
-      )
-      .send(`<!DOCTYPE html>${html}`);
   });
 }

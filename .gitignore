@@ -44,3 +44,6 @@ flow-coverage/
 
 # OSX Files
 .DS_Store
+
+# Since we decided on npm over yarn this makes sense.
+yarn.lock
