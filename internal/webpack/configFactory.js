@@ -4,7 +4,6 @@ import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import nodeExternals from 'webpack-node-externals';
 import path from 'path';
 import webpack from 'webpack';
-import WebpackMd5Hash from 'webpack-md5-hash';
 
 import { happyPackPlugin, log } from '../utils';
 import { ifElse } from '../../shared/utils/logic';
@@ -64,6 +63,8 @@ export default function webpackConfigFactory(buildOptions) {
   }
 
   let webpackConfig = {
+    // Webpack Mode
+    mode: ifDev('development', 'production'),
     // Define our entry chunks for our bundle.
     entry: {
       // We name our entry files "index" as it makes it easier for us to
@@ -176,7 +177,7 @@ export default function webpackConfigFactory(buildOptions) {
       // This is required for the modernizr-loader
       // @see https://github.com/peerigon/modernizr-loader
       alias: {
-        modernizr$: path.resolve(appRootDir.get(), './.modernizrrc'),
+        modernizr$: path.resolve(appRootDir.get(), './.modernizrrc.json'),
       },
     },
 
@@ -225,13 +226,6 @@ export default function webpackConfigFactory(buildOptions) {
       // around your modules you may see some small size improvements. However,
       // the significant improvement will be how fast the JavaScript loads in the browser.
       ifProdClient(new webpack.optimize.ModuleConcatenationPlugin()),
-
-      // We use this so that our generated [chunkhash]'s are only different if
-      // the content for our respective chunks have changed.  This optimises
-      // our long term browser caching strategy for our client bundle, avoiding
-      // cases where browsers end up having to download all the client chunks
-      // even though 1 or 2 may have only changed.
-      ifClient(() => new WebpackMd5Hash()),
 
       // These are process.env flags that you can use in your code in order to
       // have advanced control over what is included/excluded in your bundles.
@@ -499,10 +493,6 @@ export default function webpackConfigFactory(buildOptions) {
             ifClient({
               test: /\.modernizrrc.js$/,
               loader: 'modernizr-loader',
-            }),
-            ifClient({
-              test: /\.modernizrrc(\.json)?$/,
-              loader: 'modernizr-loader!json-loader',
             }),
 
             // ASSETS (Images/Fonts/etc)
