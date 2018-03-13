@@ -23,7 +23,10 @@ export default function withServiceWorker(webpackConfig, bundleConfig) {
   webpackConfig.plugins.push(
     new HtmlWebpackPlugin({
       filename: config('serviceWorker.offlinePageFileName'),
-      template: `babel-loader!${path.resolve(__dirname, './offlinePageTemplate.js')}`,
+      template: `babel-loader!${path.resolve(
+        __dirname,
+        './offlinePageTemplate.js',
+      )}`,
       production: true,
       minify: {
         removeComments: true,
@@ -97,7 +100,9 @@ export default function withServiceWorker(webpackConfig, bundleConfig) {
         // of injecting all of our client scripts into the body.
         // Please see the HtmlWebpackPlugin configuration above for more
         // information on this page.
-        navigateFallbackURL: `${bundleConfig.webPath}${config('serviceWorker.offlinePageFileName')}`,
+        navigateFallbackURL: `${bundleConfig.webPath}${config(
+          'serviceWorker.offlinePageFileName',
+        )}`,
       },
       // According to the Mozilla docs, AppCache is considered deprecated.
       // @see https://mzl.la/1pOZ5wF
@@ -108,8 +113,13 @@ export default function withServiceWorker(webpackConfig, bundleConfig) {
       // Which external files should be included with the service worker?
       // Add the polyfill io script as an external if it is enabled.
       externals: (config('polyfillIO.enabled')
-        ? [`${config('polyfillIO.url')}?features=${config('polyfillIO.features').join(',')}`]
-        : [])
+        ? [
+            `${config('polyfillIO.url')}?features=${config(
+              'polyfillIO.features',
+            ).join(',')}`,
+          ]
+        : []
+      )
         // Add any included public folder assets.
         .concat(
           config('serviceWorker.includePublicAssets').reduce((acc, cur) => {

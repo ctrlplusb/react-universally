@@ -32,11 +32,12 @@ class HotNodeServer {
       });
 
       newServer.stdout.on('data', data => console.log(data.toString().trim()));
-      newServer.stderr.on('data', (data) => {
+      newServer.stderr.on('data', data => {
         log({
           title: name,
           level: 'error',
-          message: 'Error in server execution, check the console for more info.',
+          message:
+            'Error in server execution, check the console for more info.',
         });
         console.error(data.toString().trim());
       });
@@ -62,7 +63,7 @@ class HotNodeServer {
       this.clientCompiling = true;
     });
 
-    clientCompiler.plugin('done', (stats) => {
+    clientCompiler.plugin('done', stats => {
       if (!stats.hasErrors()) {
         this.clientCompiling = false;
       }
@@ -77,7 +78,7 @@ class HotNodeServer {
       });
     });
 
-    compiler.plugin('done', (stats) => {
+    compiler.plugin('done', stats => {
       this.serverCompiling = false;
 
       if (this.disposing) {
@@ -101,7 +102,8 @@ class HotNodeServer {
         log({
           title: name,
           level: 'error',
-          message: 'Failed to start, please check the console for more information.',
+          message:
+            'Failed to start, please check the console for more information.',
           notify: true,
         });
         console.error(err);
@@ -115,7 +117,7 @@ class HotNodeServer {
   dispose() {
     this.disposing = true;
 
-    const stopWatcher = new Promise((resolve) => {
+    const stopWatcher = new Promise(resolve => {
       this.watcher.close(resolve);
     });
 

@@ -66,7 +66,7 @@ function resolveConfigForBrowserOrNode() {
  * This function wraps up the boilerplate needed to access the correct
  * configuration depending on whether your code will get executed in the
  * browser/node.
- * 
+ *
  *  - For the browser the config values are accessible from "window.__CLIENT_CONFIG__"
  *  - For a node process they are accessible from "<root>/config/values.js".
  *

@@ -14,7 +14,9 @@ module.exports = function generate(context) {
   // const config = context.htmlWebpackPlugin.options.custom.config;
   const ClientConfig = context.htmlWebpackPlugin.options.custom.ClientConfig;
   const html = renderToStaticMarkup(
-    <HTML bodyElements={<ClientConfig nonce="OFFLINE_PAGE_NONCE_PLACEHOLDER" />} />,
+    <HTML
+      bodyElements={<ClientConfig nonce="OFFLINE_PAGE_NONCE_PLACEHOLDER" />}
+    />,
   );
   return `<!DOCTYPE html>${html}`;
 };

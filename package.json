@@ -10,7 +10,8 @@
     "build:dev": "babel-node internal/scripts/build",
     "clean": "cross-env babel-node internal/scripts/clean",
     "deploy": "babel-node internal/scripts/deploy",
-    "develop": "cross-env DEPLOYMENT=development babel-node internal/development",
+    "develop":
+      "cross-env DEPLOYMENT=development babel-node internal/development",
     "lint": "eslint client server shared config internal",
     "precommit": "lint-staged",
     "prepush": "jest",
@@ -19,21 +20,12 @@
     "test:coverage": "jest --coverage"
   },
   "lint-staged": {
-    "*.js": [
-      "prettier --write",
-      "git add"
-    ]
+    "*.js": ["prettier-eslint --write", "git add"]
   },
   "jest": {
-    "collectCoverageFrom": [
-      "shared/**/*.{js,jsx}"
-    ],
-    "setupFiles": [
-      "<rootDir>/internal/jest/setupFile.js"
-    ],
-    "snapshotSerializers": [
-      "<rootDir>/node_modules/enzyme-to-json/serializer"
-    ],
+    "collectCoverageFrom": ["shared/**/*.{js,jsx}"],
+    "setupFiles": ["<rootDir>/internal/jest/setupFile.js"],
+    "snapshotSerializers": ["<rootDir>/node_modules/enzyme-to-json/serializer"],
     "testPathIgnorePatterns": [
       "<rootDir>/(build|internal|node_modules|flow-typed|public)/"
     ]
@@ -136,10 +128,7 @@
   },
   "eslintConfig": {
     "parser": "babel-eslint",
-    "extends": [
-      "airbnb",
-      "prettier"
-    ],
+    "extends": ["airbnb", "prettier"],
     "env": {
       "browser": true,
       "es6": true,
@@ -154,10 +143,7 @@
       "react/sort-comp": 0
     }
   },
-  "eslintIgnore": [
-    "node_modules/",
-    "build/"
-  ],
+  "eslintIgnore": ["node_modules/", "build/"],
   "prettier": {
     "semi": true,
     "singleQuote": true,

@@ -12,9 +12,7 @@ function HTML(props) {
 
   return (
     <html {...htmlAttributes}>
-      <head>
-        {headerElements}
-      </head>
+      <head>{headerElements}</head>
       <body>
         <div id="app" dangerouslySetInnerHTML={{ __html: appBodyString }} />
         {bodyElements}

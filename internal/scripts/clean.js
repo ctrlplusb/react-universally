@@ -9,7 +9,9 @@ import config from '../../config';
 
 function clean() {
   rimraf(pathResolve(appRootDir.get(), config('buildOutputPath')), () => {
-    console.log(`Cleaned ${pathResolve(appRootDir.get(), config('buildOutputPath'))}`);
+    console.log(
+      `Cleaned ${pathResolve(appRootDir.get(), config('buildOutputPath'))}`,
+    );
   });
 }
 

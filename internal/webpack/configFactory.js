@@ -46,9 +46,9 @@ export default function webpackConfigFactory(buildOptions) {
   log({
     level: 'info',
     title: 'Webpack',
-    message: `Creating ${isProd
-      ? 'an optimised'
-      : 'a development'} bundle configuration for the "${target}"`,
+    message: `Creating ${
+      isProd ? 'an optimised' : 'a development'
+    } bundle configuration for the "${target}"`,
   });
 
   const bundleConfig =
