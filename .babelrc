@@ -10,5 +10,8 @@
     ["env", { "targets": { "node": true } }],
     "stage-3",
     "react"
+  ],
+  "plugins": [
+    "syntax-dynamic-import"
   ]
 }

@@ -23,6 +23,7 @@ class HotClientServer {
       quiet: true,
       noInfo: true,
       headers: {
+        // Allow any host to connect to the webpack dev server
         'Access-Control-Allow-Origin': '*',
       },
       // Ensure that the public path is taken from the compiler webpack config

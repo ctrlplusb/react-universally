@@ -4,6 +4,8 @@
   <p align='center'>A starter kit for universal react applications.</p>
 </p>
 
+![Version](https://img.shields.io/github/package-json/v/ctrlplusb/react-universally.svg?style=flat-square) ![Downloads per month](https://img.shields.io/npm/dm/react-async-component.svg?style=flat-square) [![All Contributorss](https://img.shields.io/badge/all_contributors-20-orange.svg?style=flat-square)](#contributors) [![Dependencies](https://david-dm.org/ctrlplusb/react-universally.svg?style=flat-square)](https://david-dm.org/ctrlplusb/react-universally) [![devDependencies](https://david-dm.org/ctrlplusb/react-universally/dev-status.svg?style=flat-square)](https://david-dm.org/ctrlplusb/react-universally?type=dev)
+
 ## About
 
 This starter kit contains all the build tooling and configuration you need to kick off your next universal React project, whilst containing a minimal "project" set up allowing you to make your own architecture decisions (Redux/MobX etc).

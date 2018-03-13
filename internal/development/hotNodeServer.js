@@ -80,6 +80,7 @@ class HotNodeServer {
 
     compiler.plugin('done', stats => {
       this.serverCompiling = false;
+      console.log('2. Done compiling');
 
       if (this.disposing) {
         return;

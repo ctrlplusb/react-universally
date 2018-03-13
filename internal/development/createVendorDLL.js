@@ -38,6 +38,8 @@ function createVendorDLL(bundleName, bundleConfig) {
 
   function webpackConfigFactory() {
     return {
+      // Force development mode as the dev server should only be ran while developing.
+      mode: 'development',
       // We only use this for development, so lets always include source maps.
       devtool: 'inline-source-map',
       entry: {
@@ -94,7 +96,7 @@ function createVendorDLL(bundleName, bundleConfig) {
         level: 'warn',
         message: `Generating a new "${bundleName}" Vendor DLL for boosted development performance.
 
-The Vendor DLL helps to speed up your development workflow by reducing Webpack build times. It does this by seperating Vendor DLLs from your primary bundles, thereby allowing Webpack to ignore them when having to rebuild your code for changes. 
+The Vendor DLL helps to speed up your development workflow by reducing Webpack build times. It does this by seperating Vendor DLLs from your primary bundles, thereby allowing Webpack to ignore them when having to rebuild your code for changes.
 
 We recommend that you add all your client bundle specific dependencies to the Vendor DLL configuration (within /config).`,
       });

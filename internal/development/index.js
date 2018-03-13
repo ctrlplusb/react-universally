@@ -1,6 +1,9 @@
+import http from 'http';
+import openBrowser from 'react-dev-utils/openBrowser';
 import chokidar from 'chokidar';
 import { resolve as pathResolve } from 'path';
 import appRootDir from 'app-root-dir';
+import config from '../../config/values';
 import { log } from '../utils';
 
 let HotDevelopment = require('./hotDevelopment').default;
@@ -11,6 +14,20 @@ const watcher = chokidar.watch([
   pathResolve(appRootDir.get(), 'internal'),
   pathResolve(appRootDir.get(), 'config'),
 ]);
+
+// Wait until specific endpoint becomes responsive, then fire callback.
+const onResponsive = (hostname, port, cb) =>
+  setTimeout(
+    () =>
+      http
+        .get({ hostname, port, path: '/', agent: false }, cb)
+        .on('error', () => onResponsive(hostname, port, cb)),
+    1000,
+  );
+
+// Get host and port
+const host = config('host');
+const port = config('port');
 
 watcher.on('ready', () => {
   watcher.on('change', () => {
@@ -37,6 +54,9 @@ watcher.on('ready', () => {
       devServer = new HotDevelopment();
     });
   });
+
+  // Wait until devServer is started.
+  onResponsive(host, port, () => openBrowser(`http://${host}:${port}`));
 });
 
 // If we receive a kill cmd then we will first try to dispose our listeners.

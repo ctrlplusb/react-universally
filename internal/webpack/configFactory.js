@@ -1,6 +1,7 @@
 import appRootDir from 'app-root-dir';
 import AssetsPlugin from 'assets-webpack-plugin';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
+import UglifyJsPlugin from 'uglifyjs-webpack-plugin';
 import nodeExternals from 'webpack-node-externals';
 import path from 'path';
 import webpack from 'webpack';
@@ -18,7 +19,7 @@ import config from '../../config';
  * This function has been configured to support one "client/web" bundle, and any
  * number of additional "node" bundles (e.g. our "server").  You can define
  * additional node bundles by editing the project confuguration.
- *
+ com
  * @param  {Object} buildOptions - The build options.
  * @param  {target} buildOptions.target - The bundle target (e.g 'clinet' || 'server').
  * @param  {target} buildOptions.optimize - Build an optimised version of the bundle?
@@ -171,6 +172,41 @@ export default function webpackConfigFactory(buildOptions) {
       false,
     ),
 
+    // Webpack 4 automatically runs UglifyPlugin and other optimization processes.
+    // It can be configured here:
+    optimization: {
+      minimizer: ifProdClient([
+        new UglifyJsPlugin({
+          uglifyOptions: {
+            ecma: 8,
+            compress: {
+              warnings: false,
+              // Disabled because of an issue with Uglify breaking seemingly valid code:
+              // https://github.com/facebook/create-react-app/issues/2376
+              // Pending further investigation:
+              // https://github.com/mishoo/UglifyJS2/issues/2011
+              comparisons: false,
+            },
+            mangle: {
+              safari10: true,
+            },
+            output: {
+              comments: false,
+              // Turned on because emoji and regex is not minified properly using default
+              // https://github.com/facebook/create-react-app/issues/2488
+              ascii_only: true,
+            },
+          },
+          // Use multi-process parallel running to improve the build speed
+          // Default number of concurrent runs: os.cpus().length - 1
+          parallel: true,
+          // Enable file caching
+          cache: true,
+          sourceMap: config('includeSourceMapsForOptimisedClientBundle'),
+        }),
+      ]),
+    },
+
     resolve: {
       // These extensions are tried when resolving a file.
       extensions: config('bundleSrcTypes').map(ext => `.${ext}`),
@@ -222,11 +258,6 @@ export default function webpackConfigFactory(buildOptions) {
             entryOnly: false,
           }),
       ),
-
-      // Implement webpack 3 scope hoisting that will remove function wrappers
-      // around your modules you may see some small size improvements. However,
-      // the significant improvement will be how fast the JavaScript loads in the browser.
-      ifProdClient(new webpack.optimize.ModuleConcatenationPlugin()),
 
       // These are process.env flags that you can use in your code in order to
       // have advanced control over what is included/excluded in your bundles.
@@ -290,35 +321,6 @@ export default function webpackConfigFactory(buildOptions) {
 
       // We need this plugin to enable hot reloading of our client.
       ifDevClient(() => new webpack.HotModuleReplacementPlugin()),
-
-      // For our production client we need to make sure we pass the required
-      // configuration to ensure that the output is minimized/optimized.
-      ifProdClient(
-        () =>
-          new webpack.LoaderOptionsPlugin({
-            minimize: true,
-          }),
-      ),
-
-      // For our production client we need to make sure we pass the required
-      // configuration to ensure that the output is minimized/optimized.
-      ifProdClient(
-        () =>
-          new webpack.optimize.UglifyJsPlugin({
-            sourceMap: config('includeSourceMapsForOptimisedClientBundle'),
-            compress: {
-              screw_ie8: true,
-              warnings: false,
-            },
-            mangle: {
-              screw_ie8: true,
-            },
-            output: {
-              comments: false,
-              screw_ie8: true,
-            },
-          }),
-      ),
 
       // For the production build of the client we need to extract the CSS into
       // CSS files.
