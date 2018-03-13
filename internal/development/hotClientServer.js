@@ -2,7 +2,6 @@ import express from 'express';
 import createWebpackMiddleware from 'webpack-dev-middleware';
 import createWebpackHotMiddleware from 'webpack-hot-middleware';
 import ListenerManager from './listenerManager';
-import config from '../../config';
 import { log } from '../utils';
 
 class HotClientServer {
@@ -24,7 +23,7 @@ class HotClientServer {
       quiet: true,
       noInfo: true,
       headers: {
-        'Access-Control-Allow-Origin': `http://${config('host')}:${config('port')}`,
+        'Access-Control-Allow-Origin': '*',
       },
       // Ensure that the public path is taken from the compiler webpack config
       // as it will have been created as an absolute path to avoid conflicts
@@ -47,12 +46,13 @@ class HotClientServer {
       });
     });
 
-    compiler.plugin('done', (stats) => {
+    compiler.plugin('done', stats => {
       if (stats.hasErrors()) {
         log({
           title: 'client',
           level: 'error',
-          message: 'Build failed, please check the console for more information.',
+          message:
+            'Build failed, please check the console for more information.',
           notify: true,
         });
         console.error(stats.toString());
@@ -70,7 +70,9 @@ class HotClientServer {
   dispose() {
     this.webpackDevMiddleware.close();
 
-    return this.listenerManager ? this.listenerManager.dispose() : Promise.resolve();
+    return this.listenerManager
+      ? this.listenerManager.dispose()
+      : Promise.resolve();
   }
 }
 
