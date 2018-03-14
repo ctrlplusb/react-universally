@@ -5,7 +5,7 @@ import ListenerManager from './listenerManager';
 import { log } from '../utils';
 
 class HotClientServer {
-  constructor(compiler) {
+  constructor(port, compiler) {
     const app = express();
 
     const httpPathRegex = /^https?:\/\/(.*):([\d]{1,5})/i;
@@ -15,9 +15,6 @@ class HotClientServer {
         'You must supply an absolute public path to a development build of a web target bundle as it will be hosted on a seperate development server to any node target bundles.',
       );
     }
-
-    // eslint-disable-next-line no-unused-vars
-    const [_, host, port] = httpPathRegex.exec(httpPath);
 
     this.webpackDevMiddleware = createWebpackMiddleware(compiler, {
       quiet: true,

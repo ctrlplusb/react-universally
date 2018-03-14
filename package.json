@@ -78,6 +78,7 @@
     "react-helmet": "5.2.0",
     "react-hot-loader": "4.0.0",
     "react-router-dom": "4.2.2",
+    "react-tree-walker": "2.2.0",
     "serialize-javascript": "1.4.0",
     "uglifyjs-webpack-plugin": "1.2.3",
     "uuid": "3.2.1"
@@ -100,6 +101,7 @@
     "babel-template": "6.26.0",
     "chokidar": "2.0.2",
     "css-loader": "0.28.10",
+    "detect-port-alt": "1.1.5",
     "enzyme": "3.3.0",
     "enzyme-adapter-react-16": "1.1.1",
     "enzyme-to-json": "3.3.1",

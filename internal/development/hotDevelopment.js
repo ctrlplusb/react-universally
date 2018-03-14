@@ -7,6 +7,7 @@ import HotClientServer from './hotClientServer';
 import createVendorDLL from './createVendorDLL';
 import webpackConfigFactory from '../webpack/configFactory';
 import config from '../../config';
+import values from '../../config/values';
 
 const usesDevVendorDLL = bundleConfig =>
   bundleConfig.devVendorDLL != null && bundleConfig.devVendorDLL.enabled;
@@ -63,9 +64,16 @@ const initializeBundle = (name, bundleConfig) => {
 };
 
 class HotDevelopment {
-  constructor() {
+  constructor(port, clientPort) {
     this.hotClientServer = null;
     this.hotNodeServers = [];
+
+    // Update devServerPort to absolute port
+    // TODO: Refactor HotXServer's and their webpack config to
+    // use passed down props internally.
+    values.clientDevServerPort = clientPort;
+    process.env.PORT = port;
+    process.env.CLIENT_DEV_PORT = clientPort;
 
     const clientBundle = initializeBundle('client', config('bundles.client'));
 
@@ -94,7 +102,7 @@ class HotDevelopment {
                 resolve(compiler);
               }
             });
-            this.hotClientServer = new HotClientServer(compiler);
+            this.hotClientServer = new HotClientServer(clientPort, compiler);
           }),
         vendorDLLsFailed,
       )
@@ -103,7 +111,7 @@ class HotDevelopment {
         this.hotNodeServers = nodeBundles.map(
           ({ name, createCompiler }) =>
             // $FlowFixMe
-            new HotNodeServer(name, createCompiler(), clientCompiler),
+            new HotNodeServer(port, name, createCompiler(), clientCompiler),
         );
       });
   }

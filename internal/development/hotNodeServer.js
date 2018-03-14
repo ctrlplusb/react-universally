@@ -4,7 +4,7 @@ import { spawn } from 'child_process';
 import { log } from '../utils';
 
 class HotNodeServer {
-  constructor(name, compiler, clientCompiler) {
+  constructor(port, name, compiler, clientCompiler) {
     const compiledEntryFile = path.resolve(
       appRootDir.get(),
       compiler.options.output.path,
@@ -22,7 +22,9 @@ class HotNodeServer {
         });
       }
 
-      const newServer = spawn('node', [compiledEntryFile, '--color']);
+      // Start on correct port
+      const env = Object.assign(process.env, { PORT: port });
+      const newServer = spawn('node', [compiledEntryFile, '--color', { env }]);
 
       log({
         title: name,
