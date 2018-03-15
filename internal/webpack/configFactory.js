@@ -320,7 +320,12 @@ export default function webpackConfigFactory(buildOptions) {
       ifDev(() => new webpack.NoEmitOnErrorsPlugin()),
 
       // We need this plugin to enable hot reloading of our client.
-      ifDevClient(() => new webpack.HotModuleReplacementPlugin()),
+      ifDevClient(
+        () =>
+          new webpack.HotModuleReplacementPlugin({
+            multiStep: true,
+          }),
+      ),
 
       // For the production build of the client we need to extract the CSS into
       // CSS files.
